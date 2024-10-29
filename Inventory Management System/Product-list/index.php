@@ -1,3 +1,7 @@
+<?php
+include "../config/database.php";
+include "../config/on_session.php";
+?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
 
@@ -26,16 +30,7 @@
 
           <?php include "content.php";?>
           
-          <footer class="footer">
-            <div class="row g-0 justify-content-between fs-10 mt-4 mb-3">
-              <div class="col-12 col-sm-auto text-center">
-                <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">| </span><br class="d-sm-none" /> 2024 &copy; <a href="https://themewagon.com/">Themewagon</a></p>
-              </div>
-              <div class="col-12 col-sm-auto text-center">
-                <p class="mb-0 text-600">v3.22.0</p>
-              </div>
-            </div>
-          </footer>
+          <?php include "../page_properties/footer.php";?>
         </div>
         <div class="modal fade" id="authentication-modal" tabindex="-1" role="dialog" aria-labelledby="authentication-modal-label" aria-hidden="true">
           <div class="modal-dialog mt-6" role="document">

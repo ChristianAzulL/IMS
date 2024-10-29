@@ -634,8 +634,9 @@
             </div>
           </a>
         </li>
-
-
+        <?php 
+        if(strpos($access, "po_logs")!==false || strpos($access, "new_po")!==false || strpos($access, "inbound_logs")!==false){
+        ?>
         <!-- Inbounds Dropdown -->
         <li class="nav-item">
           <a class="nav-link dropdown-indicator" href="#social" role="button" 
@@ -645,27 +646,43 @@
               <span class="nav-link-text ps-1">Inbounds</span>
             </div>
           </a>
-          
           <!-- Inbounds Submenu -->
           <ul class="nav collapse" id="social">
+            <?php
+              if(strpos($access, "po_logs")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../PO-logs/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Purchased Order Logs</span></div>
               </a>
             </li>
+            <?php
+              }if(strpos($access, "new_po")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Create-PO/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create Purchased Order</span></div>
               </a>
             </li>
+            <?php
+              }if(strpos($access, "inbound_logs")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Inbound-logs/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inbound logs</span></div>
               </a>
             </li>
+            <?php 
+              }
+            ?>
           </ul>
         </li>
-
+        <?php 
+        }
+        ?>
+        <?php 
+        if(strpos($access, "product_list")!==false || strpos($access, "destination")!==false || strpos($access, "stock")!==false){
+        ?>
         <!-- Product Dropdown -->
         <li class="nav-item">
           <a class="nav-link dropdown-indicator" href="#events" role="button" 
@@ -678,24 +695,42 @@
           
           <!-- Product Submenu -->
           <ul class="nav collapse" id="events">
+            <?php 
+            if(strpos($access, "product_list")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Product-list/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product list</span></div>
               </a>
             </li>
+            <?php 
+            }if(strpos($access, "product_destination")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../item-destination/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Item destination</span></div>
               </a>
             </li>
+            <?php 
+            }if(strpos($access, "stock")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Inventory-stock/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory/stock</span></div>
               </a>
             </li>
+            <?php 
+            }
+            ?>
           </ul>
         </li>
-
+        <?php
+        }
+        ?>
+        <!-- tobecontinue -->
+        <?php 
+        if(strpos($access, "logistics")!==false){
+        ?>
         <!-- Logistics Dropdown -->
         <li class="nav-item">
           <a class="nav-link dropdown-indicator" href="#e-commerce" role="button" 
@@ -709,11 +744,6 @@
           <!-- Logistics Submenu -->
           <ul class="nav collapse" id="e-commerce">
             <li class="nav-item">
-              <a class="nav-link" href="../Outbound/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Outbound</span></div>
-              </a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="../Outbound-logs/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Outbound logs</span></div>
               </a>
@@ -725,6 +755,10 @@
             </li>
           </ul>
         </li>
+        <?php
+        }
+        if(strpos($access, "stock_transfer")!==false){
+        ?>
 
         <!-- Stock Transfer Dropdown -->
         <li class="nav-item">
@@ -750,6 +784,10 @@
             </li>
           </ul>
         </li>
+        <?php
+        }
+        if(strpos($access, "returns")!==false){
+        ?>
 
         <!-- Returns Dropdown -->
         <li class="nav-item">
@@ -775,6 +813,10 @@
             </li>
           </ul>
         </li>
+        <?php
+        }
+        if(strpos($access, "finance")!==false){
+        ?>
 
         <!-- Finance Dropdown -->
         <li class="nav-item">
@@ -795,6 +837,10 @@
             </li>
           </ul>
         </li>
+        <?php
+        }
+        if(strpos($access, "forecasting") !==false){
+        ?>
 
         <!-- Forecasting Dropdown -->
         <li class="nav-item">
@@ -815,7 +861,10 @@
             </li>
           </ul>
         </li>
-
+        <?php
+        }
+        if(strpos($access, "users")!==false){
+        ?>
         <!-- Users Section -->
         <li class="nav-item">
           <a class="nav-link" href="../Users/" aria-controls="user">
@@ -825,6 +874,10 @@
             </div>
           </a>
         </li>
+        <?php
+        }
+        if(strpos($access, "administration") !==false){
+        ?>
 
         <!-- Administration Dropdown -->
         <li class="nav-item">
@@ -880,6 +933,9 @@
             </li>
           </ul>
         </li>
+        <?php
+        }
+        ?>
 
       </ul>
     </div>

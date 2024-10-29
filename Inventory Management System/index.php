@@ -80,13 +80,13 @@
                                         <form id="login-form" action="config/login.php" method="POST">
                                             <div class="mb-3">
                                                 <label class="form-label" for="card-email">Email address</label>
-                                                <input class="form-control" id="card-email" name="email" type="email" />
+                                                <input class="form-control" id="email" name="email" type="email" />
                                             </div>
                                             <div class="mb-3">
                                                 <div class="d-flex justify-content-between">
                                                     <label class="form-label" for="card-password">Password</label>
                                                 </div>
-                                                <input class="form-control" id="card-password" name="password" type="password" />
+                                                <input class="form-control" id="password" name="password" type="password" />
                                             </div>
                                             <div class="row flex-between-center">
                                                 <div class="col-auto">
@@ -96,9 +96,9 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mb-3">
-                                                <!-- <button class="btn btn-primary d-block w-100 mt-3" id="btn-login" type="submit" name="submit">Log in</button> -->
-                                                 <a class="btn btn-primary d-block w-100 mt-3" href="dashboard/">Log in</a>
+                                            <div class="mb-3" id="btn-login-container">
+                                                <button class="btn btn-primary d-block w-100 mt-3" id="btn-login" type="submit" name="submit">Log in</button>
+                                                 
                                             </div>
                                             <div class="mb-3" id="loading-btn-container" style="display:none;">
                                                 <button id="loading-btn" class="btn btn-primary d-block w-100 mt-3" type="button" disabled="">
@@ -128,45 +128,53 @@
     <script src="vendors/list.js/list.min.js"></script>
     <script src="assets/js/theme.js"></script>
     <script>
-    // Handle form submission with AJAX
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
+    document.getElementById('login-form').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent form from submitting normally
 
-        // Replace the login button with the loading button
-        document.getElementById('btn-login').style.display = 'none';
-        document.getElementById('loading-btn-container').style.display = 'block';
+        // Hide the login button container and show the loading button immediately
+        const loginButtonContainer = document.getElementById('btn-login-container');
+        const loadingButtonContainer = document.getElementById('loading-btn-container');
 
-        // Get form data
-        var formData = new FormData(this);
+        // Hide login button container and show loading button
+        loginButtonContainer.style.display = 'none';
+        loadingButtonContainer.style.display = 'block';
 
-        // Perform AJAX request
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.action, true);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                // Handle success response
-                console.log('Login successful');
-                // You can redirect the user or show a success message here
+        // Collect form data
+        const formData = new FormData(this);
+
+        // Send AJAX request
+        fetch('config/login.php', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Login successful, delay redirection by 1.5 seconds
+                setTimeout(() => {
+                    window.location.href = 'dashboard/';
+                }, 1500);
             } else {
-                // Handle error response
-                console.log('Login failed');
+                // Login failed, show error in console and revert buttons
+                setTimeout(() => {
+                    console.error(data.message);
+                    loadingButtonContainer.style.display = 'none'; // Hide loading button
+                    loginButtonContainer.style.display = 'block'; // Show the login button container again
+                }, 1500);
             }
-
-            // Restore the login button after the request is complete
-            document.getElementById('btn-login').style.display = 'block';
-            document.getElementById('loading-btn-container').style.display = 'none';
-        };
-
-        xhr.onerror = function() {
-            console.log('Request failed');
-            // Restore the login button if there's an error
-            document.getElementById('btn-login').style.display = 'block';
-            document.getElementById('loading-btn-container').style.display = 'none';
-        };
-
-        xhr.send(formData); // Send the form data
+        })
+        .catch(error => {
+            // Handle any network or unexpected errors
+            console.error('Error:', error);
+            setTimeout(() => {
+                loadingButtonContainer.style.display = 'none'; // Hide loading button
+                loginButtonContainer.style.display = 'block'; // Show the login button container again
+            }, 1500);
+        });
     });
-    </script>
+</script>
+
+
 </body>
 
 </html>

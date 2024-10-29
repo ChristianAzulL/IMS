@@ -1,197 +1,120 @@
-<!-- <div class="card">
-<div class="card-body overflow-hidden p-lg-6">
-    <div class="row align-items-center">
-    <div class="col-lg-6"><img class="img-fluid" src="../assets/img/icons/spot-illustrations/21.png" alt="" /></div>
-    <div class="col-lg-6 ps-lg-4 my-5 text-center text-lg-start">
-        <h3 class="text-primary">Edit me!</h3>
-        <p class="lead">Create Something Beautiful.</p><a class="btn btn-falcon-primary" href="../documentation/getting-started.html">Getting started</a>
-    </div>
-    </div>
-</div>
-</div> -->
+<?php 
+$selected_warehouse_id = $_SESSION['selected_warehouse_id'];
+$selected_warehouse_name = $_SESSION['selected_warehouse_name'];
+?>
 
 <div class="card">
     <div class="card-body overflow-hidden py-6 px-2">
-      <h5>SELECT PRODUCTS</h5>
-    <div class="card shadow-none">
-  <div class="card-body p-0 pb-3"  data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"]}'>
-    <div class="d-flex align-items-center justify-content-end my-3">
-      <div id="bulk-select-replace-element">
-        <!-- <button class="btn btn-falcon-success btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="ms-1">Submit</span></button> -->
-        <a href="../config/generate-po.php" class="btn btn-falcon-success btn-sm" ><!--<span class="fas fa-plus" data-fa-transform="shrink-3 down-2">--></span><span class="ms-1">Submit</span></a>
-    </div>
-    </div>
-    <div class="table-responsive scrollbar">
-      <table class="table mb-0">
-        <thead class="bg-200">
-          <tr>
-            <th width="50"></th>
-            <th class="text-black dark__text-white align-middle sort" data-sort="desc">Description</th>
-            <th class="text-black dark__text-white align-middle sort" data-sort="desc">Parent Barcode</th>
-            <th class="text-black dark__text-white align-middle sort" data-sort="barcode">Brand </th>
-            <th class="text-black dark__text-white align-middle sort" data-sort="cat">Category</th>
-            <th class="text-black dark__text-white align-middle sort" data-sort="" style="min-width: 250px;">Supplier</th>
-            <th class="text-black dark__text-white align-middle sort" data-sort="">Order Quantity</th>
-            <th class="text-black dark__text-white align-middle white-space-nowrap pe-3 sort" data-sort="qty">Quantity</th>
-            <th class="text-black dark__text-white align-middle text-end pe-3 sort" data-sort="trans">Transactions</th>
-          </tr>
-        </thead>
-        <tbody id="bulk-select-body" class="list">
-          <tr>
-            <td>
-                <img src="../../assets/img/def_img.png" alt="" height="50">
-            </td>
-            <th class="align-middle desc">Laptop Charger 1</th>
-            <th class="align-middle barcode">490000891</th>
-            <td class="align-middle brand">British</td>
-            <td class="align-middle cat">Male</td>
-            <td><select class="form-select" name="" id="">
-                <option value="1">Select Supplier</option>
-                <optgroup label="Local">
-                    <option value="volvo">Supplier local 1</option>
-                    <option value="saab">Supplier local 2</option>
-                </optgroup>
-                <optgroup label="International">
-                    <option value="volvo">Supplier International 1</option>
-                    <option value="saab">Supplier International 2</option>
-                </optgroup>
-            </select></td>
-            <td>
-                <input type="number" class="form-control" placeholder="Input Qty">
-            </td>
-            <td class="align-middle white-space-nowrap text-end pe-3 qty">32</td>
-            <td class="align-middle text-end pe-3 trans">20</td>
-          </tr>
-          <tr>
-            <td>
-                <img src="../../assets/img/def_img.png" alt="" height="50">
-            </td>
-            <th class="align-middle desc">Laptop Charger 2</th>
-            <th class="align-middle barcode">490000895</th>
-            <td class="align-middle brand">MSI</td>
-            <td class="align-middle cat">Female</td>
-            <td><select class="form-select" name="" id="">
-                <option value="1">Select Supplier</option>
-                <optgroup label="Local">
-                    <option value="volvo">Supplier local 1</option>
-                    <option value="saab">Supplier local 2</option>
-                </optgroup>
-                <optgroup label="International">
-                    <option value="volvo">Supplier International 1</option>
-                    <option value="saab">Supplier International 2</option>
-                </optgroup>
-            </select></td>
-            <td>
-                <input type="number" class="form-control" placeholder="Input Qty">
-            </td>
-            <td class="align-middle white-space-nowrap text-end pe-3 qty">32</td>
-            <td class="align-middle text-end pe-3 trans">14</td>
-          </tr>
-          <tr>
-            <td>
-                <img src="../../assets/img/def_img.png" alt="" height="50">
-            </td>
-            <th class="align-middle desc">Laptop Charger 3</th>
-            <th class="align-middle barcode">490000896</th>
-            <td class="align-middle brand">MSI</td>
-            <td class="align-middle cat">Male</td>
-            <td><select class="form-select" name="" id="">
-                <option value="1">Select Supplier</option>
-                <optgroup label="Local">
-                    <option value="volvo">Supplier local 1</option>
-                    <option value="saab">Supplier local 2</option>
-                </optgroup>
-                <optgroup label="International">
-                    <option value="volvo">Supplier International 1</option>
-                    <option value="saab">Supplier International 2</option>
-                </optgroup>
-            </select></td>
-            <td>
-                <input type="number" class="form-control" placeholder="Input Qty">
-            </td>
-            <td class="align-middle white-space-nowrap text-end pe-3 qty">49</td>
-            <td class="align-middle text-end pe-3 trans">15</td>
-          </tr>
-          <tr>
-            <td>
-                <img src="../../assets/img/def_img.png" alt="" height="50">
-            </td>
-            <th class="align-middle desc">Laptop Charger 4</th>
-            <th class="align-middle barcode">490000897</th>
-            <td class="align-middle brand">Acer</td>
-            <td class="align-middle cat">Male</td>
-            <td><select class="form-select" name="" id="">
-                <option value="1">Select Supplier</option>
-                <optgroup label="Local">
-                    <option value="volvo">Supplier local 1</option>
-                    <option value="saab">Supplier local 2</option>
-                </optgroup>
-                <optgroup label="International">
-                    <option value="volvo">Supplier International 1</option>
-                    <option value="saab">Supplier International 2</option>
-                </optgroup>
-            </select></td>
-            <td>
-                <input type="number" class="form-control" placeholder="Input Qty">
-            </td>
-            <td class="align-middle white-space-nowrap text-end pe-3 qty">59</td>
-            <td class="align-middle text-end pe-3 trans">30</td>
-          </tr>
-          <tr>
-            <td>
-                <img src="../../assets/img/def_img.png" alt="" height="50">
-            </td>
-            <th class="align-middle desc">Laptop Charger 5</th>
-            <th class="align-middle barcode">490000898</th>
-            <td class="align-middle brand">Acer</td>
-            <td class="align-middle cat">Female</td>
-            <td><select class="form-select" name="" id="">
-                <option value="1">Select Supplier</option>
-                <optgroup label="Local">
-                    <option value="volvo">Supplier local 1</option>
-                    <option value="saab">Supplier local 2</option>
-                </optgroup>
-                <optgroup label="International">
-                    <option value="volvo">Supplier International 1</option>
-                    <option value="saab">Supplier International 2</option>
-                </optgroup>
-            </select></td>
-            <td>
-                <input type="number" class="form-control" placeholder="Input Qty">
-            </td>
-            <td class="align-middle white-space-nowrap text-end pe-3 qty">21</td>
-            <td class="align-middle text-end pe-3 trans">26</td>
-          </tr>
-          <tr>
-            <td>
-                <img src="../../assets/img/def_img.png" alt="" height="50">
-            </td>
-            <th class="align-middle desc">Laptop Charger 6</th>
-            <th class="align-middle barcode">490000899</th>
-            <td class="align-middle brand">Acer</td>
-            <td class="align-middle cat">Female</td>
-            <td><select class="form-select" name="" id="">
-                <option value="1">Select Supplier</option>
-                <optgroup label="Local">
-                    <option value="volvo">Supplier local 1</option>
-                    <option value="saab">Supplier local 2</option>
-                </optgroup>
-                <optgroup label="International">
-                    <option value="volvo">Supplier International 1</option>
-                    <option value="saab">Supplier International 2</option>
-                </optgroup>
-            </select></td>
-            <td>
-                <input type="number" class="form-control" placeholder="Input Qty">
-            </td>
-            <td class="align-middle white-space-nowrap text-end pe-3 qty">23</td>
-            <td class="align-middle text-end pe-3 trans">70</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="mt-3 mb-2 d-none">Click the button to get selected rows</p><button class="btn btn-warning d-none" data-selected-rows="data-selected-rows">Get Selected Rows</button><pre id="selectedRows"></pre>
-    </div>
-  </div>
-</div>
+        <form action="../config/create_po.php" method="POST">
+        <h5>SELECT SUPPLIER AND QUANTITY</h5>
+        <div class="card shadow-none">
+            <div class="card-body p-0 pb-3" data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"]}'>
+                <div class="d-flex align-items-center justify-content-end my-3">
+                    <div class="col-auto text-end mb-3 me-1">
+                        <select class="form-select" name="supplier" required>
+                            <option value="">Select Supplier</option>
+                            <?php 
+                            $supplier_query = "SELECT * FROM supplier ORDER BY supplier_name ASC";
+                            $supplier_res = $conn->query($supplier_query);
+                            if($supplier_res->num_rows > 0) {
+                                while($supplier_row = $supplier_res->fetch_assoc()) {
+                                    $supplier = $supplier_row['supplier_name'];
+                                    $supplier_id = $supplier_row['id'];
+                                    echo '<option value="' . $supplier_id . '">' . $supplier . '</option>';
+                                }
+                            } else {
+                                echo '<option value="">No Supplier Available</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-auto text-end mb-3 me-1">
+                        <div id="bulk-select-replace-element">
+                            <button class="btn btn-falcon-success btn-sm" type="submit">
+                                <span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span>
+                                <span class="ms-1">Submit</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="d-none ms-3" id="bulk-select-actions"></div>
+                </div>
+
+                <div class="table-responsive scrollbar">
+                    <table class="table mb-0">
+                        <thead class="bg-200">
+                            <tr>
+                                <th width="50"></th>
+                                <th class="text-black dark__text-white align-middle sort" data-sort="desc">Description</th>
+                                <th class="text-black dark__text-white align-middle sort" data-sort="desc">Parent Barcode</th>
+                                <th class="text-black dark__text-white align-middle sort" data-sort="barcode">Brand</th>
+                                <th class="text-black dark__text-white align-middle sort" data-sort="cat">Category</th>
+                                <th class="text-black dark__text-white align-middle sort" style="min-width: 250px;" hidden>Supplier</th>
+                                <th class="text-black dark__text-white align-middle sort" style="min-width: 150px;">Order Quantity</th>
+                                <th class="text-black dark__text-white align-middle white-space-nowrap pe-3 sort" data-sort="qty">Quantity</th>
+                                <th class="text-black dark__text-white align-middle text-end pe-3 sort" data-sort="trans_dd">Transactions(dd)</th>
+                                <th class="text-black dark__text-white align-middle text-end pe-3 sort" data-sort="trans_mm">Transactions(mm)</th>
+                                <th class="text-black dark__text-white align-middle text-end pe-3 sort" data-sort="trans_yy">Transactions(yy)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bulk-select-body" class="list">
+                            <?php 
+                            // Check if the form is submitted
+                            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                // Check if any checkboxes are selected
+                                if (isset($_POST['product_id']) && is_array($_POST['product_id'])) {
+                                    // Loop through each selected checkbox
+                                    foreach ($_POST['product_id'] as $selectedProductId) {
+                                        // Retrieve data associated with the selected product id
+                                        $product_key = array_search($selectedProductId, $_POST['product_id']);
+                                        $product_id = $_POST['product_id'][$product_key];
+                                        $product_img = $_POST['product_image'][$product_key];
+                                        $product_des = $_POST['product_desc'][$product_key];
+                                        $product_pbarcode = $_POST['parent_barcode'][$product_key];
+                                        $product_brand = $_POST['brand'][$product_key];
+                                        $product_category = $_POST['category'][$product_key];
+                                        $current_stock = $_POST['qty'][$product_key];
+                                        $current_total_transaction_daily = $_POST['trans_day'][$product_key];
+                                        $current_total_transaction_monthly = $_POST['trans_month'][$product_key];
+                                        $current_total_transaction_yearly = $_POST['trans_year'][$product_key];
+                                        
+
+                                        ?>
+                                        
+                                        <tr>
+                                            <td>
+                                                <img class="img img-fluid m-0" src="../../assets/img/<?php echo basename($product_img); ?>" alt="">
+                                            </td>
+                                            <th class="align-middle desc"><?php echo $product_des; ?></th>
+                                            <th class="align-middle barcode"><?php echo $product_pbarcode; ?></th>
+                                            <td class="align-middle brand"><?php echo $product_brand; ?></td>
+                                            <td class="align-middle cat"><?php echo $product_category; ?></td>
+                                            <td class="align-middle cat" hidden>
+                                                <input type="text" name="product_id[]" value="<?php echo $product_id;?>" readonly hidden>
+                                                <input type="text" name="parent_barcode[]" value="<?php echo $product_pbarcode;?>" readonly hidden>
+                                                <input type="text" name="product_desc[]" value="<?php echo $product_des;?>" readonly hidden>
+                                                <input type="text" name="brand[]" value="<?php echo $product_brand;?>" readonly hidden>
+                                                <input type="text" name="category[]" value="<?php echo $product_category;?>" readonly hidden>
+                                                
+                                            </td>
+                                            <td class="align-middle cat">
+                                                <input type="number" name="order_qty[]" class="form-control" min="0" placeholder="Order Qty">
+                                            </td>
+                                            <td class="align-middle white-space-nowrap text-end pe-3 qty"><?php echo $current_stock; ?></td>
+                                            <td class="align-middle text-end pe-3 trans_dd"><?php echo $current_total_transaction_daily; ?></td>
+                                            <td class="align-middle text-end pe-3 trans_mm"><?php echo $current_total_transaction_monthly; ?></td>
+                                            <td class="align-middle text-end pe-3 trans_yy"><?php echo $current_total_transaction_yearly; ?></td>
+                                        </tr>
+                                        <?php 
+                                    }
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </form>
     </div>
 </div>

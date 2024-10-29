@@ -1,0 +1,50 @@
+<?php
+// Include the database connection file
+include('database.php');
+include('on_session.php');
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Retrieve and sanitize the form inputs
+    $productDescription = $_POST['product_description'] ?? '';
+    $category = $_POST['category'] ?? '';
+    $brand = $_POST['brand'] ?? '';
+    $parentBarcode = $_POST['parent_barcode'] ?? '';
+    $image = $_FILES['product_image'] ?? null;
+
+    // Initialize the file path for the product image
+    $imagePath = '../../assets/img/';
+
+    // Check if an image was uploaded
+    if ($image && $image['error'] === 0) {
+        $imageName = basename($image['name']);
+        $targetDir = "../../assets/img/"; // Ensure this directory exists and has write permissions
+        $targetFilePath = $targetDir . $imageName;
+
+        // Move the uploaded file to the target directory
+        if (move_uploaded_file($image['tmp_name'], $targetFilePath)) {
+            $imagePath = $targetFilePath;
+        } else {
+            die("Error: Could not upload image.");
+        }
+    }
+
+    // Prepare the SQL statement to insert product data
+    $sql = "INSERT INTO product (`description`, category, brand, parent_barcode, product_img, `date`, `user_id`) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssssi", $productDescription, $category, $brand, $parentBarcode, $imagePath, $currentDateTime, $user_id);
+
+    // Execute the query and check for success
+    if ($stmt->execute()) {
+        header("Location: ../Product-list/?success=true");
+    } else {
+        $error_message = "Error: " . $stmt->error;
+        header("Location: ../Product-list/?success=false&err=$error_message");
+    }
+
+    // Close the statement and connection
+    $stmt->close();
+    $conn->close();
+}
+?>

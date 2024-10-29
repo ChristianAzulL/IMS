@@ -15,7 +15,7 @@
   <div class="row justify-content-end justify-content-end gx-3 gy-0 px-3">
     <div class="col-auto mb-3">
       <!-- <button class="btn btn-primary py-0 me-auto">Create</button> -->
-      <a href="../create-po/" class="btn btn-primary py-0 me-auto">Create</a>
+      <button class="btn btn-primary py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Create</button>
     </div>
     <!-- <div class="col-sm-auto"><select class="form-select form-select-sm mb-3" data-list-filter="country">
         <option selected="" value="">Select country</option>
@@ -49,69 +49,34 @@
         </tr>
       </thead>
       <tbody class="list" id="table-purchase-body">
+        <?php 
+        $purchased_order_query = "SELECT po.*, u.user_fname, u.user_lname, s.supplier_name FROM purchased_order po LEFT JOIN users u ON u.id = po.user_id LEFT JOIN supplier s ON s.id = po.supplier  ORDER BY po.id DESC";
+        $purchased_order_res = $conn->query($purchased_order_query);
+        if($purchased_order_res->num_rows>-0){
+          while($row=$purchased_order_res->fetch_assoc()){
+            $po_id = $row['id'];
+            $po_supplier = $row['supplier_name'];
+            $date_created = $row['date_order'];
+            $by = $row['user_fname'] . " " . $row['user_lname'];
+            if($row['status'] == 0){
+              $status = '<span class="badge badge rounded-pill badge-subtle-warning">Pending  <div class="spinner-border" role="status" style="height:10px; width: 10px;"><span class="visually-hidden">Loading...</span></div></span>';
+            } elseif($row['status'] == 1){
+              $status = '<span class="badge badge rounded-pill badge-subtle-success">Sent to Supplier<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+            } else {
+              $status = '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+            }
+        ?>
         <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1009</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Jommy Mateo</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span></td>
+          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-<?php echo $po_id;?></a></th>
+          <td class="align-middle white-space-nowrap supplier"><?php echo $po_supplier;?></td>
+          <td class="align-middle white-space-nowrap country"><?php echo $date_created;?></td>
+          <td class="align-middle white-space-nowrap email"><?php echo $by;?></td>
+          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php echo $status;?></td>
         </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1008</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Michael Jackson</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-secondary">Sent to supplier<span class="ms-1 fas fa-ban" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1007</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Jommy Mateo</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1006</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Jommy Mateo</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-warning">Pending<span class="ms-1 fas fa-stream" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1005</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Michael Jackson</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-secondary">Sent to supplier<span class="ms-1 fas fa-ban" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1004</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Michael Jackson</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-warning">Pending<span class="ms-1 fas fa-stream" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1003</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Jommy Mateo</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1002</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Jommy Mateo</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
-        <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-1001</a></th>
-          <td class="align-middle white-space-nowrap supplier">Supplier</td>
-          <td class="align-middle white-space-nowrap country">January 1, 2023</td>
-          <td class="align-middle white-space-nowrap email">Michael Jackson</td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-warning">Pending<span class="ms-1 fas fa-stream" data-fa-transform="shrink-2"></span></span></td>
-        </tr>
+        <?php 
+          }
+        }
+        ?>
       </tbody>
     </table>
   </div>
@@ -138,6 +103,51 @@
     </div>
   </div>
 </div>
+
+
+<!-- create po modal -->
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <form action="set_session.php" method="POST">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+          <h4 class="mb-1" id="modalExampleDemoLabel">Select Warehouse </h4>
+        </div>
+        <div class="p-4 pb-0">
+          <label for="">Warehouse</label>
+          <select name="warehouse" id="warehouse" class="form-select">
+            <option value=""></option>
+            <?php 
+            // Loop through each ID and display differently for the first item
+            foreach ($user_warehouse_ids as $id) {
+              // Trim any extra whitespace
+              $id = trim($id);
+              $warehouse_info_query = "SELECT * FROM warehouse WHERE id = '$id'";
+              $warehouse_info_result = mysqli_query($conn, $warehouse_info_query);
+              if($warehouse_info_result->num_rows>0){
+                  // Check if it's the first item
+                  $row=$warehouse_info_result->fetch_assoc();
+                  $tab_warehouse_name = $row['warehouse_name'];
+                  echo '<option value="' . $id . '">' . $tab_warehouse_name . '</option>';
+              }
+            }
+            ?>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Next </button>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
 
 <!-- Script to load the PDF dynamically -->
 <script>
