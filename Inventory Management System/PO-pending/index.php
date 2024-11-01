@@ -61,7 +61,7 @@
           }
         </script>
         <div class="row flex-center min-vh-100 py-6 text-center">
-          <div class="col-sm-10 col-md-8 col-lg-6 col-xxl-5"><a class="d-flex flex-center mb-4" href="../index.html"><img class="me-2" src="../assets/img/icons/spot-illustrations/falcon.png" alt="" width="58" /><span class="font-sans-serif text-primary fw-bolder fs-4 d-inline-block">IMS</span></a>
+          <div class="col-sm-10 col-md-8 col-lg-6 col-xxl-5">
             <div class="card">
               <div class="card-body p-4 p-sm-5">
                 <div class="fw-black lh-1 text-300 fs-error">
@@ -69,9 +69,24 @@
   <span class="visually-hidden">Loading...</span>
 </div>
                 </div>
-                <p class="lead mt-4 text-800 font-sans-serif fw-semi-bold w-md-75 w-xl-100 mx-auto">Please wait while we redirect you to Purchased Order Logs.</p>
+                <p class="lead mt-4 text-800 font-sans-serif fw-semi-bold w-md-75 w-xl-100 mx-auto">Please wait while we generate the purchased order pdf.</p>
                 <hr />
-                
+                <!-- <small class="lead mt-4 text-800 font-sans-serif mx-auto fs-10">if the download has not started after 5 seconds, click the button below.</small> -->
+
+                <form id="autoSubmitForm" action="../config/generate-po.php" method="POST">
+                    <input type="text" name="poid" value="<?php echo $_GET['elcoco'];?>" hidden>
+                    <!-- Submit Button
+                    <button type="submit" id="submit-btn" class="btn btn-primary w-100 mt-3" onclick="handleSubmit()" style="display:none;">Submit</button>
+
+                    Loading Button Container
+                    <div class="mb-3" id="loading-btn-container" style="display:none;">
+                        <button id="loading-btn" class="btn btn-primary d-block w-100 mt-3" type="button" disabled="">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                    </div> -->
+                    <button type="submit" class="btn btn-primary mt-3" hidden>submit</button>
+                </form>
               </div>
             </div>
           </div>
@@ -79,16 +94,43 @@
       </div>
     </main><!-- ===============================================--><!--    End of Main Content--><!-- ===============================================-->
     
-    <form id="autoSubmitForm" action="../config/generate-po.php" method="POST">
-        <input type="text" name="test" value="test" hidden>
-        <button type="submit" hidden>submit</button>
-    </form>
+    
 
     <script>
         window.onload = function() {
             document.getElementById("autoSubmitForm").submit();
+            setTimeout(function() {
+              window.location.href = "../PO-logs/"; // Redirects after submission
+            }, 8000); // 5000 milliseconds = 5 seconds
+            
         };
     </script>
+    <!-- <script>
+        // Function to handle submit button click
+        function handleSubmit() {
+            // Hide the submit button and show the loading container
+            document.getElementById("submit-btn").style.display = "none";
+            document.getElementById("loading-btn-container").style.display = "block";
+
+            // After 2 seconds, revert the visibility
+            setTimeout(() => {
+                document.getElementById("loading-btn-container").style.display = "none";
+                document.getElementById("submit-btn").style.display = "block";
+            }, 2000);
+        }
+
+        // Page load event to show loading container for 5 seconds
+        window.onload = function() {
+            // Show the loading container on page load
+            document.getElementById("loading-btn-container").style.display = "block";
+
+            // After 5 seconds, hide the loading container and show the submit button
+            setTimeout(() => {
+                document.getElementById("loading-btn-container").style.display = "none";
+                document.getElementById("submit-btn").style.display = "block";
+            }, 5000);
+        };
+    </script> -->
 
     <!-- ===============================================--><!--    JavaScripts--><!-- ===============================================-->
     <script src="../vendors/popper/popper.min.js"></script>

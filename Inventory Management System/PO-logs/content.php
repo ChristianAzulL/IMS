@@ -67,7 +67,7 @@
             }
         ?>
         <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="../../app/e-commerce/customer-details.html"  type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">PO-<?php echo $po_id;?></a></th>
+          <th class="align-middle white-space-nowrap name"><a href="#" type="button" data-bs-toggle="modal" data-bs-target="#pdfModal<?php echo $po_id;?>">PO-<?php echo $po_id;?></a></th>
           <td class="align-middle white-space-nowrap supplier"><?php echo $po_supplier;?></td>
           <td class="align-middle white-space-nowrap country"><?php echo $date_created;?></td>
           <td class="align-middle white-space-nowrap email"><?php echo $by;?></td>
@@ -85,15 +85,24 @@
 </div>
 
 
-<div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-hidden="true">
+<!-- pdf modal -->
+<?php 
+$modal_po_query = "SELECT * FROM purchased_order";
+$modal_po_res = $conn->query($modal_po_query);
+while($row = $modal_po_res->fetch_assoc()){
+  $modal_po_id = $row['id'];
+  $modal_pdf = $row['pdf'];
+?>
+<div class="modal fade" id="pdfModal<?php echo $modal_po_id;?>" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
     <div class="modal-content position-relative">
       <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
         <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-0">
+        
         <!-- Embed the PDF using an iframe -->
-        <iframe id="pdfViewer" src="" width="100%" height="600px"></iframe>
+        <iframe id="pdfViewer" src="../../PDFs/<?php echo $modal_pdf;?>" width="100%" height="600px"></iframe>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
@@ -103,6 +112,9 @@
     </div>
   </div>
 </div>
+<?php 
+}
+?>
 
 
 <!-- create po modal -->
@@ -149,18 +161,4 @@
 </div>
 
 
-<!-- Script to load the PDF dynamically -->
-<script>
-    var pdfModal = document.getElementById('pdfModal');
-    pdfModal.addEventListener('show.bs.modal', function (event) {
-        // Set the PDF URL when the modal is shown
-        var pdfViewer = document.getElementById('pdfViewer');
-        pdfViewer.src = "../../HIRC-OFFICIAL-PRICELIST-DEALER (1).pdf";  // Change this to your PDF file path
-    });
 
-    pdfModal.addEventListener('hidden.bs.modal', function (event) {
-        // Clear the PDF URL when the modal is hidden
-        var pdfViewer = document.getElementById('pdfViewer');
-        pdfViewer.src = "";
-    });
-</script>
