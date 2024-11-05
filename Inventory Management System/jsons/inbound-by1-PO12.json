@@ -1,0 +1,26 @@
+[
+    {
+        "product_id": "3",
+        "product_desc": "Sample Product 2",
+        "keyword": "",
+        "ordered_qty": 0,
+        "received_qty": 123,
+        "price": 0,
+        "barcode": "9001010111",
+        "batch_num": "",
+        "brand_name": "Sample Brand 1",
+        "category_name": "Sample 2"
+    },
+    {
+        "product_id": "5",
+        "product_desc": "skdjfksdjflksdf",
+        "keyword": "",
+        "ordered_qty": 0,
+        "received_qty": 11,
+        "price": 0,
+        "barcode": "sdkflksjdf",
+        "batch_num": "",
+        "brand_name": "sample brand 3",
+        "category_name": "Sample 2"
+    }
+]

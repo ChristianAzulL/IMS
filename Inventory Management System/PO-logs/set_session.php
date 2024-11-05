@@ -1,4 +1,5 @@
 <?php
+include "../config/database.php";
 include "../config/on_session.php";
 $selected_warehouse_id = $_POST['warehouse'];
 $selected_warehouse_name = "Sample Supplier";

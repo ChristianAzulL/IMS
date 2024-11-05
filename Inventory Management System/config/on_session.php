@@ -14,4 +14,22 @@ if(empty($_SESSION['pfp'])){
     $user_pfp = $_SESSION['pfp'];
 }
 
+
+// Trim any extra whitespace from each ID
+$warehouse_ids_array = array_map('trim', $user_warehouse_ids);
+
+// Initialize an array to store the select options
+$warehouse_options = [];
+
+foreach ($warehouse_ids_array as $warehouse_id) {
+    // Create the SQL query by directly inserting the warehouse ID
+    $sql = "SELECT id, warehouse_name FROM warehouse WHERE id = $warehouse_id";
+    
+    // Execute the query
+    $result = $conn->query($sql);
+    
+    if ($result && $row = $result->fetch_assoc()) {
+        $warehouse_options[] = '<option value="' . $row['id'] . '">' . $row['warehouse_name'] . '</option>';
+    }
+}
 ?>

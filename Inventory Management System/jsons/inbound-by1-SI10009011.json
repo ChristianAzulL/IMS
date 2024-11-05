@@ -1,0 +1,34 @@
+[
+    {
+        "product_id": "3",
+        "product_desc": "Sample Product 2",
+        "category_name": "Sample 2",
+        "brand_name": "Sample Brand 1",
+        "ordered_qty": 0,
+        "received_qty": 99
+    },
+    {
+        "product_id": null,
+        "product_desc": null,
+        "category_name": null,
+        "brand_name": null,
+        "ordered_qty": 0,
+        "received_qty": 0
+    },
+    {
+        "product_id": "2",
+        "product_desc": "Product Test",
+        "category_name": "Sample 1",
+        "brand_name": "Sample Brand 1",
+        "ordered_qty": 0,
+        "received_qty": 12
+    },
+    {
+        "product_id": "2",
+        "product_desc": "Product Test",
+        "category_name": "Sample 1",
+        "brand_name": "Sample Brand 1",
+        "ordered_qty": 0,
+        "received_qty": 2
+    }
+]

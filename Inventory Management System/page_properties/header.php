@@ -20,6 +20,7 @@
 <link href="../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
 <link href="../assets/css/user.min.css" rel="stylesheet" id="user-style-default">
 <link href="../vendors/choices/choices.min.css" rel="stylesheet" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     var isRTL = JSON.parse(localStorage.getItem('isRTL'));
     if (isRTL) {
