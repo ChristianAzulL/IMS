@@ -10,3 +10,18 @@
 <script src="../vendors/list.js/list.min.js"></script>
 <script src="../assets/js/theme.js"></script>
 <script src="../vendors/choices/choices.min.js"></script>
+<script>
+    // Disable right-click
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // Disable common developer tool shortcuts
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12' || 
+            (e.ctrlKey && e.shiftKey && ['I', 'C', 'J', 'U'].includes(e.key)) || 
+            (e.ctrlKey && e.key === 'U')) {
+            e.preventDefault();
+        }
+    });
+</script>

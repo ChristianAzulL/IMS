@@ -37,8 +37,6 @@ if (isset($_POST['submit'])) {
                         $category = $data[8]; 
                         // $rowIndex++;
                         // echo $rowIndex;
-                        $csv_id = $user_email. "-" .$user_id . "-" . $user_position_id . "-" . $inbound_warehouse;
-                        $_SESSION['csv_id'] = $csv_id;
 
                         $supplier_sql = "SELECT id FROM supplier WHERE supplier_name = '$supplier' LIMIT 1";
                         $supplier_res = $conn->query($supplier_sql);
@@ -90,11 +88,22 @@ if (isset($_POST['submit'])) {
                                             brand_id = '$brand_id',
                                             category = '$category',
                                             category_id = '$category_id',
-                                            csv_id = '$csv_id',
                                             warehouse = '$inbound_warehouse',
                                             user_id = '$user_id'
                                             ";
                         if($conn->query($insert_csv) === TRUE ){
+                            $csv_unique_id = $conn->insert_id;
+                            if(!isset($_SESSION['csv_id'])){
+                                $csv_id = $user_email. "-" .$user_id . "-" . $csv_unique_id . "-" . $inbound_warehouse;
+                                $_SESSION['csv_id'] = $csv_id;
+                            } else {
+                                $csv_id = $_SESSION['csv_id'];
+                            }
+                            $_SESSION['csv_id'] = $csv_id;
+                            $update_csv = "UPDATE inbound_csv SET csv_id = '$csv_id' WHERE id = '$csv_unique_id'";
+                            if($conn->query($update_csv) === TRUE ){
+                                echo "SUCCESSFULLY UPDATED";
+                            }
                             echo "successfully inserted";
                         } else {
                             echo "error inserting product";

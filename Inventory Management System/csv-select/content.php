@@ -10,10 +10,10 @@ if (isset($_SESSION['csv_id'])) {
     <div class="card-body overflow-hidden p-lg-6">
         <div class="row">
             <div class="col-lg-12">
-                <form action="csv_process.php" method="POST">
+                <form id="myForm" action="csv_process.php" method="POST">
                     <div class="row justify-content-end">
                         <div class="col-auto mb-3">
-                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <button class="btn btn-primary" id="submitBTN" type="button">Submit</button>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -111,7 +111,8 @@ if (isset($_SESSION['csv_id'])) {
                                     <td><?php echo $csv_supplier; ?></td>
                                     <td>
                                         <select class="form-select <?php echo ($csv_supplier_id != 0) ? 'bg-success' : ''; ?>" name="supplier_id[]">
-                                            <option value="reg">Register as new supplier</option>
+                                            <option value="reg_int">Register as new international supplier</option>
+                                            <option value="reg_local">Register as new local supplier</option>
                                             <?php
                                             $supplier_sql = "SELECT * FROM supplier ORDER BY supplier_name ASC";
                                             $supplier_res = $conn->query($supplier_sql);
@@ -148,3 +149,24 @@ if (isset($_SESSION['csv_id'])) {
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('submitBTN').addEventListener('click', function(event) {
+        // Show SweetAlert2 confirmation dialog
+        Swal.fire({
+            title: "Do you want to save the changes?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Save",
+            denyButtonText: `Don't save`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the form
+                document.getElementById('myForm').submit();
+                Swal.fire("Saved!", "", "success");
+            } else if (result.isDenied) {
+                // If denied, show info alert
+                Swal.fire("Changes are not saved", "", "info");
+            }
+        });
+    });
+</script>

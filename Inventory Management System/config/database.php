@@ -1,19 +1,18 @@
 <?php
-// Set timezone to the Philippines
-date_default_timezone_set('Asia/Manila');
-// Get the current date and time in MySQL DATETIME format
-$currentDateTime = date("Y-m-d H:i:s");
+require_once __DIR__ . '../../../vendor/autoload.php'; // Adjust path based on your file structure
 
-// Database connection (update with your own connection details)
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "my_database";
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '../../../'); // Adjust path if .env is in a different directory
+$dotenv->load();
 
-// Create a connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+date_default_timezone_set($_ENV['TIMEZONE']);
 
-// Check the connection
+
+define('DB_SERVER', $_ENV['DB_SERVER']);
+define('DB_USERNAME', $_ENV['DB_USERNAME']);
+define('DB_PASSWORD', $_ENV['DB_PASSWORD']);
+define('DB_NAME', $_ENV['DB_NAME']);
+
+$conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
