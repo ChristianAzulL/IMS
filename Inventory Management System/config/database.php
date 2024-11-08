@@ -16,3 +16,9 @@ $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+// Set the timezone to Philippines
+$timezone = new DateTimeZone('Asia/Manila');
+
+// Create and format the current date and time in MySQL DATETIME format (Y-m-d H:i:s)
+$currentDateTime = (new DateTime('now', $timezone))->format('Y-m-d H:i:s');

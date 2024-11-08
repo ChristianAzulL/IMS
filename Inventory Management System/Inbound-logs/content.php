@@ -206,7 +206,7 @@
           <h4 class="mb-1" id="modalExampleDemoLabel">Upload CSV</h4>
         </div>
         <div class="p-4 pb-0">
-          <form action="../config/upload_inbound_csv.php" method="POST" enctype="multipart/form-data">
+          <form action="../csv-select/index" method="POST" enctype="multipart/form-data">
           <div class="row">
 
             <div class="col-lg-5 mb-3">
