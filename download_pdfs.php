@@ -8,7 +8,7 @@ if ($mysqli->connect_error) {
 }
 
 // Prepare the SQL query to fetch all PDF data where batch_code = 'P123123'
-$query = "SELECT unique_barcode, pdf FROM stocks WHERE batch_code = 'P123123'";
+$query = "SELECT unique_barcode, pdf FROM stocks WHERE batch_code = 'batch'";
 
 // Execute the query
 $result = $mysqli->query($query);
@@ -27,7 +27,7 @@ if ($result->num_rows > 0) {
     // Loop through each row and add the PDFs to the ZIP file
     while ($row = $result->fetch_assoc()) {
         $pdfData = $row['pdf'];
-        $pdfName = $row['unique_barcode'] . ".pdf";
+        $pdfName = $row['unique_barcode'];
         
         // Add the PDF to the ZIP file (using the name as the file inside the ZIP)
         $zip->addFromString($pdfName, $pdfData);

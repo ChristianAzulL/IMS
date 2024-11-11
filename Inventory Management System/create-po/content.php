@@ -43,9 +43,9 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           $product_list_query = "
             SELECT product.*, users.user_fname, users.user_lname, category.category_name, brand.brand_name
             FROM product 
-            LEFT JOIN users ON users.id = product.user_id 
-            LEFT JOIN category ON category.id = product.category
-            LEFT JOIN brand ON brand.id = product.brand
+            LEFT JOIN users ON users.hashed_id = product.user_id 
+            LEFT JOIN category ON category.hashed_id = product.category
+            LEFT JOIN brand ON brand.hashed_id = product.brand
             ORDER BY product.id DESC
           ";
           $product_list_res = $conn->query($product_list_query);

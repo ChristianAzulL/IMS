@@ -23,13 +23,13 @@ $warehouse_options = [];
 
 foreach ($warehouse_ids_array as $warehouse_id) {
     // Create the SQL query by directly inserting the warehouse ID
-    $sql = "SELECT id, warehouse_name FROM warehouse WHERE id = $warehouse_id";
+    $sql = "SELECT hashed_id, warehouse_name FROM warehouse WHERE hashed_id = '$warehouse_id'";
     
     // Execute the query
     $result = $conn->query($sql);
     
     if ($result && $row = $result->fetch_assoc()) {
-        $warehouse_options[] = '<option value="' . $row['id'] . '">' . $row['warehouse_name'] . '</option>';
+        $warehouse_options[] = '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
     }
 }
 ?>

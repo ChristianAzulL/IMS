@@ -37,13 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $row = $result->fetch_assoc();
         $_SESSION['position_id'] = $row['user_position'];
         $position_id = $_SESSION['position_id'];
-        $_SESSION['user_id'] = $row['id'];
+        $_SESSION['user_id'] = $row['hashed_id'];
         $_SESSION['full_name'] = $row['user_fname'] . " " . $row['user_lname'];
         $_SESSION['pfp'] = $row['pfp'];
         $_SESSION['email'] = $row['email'];
         $_SESSION['birth_date'] = $row['birth_date'];
         $_SESSION['warehouse_ids'] = $row['warehouse_access'];
-        $upos_query = "SELECT position_name, access FROM user_position WHERE id = '$position_id'";
+        $upos_query = "SELECT position_name, access FROM user_position WHERE hashed_id = '$position_id'";
         $upos_result = $conn->query($upos_query);
         $upos_row = $upos_result->fetch_assoc();
         $_SESSION['position_name'] = $upos_row['position_name'];

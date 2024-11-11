@@ -59,10 +59,10 @@
         $purchased_order_query = "
         SELECT po.*, u.user_fname, u.user_lname, s.supplier_name ,wh.warehouse_name
         FROM purchased_order po 
-        LEFT JOIN users u ON u.id = po.user_id 
-        LEFT JOIN supplier s ON s.id = po.supplier 
-        LEFT JOIN warehouse wh ON wh.id = po.warehouse
-        WHERE po.warehouse IN ($imploded_warehouse_ids) 
+        LEFT JOIN users u ON u.hashed_id = po.user_id 
+        LEFT JOIN supplier s ON s.hashed_id = po.supplier 
+        LEFT JOIN warehouse wh ON wh.hashed_id = po.warehouse
+        WHERE po.warehouse IN ('$imploded_warehouse_ids') 
         ORDER BY po.id DESC";
         $purchased_order_res = $conn->query($purchased_order_query);
         if($purchased_order_res->num_rows>-0){
@@ -102,7 +102,7 @@
 
 <!-- pdf modal -->
 <?php 
-$modal_po_query = "SELECT * FROM purchased_order WHERE warehouse IN ($imploded_warehouse_ids)";
+$modal_po_query = "SELECT * FROM purchased_order WHERE warehouse IN ('$imploded_warehouse_ids')";
 $modal_po_res = $conn->query($modal_po_query);
 while($row = $modal_po_res->fetch_assoc()){
   $modal_po_id = $row['id'];
@@ -153,7 +153,7 @@ while($row = $modal_po_res->fetch_assoc()){
             foreach ($user_warehouse_ids as $id) {
               // Trim any extra whitespace
               $id = trim($id);
-              $warehouse_info_query = "SELECT * FROM warehouse WHERE id = '$id'";
+              $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
               $warehouse_info_result = mysqli_query($conn, $warehouse_info_query);
               if($warehouse_info_result->num_rows>0){
                   // Check if it's the first item

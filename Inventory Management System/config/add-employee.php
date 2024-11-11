@@ -38,8 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Redirect or display a success message
         // echo "Employee added successfully.";
         // Optionally, redirect to another page:
-        header("Location: ../Users/?success=true");
-        exit();
+        $employee_userid = $conn->insert_id;
+        $hashEmp_userid = hash('sha256', $employee_userid);
+        $update_employee = "UPDATE users SET hashed_id = '$hashEmp_userid' WHERE id = '$employee_userid'";
+        if($conn->query($update_employee) === TRUE ){
+            header("Location: ../Users/?success=true");
+            exit();
+        }
+        
     } else {
         // Display an error message if something goes wrong
         $error = "Error: " . mysqli_error($conn);

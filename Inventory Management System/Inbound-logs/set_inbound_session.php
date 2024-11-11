@@ -8,15 +8,7 @@ if (isset($_POST['supplier'], $_POST['po_id'], $_POST['received_date'], $_POST['
     $_SESSION['inbound_po_id'] = (int)$_POST['po_id'];  // Ensuring it's an integer
     $_SESSION['inbound_received_date'] = htmlspecialchars($_POST['received_date']);
     $_SESSION['inbound_warehouse'] = htmlspecialchars($_POST['warehouse']);
-    
-    // Optional fields - check if they are set before saving
-    if (isset($_POST['driver'])) {
-        $_SESSION['inbound_driver'] = htmlspecialchars($_POST['driver']);
-    }
-    if (isset($_POST['plate_num'])) {
-        $_SESSION['inbound_plate_num'] = htmlspecialchars($_POST['plate_num']);
-    }
-
+   
     // Redirect to a confirmation or next step page if needed
     header("Location: ../inbound-select-products/");
     exit();

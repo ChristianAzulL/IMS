@@ -27,14 +27,7 @@
     </html>';
 
     $pdfname = "batch-" . $batch . "-" . $unique_barcode . ".pdf";
-    if (empty($pdf)) {
-        $update_stock = "UPDATE stocks SET pdf = '$pdfname' WHERE id = '$stock_id'";
-        if ($conn->query($update_stock) === TRUE) {
-            include "../config/generate-pdf.php";
-        } else {
-            echo "Error updating record: " . $conn->error;
-        }
-    }
+    
 
  
 

@@ -86,11 +86,11 @@
 
 <!-- Modal -->
 <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <form action="../config/add-warehouse.php" method="POST">
+    <form action="../config/add-warehouse.php" id="myForm" method="POST">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
             <div class="modal-content position-relative">
                 <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
                     <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
@@ -100,14 +100,59 @@
                         <div class="mb-3">
                             <label class="col-form-label" for="warehouse-name">Warehouse Name:</label>
                             <input class="form-control" name="warehouse-name" id="warehouse-name" type="text" />
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Warehouse name already exist</div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-primary"id="btnsubmit" type="submit" disabled>Submit</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
+
+<script>
+    $(document).ready(function() {
+        // Debounce function to delay the AJAX call until the user stops typing
+        let debounceTimer;
+        $('#warehouse-name').on('input', function() {
+            const warehouseName = $(this).val();
+
+            // Clear the previous timeout
+            clearTimeout(debounceTimer);
+
+            // Set a new timeout for checking the warehouse name
+            debounceTimer = setTimeout(function() {
+                // Perform the AJAX request to check the warehouse name
+                $.ajax({
+                    url: '../config/check-warehouse.php',
+                    type: 'POST',
+                    data: { 'warehouse-name': warehouseName },
+                    dataType: 'json',
+                    success: function(response) {
+                        // Handle the response from the PHP script
+                        if (response.exists) {
+                            $('#warehouse-name').removeClass('is-valid').addClass('is-invalid');
+                            $('.invalid-feedback').show();
+                            $('.valid-feedback').hide();
+                            $('#btnsubmit').prop('disabled', true); // Disable submit button
+                        } else {
+                            $('#warehouse-name').removeClass('is-invalid').addClass('is-valid');
+                            $('.valid-feedback').show();
+                            $('.invalid-feedback').hide();
+                            $('#btnsubmit').prop('disabled', false); // Enable submit button
+                        }
+                    },
+                    error: function() {
+                        // Handle any errors that occur during the AJAX request
+                        alert('Error checking warehouse name.');
+                    }
+                });
+            }, 500); // Delay of 500ms after the user stops typing
+        });
+    });
+</script>

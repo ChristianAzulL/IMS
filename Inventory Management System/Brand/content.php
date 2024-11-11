@@ -30,12 +30,12 @@
                                     <th class="text-900 sort" data-sort="name">brand</th>
                                     <th class="text-900 sort" data-sort="email">Published date</th>
                                     <th class="text-900 sort" data-sort="age">Publish by</th>
-                                    <th class="text-900">Actions</th> <!-- Added Actions header -->
+                                    <th class="text-900" style="width: 50px;"></th> <!-- Added Actions header -->
                                 </tr>
                             </thead>
                             <tbody class="list">
                                 <?php 
-                                $brand_query = "SELECT brand.*, users.user_fname, users.user_lname FROM brand LEFT JOIN users ON users.id = brand.user_id ORDER BY id DESC";
+                                $brand_query = "SELECT brand.*, users.user_fname, users.user_lname FROM brand LEFT JOIN users ON users.hashed_id = brand.user_id ORDER BY brand.id DESC";
                                 $brand_result = mysqli_query($conn, $brand_query);
                                 if ($brand_result->num_rows > 0) {
                                     while ($row = $brand_result->fetch_assoc()) {
@@ -48,7 +48,7 @@
                                     <td class="email"><?php echo htmlspecialchars($publish_Date); ?></td>
                                     <td class="age"><?php echo htmlspecialchars($by); ?></td>
                                     <td>
-                                        <button class="btn btn-secondary">Edit</button>
+                                        <button class="btn btn-transparent"><span class="far fa-edit"></span></button>
                                     </td>
                                 </tr>
                                 <?php 
@@ -74,7 +74,7 @@
 </div>
 
 <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <form action="../config/add-brand.php" method="POST">
+    <form action="../config/add-brand.php" id="myForm" method="POST">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
             <div class="modal-content position-relative">
                 <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
@@ -88,14 +88,58 @@
                         <div class="mb-3">
                             <label class="col-form-label" for="brand-name">brand Name:</label>
                             <input class="form-control" id="brand-name" name="brand_name" type="text" />
+                            <div class="valid-feedback">Looks good!</div>
+                            <div class="invalid-feedback">Warehouse name already exist</div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-primary" id="btnsubmit" type="submit" disabled>Submit</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
+<script>
+    $(document).ready(function() {
+        // Debounce function to delay the AJAX call until the user stops typing
+        let debounceTimer;
+        $('#brand-name').on('input', function() {
+            const brandName = $(this).val();
+
+            // Clear the previous timeout
+            clearTimeout(debounceTimer);
+
+            // Set a new timeout for checking the warehouse name
+            debounceTimer = setTimeout(function() {
+                // Perform the AJAX request to check the warehouse name
+                $.ajax({
+                    url: '../config/check-brand .php',
+                    type: 'POST',
+                    data: { 'brand-name': brandName },
+                    dataType: 'json',
+                    success: function(response) {
+                        // Handle the response from the PHP script
+                        if (response.exists) {
+                            $('#brand-name').removeClass('is-valid').addClass('is-invalid');
+                            $('.invalid-feedback').show();
+                            $('.valid-feedback').hide();
+                            $('#btnsubmit').prop('disabled', true); // Disable submit button
+                        } else {
+                            $('#brand-name').removeClass('is-invalid').addClass('is-valid');
+                            $('.valid-feedback').show();
+                            $('.invalid-feedback').hide();
+                            $('#btnsubmit').prop('disabled', false); // Enable submit button
+                        }
+                    },
+                    error: function() {
+                        // Handle any errors that occur during the AJAX request
+                        alert('Error checking warehouse name.');
+                    }
+                });
+            }, 500); // Delay of 500ms after the user stops typing
+        });
+    });
+</script>

@@ -213,15 +213,10 @@
               <label class="col-form-label" for="recipient-name">Warehouse:</label>
               <select class="form-select" id="warehouse" required="required" name="warehouse" required>
                 <option value="">Select warehouse...</option>
-                <<?php echo implode("\n", $warehouse_options); ?>
+                  <?php echo implode("\n", $warehouse_options); ?>
                 <?php ?>
               </select>
               <div class="invalid-feedback">Please select one</div>
-            </div>
-
-            <div class="col-lg-3 mb-3">
-              <label for="">P.O no</label>
-              <input type="number" name="po_id" class="form-control" required>
             </div>
 
             <div class="col-lg-4 mb-3">
@@ -234,14 +229,11 @@
                 <input type="file" name="csv_file" id="input_csv" class="form-control" accept=".csv" required>
             </div>
 
-            <div class="col-lg-4 mb-3">
-              <label class="col-form-label" for="message-text">Driver:</label>
-              <input type="text" name="driver" class="form-control" placeholder="Enter Driver name">
-            </div>
             <div class="col-lg-3 mb-3">
-              <label  class="col-form-label" for="">Plate no.</label>
-              <input type="text" name="plate_num" class="form-control" placeholder="Enter Plate no.">
+              <label for="">P.O no</label>
+              <input type="number" name="po_id" class="form-control" required>
             </div>
+
           </div>
         </div>
       </div>
