@@ -21,7 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Execute the query
     if ($stmt->execute()) {
-        header("Location: ../Category/?success=true");
+        $category_id = $conn->insert_id;
+        $hashed_id = hash('sha256', $category_id);
+        $update = "UPDATE category SET hashed_id ='$hashed_id' WHERE id = '$category_id'";
+        if($conn->query($update)===TRUE){
+            header("Location: ../Category/?success=true");
+        }
     } else {
         header("Location: ../Category/?success=false");
     }

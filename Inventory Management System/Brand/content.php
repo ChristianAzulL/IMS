@@ -116,7 +116,7 @@
             debounceTimer = setTimeout(function() {
                 // Perform the AJAX request to check the warehouse name
                 $.ajax({
-                    url: '../config/check-brand .php',
+                    url: '../config/check-brand.php',
                     type: 'POST',
                     data: { 'brand-name': brandName },
                     dataType: 'json',

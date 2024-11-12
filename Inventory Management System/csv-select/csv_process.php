@@ -49,6 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sql = "INSERT INTO brand (brand_name) VALUES ('$brand_name')";
                 $conn->query($sql);
                 $brand_id = $conn->insert_id;
+                $hashed_brand_id = hash('sha256', $brand_id);
+                $update_brand = "UPDATE brand SET hashed_id = '$hashed_brand_id' WHERE id = '$brand_id'";
+                $conn->query($update_brand);
             } else {
                 $row = $result->fetch_assoc();
                 $brand_id = $row['id'];
@@ -71,6 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sql = "INSERT INTO category (category_name) VALUES ('$category_name')";
                 $conn->query($sql);
                 $category_id = $conn->insert_id;
+                $hashed_category_id = hash('sha256', $category_id);
+                $update_category = "UPDATE category SET hashed_id = '$hashed_category_id' WHERE id ='$category_id'";
+                $conn->query($update_category);
             } else {
                 $row = $result->fetch_assoc();
                 $category_id = $row['id'];
@@ -93,23 +99,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sql = "INSERT INTO supplier (supplier_name) VALUES ('$supplier_name')";
                 $conn->query($sql);
                 $supplier_id = $conn->insert_id;
+                $hashed_supplier_id = hash('sha256', $supplier_id);
+                $update_supplier = "UPDATE supplier SET hashed_id = '$hashed_supplier_id' WHERE id ='$supplier_id'";
+                $conn->query($update_supplier);
             } else {
                 $row = $result->fetch_assoc();
                 $supplier_id = $row['id'];
             }
         }
 
-        // Insert product record if brand or category is new
-        if (is_string($brand) || is_string($category)) {
-            $sql = "INSERT INTO product (`description`, brand, category, parent_barcode) 
-                    VALUES ('$item', '$brand_id', '$category_id', '$barcode')";
-            $conn->query($sql);
-            $product_id = $conn->insert_id;
-        }
+        
 
         // Check if the product already exists
-        if (is_int($brand) || is_int($category)) {
-            $query = "SELECT id FROM product WHERE `description` = '$item' AND brand = '$brand' AND category = '$category' LIMIT 1";
+        if (is_int($brand) && is_int($category)) {
+            $hashed_brand = hash('sha256', $brand);
+            $hashed_category = hash('sha256', $category);
+            $query = "SELECT id FROM product WHERE `description` = '$item' AND brand = '$hashed_brand' AND category = '$hashed_category' LIMIT 1";
             $result = $conn->query($query);
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
@@ -119,9 +124,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         VALUES ('$item', '$brand_id', '$category_id', '$barcode')";
                 $conn->query($sql);
                 $product_id = $conn->insert_id;
+                $hashed_product_id = hash('sha256', $product_id);
+                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id' WHERE id ='$product_id'";
+                $conn->query($update_product);
             }
+        } else{
+                $sql = "INSERT INTO product (`description`, brand, category, parent_barcode) 
+                        VALUES ('$item', '$brand_id', '$category_id', '$barcode')";
+                $conn->query($sql);
+                $product_id = $conn->insert_id;
+                $hashed_product_id = hash('sha256', $product_id);
+                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id' WHERE id ='$product_id'";
+                $conn->query($update_product);
         }
 
+        $product_id = $product_id;
         // Generate and store PDF for each quantity
         for ($i = 1; $i <= $quantity; $i++) {
             $unique_barcode = $barcode . "-" . $i;
@@ -134,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $html .= "<p>Supplier: $supplier_name</p>";
             $html .= "<p>Batch: $batch</p>";
             $html .= "<div class='barcode-container'>";
-            $html .= "<img alt='testing' src='../../assets/barcode/barcode.php?codetype=Code39&size=50&text=$unique_barcode&print=true'/>";
+            $html .= "<img alt='testing' src='../../assets/barcode/barcode.php?codetype=Code128&size=50&text=$unique_barcode&print=true'/>";
             $html .= "</div>";
             $html .= "</body></html>";
 
@@ -148,8 +165,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insert into database with the generated PDF data
             $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `pdf`) 
-                    VALUES ('$unique_barcode', '$product_id', '$barcode', '$batch', '$price', '1', '$supplier_id', NOW(), '$user_id', '$pdfData')";
+                    VALUES ('$unique_barcode', '$product_id', '$barcode', '$batch', '$price', '1', '$supplier_id', '$currentDateTime', '$user_id', '$pdfData')";
             if ($conn->query($sql) === TRUE) {
+                $stock_id = $conn->insert_id;
+                $hash_stock = hash('sha256', $stock_id);
+                $update_stock = "UPDATE stocks SET hashed_id = '$hash_stock' WHERE id ='$stock_id'";
+                $conn->query($update_stock);
                 $success++; // Increment success count if insertion was successful
             } else {
                 // Handle error

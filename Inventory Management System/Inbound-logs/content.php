@@ -58,10 +58,10 @@
 
         $inbound_sql = "SELECT il.*, u.user_fname, u.user_lname, w.warehouse_name, s.supplier_name
                         FROM inbound_logs il
-                        LEFT JOIN users u ON u.id = il.user_id
-                        LEFT JOIN warehouse w ON w.id = il.warehouse
-                        LEFT JOIN supplier s ON s.id = il.supplier
-                        WHERE il.warehouse IN ($imploded_warehouse_ids)
+                        LEFT JOIN users u ON u.hashed_id = il.user_id
+                        LEFT JOIN warehouse w ON w.hashed_id = il.warehouse
+                        LEFT JOIN supplier s ON s.hashed_id = il.supplier
+                        WHERE il.warehouse IN ('$imploded_warehouse_ids')
                         ORDER BY il.id DESC";
         $inbound_res = $conn->query($inbound_sql);
         if($inbound_res->num_rows>0){
@@ -141,7 +141,7 @@
                 $option_supplier_res = $conn->query($option_supplier_query);
                 if($option_supplier_res->num_rows>0){
                   while($row = $option_supplier_res->fetch_assoc()){
-                    $option_supplier_id = $row['id'];
+                    $option_supplier_id = $row['hashed_id'];
                     $option_supplier_name = $row['supplier_name'];
                     echo '<option value="' . $option_supplier_id . '">' . $option_supplier_name . '</option>';
                   }

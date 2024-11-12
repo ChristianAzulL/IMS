@@ -79,9 +79,9 @@
               $product_list_query = "
                 SELECT product.*, users.user_fname, users.user_lname, category.category_name, brand.brand_name
                 FROM product 
-                LEFT JOIN users ON users.id = product.user_id 
-                LEFT JOIN category ON category.id = product.category
-                LEFT JOIN brand ON brand.id = product.brand
+                LEFT JOIN users ON users.hashed_id = product.user_id 
+                LEFT JOIN category ON category.hashed_id = product.category
+                LEFT JOIN brand ON brand.hashed_id = product.brand
                 ORDER BY product.id DESC
               ";
               $product_list_res = $conn->query($product_list_query);
@@ -107,7 +107,7 @@
                   <td class="by"><small><?php echo $product_publisher; ?></small></td>
                   <td class="date"><small><?php echo $product_date; ?></small></td>
                   <td>
-                    <button class="btn btn-info py-0" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit product information">
+                    <button class="btn btn-transparent py-0" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit product information">
                       <span class="far fa-edit m-0 p-0"></span>
                     </button>
                   </td>
@@ -160,7 +160,7 @@
               $category_result = $conn->query($category_selection);
               if($category_result->num_rows > 0) {
                 while($row = $category_result->fetch_assoc()) {
-                  echo '<option value="' . $row['id'] . '">' . $row['category_name'] . '</option>';
+                  echo '<option value="' . $row['hashed_id'] . '">' . $row['category_name'] . '</option>';
                 }
               } else {
                 echo '<option value="">No category found</option>';
@@ -176,7 +176,7 @@
               $brand_result = $conn->query($brand_selection);
               if($brand_result->num_rows > 0) {
                 while($row = $brand_result->fetch_assoc()) {
-                  echo '<option value="' . $row['id'] . '">' . $row['brand_name'] . '</option>';
+                  echo '<option value="' . $row['hashed_id'] . '">' . $row['brand_name'] . '</option>';
                 }
               } else {
                 echo '<option value="">No brand found</option>';

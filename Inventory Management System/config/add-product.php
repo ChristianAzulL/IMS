@@ -33,11 +33,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             VALUES (?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssi", $productDescription, $category, $brand, $parentBarcode, $imagePath, $currentDateTime, $user_id);
+    $stmt->bind_param("sssssss", $productDescription, $category, $brand, $parentBarcode, $imagePath, $currentDateTime, $user_id);
 
     // Execute the query and check for success
     if ($stmt->execute()) {
-        header("Location: ../Product-list/?success=true");
+        $product_id = $stmt->insert_id;
+        $hashed_product_id = hash('sha256', $product_id);
+        $update = "UPDATE product SET hashed_id = '$hashed_product_id' WHERE id = '$product_id'";
+        if($conn->query($update)===TRUE){
+            header("Location: ../Product-list/?success=true");
+        }
+        
     } else {
         $error_message = "Error: " . $stmt->error;
         header("Location: ../Product-list/?success=false&err=$error_message");
