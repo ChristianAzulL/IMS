@@ -17,7 +17,7 @@
                     foreach ($user_warehouse_ids as $id) {
                         // Trim any extra whitespace
                         $id = trim($id);
-                        $warehouse_info_query = "SELECT * FROM warehouse WHERE id = '$id'";
+                        $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
                         $warehouse_info_result = mysqli_query($conn, $warehouse_info_query);
                         if($warehouse_info_result->num_rows>0){
                             // Check if it's the first item
@@ -166,7 +166,7 @@
                                             </thead>
                                             <tbody class="list">
                                                 <?php 
-                                                    $item_location_query = "SELECT item_location.*, users.user_fname, users.user_lname FROM item_location LEFT JOIN users ON users.id = item_location.user_id WHERE item_location.warehouse = '$_id' ORDER BY item_location.id DESC";
+                                                    $item_location_query = "SELECT item_location.*, users.user_fname, users.user_lname FROM item_location LEFT JOIN users ON users.hashed_id = item_location.user_id WHERE item_location.warehouse = '$_id' ORDER BY item_location.id DESC";
                                                     $item_location_result = mysqli_query($conn, $item_location_query);
                                                     if ($item_location_result->num_rows > 0) {
                                                         while ($row = $item_location_result->fetch_assoc()) {
@@ -223,7 +223,7 @@ $m_first = true;
 foreach ($user_warehouse_ids as $m_id) {
     // Trim any extra whitespace
     $m_id = trim($m_id);
-    $m_warehouse_info_query = "SELECT * FROM warehouse WHERE id = '$m_id'";
+    $m_warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$m_id'";
     $m_warehouse_info_result = mysqli_query($conn, $m_warehouse_info_query);
     if($warehouse_info_result->num_rows>0){
         // Check if it's the first item

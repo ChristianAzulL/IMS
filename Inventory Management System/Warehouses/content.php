@@ -116,43 +116,63 @@
 
 
 <script>
-    $(document).ready(function() {
-        // Debounce function to delay the AJAX call until the user stops typing
-        let debounceTimer;
-        $('#warehouse-name').on('input', function() {
-            const warehouseName = $(this).val();
+    $(document).ready(function () {
+        // Function to check all rows
+        function checkAllRows() {
+            const items = [];
+            const brands = [];
+            const categories = [];
+            const rows = $('table tr'); // Adjust selector to your table
 
-            // Clear the previous timeout
-            clearTimeout(debounceTimer);
+            // Collect all item, brand, and category values from the rows
+            rows.each(function (index) {
+                const item = $(this).find('input[name="item[]"]').val();
+                const brand = $(this).find('input[name="brand[]"]').val();
+                const category = $(this).find('input[name="category[]"]').val();
+                
+                items.push(item);
+                brands.push(brand);
+                categories.push(category);
+            });
 
-            // Set a new timeout for checking the warehouse name
-            debounceTimer = setTimeout(function() {
-                // Perform the AJAX request to check the warehouse name
-                $.ajax({
-                    url: '../config/check-warehouse.php',
-                    type: 'POST',
-                    data: { 'warehouse-name': warehouseName },
-                    dataType: 'json',
-                    success: function(response) {
-                        // Handle the response from the PHP script
-                        if (response.exists) {
-                            $('#warehouse-name').removeClass('is-valid').addClass('is-invalid');
-                            $('.invalid-feedback').show();
-                            $('.valid-feedback').hide();
-                            $('#btnsubmit').prop('disabled', true); // Disable submit button
+            // Send batch data (item, brand, category) to the server
+            $.ajax({
+                url: '../config/check-product-csv-existence.php',  // Ensure this points to the correct path
+                type: 'POST',
+                data: JSON.stringify({ items, brands, categories }),  // Sending item, brand, and category values
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    rows.each(function (index) {
+                        const row = $(this);
+                        const itemInput = row.find('input[name="item[]"]');
+                        const result = response[index];
+
+                        // Item Feedback: show feedback based on product existence
+                        if (result.itemExists) {
+                            itemInput.removeClass('is-valid').addClass('is-invalid');
+                            itemInput.next('.invalid-feedback').text('Product already exists').show();
                         } else {
-                            $('#warehouse-name').removeClass('is-invalid').addClass('is-valid');
-                            $('.valid-feedback').show();
-                            $('.invalid-feedback').hide();
-                            $('#btnsubmit').prop('disabled', false); // Enable submit button
+                            itemInput.removeClass('is-invalid').addClass('is-valid');
+                            itemInput.next('.valid-feedback').text('Will be registered as new.').show();
                         }
-                    },
-                    error: function() {
-                        // Handle any errors that occur during the AJAX request
-                        alert('Error checking warehouse name.');
-                    }
-                });
-            }, 500); // Delay of 500ms after the user stops typing
+                    });
+                },
+                error: function () {
+                    alert('Error checking products.');
+                }
+            });
+        }
+
+        // Check all rows once on page load
+        checkAllRows();
+
+        // Debounce input check (after the user stops typing)
+        let debounceTimer;
+        $('input[name="item[]"], input[name="brand[]"], input[name="category[]"]').on('input', function () {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(checkAllRows, 500);
         });
     });
 </script>
+

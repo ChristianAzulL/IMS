@@ -64,7 +64,7 @@
   </div>
 
   <!-- Best Selling Products Table -->
-  <div class="col-lg-6">
+  <div class="col-lg-6 mb-3">
     <div class="card h-lg-100 overflow-hidden">
       <div class="card-body p-0">
         <div class="table-responsive scrollbar">
@@ -205,6 +205,109 @@
           <div class="col-auto">
             <a class="btn btn-sm btn-falcon-default" href="#!">View All</a>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <?php 
+          $first = true;
+
+          foreach ($user_warehouse_ids as $id) {
+            $id = trim($id);
+            $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
+            $warehouse_info_result = mysqli_query($conn, $warehouse_info_query);
+            if($warehouse_info_result->num_rows>0){
+              $row=$warehouse_info_result->fetch_assoc();
+              $tab_warehouse_name = $row['warehouse_name'];
+              if ($first) {
+                echo '<li class="nav-item"><a class="nav-link active" id="tab' . $id . '" data-bs-toggle="tab" href="#tab-wh' . $id . '" role="tab" aria-controls="tab-wh' . $id . '" aria-selected="true">' . $tab_warehouse_name . '</a></li>';
+                $first = false;
+              } else {
+                echo '<li class="nav-item"><a class="nav-link" id="tab' . $id . '" data-bs-toggle="tab" href="#tab-wh' . $id . '" role="tab" aria-controls="tab-wh' . $id . '" aria-selected="false">' . $tab_warehouse_name . '</a></li>';
+              }
+            }
+
+          }
+          ?>
+        </ul>
+        <div class="tab-content border border-top-0 p-3" id="myTabContent">
+          <?php 
+          $first = true;
+          foreach ($user_warehouse_ids as $id) {
+            $id = trim($id);
+            if($first){
+            ?>
+            <div class="tab-pane fade show active" id="tab-wh<?php echo $id;?>" role="tabpanel" aria-labelledby="home-tab">
+
+            </div>
+            <?php
+            $first = false;
+            } else {
+            ?>
+            <div class="tab-pane fade" id="tab-wh<?php echo $id;?>" role="tabpanel" aria-labelledby="home-tab">
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                  <thead class="table-dark">
+                    <tr>
+                      <th><small>Product Description</small></th>
+                      <th><small>Keyword</small></th>
+                      <th><small>Barcode</small></th>
+                      <th><small>Qty</small></th>
+                      <th><small>Brand</small></th>
+                      <th><small>Category</small></th>
+                      <th><small>Transaction</small></th>
+                      <!-- <th><small></small></th>
+                      <th><small></small></th>
+                      <th><small></small></th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                      <?php 
+                      $stock_query = "SELECT 
+                                          COUNT(s.id) AS qty, 
+                                          p.description, 
+                                          p.parent_barcode AS Barcode, 
+                                          b.brand_name, 
+                                          c.category_name
+                                      FROM stocks s
+                                      LEFT JOIN product p ON p.id = s.product_id
+                                      LEFT JOIN brand b ON b.hashed_id = p.brand
+                                      LEFT JOIN category c ON c.hashed_id = p.category
+                                      WHERE s.warehouse = '$id'
+                                      GROUP BY s.product_id
+                                      ORDER BY s.id DESC";
+
+                      $result = mysqli_query($conn, $stock_query); // Assuming $conn is your connection.
+
+                      while ($row = mysqli_fetch_assoc($result)) {
+                          $description = $row['description'];
+                          $barcode = $row['Barcode']; // Column alias
+                          $qty = $row['qty'];
+                          $brand_name = $row['brand_name'];
+                          $category_name = $row['category_name'];
+                      ?>
+                          <tr>
+                              <td><small><?php echo htmlspecialchars($description); ?></small></td>
+                              <td><small><?php echo htmlspecialchars($barcode); ?></small></td>
+                              <td><small><?php echo htmlspecialchars($qty); ?></small></td>
+                              <td><small><?php echo htmlspecialchars($brand_name); ?></small></td>
+                              <td><small><?php echo htmlspecialchars($category_name); ?></small></td>
+                              <td><small>leave it be</small></td>
+                          </tr>
+                      <?php } ?>
+                  </tbody>
+
+                </table>
+              </div>
+            </div>
+            <?php
+            }
+          }
+          ?>
         </div>
       </div>
     </div>

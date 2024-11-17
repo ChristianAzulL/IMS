@@ -1,3 +1,9 @@
+<?php
+// Unset the specific session variable
+if (isset($_SESSION['inbound_id'])) {
+  unset($_SESSION['inbound_id']);
+}
+?>
 <!-- <div class="card">
 <div class="card-body overflow-hidden p-lg-6">
     <div class="row align-items-center">

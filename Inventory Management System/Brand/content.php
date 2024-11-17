@@ -143,3 +143,54 @@
         });
     });
 </script>
+
+<script>
+    $(document).ready(function () {
+    function checkBrandExistence() {
+        // Loop through each row and check brand existence
+        $('table tr').each(function (index) {
+            const brandInput = $(this).find('input[name="brand[]"]');
+            const brandName = brandInput.val();
+            
+            // Skip if the brand input is empty
+            if (brandName) {
+                $.ajax({
+                    url: '../config/check-brand.php',
+                    type: 'POST',
+                    data: { 'brand-name': brandName },
+                    dataType: 'json',
+                    success: function (response) {
+                        // Handle brand existence feedback
+                        if (response.exists) {
+                            brandInput.removeClass('is-valid').addClass('is-invalid');
+                            brandInput.next('.invalid-feedback').text('Brand already exists').show();
+                            brandInput.next('.valid-feedback').hide();
+                        } else {
+                            brandInput.removeClass('is-invalid').addClass('is-valid');
+                            brandInput.next('.valid-feedback').text('Brand will be registered as new.').show();
+                            brandInput.next('.invalid-feedback').hide();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Log any errors in the console (can be deleted/commented later)
+                        console.error('Error checking brand existence:', error);
+                        console.error('Status:', status);
+                        console.error('Response:', xhr.responseText);
+                    }
+                });
+            }
+        });
+    }
+
+    // Check brand existence once on page load
+    checkBrandExistence();
+
+    // Debounce input check (after the user stops typing)
+    let debounceTimer;
+    $('input[name="brand[]"]').on('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(checkBrandExistence, 500);
+    });
+});
+
+</script>
