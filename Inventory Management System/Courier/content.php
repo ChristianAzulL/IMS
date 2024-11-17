@@ -1,6 +1,6 @@
 <div class="row py-6 px-1">
     <div class="col-lg-12 mb-3">
-        <h4>Warehouse/Branches</h4>
+        <h4>Courier/s</h4>
     </div>
     
     <div class="col-lg-12">
@@ -30,8 +30,7 @@
                 <table class="table table-bordered table-striped fs-10 mb-0">
                     <thead class="bg-200">
                         <tr>
-                            <th class="text-900 sort" data-sort="name">Warehouse name</th>
-                            <th class="text-900 sort" data-sort="status">Status</th>
+                            <th class="text-900 sort" data-sort="name">Courier</th>
                             <th class="text-900 sort" data-sort="email">Published date</th>
                             <th class="text-900 sort" data-sort="age">Publish by</th>
                             <th class="text-900 sort" ></th>
@@ -39,25 +38,24 @@
                     </thead>
                     <tbody class="list bg-light">
                         <?php
-                            $Query = "SELECT w.*, u.user_fname, u.user_lname 
-                                        FROM warehouse w
-                                        LEFT JOIN users u ON u.hashed_id = w.user_id 
-                                        ORDER BY w.id DESC";
+                            $Query = "SELECT cr.*, u.user_fname, u.user_lname 
+                                        FROM courier cr
+                                        LEFT JOIN users u ON u.hashed_id = cr.user_id 
+                                        ORDER BY cr.id DESC";
                   
                             $res = $conn->query($Query);
                             while($row = $res->fetch_assoc()) {
-                                $warehouse_name = $row['warehouse_name'];
+                                $courier_name = $row['courier_name'];
                                 $publish_date = date("F j, Y", strtotime($row['date']));
                                 $publish_by = $row['user_fname'] . " " . $row['user_lname'];
-                                if($row['warehouse_status'] == 0){
-                                    $status = '<span class="badge bg-danger">Disabled</span>';
-                                } else {
-                                    $status = '<span class="badge bg-success">Enabled</span>';
-                                }
+                                
+                              
+                                
+                                
                             ?>
                             <tr>
-                                <td class="name"><b><small><?php echo $warehouse_name;?></small></b></td>
-                                <td class="status"><?php echo $status;?></td>
+                                <td class="name"><b><small class="mb-0"><?php echo $courier_name;?></small></b>
+                                </td>
                                 <td class="email"><small><?php echo $publish_date;?></small></td>
                                 <td class="age"><small><?php echo $publish_by;?></small></td>
                                 <td class="py-1 px-0"><button class="btn btn-danger py-0" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="disable"><small><span class="fas fa-minus"></span></small></button></td>
@@ -86,7 +84,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <form action="../config/add-warehouse.php" id="myForm" method="POST">
+    <form action="../config/add-courier.php" id="myForm" method="POST">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
             <div class="modal-content position-relative">
                 <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
@@ -94,14 +92,14 @@
                 </div>
                 <div class="modal-body p-0">
                     <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
-                        <h4 class="mb-1" id="modalExampleDemoLabel">Add a new warehouse</h4>
+                        <h4 class="mb-1" id="modalExampleDemoLabel">Add a new courier</h4>
                     </div>
                     <div class="p-4 pb-0">
                         <div class="mb-3">
-                            <label class="col-form-label" for="warehouse-name">Warehouse Name:</label>
-                            <input class="form-control" name="warehouse-name" id="warehouse-name" type="text" />
+                            <label class="col-form-label" for="courier-name">courier Name:</label>
+                            <input class="form-control" name="courier-name" id="courier-name" type="text" />
                             <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Warehouse name already exist</div>
+                            <div class="invalid-feedback">courier name already exist</div>
                         </div>
                     </div>
                 </div>
@@ -119,19 +117,19 @@
     $(document).ready(function() {
         // Debounce function to delay the AJAX call until the user stops typing
         let debounceTimer;
-        $('#warehouse-name').on('input', function() {
-            const warehouseName = $(this).val();
+        $('#courier-name').on('input', function() {
+            const courierName = $(this).val();
 
             // Clear the previous timeout
             clearTimeout(debounceTimer);
 
-            // Set a new timeout for checking the warehouse name
+            // Set a new timeout for checking the courier name
             debounceTimer = setTimeout(function() {
-                // Perform the AJAX request to check the warehouse name
+                // Perform the AJAX request to check the courier name
                 $.ajax({
-                    url: '../config/check-warehouse.php',
+                    url: '../config/check-courier.php',
                     type: 'POST',
-                    data: { 'warehouse-name': warehouseName },
+                    data: { 'courier-name': courierName },
                     dataType: 'json',
                     success: function(response) {
                         // Handle the response from the PHP script
@@ -149,7 +147,7 @@
                     },
                     error: function() {
                         // Handle any errors that occur during the AJAX request
-                        alert('Error checking warehouse name.');
+                        alert('Error checking courier name.');
                     }
                 });
             }, 500); // Delay of 500ms after the user stops typing
