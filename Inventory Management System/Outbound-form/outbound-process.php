@@ -1,0 +1,66 @@
+<?php
+include "../config/database.php"; // Ensure this includes a $conn object for MySQLi
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
+    $barcode = $_POST['barcode'];
+
+    // Use MySQLi's ? placeholder
+    $stmt = $conn->prepare("
+        SELECT 
+            product.description, 
+            brand.brand_name, 
+            category.category_name, 
+            stocks.batch_code 
+        FROM 
+            product
+        JOIN brand ON product.brand = brand.hashed_id
+        JOIN category ON product.category = category.hashed_id
+        JOIN stocks ON product.hashed_id = stocks.product_id
+        WHERE stocks.unique_barcode = ?
+    ");
+
+    if (!$stmt) {
+        echo json_encode(["error" => "Failed to prepare statement: " . $conn->error]);
+        exit;
+    }
+
+    $stmt->bind_param("s", $barcode); // Bind the barcode to the query
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $product = $result->fetch_assoc();
+
+    if ($product) {
+        $data = [
+            "barcode" => $barcode,
+            "product_description" => $product['description'] ?? '',
+            "batch_num" => $product['batch_code'] ?? '',
+            "brand_name" => $product['brand_name'] ?? '',
+            "category_name" => $product['category_name'] ?? ''
+        ];
+
+        $jsonFile = 'products.json';
+
+        // Ensure the JSON file exists or create it
+        if (!file_exists($jsonFile)) {
+            file_put_contents($jsonFile, json_encode([], JSON_PRETTY_PRINT));
+        }
+
+        // Read existing data and append the new product
+        $existingData = json_decode(file_get_contents($jsonFile), true) ?: [];
+        $existingData[] = $data;
+
+        // Save updated data back to the JSON file
+        file_put_contents($jsonFile, json_encode($existingData, JSON_PRETTY_PRINT));
+
+        echo json_encode($existingData); // Return updated JSON data
+    } else {
+        echo json_encode(["error" => "No product found for the given barcode."]);
+    }
+
+    $stmt->close();
+} else {
+    echo json_encode(["error" => "Invalid request."]);
+}
+
+$conn->close();
+?>

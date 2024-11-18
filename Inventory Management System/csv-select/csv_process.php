@@ -122,29 +122,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         for ($i = 1; $i <= $quantity; $i++) {
             $unique_barcode = $barcode . "-" . $i;
 
-            // Dynamic HTML content for the PDF
-            $html = "<html><head><style>body { font-family: Arial, sans-serif; }</style></head>";
-            $html .= "<body>";
-            $html .= "<h1>Product: $item</h1>";
-            $html .= "<p>Barcode: $unique_barcode</p>";
-            $html .= "<p>Supplier: $supplier_name</p>";
-            $html .= "<p>Batch: $batch</p>";
-            $html .= "<div class='barcode-container'>";
-            $html .= "<img alt='testing' src='../../assets/barcode/barcode.php?codetype=Code128&size=50&text=$unique_barcode&print=true'/>";
-            $html .= "</div>";
-            $html .= "</body></html>";
+            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`) 
+                     VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id')";
+            // // Dynamic HTML content for the PDF
+            // $html = "<html><head><style>body { font-family: Arial, sans-serif; }</style></head>";
+            // $html .= "<body>";
+            // $html .= "<h1>Product: $item</h1>";
+            // $html .= "<p>Barcode: $unique_barcode</p>";
+            // $html .= "<p>Supplier: $supplier_name</p>";
+            // $html .= "<p>Batch: $batch</p>";
+            // $html .= "<div class='barcode-container'>";
+            // $html .= "<img alt='testing' src='../../assets/barcode/barcode.php?codetype=Code128&size=50&text=$unique_barcode&print=true'/>";
+            // $html .= "</div>";
+            // $html .= "</body></html>";
 
-            // Initialize mPDF and generate the PDF
-            $mpdf = new \Mpdf\Mpdf();
-            $mpdf->WriteHTML($html);
-            $pdfData = $mpdf->Output('', 'S'); // Get PDF as a string
+            // // Initialize mPDF and generate the PDF
+            // $mpdf = new \Mpdf\Mpdf();
+            // $mpdf->WriteHTML($html);
+            // $pdfData = $mpdf->Output('', 'S'); // Get PDF as a string
 
-            // Escape the binary PDF data for insertion into the database
-            $pdfData = $conn->real_escape_string($pdfData);
+            // // Escape the binary PDF data for insertion into the database
+            // $pdfData = $conn->real_escape_string($pdfData);
 
             // Insert into database with the generated PDF data
-            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `pdf`, `inbound_id`) 
-                    VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$pdfData', '$inbound_id')";
+            // $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `pdf`, `inbound_id`) 
+            //         VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$pdfData', '$inbound_id')";
             if ($conn->query($sql) === TRUE) {
                 $stock_id = $conn->insert_id;
                 $hash_stock = hash('sha256', $stock_id);

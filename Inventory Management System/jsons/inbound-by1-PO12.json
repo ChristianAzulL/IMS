@@ -12,13 +12,10 @@
         "category_name": "Sample 2"
     },
     {
-        "product_id": "5",
-        "product_desc": "skdjfksdjflksdf",
+        "barcode": "",
+        "product_description": "skdjfksdjflksdf",
         "keyword": "",
-        "ordered_qty": 0,
-        "received_qty": 11,
         "price": 0,
-        "barcode": "sdkflksjdf",
         "batch_num": "",
         "brand_name": "sample brand 3",
         "category_name": "Sample 2"
