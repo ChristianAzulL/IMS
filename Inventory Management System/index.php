@@ -56,11 +56,12 @@
                         <div class="card-body p-0">
                             <div class="row g-0 h-100">
                                 <!-- Left Side (Image & Info) -->
-                                <div class="col-md-5 text-center bg-card-gradient">
+                                <div class="col-md-5 text-center bg-dark bg-gradient">
                                     <div class="position-relative p-4 pt-md-5 pb-md-7" data-bs-theme="light">
                                         <div class="bg-holder bg-auth-card-shape" style="background-image:url(assets/img/icons/spot-illustrations/half-circle.png);"></div>
                                         <div class="z-1 position-relative">
-                                            <a class="link-light mb-4 font-sans-serif fs-5 d-inline-block fw-bolder" href="">IMS</a>
+                                            <img class="me-2" src="../assets/img/logo/LPO Logo.png" alt="" width="120" />
+                                            <!-- <a class="link-light mb-4 font-sans-serif fs-5 d-inline-block fw-bolder" href="">IMS</a> -->
                                             <p class="opacity-75 text-white">Inventory Management System</p>
                                         </div>
                                     </div>
