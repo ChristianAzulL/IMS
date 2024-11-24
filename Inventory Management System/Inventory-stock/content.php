@@ -129,182 +129,136 @@
 
 <script>
     let currentPage = 1;
-let limit = 9;
+    let limit = 9;
 
-function loadData() {
-    const search = $('#searchInput').val();
-    const warehouse = $('#warehouse').val(); // Get selected warehouse
-    const offset = (currentPage - 1) * limit;
+    function loadData() {
+        const search = $('#searchInput').val();
+        const warehouse = $('#warehouse').val(); // Get selected warehouse
+        const offset = (currentPage - 1) * limit;
 
-    $.getJSON('../config/getStockListData.php', { limit, offset, search, warehouse }, function (response) {
-        if (response.error) {
-            console.error(response.error);
-            return;
-        }
+        $.getJSON('../config/getStockListData.php', { limit, offset, search, warehouse }, function (response) {
+            if (response.error) {
+                console.error(response.error);
+                return;
+            }
 
-        const listBody = $('#listBody');
-        listBody.empty();
+            const listBody = $('#listBody');
+            listBody.empty();
 
-        if (response.data.length === 0) {
-            listBody.append('<div class="text-center py-5">No results found.</div>');
-        } else {
-            response.data.forEach((item) => {
-                listBody.append(`
-                    <article class="card mb-3 overflow-hidden">
-                        <div class="card-body p-0">
-                            <div class="row g-0">
-                                <!-- Product Image -->
-                                <div class="col-md-4 col-lg-3">
-                                    <div class="hoverbox h-md-100">
-                                        <a class="text-decoration-none" href="${item.product_img || '#'}" data-gallery="attachment-bg">
-                                            <img class="h-100 w-100 object-fit-cover" 
-                                            src="${item.product_img || '../../assets/img/def_img.png'}" 
-                                            alt="${item.product_name || 'No Image'}" />
-                                        </a>
-                                    </div>
-                                </div>
-                                <!-- Product Details -->
-                                <div class="col-md-8 col-lg-9 p-x1">
-                                    <div class="row g-0 h-100">
-                                        <!-- Description -->
-                                        <div class="col-lg-8 col-xxl-9 d-flex flex-column pe-x1">
-                                            <div class="d-flex gap-2 flex-wrap mb-3">
-                                                <span class="badge rounded-pill badge-subtle-success">
-                                                    <span class="fas fa-crown me-1"></span>
-                                                    <span>${item.category}</span>
-                                                </span>
-                                            </div>
-                                            <h5 class="fs-9"><a href="#">${item.brand}</a></h5>
-                                            <h4 class="mt-3 mt-sm-0 fs-9 fs-lg-8">
-                                                <a class="text-900" href="#">${item.product_name}</a>
-                                            </h4>
-                                            <div class="flex-1 d-flex align-items-end fw-semi-bold fs-10">
-                                                <span class="me-1 text-900">${item.created_date || 'N/A'}</span>
-                                                <span class="me-2 text-secondary">| ${item.created_by || 'Unknown'}</span>
-                                            </div>
+            if (response.data.length === 0) {
+                listBody.append('<div class="text-center py-5">No results found.</div>');
+            } else {
+                response.data.forEach((item) => {
+                    listBody.append(`
+                        <article class="card mb-3 overflow-hidden">
+                            <div class="card-body p-0">
+                                <div class="row g-0">
+                                    <!-- Product Image -->
+                                    <div class="col-md-4 col-lg-3">
+                                        <div class="hoverbox h-md-100">
+                                            <a class="text-decoration-none" href="${item.product_img || '#'}" data-gallery="attachment-bg">
+                                                <img class="h-100 w-100 object-fit-cover" 
+                                                src="${item.product_img || '../../assets/img/def_img.png'}" 
+                                                alt="${item.product_name || 'No Image'}" />
+                                            </a>
                                         </div>
-                                        <!-- Quantity -->
-                                        <div class="col-lg-4 col-xxl-3 mt-4 mt-lg-0">
-                                            <div class="h-100 rounded border-lg border-1 d-flex flex-lg-column justify-content-between p-lg-3">
-                                                <div class="mb-lg-4 mt-auto mt-lg-0">
-                                                    <h4 class="mb-1 lh-1 fs-7 text-warning d-flex align-items-end">${item.quantity || 0}</h4>
-                                                    <p class="mb-0 fs-11 text-800">Total Available Quantity</p>
+                                    </div>
+                                    <!-- Product Details -->
+                                    <div class="col-md-8 col-lg-9 p-x1">
+                                        <div class="row g-0 h-100">
+                                            <!-- Description -->
+                                            <div class="col-lg-8 col-xxl-9 d-flex flex-column pe-x1">
+                                                <div class="d-flex gap-2 flex-wrap mb-3">
+                                                    <span class="badge rounded-pill badge-subtle-success">
+                                                        <span class="fas fa-crown me-1"></span>
+                                                        <span>${item.category}</span>
+                                                    </span>
                                                 </div>
-                                                <div class="mt-3 d-flex flex-lg-column gap-2">
-                                                    <button class="btn btn-md btn-primary fs-10" type="button" data-bs-toggle="collapse" data-bs-target="#${item.id}" aria-expanded="false" aria-controls="collapseExample">
-                                                        <span class="fas fa-cart-plus"></span>
-                                                        <span class="ms-1 d-none d-lg-inline">View details</span>
-                                                    </button>
+                                                <h5 class="fs-9"><a href="#">${item.brand}</a></h5>
+                                                <h4 class="mt-3 mt-sm-0 fs-9 fs-lg-8">
+                                                    <a class="text-900" href="#">${item.product_name}</a>
+                                                </h4>
+                                                <div class="flex-1 d-flex align-items-end fw-semi-bold fs-10">
+                                                    <span class="me-1 text-900">${item.created_date || 'N/A'}</span>
+                                                    <span class="me-2 text-secondary">| ${item.created_by || 'Unknown'}</span>
+                                                </div>
+                                            </div>
+                                            <!-- Quantity -->
+                                            <div class="col-lg-4 col-xxl-3 mt-4 mt-lg-0">
+                                                <div class="h-100 rounded border-lg border-1 d-flex flex-lg-column justify-content-between p-lg-3">
+                                                    <div class="mb-lg-4 mt-auto mt-lg-0">
+                                                        <h4 class="mb-1 lh-1 fs-7 text-warning d-flex align-items-end">${item.quantity || 0}</h4>
+                                                        <p class="mb-0 fs-11 text-800">Total Available Quantity</p>
+                                                    </div>
+                                                    <div class="mt-3 d-flex flex-lg-column gap-2">
+                                                        <button class="btn btn-md btn-primary fs-10" type="button" data-bs-toggle="collapse" data-bs-target="#item${item.id}" aria-expanded="false" aria-controls="item${item.id}">
+                                                            <span class="fas fa-cart-plus"></span>
+                                                            <span class="ms-1 d-none d-lg-inline">View details</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="collapse" id="${item.id}">
-                            <div class="table-responsive">
-                                <table class="table table-bordered-solid">
-                                    <thead>
-                                        <th>
-                                            <b>
-                                                <small>
-                                                    BATCH CODE
-                                                </small>
-                                            </b>
-                                        </th>
-                                        <th>
-                                            <b>
-                                                <small>
-                                                    PRICE/ CAPITAL
-                                                </small>
-                                            </b>
-                                        </th>
-                                        <th>
-                                            <b>
-                                                <small>
-                                                    QUANTITY 
-                                                </small>
-                                            </b>
-                                        </th>
-                                        <th>
-                                            <b>
-                                                <small>
-                                                    SUPPLIER
-                                                </small>
-                                            </b>
-                                        </th>
-                                        <th>
-                                            <b>
-                                                <small>
-                                                    DATE ADDED
-                                                </small>
-                                            </b>
-                                        </th>
-                                    </thead>
-                                    <tbody id="product${item.id}">
-                                        SELECT 
-                                            s.batch_code, 
-                                            s.capital, 
-                                            s.date, 
-                                            COUNT(*) AS batch_qty,
-                                            sup.supplier_name
-                                        FROM stocks s
-                                        LEFT JOIN supplier sup ON s.supplier = sup.hashed_id
-                                        WHERE s.product_id = ?
-                                        GROUP BY s.batch_code, s.price, sup.supplier_name
-                                        ORDER BY s.date DESC
+                            <div class="collapse" id="item${item.id}"></div>
+                        </article>
+                    `);
+                });
+            }
 
-                                        <td>batch_code</td>
-                                        <td>capital</td>
-                                        <td>batch_qty</td>
-                                        <td>supplier_name</td>
-                                        <td>date</td>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </article>
-                `);
-            });
+            $('#totalItems').text(response.total);
+            $('#matchedItems').text(response.data.length);
+            updatePagination(response.total);
+        });
+    }
+
+    function updatePagination(total) {
+        const totalPages = Math.ceil(total / limit);
+        const pagination = $('#pagination');
+        pagination.empty();
+
+        if (currentPage > 1) {
+            pagination.append(`<button class="btn btn-sm btn-secondary me-1" onclick="changePage(${currentPage - 1})">Previous</button>`);
         }
 
-        $('#totalItems').text(response.total);
-        $('#matchedItems').text(response.data.length);
-        updatePagination(response.total);
+        for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
+            pagination.append(`<button class="btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} me-1" onclick="changePage(${i})">${i}</button>`);
+        }
+
+        if (currentPage < totalPages) {
+            pagination.append(`<button class="btn btn-sm btn-secondary" onclick="changePage(${currentPage + 1})">Next</button>`);
+        }
+    }
+
+    function changePage(page) {
+        currentPage = page;
+        loadData();
+    }
+
+    $('#searchInput, #warehouse').on('input change', function () {
+        currentPage = 1;
+        loadData();
     });
-}
 
-function updatePagination(total) {
-    const totalPages = Math.ceil(total / limit);
-    const pagination = $('#pagination');
-    pagination.empty();
+    $(document).ready(function () {
+        loadData();
 
-    if (currentPage > 1) {
-        pagination.append(`<button class="btn btn-sm btn-secondary me-1" onclick="changePage(${currentPage - 1})">Previous</button>`);
-    }
+        // Event delegation for dynamically created buttons
+        $(document).on('click', '.btn[data-bs-toggle="collapse"]', function () {
+            const itemId = $(this).data('bs-target').replace('#item', ''); // Extract the item ID
+            const targetDiv = $(this).data('bs-target'); // Target collapse div ID
 
-    for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
-        pagination.append(`<button class="btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} me-1" onclick="changePage(${i})">${i}</button>`);
-    }
-
-    if (currentPage < totalPages) {
-        pagination.append(`<button class="btn btn-sm btn-secondary" onclick="changePage(${currentPage + 1})">Next</button>`);
-    }
-}
-
-function changePage(page) {
-    currentPage = page;
-    loadData();
-}
-
-$('#searchInput, #warehouse').on('input change', function () {
-    currentPage = 1;
-    loadData();
-});
-
-$(document).ready(function () {
-    loadData();
-});
+            // Check if the content has already been loaded
+            if ($(targetDiv).is(':empty')) {
+                // Fetch item details and populate the collapse section
+                $.get(`item_details.php?id=${itemId}`, function (response) {
+                    $(targetDiv).html(response); // Load the response into the collapse div
+                }).fail(function () {
+                    $(targetDiv).html('<div class="text-danger p-3">Failed to load item details.</div>');
+                });
+            }
+        });
+    });
 </script>
