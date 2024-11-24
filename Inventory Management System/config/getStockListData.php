@@ -12,6 +12,7 @@ try {
     $baseQuery = "
         SELECT 
             COUNT(s.product_id) AS quantity,
+            s.product_id,
             p.id, 
             p.description AS product_name, 
             p.product_img, 

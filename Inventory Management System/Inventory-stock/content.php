@@ -191,7 +191,7 @@
                                                         <p class="mb-0 fs-11 text-800">Total Available Quantity</p>
                                                     </div>
                                                     <div class="mt-3 d-flex flex-lg-column gap-2">
-                                                        <button class="btn btn-md btn-primary fs-10" type="button" data-bs-toggle="collapse" data-bs-target="#item${item.id}" aria-expanded="false" aria-controls="item${item.id}">
+                                                        <button class="btn btn-md btn-primary fs-10" type="button" data-bs-toggle="collapse" data-bs-target="#item${item.product_id}" aria-expanded="false" aria-controls="item${item.product_id}">
                                                             <span class="fas fa-cart-plus"></span>
                                                             <span class="ms-1 d-none d-lg-inline">View details</span>
                                                         </button>
@@ -202,7 +202,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="collapse" id="item${item.id}"></div>
+                            <div class="collapse" id="item${item.product_id}"></div>
                         </article>
                     `);
                 });
