@@ -56,17 +56,17 @@
                         <div class="card-body p-0">
                             <div class="row g-0 h-100">
                                 <!-- Left Side (Image & Info) -->
-                                <div class="col-md-5 text-center bg-dark bg-gradient">
+                                <div class="col-md-5 text-center bg-light bg-gradient">
                                     <div class="position-relative p-4 pt-md-5 pb-md-7" data-bs-theme="light">
                                         <div class="bg-holder bg-auth-card-shape" style="background-image:url(assets/img/icons/spot-illustrations/half-circle.png);"></div>
                                         <div class="z-1 position-relative">
                                             <img class="me-2" src="../assets/img/logo/LPO Logo.png" alt="" width="120" />
                                             <!-- <a class="link-light mb-4 font-sans-serif fs-5 d-inline-block fw-bolder" href="">IMS</a> -->
-                                            <p class="opacity-75 text-white">Inventory Management System</p>
+                                            <p class="opacity-75 text-dark">Inventory Management System</p>
                                         </div>
                                     </div>
                                     <div class="mt-3 mb-4 mt-md-4 mb-md-5" data-bs-theme="light">
-                                        <p class="mb-0 mt-4 mt-md-5 fs-10 fw-semi-bold text-white opacity-75">Read our <a class="text-decoration-underline text-white" href="#!">terms</a> and <a class="text-decoration-underline text-white" href="#!">conditions </a></p>
+                                        <!-- <p class="mb-0 mt-4 mt-md-5 fs-10 fw-semi-bold text-white opacity-75">Read our <a class="text-decoration-underline text-white" href="#!">terms</a> and <a class="text-decoration-underline text-white" href="#!">conditions </a></p> -->
                                     </div>
                                 </div>
                                 

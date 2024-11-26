@@ -1,0 +1,26 @@
+[
+    {
+        "barcode": "100000-1",
+        "product_description": "Accessory_1",
+        "batch_num": "Batch_1",
+        "brand_name": "brand_1",
+        "category_name": "category_A",
+        "selling_price": "100"
+    },
+    {
+        "barcode": "100000-5",
+        "product_description": "Accessory_1",
+        "batch_num": "Batch_1",
+        "brand_name": "brand_1",
+        "category_name": "category_A",
+        "selling_price": "100"
+    },
+    {
+        "barcode": "100000-6",
+        "product_description": "Accessory_1",
+        "batch_num": "Batch_1",
+        "brand_name": "brand_1",
+        "category_name": "category_A",
+        "selling_price": "100"
+    }
+]

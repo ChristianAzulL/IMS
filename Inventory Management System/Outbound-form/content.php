@@ -6,7 +6,7 @@
         <div class="card">
             <div class="card-body overflow-hidden" style="height: 300px;">
                 <h3>Products Transaction</h3>
-                <div id="product-table"></div>
+                <div class="table-responsive" id="product-table"></div>
             </div>
         </div>
     </div>
@@ -50,13 +50,17 @@
                             ?>
                         </select>
                     </div>
-                    <div class="col-2 mb-3">
-                        <label for="">Partner Code</label>
-                        <input class="form-control" type="text">
+                    <div class="col-3 mb-3">
+                        <label for="">Order no.</label>
+                        <input class="form-control" type="number">
                     </div>
-                    <div class="col-8 mb-3">
-                        <label for="">Address</label>
-                        <input class="form-control" type="text">
+                    <div class="col-3 mb-3">
+                        <label for="">Order Line ID</label>
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label for="">Process by</label>
+                        <input class="form-control" type="text" readonly value="<?php echo $user_fullname;?>">
                     </div>
                     <div class="col-2 mb-3 pt-4">
                         <button class="btn btn-primary">Save</button>
@@ -85,11 +89,13 @@
             $.getJSON('products.json', function (data) {
                 if (data.length > 0) {
                     let table = `
+                    <div class="overflow-hidden">
                         <table class="table table-striped table-bordered">
                             <thead class="thead-dark">
                                 <tr>
                                     <th>Barcode</th>
                                     <th>Description</th>
+                                    <th>Selling Price</th>
                                     <th>Keyword</th>
                                     <th>Batch Number</th>
                                     <th>Brand Name</th>
@@ -103,6 +109,7 @@
                             <tr>
                                 <td>${product.barcode}</td>
                                 <td>${product.product_description}</td>
+                                <td class="text-end">${product.selling_price}</td>
                                 <td>${product.keyword}</td>
                                 <td>${product.batch_num}</td>
                                 <td>${product.brand_name}</td>
@@ -113,6 +120,7 @@
                     table += `
                             </tbody>
                         </table>
+                    </div>
                     `;
                     $('#product-table').html(table);
                 } else {

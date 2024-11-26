@@ -19,7 +19,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
                             if($supplier_res->num_rows > 0) {
                                 while($supplier_row = $supplier_res->fetch_assoc()) {
                                     $supplier = $supplier_row['supplier_name'];
-                                    $supplier_id = $supplier_row['id'];
+                                    $supplier_id = $supplier_row['hashed_id'];
                                     echo '<option value="' . $supplier_id . '">' . $supplier . '</option>';
                                 }
                             } else {

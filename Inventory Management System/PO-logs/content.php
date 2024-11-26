@@ -24,7 +24,7 @@
         <option value="uk">UK</option>
       </select></div> -->
     <div class="col-sm-auto"><select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
-        <option selected="" value="">Select Warehouse</option>
+        <option selected="" value="">All Warehouse</option>
         <?php echo implode("\n", $warehouse_options); ?>
         <!-- <option value="Pending">Pending</option>
         <option value="Success">Received</option>
@@ -53,19 +53,24 @@
       </thead>
       <tbody class="list" id="table-purchase-body">
         <?php 
-        // Convert the IDs to a comma-separated string for the WHERE IN clause
-        $imploded_warehouse_ids = implode(",", $user_warehouse_ids);
+        // Quote each ID in the array
+        $quoted_warehouse_ids = array_map(function ($id) {
+          return "'" . trim($id) . "'";
+        }, $user_warehouse_ids);
+
+        // Create a comma-separated string of quoted IDs
+        $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
         // Create the unique query to fetch orders for the specified warehouses
         $purchased_order_query = "
-        SELECT po.*, u.user_fname, u.user_lname, s.supplier_name ,wh.warehouse_name
-        FROM purchased_order po 
-        LEFT JOIN users u ON u.hashed_id = po.user_id 
-        LEFT JOIN supplier s ON s.hashed_id = po.supplier 
+        SELECT po.*, u.user_fname, u.user_lname, s.supplier_name, wh.warehouse_name
+        FROM purchased_order po
+        LEFT JOIN users u ON u.hashed_id = po.user_id
+        LEFT JOIN supplier s ON s.hashed_id = po.supplier
         LEFT JOIN warehouse wh ON wh.hashed_id = po.warehouse
-        WHERE po.warehouse IN ('$imploded_warehouse_ids') 
+        WHERE po.warehouse IN ($imploded_warehouse_ids)
         ORDER BY po.id DESC";
         $purchased_order_res = $conn->query($purchased_order_query);
-        if($purchased_order_res->num_rows>-0){
+        if($purchased_order_res->num_rows>0){
           while($row=$purchased_order_res->fetch_assoc()){
             $po_id = $row['id'];
             $po_supplier = $row['supplier_name'];
@@ -100,13 +105,16 @@
 </div>
 
 
-<!-- pdf modal -->
 <?php 
-$modal_po_query = "SELECT * FROM purchased_order WHERE warehouse IN ('$imploded_warehouse_ids')";
+$modal_po_query = "SELECT * FROM purchased_order WHERE warehouse IN ($imploded_warehouse_ids)";
 $modal_po_res = $conn->query($modal_po_query);
 while($row = $modal_po_res->fetch_assoc()){
-  $modal_po_id = $row['id'];
-  $modal_pdf = $row['pdf'];
+    $modal_po_id = $row['id'];
+    $modal_pdf_blob = $row['pdf'];
+
+    // Encode the binary PDF data as Base64
+    $base64_pdf = base64_encode($modal_pdf_blob);
+    $pdf_data_url = "data:application/pdf;base64,$base64_pdf";
 ?>
 <div class="modal fade" id="pdfModal<?php echo $modal_po_id;?>" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
@@ -115,14 +123,12 @@ while($row = $modal_po_res->fetch_assoc()){
         <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-0">
-        
         <!-- Embed the PDF using an iframe -->
-        <iframe id="pdfViewer" src="../../PDFs/<?php echo $modal_pdf;?>" width="100%" height="600px"></iframe>
+        <iframe id="pdfViewer<?php echo $modal_po_id;?>" src="<?php echo $pdf_data_url; ?>" width="100%" height="600px"></iframe>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-        <!-- <button class="btn btn-primary" type="button">Understood </button> -->
-        <a href="../Receive-po/" class="btn btn-primary" type="button">Recieve P.O </a>
+        <a href="../Receive-po/" class="btn btn-primary" type="button">Receive P.O</a>
       </div>
     </div>
   </div>
@@ -130,6 +136,7 @@ while($row = $modal_po_res->fetch_assoc()){
 <?php 
 }
 ?>
+
 
 
 <!-- create po modal -->
@@ -154,7 +161,7 @@ while($row = $modal_po_res->fetch_assoc()){
               // Trim any extra whitespace
               $id = trim($id);
               $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
-              $warehouse_info_result = mysqli_query($conn, $warehouse_info_query);
+              $warehouse_info_result = $conn->query($warehouse_info_query);
               if($warehouse_info_result->num_rows>0){
                   // Check if it's the first item
                   $row=$warehouse_info_result->fetch_assoc();

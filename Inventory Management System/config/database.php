@@ -6,7 +6,6 @@ $dotenv->load();
 
 date_default_timezone_set($_ENV['TIMEZONE']);
 
-
 define('DB_SERVER', $_ENV['DB_SERVER']);
 define('DB_USERNAME', $_ENV['DB_USERNAME']);
 define('DB_PASSWORD', $_ENV['DB_PASSWORD']);
@@ -17,8 +16,5 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Set the timezone to Philippines
 $timezone = new DateTimeZone('Asia/Manila');
-
-// Create and format the current date and time in MySQL DATETIME format (Y-m-d H:i:s)
 $currentDateTime = (new DateTime('now', $timezone))->format('Y-m-d H:i:s');

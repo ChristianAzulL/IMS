@@ -103,10 +103,18 @@ if ($row) {  // Check if the query returned any rows
     </html>';
 
     $pdfname = "PO-" . $po_id . " - " . $po_supplier . ".pdf";
+    // Initialize mPDF and generate the PDF
+    $mpdf = new \Mpdf\Mpdf();
+    $mpdf->WriteHTML($data);
+    $pdfData = $mpdf->Output('', 'S'); // Get PDF as a string
+
+    // Escape the binary PDF data for insertion into the database
+    $pdfData = $conn->real_escape_string($pdfData);
     if (empty($pdf)) {
-        $update_po = "UPDATE purchased_order SET pdf = '$pdfname' WHERE id = '$po_id'";
+        $update_po = "UPDATE purchased_order SET pdf = '$pdfData' WHERE id = '$po_id'";
         if ($conn->query($update_po) === TRUE) {
-            include "generate-pdf.php";
+            
+            header("location: ../PO-logs/?generate=true");
         } else {
             echo "Error updating record: " . $conn->error;
         }

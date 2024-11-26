@@ -45,7 +45,7 @@
                   <!-- Warehouse Select -->
                     <select name="warehouse" id="warehouse" class="form-select form-select-sm">
                         <!-- <option value="">All Warehouses</option> -->
-                        <option value="4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a">Warehouse Sample 2</option>
+                        <option value="">All Warehouse</option>
                         <?php 
                         foreach ($user_warehouse_ids as $id) {
                             $id = trim($id);
@@ -170,8 +170,12 @@
                                             <div class="col-lg-8 col-xxl-9 d-flex flex-column pe-x1">
                                                 <div class="d-flex gap-2 flex-wrap mb-3">
                                                     <span class="badge rounded-pill badge-subtle-success">
-                                                        <span class="fas fa-crown me-1"></span>
+                                                        <span class="fas fa-object-group me-1"></span>
                                                         <span>${item.category}</span>
+                                                    </span>
+                                                    <span class="badge rounded-pill badge-subtle-info">
+                                                        <span class="fas fa-warehouse me-1"></span>
+                                                        <span>${item.wh}</span>
                                                     </span>
                                                 </div>
                                                 <h5 class="fs-9"><a href="#">${item.brand}</a></h5>

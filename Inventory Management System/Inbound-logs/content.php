@@ -219,7 +219,7 @@ if (isset($_SESSION['inbound_id'])) {
               <label class="col-form-label" for="recipient-name">Warehouse:</label>
               <select class="form-select" id="warehouse" required="required" name="warehouse" required>
                 <option value="">Select warehouse...</option>
-                  <?php echo implode("\n", $warehouse_options); ?>
+                  <?php echo implode("\n", $warehouse_options2); ?>
                 <?php ?>
               </select>
               <div class="invalid-feedback">Please select one</div>

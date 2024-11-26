@@ -3,6 +3,7 @@ include "../config/database.php"; // Ensure this includes a $conn object for MyS
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
     $barcode = $_POST['barcode'];
+    $selling_price = $_POST['selling_price'];
 
     // Use MySQLi's ? placeholder
     $stmt = $conn->prepare("
@@ -35,7 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
             "product_description" => $product['description'] ?? '',
             "batch_num" => $product['batch_code'] ?? '',
             "brand_name" => $product['brand_name'] ?? '',
-            "category_name" => $product['category_name'] ?? ''
+            "category_name" => $product['category_name'] ?? '',
+            "selling_price" => $selling_price
         ];
 
         $jsonFile = 'products.json';

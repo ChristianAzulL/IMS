@@ -20,6 +20,7 @@ $warehouse_ids_array = array_map('trim', $user_warehouse_ids);
 
 // Initialize an array to store the select options
 $warehouse_options = [];
+$warehouse_options2 = [];
 
 foreach ($warehouse_ids_array as $warehouse_id) {
     // Create the SQL query by directly inserting the warehouse ID
@@ -29,7 +30,8 @@ foreach ($warehouse_ids_array as $warehouse_id) {
     $result = $conn->query($sql);
     
     if ($result && $row = $result->fetch_assoc()) {
-        $warehouse_options[] = '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
+        $warehouse_options[] = '<option value="' . $row['warehouse_name'] . '">' . $row['warehouse_name'] . '</option>';
+        $warehouse_options2[] = '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
     }
 }
 ?>
