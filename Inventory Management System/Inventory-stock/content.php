@@ -253,11 +253,12 @@
         $(document).on('click', '.btn[data-bs-toggle="collapse"]', function () {
             const itemId = $(this).data('bs-target').replace('#item', ''); // Extract the item ID
             const targetDiv = $(this).data('bs-target'); // Target collapse div ID
+            const warehouse = $('#warehouse').val(); // Get selected warehouse
 
             // Check if the content has already been loaded
             if ($(targetDiv).is(':empty')) {
-                // Fetch item details and populate the collapse section
-                $.get(`item_details.php?id=${itemId}`, function (response) {
+                // Fetch item details and populate the collapse section, including the warehouse
+                $.get(`item_details.php?id=${itemId}&wh=${warehouse}`, function (response) {
                     $(targetDiv).html(response); // Load the response into the collapse div
                 }).fail(function () {
                     $(targetDiv).html('<div class="text-danger p-3">Failed to load item details.</div>');

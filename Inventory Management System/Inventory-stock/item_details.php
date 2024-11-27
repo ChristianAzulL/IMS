@@ -2,6 +2,7 @@
     <table class="table bordered-table">
         <thead>
             <th>Batch Code</th>
+            <th>Import</th>
             <th>Date Added</th>
         </thead>
         <tbody>
@@ -11,28 +12,43 @@ include "../config/database.php";
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
+    $wh = $_GET['wh'];
+    
+    $query = "SELECT s.*, sup.local_international
+              FROM stocks s
+              LEFT JOIN supplier sup ON s.supplier = sup.hashed_id 
+              WHERE s.product_id = ?" . (!empty($wh) ? " AND s.warehouse = ?" : "") . 
+              " GROUP BY s.batch_code";
 
-    // Use prepared statements to prevent SQL injection
-    $query = "SELECT * FROM stocks WHERE product_id = ? GROUP BY batch_code";
+    // Prepare the statement
     $stmt = $conn->prepare($query);
 
     if ($stmt === false) {
         die('Error preparing statement: ' . $conn->error);
     }
 
-    $stmt->bind_param("s", $id); // assuming 'product_id' is a string, adjust the type if necessary
+    // Bind parameters
+    if (!empty($wh)) {
+        $stmt->bind_param("ss", $id, $wh); // Bind both product_id and warehouse
+    } else {
+        $stmt->bind_param("s", $id); // Only bind product_id
+    }
+
     $stmt->execute();
     $result = $stmt->get_result();
+    if(empty($wh)){
+        $sample = "All Warehouse";
+    } else {
+        $sample = $wh;
+    }
 
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-        ?>
-        <tr>
-        <td><?php echo $row['batch_code'];?></td>
-        <td><?php echo $row['date'];?></td>
-        </tr>
-        <?php
-            // echo $row['batch_code'] . "<br>";
+            echo "<tr>
+                <td>{$row['batch_code']}</td>
+                <td><small>{$sample}</small></td>
+                <td>{$row['date']}</td>
+                </tr>";
         }
     } else {
         echo "No data found for the given product ID.";
