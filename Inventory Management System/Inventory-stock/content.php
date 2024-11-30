@@ -195,10 +195,17 @@
                                                         <p class="mb-0 fs-11 text-800">Total Available Quantity</p>
                                                     </div>
                                                     <div class="mt-3 d-flex flex-lg-column gap-2">
-                                                        <button class="btn btn-md btn-primary fs-10" type="button" data-bs-toggle="collapse" data-bs-target="#item${item.product_id}" aria-expanded="false" aria-controls="item${item.product_id}">
+                                                        <button class="btn btn-md btn-primary fs-10" 
+                                                                type="button" 
+                                                                data-bs-toggle="collapse" 
+                                                                data-bs-target="#item${item.product_id}" 
+                                                                aria-expanded="false" 
+                                                                aria-controls="item${item.product_id}"
+                                                                data-wh="${item.warehouse}"> <!-- Added data-wh attribute -->
                                                             <span class="fas fa-cart-plus"></span>
                                                             <span class="ms-1 d-none d-lg-inline">View details</span>
                                                         </button>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -253,16 +260,18 @@
         $(document).on('click', '.btn[data-bs-toggle="collapse"]', function () {
             const itemId = $(this).data('bs-target').replace('#item', ''); // Extract the item ID
             const targetDiv = $(this).data('bs-target'); // Target collapse div ID
+            const warehouse = $(this).data('wh'); // Get the warehouse value from the button
 
             // Check if the content has already been loaded
             if ($(targetDiv).is(':empty')) {
-                // Fetch item details and populate the collapse section
-                $.get(`item_details.php?id=${itemId}`, function (response) {
+                // Fetch item details and pass both itemId and warehouse (wh) parameters
+                $.get(`item_details.php?id=${itemId}&wh=${warehouse}`, function (response) {
                     $(targetDiv).html(response); // Load the response into the collapse div
                 }).fail(function () {
                     $(targetDiv).html('<div class="text-danger p-3">Failed to load item details.</div>');
                 });
             }
         });
+
     });
 </script>

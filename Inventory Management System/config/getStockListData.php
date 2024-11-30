@@ -20,7 +20,8 @@ try {
             b.brand_name AS brand, 
             CONCAT(u.user_fname, ' ', u.user_lname) AS created_by, 
             p.date AS created_date,
-            w.warehouse_name AS wh
+            w.warehouse_name AS wh,
+            s.warehouse
         FROM stocks s
         LEFT JOIN product p ON s.product_id = p.hashed_id
         LEFT JOIN brand b ON p.brand = b.hashed_id
