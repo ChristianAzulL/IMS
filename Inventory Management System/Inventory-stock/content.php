@@ -1,99 +1,101 @@
-<!-- Main Container -->
-<div class="col-xxl-10 col-xl-9">
-  <!-- Courses Section Card -->
-  <div class="card mb-3">
-    <!-- Card Header -->
-    <div class="card-header position-relative">
-        <div class="row">
-            <div class="col-4">
-                <h5 class="mb-0 mt-1">All Courses</h5>
-            </div>
-            <div class="col-8 text-end">
-                <div>
-                    Total Products: <span id="totalItems">0</span>
-                    | Matched Products: <span id="matchedItems">0</span>
+<div class="row g-3 mb-3">
+    <!-- Main Container -->
+    <div class="col-xxl-14 col-xl-12 col-12">
+    <!-- Courses Section Card -->
+    <div class="card mb-3">
+        <!-- Card Header -->
+        <div class="card-header position-relative">
+            <div class="row">
+                <div class="col-4">
+                    <h5 class="mb-0 mt-1">All Courses</h5>
+                </div>
+                <div class="col-8 text-end">
+                    <div>
+                        Total Products: <span id="totalItems">0</span>
+                        | Matched Products: <span id="matchedItems">0</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Search and Filter Section -->
-    <div class="card-body pt-0 pt-md-3">
-      <div class="row g-3 align-items-center">
-        <!-- Filter Button for Smaller Screens -->
-        <div class="col-auto d-xl-none">
-          <button class="btn btn-sm p-0 btn-link position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
-            <span class="fas fa-filter fs-9 text-700"></span>
-          </button>
-        </div>
-        <!-- Search Bar -->
-        <div class="col">
-          <form class="position-relative">
-            <input class="form-control form-control-sm search-input lh-1 rounded-2 ps-4" id="searchInput" type="search" placeholder="Search..." aria-label="Search" />
-            <div class="position-absolute top-50 start-0 translate-middle-y ms-2">
-              <span class="fas fa-search text-400 fs-10"></span>
+        <!-- Search and Filter Section -->
+        <div class="card-body pt-0 pt-md-3">
+        <div class="row g-3 align-items-center">
+            <!-- Filter Button for Smaller Screens -->
+            <div class="col-auto d-xl-none">
+            <button class="btn btn-sm p-0 btn-link position-relative" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas" aria-controls="filterOffcanvas">
+                <span class="fas fa-filter fs-9 text-700"></span>
+            </button>
             </div>
-          </form>
-        </div>
-        <!-- Sorting and View Options -->
-        <div class="col position-sm-relative position-absolute top-0 end-0 me-3 me-sm-0 p-0">
-          <div class="row g-0 g-md-3 justify-content-end">
-            <!-- Sort By Dropdown -->
-            <div class="col-auto row gx-2">
-              <form class="row gx-2">
-                <div class="col-auto d-none d-lg-block"><small class="fw-semi-bold">warehouse:</small></div>
-                <div class="col-auto">
-                  <!-- Warehouse Select -->
-                    <select name="warehouse" id="warehouse" class="form-select form-select-sm">
-                        <!-- <option value="">All Warehouses</option> -->
-                        <option value="">All Warehouse</option>
-                        <?php 
-                        foreach ($user_warehouse_ids as $id) {
-                            $id = trim($id);
-                            $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
-                            $warehouse_info_result = mysqli_query($conn, $warehouse_info_query);
-                            if ($warehouse_info_result->num_rows > 0) {
-                                $row = $warehouse_info_result->fetch_assoc();
-                                $tab_warehouse_name = $row['warehouse_name'];
-                                echo '<option value="' . $id . '">' . $tab_warehouse_name . '</option>';
+            <!-- Search Bar -->
+            <div class="col">
+            <form class="position-relative">
+                <input class="form-control form-control-sm search-input lh-1 rounded-2 ps-4" id="searchInput" type="search" placeholder="Search..." aria-label="Search" />
+                <div class="position-absolute top-50 start-0 translate-middle-y ms-2">
+                <span class="fas fa-search text-400 fs-10"></span>
+                </div>
+            </form>
+            </div>
+            <!-- Sorting and View Options -->
+            <div class="col position-sm-relative position-absolute top-0 end-0 me-3 me-sm-0 p-0">
+            <div class="row g-0 g-md-3 justify-content-end">
+                <!-- Sort By Dropdown -->
+                <div class="col-auto row gx-2">
+                <form class="row gx-2">
+                    <div class="col-auto d-none d-lg-block"><small class="fw-semi-bold">warehouse:</small></div>
+                    <div class="col-auto">
+                    <!-- Warehouse Select -->
+                        <select name="warehouse" id="warehouse" class="form-select form-select-sm">
+                            <!-- <option value="">All Warehouses</option> -->
+                            <option value="">All Warehouse</option>
+                            <?php 
+                            foreach ($user_warehouse_ids as $id) {
+                                $id = trim($id);
+                                $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
+                                $warehouse_info_result = mysqli_query($conn, $warehouse_info_query);
+                                if ($warehouse_info_result->num_rows > 0) {
+                                    $row = $warehouse_info_result->fetch_assoc();
+                                    $tab_warehouse_name = $row['warehouse_name'];
+                                    echo '<option value="' . $id . '">' . $tab_warehouse_name . '</option>';
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                    </div>
+                </form>
                 </div>
-              </form>
             </div>
-          </div>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
-<div id="listBody">
-  
-</div>
-  <!-- Pagination Section -->
-  <div class="card">
-    <div class="card-body">
-      <div class="row g-3 flex-center justify-content-md-between">
-        <!-- Items Per Page Dropdown -->
-        <div class="col-auto">
-          <form class="row gx-2" hidden>
-            <div class="col-auto"><small>Show:</small></div>
+    <div id="listBody">
+    
+    </div>
+    <!-- Pagination Section -->
+    <div class="card">
+        <div class="card-body">
+        <div class="row g-3 flex-center justify-content-md-between">
+            <!-- Items Per Page Dropdown -->
             <div class="col-auto">
-              <select class="form-select form-select-sm" aria-label="Show courses">
-                <option selected="selected" value="9">9</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-              </select>
+            <form class="row gx-2" hidden>
+                <div class="col-auto"><small>Show:</small></div>
+                <div class="col-auto">
+                <select class="form-select form-select-sm" aria-label="Show courses">
+                    <option selected="selected" value="9">9</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+                </div>
+            </form>
             </div>
-          </form>
+            <!-- Pagination Controls -->
+            <div class="col-auto" id="pagination">
+            
+            </div>
         </div>
-        <!-- Pagination Controls -->
-        <div class="col-auto" id="pagination">
-          
         </div>
-      </div>
     </div>
-  </div>
+    </div>
 </div>
 
 
