@@ -60,6 +60,7 @@
                         while ($row = $result->fetch_assoc()) {
                             // Check if we are still in the same batch code
                             if ($previous_batch_code != $row['batch_code']) {
+                                
                                 // Start a new batch code row
                                 if ($previous_batch_code != '') {
                                     echo "</tbody></table></td></tr>"; // Close previous batch details table
@@ -81,8 +82,8 @@
                                     </tr>
                                     <tr class='collapse p-0 m-0' id='product-details-modal" . htmlspecialchars($row['batch_code']) . '-' . $id . '-' . $warehouse . "'>
                                         <td class='p-0 m-0' colspan='6'>
-                                            <table class='table table-hover table-striped table-bordered border-dark'>
-                                                <thead class='table-primary'>
+                                            <table class='table table-hover table-striped table-bordered border-info table-sm'>
+                                                <thead class='table-info'>
                                                     <tr>
                                                         <th scope='row'>Barcode</th>
                                                         <th>Capital</th>
@@ -96,9 +97,9 @@
                             // Display product details for the current batch code
                             echo "
                                 <tr>
-                                    <td>" . htmlspecialchars($row['unique_barcode']) . "</td>
-                                    <td>" . htmlspecialchars($row['capital']) . "</td>
-                                    <td>" . htmlspecialchars($row['location_name']) . "</td>
+                                    <td><small>" . htmlspecialchars($row['unique_barcode']) . "</small></td>
+                                    <td class='text-end'><small>" . htmlspecialchars($row['capital']) . "</small></td>
+                                    <td><small>" . htmlspecialchars($row['location_name']) . "</small></td>
                                 </tr>
                             ";
                         }

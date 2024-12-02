@@ -102,6 +102,13 @@
     let currentPage = 1;
     let limit = 9;
 
+    // Function to format date to 'Month Day, Year' (e.g., January 1, 2022)
+    function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', options);
+    }
+
     function loadData() {
         const search = $('#searchInput').val();
         const warehouse = $('#warehouse').val(); // Get selected warehouse
@@ -154,8 +161,8 @@
                                                     <a class="text-900" href="#">${item.product_name}</a>
                                                 </h4>
                                                 <div class="flex-1 d-flex align-items-end fw-semi-bold fs-10">
-                                                    <span class="me-1 text-900">${item.created_date || 'N/A'}</span>
-                                                    <span class="me-2 text-secondary">| ${item.created_by || 'Unknown'}</span>
+                                                    <span class="me-1 text-900">${formatDate(item.created_date) || 'N/A'}</span>
+                                                    <span class="me-2 text-secondary">| Latest Delivery Date</span>
                                                 </div>
                                             </div>
                                             <!-- Quantity -->
@@ -173,7 +180,7 @@
                                                                 aria-expanded="false" 
                                                                 aria-controls="item${item.product_id}"
                                                                 data-wh="${item.warehouse}"> <!-- Added data-wh attribute -->
-                                                            <span class="fas fa-cart-plus"></span>
+                                                            <span class="fas fa-info-circle"></span>
                                                             <span class="ms-1 d-none d-lg-inline">View details</span>
                                                         </button>
 
@@ -243,6 +250,5 @@
                 });
             }
         });
-
     });
 </script>
