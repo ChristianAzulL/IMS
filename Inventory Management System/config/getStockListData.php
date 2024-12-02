@@ -11,7 +11,13 @@ try {
 
     $baseQuery = "
         SELECT 
-            COUNT(s.product_id) AS quantity,
+            COALESCE((
+                    SELECT COUNT(*) 
+                    FROM stocks 
+                    WHERE item_status = 0 
+                        AND product_id = s.product_id 
+                        AND warehouse = s.warehouse
+                ), 0) AS quantity,
             s.product_id,
             p.id, 
             p.description AS product_name, 
@@ -33,13 +39,14 @@ try {
            OR c.category_name LIKE ? 
            OR u.user_fname LIKE ? 
            OR u.user_lname LIKE ?)
+           AND s.item_status = 0
     ";
 
     if ($warehouse) {
         $baseQuery .= " AND w.hashed_id = ?";
     }
 
-    $baseQuery .= " GROUP BY s.product_id ORDER BY s.product_id DESC LIMIT ? OFFSET ?";
+    $baseQuery .= " GROUP BY s.product_id, s.warehouse ORDER BY s.date DESC LIMIT ? OFFSET ?";
 
     $stmt = $conn->prepare($baseQuery);
 
@@ -71,6 +78,7 @@ try {
            OR c.category_name LIKE ? 
            OR u.user_fname LIKE ? 
            OR u.user_lname LIKE ?)
+           AND s.item_status = 0
     ";
 
     if ($warehouse) {
