@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Prepare and bind
     $stmt = $conn->prepare("INSERT INTO item_location (location_name, `date`, user_id, warehouse) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssii", $item_locationName, $currentDateTime, $user_id, $warehouse_loc_id);
+    $stmt->bind_param("ssis", $item_locationName, $currentDateTime, $user_id, $warehouse_loc_id);
 
     // Execute the query
     if ($stmt->execute()) {

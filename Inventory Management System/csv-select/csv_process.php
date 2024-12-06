@@ -3,12 +3,13 @@
 include '../config/database.php';
 include '../config/on_session.php';
 
+$unique_key = $_SESSION['unique_key'];
 $po_id = $_SESSION['inbound_po_id'];
 $received_date = $_SESSION['inbound_received_date'];
 $warehouse_inbound = $_SESSION['inbound_warehouse'];
 
 
-$insert_inbound = "INSERT INTO inbound_logs SET po_id = '$po_id', date_received = '$received_date', user_id = '$user_id', warehouse = '$warehouse_inbound'";
+$insert_inbound = "INSERT INTO inbound_logs SET po_id = '$po_id', date_received = '$received_date', user_id = '$user_id', warehouse = '$warehouse_inbound', unique_key = '$unique_key'";
 if($conn->query($insert_inbound)===true){
     $inbound_id = $conn->insert_id;
 }
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $batches = $_POST['batch'];
     $brands = $_POST['brand'];
     $categories = $_POST['category'];
+    $safeties = $_POST['safety'];
 
     $checkedCount = count($csv_unique); // Count how many checkboxes were checked
     $success = 0;
@@ -42,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $batch = $batches[$index - 1];
         $brand = $brands[$index - 1];
         $category = $categories[$index - 1];
+        $safety = $safeties[$index - 1];
 
         
             $brand_name = $brand;
@@ -113,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $conn->query($sql);
                 $product_id = $conn->insert_id;
                 $hashed_product_id = hash('sha256', $product_id);
-                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id' WHERE id ='$product_id'";
+                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id', `safety` = '$safety' WHERE id ='$product_id'";
                 $conn->query($update_product);
             }
         
@@ -122,8 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         for ($i = 1; $i <= $quantity; $i++) {
             $unique_barcode = $barcode . "-" . $i;
 
-            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`) 
-                     VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id')";
+            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`, `unique_key`) 
+                     VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key')";
             // // Dynamic HTML content for the PDF
             // $html = "<html><head><style>body { font-family: Arial, sans-serif; }</style></head>";
             // $html .= "<body>";

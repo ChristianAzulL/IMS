@@ -1,7 +1,7 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
-
+include "../config/unique-key.php";
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">

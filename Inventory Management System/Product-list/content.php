@@ -88,7 +88,12 @@
               if($product_list_res->num_rows > 0) {
                 while($row = $product_list_res->fetch_assoc()) {
                   $product_id = $row['id'];
-                  $product_img = $row['product_img'];
+                  if(empty($row['product_img']) || !isset($row['product_img'])){
+                    $product_img = 'def_img.png';
+                  } else {
+                    $product_img = $row['product_img'];
+                  }
+                  
                   $product_category = $row['category_name'];
                   $product_brand = $row['brand_name'];
                   $product_des = $row['description'];
@@ -136,7 +141,7 @@
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content position-relative">
       <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-3">
         <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">

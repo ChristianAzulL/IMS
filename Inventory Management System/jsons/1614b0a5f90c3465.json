@@ -1,0 +1,37 @@
+[
+    {
+        "warehouse": "21",
+        "barcode": "kjn",
+        "timestamp": "2024-12-07 01:28:59"
+    },
+    {
+        "warehouse": "21",
+        "barcode": "mn",
+        "timestamp": "2024-12-07 01:29:06"
+    },
+    {
+        "warehouse": "21",
+        "barcode": "jnj",
+        "timestamp": "2024-12-07 01:29:09"
+    },
+    {
+        "warehouse": "22",
+        "barcode": "';ljkn",
+        "timestamp": "2024-12-07 01:29:18"
+    },
+    {
+        "warehouse": "22",
+        "barcode": "kjh",
+        "timestamp": "2024-12-07 01:29:19"
+    },
+    {
+        "warehouse": "7",
+        "barcode": "jjjjjjjjjj",
+        "timestamp": "2024-12-07 01:29:31"
+    },
+    {
+        "warehouse": "7",
+        "barcode": "ggggggggggg",
+        "timestamp": "2024-12-07 01:29:34"
+    }
+]

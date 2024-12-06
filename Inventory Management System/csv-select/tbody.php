@@ -23,7 +23,7 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
 
                 while (($data = fgetcsv($handle, 1000, ",")) !== false) {
                     if (count($data) >= 9) {
-                        [$item, $keyword, $qty, $price, $supplier, $barcode, $batch, $brand, $category] = $data;
+                        [$item, $keyword, $qty, $price, $supplier, $barcode, $batch, $brand, $category, $safety] = $data;
                         $rowIndex++;
                         
                         
@@ -83,6 +83,9 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                                 <input class="form-control" name="category[]" type="text" value="<?php echo $category; ?>">
                                 <div class="valid-feedback">Will be registered as new.</div>
                                 <div class="invalid-feedback">Category name already exist</div>
+                            </td>
+                            <td>
+                                <input class="form-control" name="safety[]" type="number" value="<?php echo $safety; ?>">
                             </td>
                         </tr>
                         <?php

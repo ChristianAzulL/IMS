@@ -49,6 +49,7 @@
                                     <th style="min-width: 200px;">Batch no.</th>
                                     <th style="min-width: 200px;">Brand</th>
                                     <th style="min-width: 200px;">Category</th>
+                                    <th style="min-width: 200px;">Safety</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,7 +105,7 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
                         confirmButtonText: "OK"
                     }).then(() => {
                         // Redirect to the dashboard after clicking "OK"
-                        window.location.href = '../dashboard';
+                        window.location.href = '../Unique-Barcodes?success=0';
                     });
                 } else if (data.status === 'info') {
                     Swal.fire("Info", data.message, "info");
