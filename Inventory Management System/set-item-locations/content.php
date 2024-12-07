@@ -45,6 +45,16 @@ if(isset($_SESSION['selected-warehouse-SIL'])){
     </div>
 </div>
 
+<div class="card mt-3">
+    <div class="card-body overflow-hidden p-lg-12">
+        <div class="row text-end">
+            <div class="w-3"">
+                <button class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Toast for server response -->
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
     <div class="toast fade" id="liveToast" role="alert" aria-live="assertive" aria-atomic="true">
