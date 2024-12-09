@@ -46,7 +46,6 @@
                     <!-- Warehouse Select -->
                         <select name="warehouse" id="warehouse" class="form-select form-select-sm">
                             <!-- <option value="">All Warehouses</option> -->
-                            <option value="">All Warehouse</option>
                             <?php 
                             foreach ($user_warehouse_ids as $id) {
                                 $id = trim($id);

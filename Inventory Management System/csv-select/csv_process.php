@@ -110,46 +110,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $row = $result->fetch_assoc();
                 $product_id = $row['id'];
                 $hashed_product_id = $row['hashed_id'];
+                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id', `safety` = '$safety', keyword = '$keyword' WHERE id ='$product_id'";
+                $conn->query($update_product);
             } else {
                 $sql = "INSERT INTO product (`description`, brand, category, parent_barcode, `date`, user_id) 
                         VALUES ('$item', '$hashed_brand_id', '$hashed_category_id', '$barcode', '$currentDateTime', '$user_id')";
                 $conn->query($sql);
                 $product_id = $conn->insert_id;
                 $hashed_product_id = hash('sha256', $product_id);
-                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id', `safety` = '$safety' WHERE id ='$product_id'";
+                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id', `safety` = '$safety', keyword = '$keyword' WHERE id ='$product_id'";
                 $conn->query($update_product);
             }
         
 
-        // Generate and store PDF for each quantity
+        // Generate and store unique barcodes for each quantity
+        $last_unique_suffix = 0; // Initialize to start fresh if no prior barcodes exist
+
+        // Check the last unique barcode and get its suffix
+        $check_unique_barcode = "SELECT unique_barcode 
+                                    FROM stocks 
+                                    WHERE parent_barcode = '$barcode' 
+                                    ORDER BY LPAD(SUBSTRING_INDEX(unique_barcode, '-', -1), 10, '0') DESC 
+                                    LIMIT 1;";
+        $check_unique_barcode_res = $conn->query($check_unique_barcode);
+        if ($check_unique_barcode_res->num_rows > 0) {
+            $row = $check_unique_barcode_res->fetch_assoc();
+            $last_unique_barcode = $row['unique_barcode'];
+            $parts = explode('-', $last_unique_barcode);
+            $last_unique_suffix = isset($parts[1]) ? (int)$parts[1] : 0; // Extract numeric suffix
+        }
+
+        // Generate new unique barcodes
         for ($i = 1; $i <= $quantity; $i++) {
-            $unique_barcode = $barcode . "-" . $i;
+            $new_suffix = $last_unique_suffix + $i; // Increment suffix
+            $unique_barcode = $barcode . '-' . $new_suffix; // Append new suffix
 
+            // Insert the new stock record into the database
             $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`, `unique_key`) 
-                     VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key')";
-            // // Dynamic HTML content for the PDF
-            // $html = "<html><head><style>body { font-family: Arial, sans-serif; }</style></head>";
-            // $html .= "<body>";
-            // $html .= "<h1>Product: $item</h1>";
-            // $html .= "<p>Barcode: $unique_barcode</p>";
-            // $html .= "<p>Supplier: $supplier_name</p>";
-            // $html .= "<p>Batch: $batch</p>";
-            // $html .= "<div class='barcode-container'>";
-            // $html .= "<img alt='testing' src='../../assets/barcode/barcode.php?codetype=Code128&size=50&text=$unique_barcode&print=true'/>";
-            // $html .= "</div>";
-            // $html .= "</body></html>";
-
-            // // Initialize mPDF and generate the PDF
-            // $mpdf = new \Mpdf\Mpdf();
-            // $mpdf->WriteHTML($html);
-            // $pdfData = $mpdf->Output('', 'S'); // Get PDF as a string
-
-            // // Escape the binary PDF data for insertion into the database
-            // $pdfData = $conn->real_escape_string($pdfData);
-
-            // Insert into database with the generated PDF data
-            // $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `pdf`, `inbound_id`) 
-            //         VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$pdfData', '$inbound_id')";
+                    VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key')";
+            
             if ($conn->query($sql) === TRUE) {
                 $stock_id = $conn->insert_id;
                 $hash_stock = hash('sha256', $stock_id);
@@ -157,11 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $conn->query($update_stock);
                 $success++; // Increment success count if insertion was successful
             } else {
-                // Handle error
-                error_log("Failed to insert PDF data: " . $conn->error);
+                error_log("Failed to insert stock: " . $conn->error);
             }
-        }
-        
+        }        
     }
 
     // Update the response to success if there are any valid changes

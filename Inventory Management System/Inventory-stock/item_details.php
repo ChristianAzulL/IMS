@@ -7,7 +7,7 @@
                 <th  scope="col">Supplier</th>
                 <th  scope="col">Import</th>
                 <th  scope="col">Imbounded by</th>
-                <th  scope="col">Date Added</th>
+                <th  scope="col">Inbounded date</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +38,8 @@
                         s.date,
                         s.unique_barcode, 
                         s.capital, 
+                        s.item_status,
+                        s.price,
                         r.location_name
                     FROM stocks s
                     LEFT JOIN supplier sup ON s.supplier = sup.hashed_id
@@ -45,7 +47,7 @@
                     LEFT JOIN item_location r ON s.item_location = r.id
                     WHERE s.product_id = ? 
                       AND s.warehouse = ?
-                    ORDER BY s.batch_code, s.unique_barcode
+                    ORDER BY s.date
                 ";
 
                 if ($stmt = $conn->prepare($query)) {
@@ -67,6 +69,11 @@
                                 }
 
                                 $previous_batch_code = $row['batch_code'];
+                                if($row['import_status'] === "Local" || $row['import_status'] === "LOCAL"){
+                                    $import_status = '<span class="badge bg-primary">Local</span>';
+                                } else {
+                                    $import_status = '<span class="badge bg-warning">International</span>';
+                                }
                                 echo "
                                     <tr>
                                         <td scope='row'>
@@ -76,7 +83,7 @@
                                         </td>
                                         <td class='text-end'>" . htmlspecialchars($row['available_quantity']) . "</td>
                                         <td>" . htmlspecialchars($row['supplier_name']) . "</td>
-                                        <td>" . htmlspecialchars($row['import_status']) . "</td>
+                                        <td>" . $import_status . "</td>
                                         <td>" . htmlspecialchars($row['added_by']) . "</td>
                                         <td>" . htmlspecialchars($row['date']) . "</td>
                                     </tr>
@@ -86,7 +93,9 @@
                                                 <thead class='table-info'>
                                                     <tr>
                                                         <th scope='row'>Barcode</th>
+                                                        <th>Fullfilment Status</th>
                                                         <th>Capital</th>
+                                                        <th>Sold Amount</th>
                                                         <th>Item Location</th>
                                                     </tr>
                                                 </thead>
@@ -94,12 +103,26 @@
                                 ";
                             }
 
+                            if(empty($row['location_name'])){
+                                $location_name = 'For SKU';
+                            } else {
+                                $location_name = $row['location_name'];
+                            }
+                            if($row['item_status'] == 0) {
+                                $item_status = '<span class="badge rounded-pill bg-success">Available</span>';
+                            } elseif($row['item_status'] == 2) {
+                                $item_status = '<span class="badge rounded-pill bg-danger">Sold</span>';
+                            } else {
+                                $item_status = '<span class="badge rounded-pill bg-primary">Enroute</span>';
+                            }
                             // Display product details for the current batch code
                             echo "
                                 <tr>
-                                    <td><small>" . htmlspecialchars($row['unique_barcode']) . "</small></td>
+                                    <td><a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "'><small>" . htmlspecialchars($row['unique_barcode']) . "</small></a></td>
+                                    <td class='text-center'>" . $item_status . "</td>
                                     <td class='text-end'><small>" . htmlspecialchars($row['capital']) . "</small></td>
-                                    <td><small>" . htmlspecialchars($row['location_name']) . "</small></td>
+                                    <td><small>" . $row['price'] . "</small></td>
+                                    <td><small>" . htmlspecialchars($location_name) . "</small></td>
                                 </tr>
                             ";
                         }
