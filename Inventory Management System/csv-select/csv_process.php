@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
 
         
-            $query = "SELECT * FROM product WHERE `description` = '$item' AND brand = '$hashed_brand_id' AND category = '$hashed_category_id' LIMIT 1";
+            $query = "SELECT * FROM product WHERE `parent_barcode` = '$barcode' LIMIT 1";
             $result = $conn->query($query);
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
@@ -127,17 +127,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $last_unique_suffix = 0; // Initialize to start fresh if no prior barcodes exist
 
         // Check the last unique barcode and get its suffix
-        $check_unique_barcode = "SELECT unique_barcode 
+        $check_unique_barcode = "SELECT barcode_extension 
                                     FROM stocks 
                                     WHERE parent_barcode = '$barcode' 
-                                    ORDER BY LPAD(SUBSTRING_INDEX(unique_barcode, '-', -1), 10, '0') DESC 
+                                    ORDER BY barcode_extension DESC 
                                     LIMIT 1;";
         $check_unique_barcode_res = $conn->query($check_unique_barcode);
         if ($check_unique_barcode_res->num_rows > 0) {
             $row = $check_unique_barcode_res->fetch_assoc();
-            $last_unique_barcode = $row['unique_barcode'];
-            $parts = explode('-', $last_unique_barcode);
-            $last_unique_suffix = isset($parts[1]) ? (int)$parts[1] : 0; // Extract numeric suffix
+            $last_unique_barcode = $row['barcode_extension'];
+            $last_unique_suffix = $last_unique_barcode;
         }
 
         // Generate new unique barcodes
@@ -146,8 +145,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $unique_barcode = $barcode . '-' . $new_suffix; // Append new suffix
 
             // Insert the new stock record into the database
-            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`, `unique_key`) 
-                    VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key')";
+            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`, `unique_key`, `barcode_extension`) 
+                    VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key', '$new_suffix')";
             
             if ($conn->query($sql) === TRUE) {
                 $stock_id = $conn->insert_id;

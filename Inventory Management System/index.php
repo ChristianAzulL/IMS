@@ -128,52 +128,63 @@
     <script src="vendors/lodash/lodash.min.js"></script>
     <script src="vendors/list.js/list.min.js"></script>
     <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    document.getElementById('login-form').addEventListener('submit', function (e) {
-        e.preventDefault(); // Prevent form from submitting normally
+        document.getElementById('login-form').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form from submitting normally
 
-        // Hide the login button container and show the loading button immediately
-        const loginButtonContainer = document.getElementById('btn-login-container');
-        const loadingButtonContainer = document.getElementById('loading-btn-container');
+            const loginButtonContainer = document.getElementById('btn-login-container');
+            const loadingButtonContainer = document.getElementById('loading-btn-container');
 
-        // Hide login button container and show loading button
-        loginButtonContainer.style.display = 'none';
-        loadingButtonContainer.style.display = 'block';
+            // Hide login button container and show loading button
+            loginButtonContainer.style.display = 'none';
+            loadingButtonContainer.style.display = 'block';
 
-        // Collect form data
-        const formData = new FormData(this);
+            // Collect form data
+            const formData = new FormData(this);
 
-        // Send AJAX request
-        fetch('config/login.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Login successful, delay redirection by 1.5 seconds
+            // Send AJAX request
+            fetch('config/login.php', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Login successful, delay redirection by 1.5 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard/';
+                    }, 1500);
+                } else {
+                    // Login failed, show SweetAlert2 error message
+                    setTimeout(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid credentials!',
+                            text: data.message || 'Please check your email and password and try again.',
+                            confirmButtonText: 'OK'
+                        });
+                        loadingButtonContainer.style.display = 'none'; // Hide loading button
+                        loginButtonContainer.style.display = 'block'; // Show login button container again
+                    }, 1500);
+                }
+            })
+            .catch(error => {
+                // Handle any network or unexpected errors
+                console.error('Error:', error);
                 setTimeout(() => {
-                    window.location.href = 'dashboard/';
-                }, 1500);
-            } else {
-                // Login failed, show error in console and revert buttons
-                setTimeout(() => {
-                    console.error(data.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        confirmButtonText: 'OK'
+                    });
                     loadingButtonContainer.style.display = 'none'; // Hide loading button
-                    loginButtonContainer.style.display = 'block'; // Show the login button container again
+                    loginButtonContainer.style.display = 'block'; // Show login button container again
                 }, 1500);
-            }
-        })
-        .catch(error => {
-            // Handle any network or unexpected errors
-            console.error('Error:', error);
-            setTimeout(() => {
-                loadingButtonContainer.style.display = 'none'; // Hide loading button
-                loginButtonContainer.style.display = 'block'; // Show the login button container again
-            }, 1500);
+            });
         });
-    });
-</script>
+    </script>
 
 
 </body>
