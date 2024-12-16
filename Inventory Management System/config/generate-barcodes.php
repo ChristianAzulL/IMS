@@ -39,19 +39,31 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
         $categoryName = $row['category_name'];
 
         // Generate HTML content for PDF
-        $html = "<html><head><style>body { font-family: Arial, sans-serif; }</style></head>";
-        $html .= "<body>";
-        $html .= "<h1>Product: $productDescription</h1>";
-        $html .= "<p>Barcode: $uniqueBarcode</p>";
-        $html .= "<p>Brand: $brandName</p>";
-        $html .= "<p>Category: $categoryName</p>";
-        $html .= "<div class='barcode-container'>";
-        $html .= "<img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=50&text=$uniqueBarcode&print=true'/>";
-        $html .= "</div>";
-        $html .= "</body></html>";
+        $html = "
+        <html>
+        <head>
+            <style>
+                img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    object-fit: contain;
+                }
+            </style>
+        </head>
+        <body>
+                <img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>
+        </body>
+        </html>";
 
-        // Initialize mPDF for individual PDF
-        $mpdf = new \Mpdf\Mpdf();
+        // Initialize mPDF with custom paper size for thermal printer (58mm x 30mm) and no margins
+        $mpdf = new \Mpdf\Mpdf([
+            'format' => [30, 10], // 58mm width x 30mm height
+            'margin_left' => 0,
+            'margin_right' => 0,
+            'margin_top' => 0,
+            'margin_bottom' => 0,
+        ]);
+
         $mpdf->WriteHTML($html);
 
         // Save the PDF to a temporary file

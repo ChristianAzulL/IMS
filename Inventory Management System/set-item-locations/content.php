@@ -9,7 +9,12 @@ if(isset($_SESSION['inbound_warehouse'])){
     <div class="card-body overflow-hidden p-lg-6">
         <div class="row">
             <div class="col-lg-12">
-                <form id="myForm" action="csv_process.php" method="POST" enctype="multipart/form-data">
+                <h4>Please set the Item Location</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <form id="myForm" action="../config/set-item-loc.php" method="POST">
                     <div class="row justify-content-end">
                         <div class="col-auto mb-3">
                             <button class="btn btn-primary" id="submitBTN" type="submit">Submit</button>
@@ -20,6 +25,7 @@ if(isset($_SESSION['inbound_warehouse'])){
                         <table class="table bordered-table">
                             <thead class="table-info">
                                 <tr>
+                                    <th style="min-width: 75px;"></th>
                                     <th style="min-width: 300px;">Product Description</th>
                                     <th style="min-width: 200px;">Keyword</th>
                                     <th style="min-width: 130px;">Qty</th>

@@ -657,14 +657,6 @@
               </a>
             </li>
             <?php
-              }if(strpos($access, "new_po")!==false){
-            ?>
-            <li class="nav-item">
-              <a class="nav-link" href="../Create-PO/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create Purchased Order</span></div>
-              </a>
-            </li>
-            <?php
               }if(strpos($access, "inbound_logs")!==false){
             ?>
             <li class="nav-item">
@@ -681,7 +673,7 @@
         }
         ?>
         <?php 
-        if(strpos($access, "product_list")!==false || strpos($access, "destination")!==false || strpos($access, "stock")!==false){
+        if(strpos($access, "product_list")!==false || strpos($access, "stock")!==false){
         ?>
         <!-- Product Dropdown -->
         <li class="nav-item">
@@ -701,14 +693,6 @@
             <li class="nav-item">
               <a class="nav-link" href="../Product-list/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product list</span></div>
-              </a>
-            </li>
-            <?php 
-            }if(strpos($access, "product_destination")!==false){
-            ?>
-            <li class="nav-item">
-              <a class="nav-link" href="../item-destination/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Item destination</span></div>
               </a>
             </li>
             <?php 
@@ -876,7 +860,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "administration") !==false){
+        if(strpos($access, "administration") !==false || strpos($access, "destination")!==false ){
         ?>
 
         <!-- Administration Dropdown -->
@@ -931,6 +915,17 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Access levels</span></div>
               </a>
             </li>
+            <?php
+              if(strpos($access, "product_destination")!==false){
+              ?>
+              <li class="nav-item">
+                <a class="nav-link" href="../item-destination/">
+                  <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Item destination</span></div>
+                </a>
+              </li>
+              <?php 
+              }
+            ?>
           </ul>
         </li>
         <?php

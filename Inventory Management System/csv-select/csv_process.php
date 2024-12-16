@@ -101,6 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hashed_supplier_id = $supplier_id;
             }
 
+            $update_inbound_query = "UPDATE inbound_logs SET supplier = '$hashed_supplier_id' WHERE id = '$inbound_id'";
+            $conn->query($update_inbound_query);
+
         
 
         

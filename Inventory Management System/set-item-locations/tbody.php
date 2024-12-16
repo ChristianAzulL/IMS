@@ -17,7 +17,8 @@ if (isset($_SESSION['unique_key'])) {
                   AND warehouse = s.warehouse 
                   AND unique_key = '$unique_key'
             ) AS quantity, 
-            sup.supplier_name, 
+            sup.supplier_name,
+            p.product_img, 
             p.keyword, 
             p.description, 
             b.brand_name, 
@@ -38,6 +39,9 @@ if (isset($_SESSION['unique_key'])) {
         while ($row = $result->fetch_assoc()) {
 ?>
 <tr>
+    <td>
+        <img src="<?php echo $row['product_img'];?>" class="img-fluid" alt="">
+    </td>
     <td>
         <?php echo $row['description']; ?>
     </td>
@@ -70,6 +74,7 @@ if (isset($_SESSION['unique_key'])) {
         <?php echo $row['safety']; ?>
     </td>
     <td>
+        <input type="text" name="parent_barcode[]" value="<?php echo $row['parent_barcode']?>" hidden>
         <select name="item_location[]" class="form-select" id="" required>
             <option value="">Select Item Location</option>
             <?php 

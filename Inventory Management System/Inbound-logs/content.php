@@ -17,7 +17,7 @@ if (isset($_SESSION['inbound_id'])) {
 </div> -->
 <div class="card">
   <div class="card-body overflow-hidden py-6 px-0">
-<div id="tableExample4" data-list='{"valueNames":["inbound_no","po_no","supplier","date","receiver"]}'>
+<div id="tableExample4" data-list='{"valueNames":["inbound_no","po_no","supplier","date","receiver","warehouse"]}'>
   <div class="row justify-content-end justify-content-end gx-3 gy-0 px-3">
     <div class="col-auto mb-3">
       <button class="btn btn-primary py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Create</button>
@@ -59,21 +59,26 @@ if (isset($_SESSION['inbound_id'])) {
       </thead>
       <tbody class="list" id="table-purchase-body">
         <?php 
-        // Convert the IDs to a comma-separated string for the WHERE IN clause
-        $imploded_warehouse_ids = implode(",", $user_warehouse_ids);
+        // Quote each ID in the array
+        $quoted_warehouse_ids = array_map(function ($id) {
+          return "'" . trim($id) . "'";
+        }, $user_warehouse_ids);
+
+        // Create a comma-separated string of quoted IDs
+        $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
 
         $inbound_sql = "SELECT il.*, u.user_fname, u.user_lname, w.warehouse_name, s.supplier_name
                         FROM inbound_logs il
                         LEFT JOIN users u ON u.hashed_id = il.user_id
                         LEFT JOIN warehouse w ON w.hashed_id = il.warehouse
                         LEFT JOIN supplier s ON s.hashed_id = il.supplier
-                        WHERE il.warehouse IN ('$imploded_warehouse_ids')
+                        WHERE il.warehouse IN ($imploded_warehouse_ids)
                         ORDER BY il.id DESC";
         $inbound_res = $conn->query($inbound_sql);
         if($inbound_res->num_rows>0){
           while($row=$inbound_res->fetch_assoc()){
             $inbound_id = $row['id'];
-            $inbound_sales_invoice = $row['sales_invoice'];
+            $inbound_sales_invoice = $row['unique_key'];
             $inbound_date = $row['date_received'];
             $inbound_supplier = $row['supplier_name'];
             $inbound_receiver = $row['user_fname'] . " " . $row['user_lname'];
@@ -106,24 +111,6 @@ if (isset($_SESSION['inbound_id'])) {
 </div>
 
 
-<div class="modal fade" id="pdfModal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-    <div class="modal-content position-relative">
-      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body p-0">
-        <!-- Embed the PDF using an iframe -->
-        <iframe id="pdfViewer" src="" width="100%" height="600px"></iframe>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-        <!-- <button class="btn btn-primary" type="button">Understood </button> -->
-        <a href="../Receive-po/" class="btn btn-primary" type="button">Recieve P.O </a>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">

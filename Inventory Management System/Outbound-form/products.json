@@ -22,5 +22,21 @@
         "brand_name": "brand_1",
         "category_name": "category_A",
         "selling_price": "100"
+    },
+    {
+        "barcode": "1000992-17",
+        "product_description": "Laptop Charger Type C for ROG ally Z1",
+        "batch_num": "Batch_0009",
+        "brand_name": "ROG",
+        "category_name": "Laptop Charger",
+        "selling_price": "123"
+    },
+    {
+        "barcode": "1000992-17",
+        "product_description": "Laptop Charger Type C for ROG ally Z1",
+        "batch_num": "Batch_0009",
+        "brand_name": "ROG",
+        "category_name": "Laptop Charger",
+        "selling_price": "123"
     }
 ]

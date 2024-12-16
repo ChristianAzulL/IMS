@@ -13,7 +13,6 @@
         <tbody>
             <?php
             include "../config/database.php";
-
             // Check if both parameters are provided
             if (isset($_GET['id']) && isset($_GET['wh'])) {
                 $id = $_GET['id'];
@@ -89,17 +88,19 @@
                                     </tr>
                                     <tr class='collapse p-0 m-0' id='product-details-modal" . htmlspecialchars($row['batch_code']) . '-' . $id . '-' . $warehouse . "'>
                                         <td class='p-0 m-0' colspan='6'>
-                                            <table class='table table-hover table-striped table-bordered border-info table-sm'>
-                                                <thead class='table-info'>
-                                                    <tr>
-                                                        <th scope='row'>Barcode</th>
-                                                        <th>Fullfilment Status</th>
-                                                        <th>Capital</th>
-                                                        <th>Sold Amount</th>
-                                                        <th>Item Location</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
+                                            <div id=\"tableExample\" data-list='{\"valueNames\":[\"barcode" . $row['batch_code'] . "\",\"status" . $row['batch_code'] . "\",\"capital" . $row['batch_code'] . "\",\"sold" . $row['batch_code'] . "\",\"location" . $row['batch_code'] . "\"],\"pagination\":false}'>
+                                                <div class='table-responsive scrollbar'>
+                                                        <table class='table table-hover table-striped table-bordered border-info table-sm'>
+                                                            <thead class='table-info'>
+                                                                <tr>
+                                                                    <th class='text-900 sort' data-sort='barcode" . $row['batch_code'] . "'>Barcode</th>
+                                                                    <th class='text-900 sort' data-sort='status" . $row['batch_code'] . "'>Fullfilment Status</th>
+                                                                    <th class='text-900 sort' data-sort='capital" . $row['batch_code'] . "'>Capital</th>
+                                                                    <th class='text-900 sort' data-sort='sold" . $row['batch_code'] . "'>Sold Amount</th>
+                                                                    <th class='text-900 sort' data-sort='location" . $row['batch_code'] . "'>Item Location</th>
+                                                                </tr>
+                                                            </thead>
+                                                        <tbody>
                                 ";
                             }
 
@@ -118,17 +119,17 @@
                             // Display product details for the current batch code
                             echo "
                                 <tr>
-                                    <td><a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "'><small>" . htmlspecialchars($row['unique_barcode']) . "</small></a></td>
-                                    <td class='text-center'>" . $item_status . "</td>
-                                    <td class='text-end'><small>" . htmlspecialchars($row['capital']) . "</small></td>
-                                    <td><small>" . $row['price'] . "</small></td>
-                                    <td><small>" . htmlspecialchars($location_name) . "</small></td>
+                                    <td class='barcode" . $row['batch_code'] . "'><a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "'><small>" . htmlspecialchars($row['unique_barcode']) . "</small></a></td>
+                                    <td class='status" . $row['batch_code'] . " text-center'>" . $item_status . "</td>
+                                    <td class='capital" . $row['batch_code'] . " text-end'><small>" . htmlspecialchars($row['capital']) . "</small></td>
+                                    <td class='sold" . $row['batch_code'] . "'><small>" . $row['price'] . "</small></td>
+                                    <td class='location" . $row['batch_code'] . "'><small>" . htmlspecialchars($location_name) . "</small></td>
                                 </tr>
                             ";
                         }
 
                         // Close the last batch details table
-                        echo "</tbody></table></td></tr>";
+                        echo "</tbody></table></div></div></td></tr>";
                     } else {
                         echo "<tr><td colspan='6'>No data found for the given product ID and warehouse.</td></tr>";
                     }

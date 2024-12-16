@@ -8,11 +8,18 @@
 
             <!-- Search form -->
             <div class="row justify-content-end g-0">
-                <div class="col-auto col-sm-7 mb-3">
+                <div class="col-auto col-sm-4 mb-3 text-start">
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">
                         <span class="fas fa-plus"></span> New
                     </button>
                 </div>
+                <div class="col-auto col-sm-3 mb-3"><select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
+                <option selected="" value="">Select Warehouse</option>
+                <?php echo implode("\n", $warehouse_options); ?>
+                <!-- <option value="Pending">Pending</option>
+                <option value="Success">Received</option>
+                <option value="Blocked">Sent to Supplier</option> -->
+                </select></div>
                 <div class="col-auto col-sm-5 mb-3">
                     <form>
                         <div class="input-group">

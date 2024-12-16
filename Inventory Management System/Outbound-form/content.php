@@ -89,7 +89,7 @@
             $.getJSON('products.json', function (data) {
                 if (data.length > 0) {
                     let table = `
-                    <div class="overflow-hidden">
+                    <div class="table-responsive scrollbar overflow-hidden">
                         <table class="table table-striped table-bordered">
                             <thead class="thead-dark">
                                 <tr>
