@@ -1,77 +1,130 @@
 <div class="row">
-    <div class="col-lg-12 mb-3">
-        <div id="barcode-form"></div>
-    </div>
-    <div class="col-lg-12 mb-3">
-        <div class="card">
-            <div class="card-body overflow-hidden" style="height: 300px;">
-                <h3>Products Transaction</h3>
-                <div class="table-responsive" id="product-table"></div>
-            </div>
-        </div>
-    </div>
     <div class="col-lg-12">
-        <div class="card" >
-            <div class="card-body">
+        <div class="card" style="height: 85vh;">
+            <!-- Card Header -->
+            <div class="card-header">
+                <div class="my-3" id="barcode-form"></div>
+            </div>
+            <form action="sample.php" method="post">
+            <!-- Card Body -->
+            <div class="card-body overflow-hidden scrollbar border-top border-bottom">
+                <div class="table-responsive" style="height: 50vh; overflow-y: auto;">
+                    <table class="table table-sm">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Description</th>
+                                <th class="text-end">Capital(₱)</th>
+                                <th>Selling Price(₱)</th>
+                                <th>Keyword</th>
+                                <th>Batch Number</th>
+                                <th>Brand Name</th>
+                                <th>Category Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+
+                    </table>
+                </div>    
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer">
                 <div class="row">
-                    <div class="col-5 mb-3">
-                        <label for="">Customer Name</label>
-                        <input class="form-control" type="text">
+
+                    <!-- Left Column -->
+                    <div class="col-8">
+                        <div class="row">
+
+                            <!-- Customer Name -->
+                            <div class="col-8 mb-3">
+                                <label for="">Customer Name</label>
+                                <input class="form-control" type="text" required>
+                            </div>
+
+                            <!-- Platform -->
+                            <div class="col-4 mb-3">
+                                <label for="">Platform</label>
+                                <select class="form-select" name="platform" id="" required>
+                                    <?php 
+                                    $sql = "SELECT * FROM logistic_partner ORDER BY logistic_name";
+                                    $res = $conn->query($sql);
+
+                                    if ($res->num_rows > 0) {
+                                        while ($row = $res->fetch_assoc()) {
+                                            echo "<option value='" . $row['hashed_id'] . "'>" . $row['logistic_name'] . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option value=''>No Data</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <!-- Courier -->
+                            <div class="col-3 mb-3">
+                                <label for="">Courier</label>
+                                <select class="form-select" name="courier" id="" required>
+                                    <?php 
+                                    $sql = "SELECT * FROM courier ORDER BY courier_name ASC";
+                                    $res = $conn->query($sql);
+
+                                    if ($res->num_rows > 0) {
+                                        while ($row = $res->fetch_assoc()) {
+                                            echo "<option value='" . $row['hashed_id'] . "'>" . $row['courier_name'] . "</option>";
+                                        }
+                                    } else {
+                                        echo "<option value=''>No Data</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+
+                            <!-- Order Number -->
+                            <div class="col-3 mb-3">
+                                <label for="">Order no.</label>
+                                <input class="form-control" type="text" required>
+                            </div>
+
+                            <!-- Order Line ID -->
+                            <div class="col-3 mb-3">
+                                <label for="">Order Line ID</label>
+                                <input class="form-control" type="text" required>
+                            </div>
+
+                            <!-- Process By -->
+                            <div class="col-3 mb-3">
+                                <label for="">Process by</label>
+                                <input class="form-control" type="text" readonly value="<?php echo $user_fullname; ?>">
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-3 mb-3">
-                        <label for="">Platform</label>
-                        <select class="form-select" name="platform" id="">
-                            <?php 
-                            $sql = "SELECT * FROM logistic_partner ORDER BY logistic_name";
-                            $res = $conn->query($sql);
-                            if($res->num_rows>0){
-                                while($row = $res->fetch_assoc()){
-                                    echo "<option value='".$row['hashed_id']."'>".$row['logistic_name']."</option>";
-                                }
-                            } else {
-                                echo "<option value=''>No Data</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-4 mb-3">
-                        <label for="">Courier</label>
-                        <select class="form-select" name="courier" id="">
-                            <?php 
-                            $sql = "SELECT * FROM courier ORDER BY courier_name ASC";
-                            $res = $conn->query($sql);
-                            if($res->num_rows>0){
-                                while($row = $res->fetch_assoc()){
-                                    echo "<option value='".$row['hashed_id']."'>".$row['courier_name']."</option>";
-                                }
-                            } else {
-                                echo "<option value=''>No Data</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col-3 mb-3">
-                        <label for="">Order no.</label>
-                        <input class="form-control" type="number">
-                    </div>
-                    <div class="col-3 mb-3">
-                        <label for="">Order Line ID</label>
-                        <input type="number" class="form-control">
-                    </div>
-                    <div class="col-4 mb-3">
-                        <label for="">Process by</label>
-                        <input class="form-control" type="text" readonly value="<?php echo $user_fullname;?>">
-                    </div>
-                    <div class="col-2 mb-3 pt-4">
-                        <button class="btn btn-primary">Save</button>
+                    
+                    <!-- Right Column -->
+                    <div class="col-4 border-start">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-6 text-start">
+                                    <p><b>Total:</b></p>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <p><i>1000.00</i></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn-primary w-100">Submit</button>
+                        </div>
                     </div>
                     
                 </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
+<!-- Add this in the <head> or before </body> -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     $(document).ready(function () {
         // Load the barcode form initially
@@ -84,54 +137,25 @@
             });
         }
 
-        // Function to load the product table
-        function loadProductTable() {
-            $.getJSON('products.json', function (data) {
-                if (data.length > 0) {
-                    let table = `
-                    <div class="table-responsive scrollbar overflow-hidden">
-                        <table class="table table-striped table-bordered">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Barcode</th>
-                                    <th>Description</th>
-                                    <th>Selling Price</th>
-                                    <th>Keyword</th>
-                                    <th>Batch Number</th>
-                                    <th>Brand Name</th>
-                                    <th>Category Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-                    $.each(data, function (index, product) {
-                        table += `
-                            <tr>
-                                <td>${product.barcode}</td>
-                                <td>${product.product_description}</td>
-                                <td class="text-end">${product.selling_price}</td>
-                                <td>${product.keyword}</td>
-                                <td>${product.batch_num}</td>
-                                <td>${product.brand_name}</td>
-                                <td>${product.category_name}</td>
-                            </tr>
-                        `;
-                    });
-                    table += `
-                            </tbody>
-                        </table>
-                    </div>
-                    `;
-                    $('#product-table').html(table);
-                } else {
-                    $('#product-table').html('<p>No products available.</p>');
+        // Function to load content
+        function loadContent() {
+            $.ajax({
+                url: 'bor.php?view=sample', // URL of the PHP file
+                method: 'GET',             // HTTP method
+                success: function (data) {
+                    // Insert the retrieved data into the div
+                    $('#table-body').html(data);
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors
+                    console.error('Error:', error);
                 }
-            }).fail(function () {
-                $('#product-table').html('<p>No transaction yet.</p>');
             });
         }
 
-        // Handle form submission
+        loadContent();
+
+        // Include SweetAlert2 (make sure it's loaded in your HTML)
         $(document).on('submit', '#myForm', function (e) {
             e.preventDefault();
 
@@ -140,17 +164,32 @@
                 url: $(this).attr('action'),
                 data: $(this).serialize(),
                 dataType: 'json',
-                success: function () {
-                    loadBarcodeForm();
-                    loadProductTable();
+                success: function (response) {
+                    if (response.error) {
+                        // Display SweetAlert2 error message
+                        Swal.fire({
+                            icon: 'warning',
+                            title: response.error,
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            loadBarcodeForm();
+                        });
+                    } else {
+                        // Reload data
+                        loadBarcodeForm();
+                        loadContent();
+                    }
                 },
                 error: function () {
-                    alert('An error occurred. Please try again.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
         });
 
-        // Initial load of the product table
-        loadProductTable();
     });
 </script>

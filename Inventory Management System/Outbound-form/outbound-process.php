@@ -3,7 +3,6 @@ include "../config/database.php"; // Ensure this includes a $conn object for MyS
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
     $barcode = $_POST['barcode'];
-    $selling_price = $_POST['selling_price'];
 
     // Use MySQLi's ? placeholder
     $stmt = $conn->prepare("
@@ -11,7 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
             product.description, 
             brand.brand_name, 
             category.category_name, 
-            stocks.batch_code 
+            stocks.batch_code, 
+            stocks.capital
         FROM 
             product
         JOIN brand ON product.brand = brand.hashed_id
@@ -31,15 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
     $product = $result->fetch_assoc();
 
     if ($product) {
-        $data = [
-            "barcode" => $barcode,
-            "product_description" => $product['description'] ?? '',
-            "batch_num" => $product['batch_code'] ?? '',
-            "brand_name" => $product['brand_name'] ?? '',
-            "category_name" => $product['category_name'] ?? '',
-            "selling_price" => $selling_price
-        ];
-
         $jsonFile = 'products.json';
 
         // Ensure the JSON file exists or create it
@@ -47,14 +38,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
             file_put_contents($jsonFile, json_encode([], JSON_PRETTY_PRINT));
         }
 
-        // Read existing data and append the new product
+        // Read existing data
         $existingData = json_decode(file_get_contents($jsonFile), true) ?: [];
-        $existingData[] = $data;
 
-        // Save updated data back to the JSON file
-        file_put_contents($jsonFile, json_encode($existingData, JSON_PRETTY_PRINT));
+        // Check if barcode already exists
+        $barcodeExists = false;
+        foreach ($existingData as $existingProduct) {
+            if ($existingProduct['barcode'] === $barcode) {
+                $barcodeExists = true;
+                break;
+            }
+        }
 
-        echo json_encode($existingData); // Return updated JSON data
+        if ($barcodeExists) {
+            echo json_encode(["error" => "Barcode already listed."]);
+        } else {
+            // Append the new product if barcode doesn't exist
+            $data = [
+                "barcode" => $barcode,
+                "product_description" => $product['description'] ?? '',
+                "batch_num" => $product['batch_code'] ?? '',
+                "brand_name" => $product['brand_name'] ?? '',
+                "category_name" => $product['category_name'] ?? '',
+                "capital" => $product['capital'] ?? ''
+            ];
+
+            $existingData[] = $data;
+
+            // Save updated data back to the JSON file
+            file_put_contents($jsonFile, json_encode($existingData, JSON_PRETTY_PRINT));
+
+            echo json_encode($existingData); // Return updated JSON data
+        }
     } else {
         echo json_encode(["error" => "No product found for the given barcode."]);
     }
