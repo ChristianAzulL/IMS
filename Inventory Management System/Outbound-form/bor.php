@@ -19,10 +19,11 @@ if (isset($_GET['view'])) {
                 foreach ($products as $product) {
                     ?>
                     <tr>
-                        <td><?php echo $product['barcode']; ?></td>
+                        <td><button class="btn btn-transparent action-button" type="button" data-barcode="<?php echo $product['barcode']; ?>"><span class="far fa-window-close text-danger"></span></button></td>
+                        <td><input type="text" name="barcode[]" class="form-control m-0 py-0" value="<?php echo $product['barcode']; ?>" readonly></td>
                         <td><?php echo $product['product_description'];?></td>
                         <td><?php echo $product['capital'];?></td>
-                        <td><input type="number" name="selling[]" min="<?php echo $product['capital'];?>" class="form-control" step="0.01" required></td>
+                        <td><input type="number" name="selling[]" min="<?php echo $product['capital'];?>" class="form-control m-0 py-0 selling-input" step="0.01" placeholder="Selling Price" required></td>
                         <td><?php echo $product['batch_num']; ?></td>
                         <td><?php echo $product['brand_name'];?></td>
                         <td><?php echo $product['brand_name'];?></td>

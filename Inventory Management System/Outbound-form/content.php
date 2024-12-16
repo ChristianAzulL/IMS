@@ -12,6 +12,7 @@
                     <table class="table table-sm">
                         <thead class="table-dark">
                             <tr>
+                                <th style="width: 30px;"></th>
                                 <th>Barcode</th>
                                 <th>Description</th>
                                 <th class="text-end">Capital(₱)</th>
@@ -108,7 +109,7 @@
                                     <p><b>Total:</b></p>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <p><i>1000.00</i></p>
+                                    <p id="total" class="fw-bold">Total: 0.00</p>
                                 </div>
                             </div>
                         </div>
@@ -125,10 +126,16 @@
 </div>
 <!-- Add this in the <head> or before </body> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready(function () {
-        // Load the barcode form initially
+        let sellingInputClicked = false; // Track if the alert has been shown
+
+        // Load barcode form initially
         loadBarcodeForm();
+
+        // Load table content
+        loadContent();
 
         // Function to load the barcode form
         function loadBarcodeForm() {
@@ -137,24 +144,97 @@
             });
         }
 
-        // Function to load content
+        // Function to load table content
         function loadContent() {
             $.ajax({
                 url: 'bor.php?view=sample', // URL of the PHP file
-                method: 'GET',             // HTTP method
+                method: 'GET',
                 success: function (data) {
-                    // Insert the retrieved data into the div
                     $('#table-body').html(data);
+
+                    // Rebind events after loading content
+                    bindSellingInputEvent();
+                    calculateTotal();
                 },
                 error: function (xhr, status, error) {
-                    // Handle errors
-                    console.error('Error:', error);
+                    console.error('Error loading content:', error);
                 }
             });
         }
 
-        loadContent();
+        // Event delegation for calculateTotal
+        $(document).on('input', '.selling-input', function () {
+            calculateTotal();
+        });
 
+        // Calculate total
+        function calculateTotal() {
+            let total = 0;
+            $('.selling-input').each(function () {
+                const value = parseFloat($(this).val());
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+            $('#total').text(`Total: ${total.toFixed(2)}`);
+        }
+
+        // Show warning on first click of selling input
+        function bindSellingInputEvent() {
+            $('.selling-input').one('focus', function () {
+                if (!sellingInputClicked) {
+                    sellingInputClicked = true; // Set to true after first alert
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Finalize Items First!',
+                        text: 'If you input any values here, they will be cleared if you delete any barcode.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+        // Event delegation for action buttons
+        $(document).on('click', '.action-button', function () {
+            const barcode = $(this).data('barcode');
+
+            // Send AJAX request
+            $.ajax({
+                url: 'action.php',
+                method: 'POST',
+                data: { barcode: barcode },
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: response.message,
+                            confirmButtonText: 'OK'
+                        });
+
+                        // Reload table content
+                        loadContent();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
+        
         // Include SweetAlert2 (make sure it's loaded in your HTML)
         $(document).on('submit', '#myForm', function (e) {
             e.preventDefault();
@@ -190,6 +270,7 @@
                 }
             });
         });
+
 
     });
 </script>
