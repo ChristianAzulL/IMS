@@ -1,6 +1,8 @@
 <?php
 include "../config/database.php"; // Ensure this includes a $conn object for MySQLi
+include "../config/on_session.php";
 
+$outbound_id = $_SESSION['outbound_id'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
     $barcode = $_POST['barcode'];
 
@@ -17,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
         JOIN brand ON product.brand = brand.hashed_id
         JOIN category ON product.category = category.hashed_id
         JOIN stocks ON product.hashed_id = stocks.product_id
-        WHERE stocks.unique_barcode = ?
+        WHERE stocks.unique_barcode = ? AND stocks.item_status = 0
     ");
 
     if (!$stmt) {
@@ -31,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['barcode'])) {
     $product = $result->fetch_assoc();
 
     if ($product) {
-        $jsonFile = 'products.json';
+        $jsonFile = $outbound_id . '.json';
 
         // Ensure the JSON file exists or create it
         if (!file_exists($jsonFile)) {

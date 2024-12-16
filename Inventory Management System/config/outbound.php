@@ -1,81 +1,90 @@
 <?php
-// Include database connection (replace with your actual connection details)
-include('database.php'); // Make sure to include your database connection file
+include('database.php');
+include('on_session.php'); 
 
-// Initialize response array
+$outbound_id = $_SESSION['outbound_id'];
+$warehouse = $_SESSION['warehouse_ids'];
+
 $response = [
     'status' => 'error',
     'error' => 'Something went wrong.',
 ];
 
-// Check if form was submitted via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // Retrieve form data from the $_POST array
-    $customerName = isset($_POST['customer_name']) ? $_POST['customer_name'] : '';
-    $platform = isset($_POST['platform']) ? $_POST['platform'] : '';
-    $courier = isset($_POST['courier']) ? $_POST['courier'] : '';
-    $orderNo = isset($_POST['order_no']) ? $_POST['order_no'] : '';
-    $orderLineID = isset($_POST['order_line_id']) ? $_POST['order_line_id'] : '';
+    $customerName = isset($_POST['customer_name']) ? htmlspecialchars($_POST['customer_name']) : '';
+    $platform = isset($_POST['platform']) ? htmlspecialchars($_POST['platform']) : '';
+    $courier = isset($_POST['courier']) ? htmlspecialchars($_POST['courier']) : '';
+    $orderNo = isset($_POST['order_no']) ? htmlspecialchars($_POST['order_no']) : '';
+    $orderLineID = isset($_POST['order_line_id']) ? htmlspecialchars($_POST['order_line_id']) : '';
     $processedBy = isset($_POST['processed_by']) ? $_POST['processed_by'] : '';
 
-    // Retrieve the selling prices and barcodes
     $barcodes = isset($_POST['barcode']) ? $_POST['barcode'] : [];
     $sellingPrices = isset($_POST['selling']) ? $_POST['selling'] : [];
 
-    // Basic validation (checking required fields)
     if (empty($customerName) || empty($platform) || empty($courier) || empty($orderNo) || empty($orderLineID)) {
         $response['error'] = 'All fields are required.';
         echo json_encode($response);
         exit;
     }
 
-    // Ensure barcodes and selling prices match in count
     if (empty($barcodes) || empty($sellingPrices) || count($barcodes) !== count($sellingPrices)) {
         $response['error'] = 'Barcodes and selling prices must be provided and match in number.';
         echo json_encode($response);
         exit;
     }
 
-    // Start a database transaction to ensure data consistency
     $conn->begin_transaction();
 
     try {
-        // Insert order details into the orders table
-        $orderSql = "INSERT INTO orders (customer_name, platform_id, courier_id, order_no, order_line_id, processed_by, created_at) 
-                     VALUES ('$customerName', '$platform', '$courier', '$orderNo', '$orderLineID', '$processedBy', NOW())";
-        if ($conn->query($orderSql) === TRUE) {
-            // Get the last inserted order ID
+        $orderSql = "INSERT INTO outbound_logs (date_sent, warehouse, user_id, customer_fullname, courier, platform, order_num, order_line_id, hashed_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmt = $conn->prepare($orderSql);
+        $stmt->bind_param("sssssssss", $currentDateTime, $warehouse, $user_id, $customerName, $courier, $platform, $orderNo, $orderLineID, $outbound_id);
+        
+        if ($stmt->execute()) {
             $orderID = $conn->insert_id;
 
-            // Insert barcodes and selling prices into the order_items table
             foreach ($barcodes as $key => $barcode) {
                 $sellingPrice = $sellingPrices[$key];
-                $itemSql = "INSERT INTO order_items (order_id, barcode, selling_price, created_at) 
-                            VALUES ('$orderID', '$barcode', '$sellingPrice', NOW())";
-                if (!$conn->query($itemSql)) {
-                    throw new Exception("Failed to insert order item: " . $conn->error);
+                $itemSql = "INSERT INTO outbound_content (unique_barcode, sold_price, hashed_id) 
+                            VALUES (?, ?, ?)";
+                $itemStmt = $conn->prepare($itemSql);
+                $itemStmt->bind_param("sss", $barcode, $sellingPrice, $outbound_id);
+                
+                if ($itemStmt->execute()) {
+                    $update_stock = "UPDATE stocks SET item_status = 1, outbound_id = '$outbound_id', outbounded_by = '$user_id' WHERE unique_barcode = '$barcode'";
+                    if ($conn->query($update_stock) === TRUE) {
+                        $action = "Outbounded to Customer: " . $customerName;
+                        $insert_to_item_history = "INSERT INTO stock_timeline SET unique_barcode = '$barcode', title = 'Outbound', `action` = '$action', user_id = '$user_id', `date` = '$currentDateTime'";
+                        $conn->query($insert_to_item_history);
+                    }
+                } else {
+                    throw new Exception("Failed to insert order item: " . $itemStmt->error);
                 }
             }
 
-            // Commit the transaction if everything is successful
-            $conn->commit();
+            $log_action = 'Outbound #' . $outbound_id . ' has been successfully processed.';
+            $insert_logs = "INSERT INTO logs SET title = 'OUTBOUND', `action` = '$log_action', user_id = '$user_id', `date` = '$currentDateTime'";
+            $conn->query($insert_logs);
 
-            // Success response
+            $filePath = '../Outbound-form/' . $outbound_id . '.json';
+            if (file_exists($filePath) && !unlink($filePath)) {
+                throw new Exception("Failed to delete the file.");
+            }
+
+            $conn->commit();
             $response['status'] = 'success';
             $response['message'] = 'Order saved successfully.';
+            unset($response['error']);
         } else {
-            throw new Exception("Failed to insert order: " . $conn->error);
+            throw new Exception("Failed to insert order: " . $stmt->error);
         }
     } catch (Exception $e) {
-        // Rollback transaction in case of an error
         $conn->rollback();
         $response['error'] = 'Transaction failed: ' . $e->getMessage();
     }
-} else {
-    $response['error'] = 'Invalid request method.';
-}
 
-// Send JSON response back to the front end
-echo json_encode($response);
+    echo json_encode($response);
+}
 ?>

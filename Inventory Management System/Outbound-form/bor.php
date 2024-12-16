@@ -1,7 +1,12 @@
 <?php
+include "../config/database.php";
+include "../config/on_session.php";
+
+$outbound_id = $_SESSION['outbound_id'];
+
 if (isset($_GET['view'])) {
     // Path to the JSON file
-    $jsonFilePath = 'products.json';
+    $jsonFilePath = $outbound_id . '.json';
 
     // Check if the file exists
     if (file_exists($jsonFilePath)) {

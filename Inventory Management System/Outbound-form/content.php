@@ -5,7 +5,7 @@
             <div class="card-header">
                 <div class="my-3" id="barcode-form"></div>
             </div>
-            <form action="sample.php" method="post">
+            <form action="../config/outbound.php" id="myform2" method="post">
             <!-- Card Body -->
             <div class="card-body overflow-hidden scrollbar border-top border-bottom">
                 <div class="table-responsive" style="height: 50vh; overflow-y: auto;">
@@ -40,7 +40,7 @@
                             <!-- Customer Name -->
                             <div class="col-8 mb-3">
                                 <label for="">Customer Name</label>
-                                <input class="form-control" type="text" required>
+                                <input class="form-control" name="customer_name" type="text" required>
                             </div>
 
                             <!-- Platform -->
@@ -84,19 +84,19 @@
                             <!-- Order Number -->
                             <div class="col-3 mb-3">
                                 <label for="">Order no.</label>
-                                <input class="form-control" type="text" required>
+                                <input class="form-control" name="order_no" type="text" required>
                             </div>
 
                             <!-- Order Line ID -->
                             <div class="col-3 mb-3">
                                 <label for="">Order Line ID</label>
-                                <input class="form-control" type="text" required>
+                                <input class="form-control" name="order_line_id" type="text" required>
                             </div>
 
                             <!-- Process By -->
                             <div class="col-3 mb-3">
                                 <label for="">Process by</label>
-                                <input class="form-control" type="text" readonly value="<?php echo $user_fullname; ?>">
+                                <input class="form-control" type="text" name="processed_by" readonly value="<?php echo $user_fullname; ?>">
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
         // Function to load table content
         function loadContent() {
             $.ajax({
-                url: 'bor.php?view=sample', // URL of the PHP file
+                url: 'bor.php?view=<?php echo $_SESSION['outbound_id'];?>', // URL of the PHP file
                 method: 'GET',
                 success: function (data) {
                     $('#table-body').html(data);
@@ -261,6 +261,66 @@
                     }
                 },
                 error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'An unexpected error occurred. Please try again later.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
+        // Submit the form with id="myform2" via AJAX and show loading state
+        $(document).on('submit', '#myform2', function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            // Disable submit button and show loading state
+            let submitButton = $(this).find('button[type="submit"]');
+            submitButton.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+
+            // Submit the form via AJAX
+            $.ajax({
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (response) {
+                    // Re-enable submit button after response
+                    submitButton.prop('disabled', false).html('Submit');
+
+                    // Show SweetAlert2 based on response
+                    Swal.fire({
+                        icon: response.status === 'success' ? 'success' : 'error',
+                        title: response.status === 'success' ? 'Success' : 'Error',
+                        text: response.message,
+                        confirmButtonText: 'OK'
+                    }).then(function () {
+                        if (response.status === 'success') {
+                            // After successful response, ask user if they want to make another outbound transaction
+                            Swal.fire({
+                                icon: 'question',
+                                title: 'Would you like to make another outbound transaction?',
+                                showCancelButton: true,
+                                confirmButtonText: 'Yes',
+                                cancelButtonText: 'No'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Redirect to unset.php for a new transaction
+                                    window.location.href = 'unset.php';
+                                } else {
+                                    // Redirect to outbound logs
+                                    window.location.href = '../Outbound-logs/';
+                                }
+                            });
+                        }
+                    });
+                },
+                error: function () {
+                    // Re-enable submit button if there's an error
+                    submitButton.prop('disabled', false).html('Submit');
+
+                    // Show error message if AJAX fails
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',

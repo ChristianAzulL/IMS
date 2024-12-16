@@ -1,6 +1,24 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
+
+// Check if 'outbound_id' is set in the session
+if (!isset($_SESSION['outbound_id'])) {
+    // Query to get the last outbound log's hashed_id
+    $check_lastoutbound = "SELECT hashed_id FROM outbound_logs ORDER BY hashed_id DESC LIMIT 1";
+    $result = $conn->query($check_lastoutbound); // Execute the query
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        // Increment the last hashed_id and ensure it is 16 digits with leading zeros
+        $outbound_id = str_pad((int)$row['hashed_id'] + 1, 16, '0', STR_PAD_LEFT);
+        $_SESSION['outbound_id'] = $outbound_id; // Store the new outbound_id in session
+    } else {
+        // If there are no records, set the outbound_id to the first possible value
+        $outbound_id = str_pad(1, 16, '0', STR_PAD_LEFT);
+        $_SESSION['outbound_id'] = $outbound_id; // Store the first outbound_id in session
+    }
+}
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">

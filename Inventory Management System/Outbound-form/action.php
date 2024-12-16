@@ -1,9 +1,13 @@
 <?php
+include "../config/database.php";
+include "../config/on_session.php";
+
+$outbound_id = $_SESSION['outbound_id'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['barcode'])) {
     $barcode = $_POST['barcode'];
 
     // Path to the JSON file
-    $filePath = 'products.json';
+    $filePath = $outbound_id . '.json';
 
     // Check if the file exists
     if (!file_exists($filePath)) {

@@ -1,3 +1,8 @@
+<?php 
+if(isset($_SESSION['outbound_id'])){
+    unset($_SESSION['outbound_id']);
+}
+?>
 <!-- <div class="card"> -->
 <div class="card-body overflow-hidden p-lg-6">
     <div class="row align-items-center">
