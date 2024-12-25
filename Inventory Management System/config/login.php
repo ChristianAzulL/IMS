@@ -48,6 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $upos_row = $upos_result->fetch_assoc();
         $_SESSION['position_name'] = $upos_row['position_name'];
         $_SESSION['access'] = $upos_row['access'];
+        $fullname = $_SESSION['full_name'];
+        $user_id = $_SESSION['user_id'];
+        $action = $fullname . ' Logged in.';
+        // Prepare the SQL statement with placeholders
+        $stmt = $conn->prepare("INSERT INTO logs (title, `action`, `date`, user_id) VALUES (?, ?, ?, ?)");
+
+        // Bind the parameters to the placeholders
+        $title = 'LOGGED IN';
+        $stmt->bind_param("ssss", $title, $action, $currentDateTime, $user_id);
+
+        // Execute the prepared statement
+        if ($stmt->execute()) {
+            
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Log entry failed: ' . $stmt->error]);
+        }
 
         echo json_encode(['success' => true]);
     } else {

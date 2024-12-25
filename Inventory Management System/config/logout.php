@@ -1,7 +1,21 @@
 <?php
-// Start or resume a session
-session_start();
+include "database.php";
+include "on_session.php";
 
+$action = $user_fullname . ' Logged out.';
+// Prepare the SQL statement with placeholders
+$stmt = $conn->prepare("INSERT INTO logs (title, `action`, `date`, user_id) VALUES (?, ?, ?, ?)");
+
+// Bind the parameters to the placeholders
+$title = 'LOGGED OUT';
+$stmt->bind_param("ssss", $title, $action, $currentDateTime, $user_id);
+
+// Execute the prepared statement
+if ($stmt->execute()) {
+    
+} else {
+    echo json_encode(['success' => false, 'message' => 'Log entry failed: ' . $stmt->error]);
+}
 // Unset all session variables
 $_SESSION = array();
 

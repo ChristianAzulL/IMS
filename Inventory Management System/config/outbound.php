@@ -3,8 +3,13 @@ include('database.php');
 include('on_session.php'); 
 
 $outbound_id = $_SESSION['outbound_id'];
-$warehouse = $_SESSION['warehouse_ids'];
-
+$warehouse_for_outbound = $_SESSION['warehouse_outbound'];
+$warehouse_sql = "SELECT hashed_id FROM warehouse WHERE warehouse_name = '$warehouse_for_outbound' LIMIT 1";
+$res = $conn->query($warehouse_sql);
+if($res->num_rows>0){
+    $row = $res->fetch_assoc();
+    $warehouse = $row['hashed_id'];
+}
 $response = [
     'status' => 'error',
     'error' => 'Something went wrong.',
