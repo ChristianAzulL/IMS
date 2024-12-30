@@ -39,7 +39,6 @@ try {
            OR c.category_name LIKE ? 
            OR u.user_fname LIKE ? 
            OR u.user_lname LIKE ?)
-           AND s.item_status = 0
     ";
 
     if ($warehouse) {

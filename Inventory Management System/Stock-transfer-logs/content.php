@@ -7,7 +7,7 @@ if (isset($_SESSION['Stock_id'])) {
 
 <div class="card">
   <div class="card-body overflow-hidden py-6 px-0">
-    <div id="tableExample4" data-list='{"valueNames":["Stock_no","po_no","supplier","date","receiver","warehouse"]}'>
+    <div id="tableExample4" data-list='{"valueNames":["Stock_no","batch","status","from_wh","from_name","date_sent","remarks_sender","to_wh","date_rec","receiver_name","remarks_rec"]}'>
       <div class="row">
         <div class="col-12 ps-5 mb-3">
           <h4>Stock LOGS</h4>
@@ -36,19 +36,20 @@ if (isset($_SESSION['Stock_id'])) {
 
       <!-- Table Section -->
       <div class="table-responsive scrollbar">
-        <table class="table table-sm table-striped fs-10 mb-0 overflow-hidden">
+        <table class="table table-sm table-striped table-hover fs-10 mb-0 overflow-hidden">
           <thead class="bg-200">
             <tr>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="Stock_no">Details</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="receiver">Fulfillment Status</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="warehouse">From</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="receiver">Sent By</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="date">Date Sent</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="date">Sender Remarks</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="receiver">To</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="receiver">Date Received</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="receiver">Received By</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="date">Receiver Remarks</th>
+              <th></th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="batch">Details</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="status">Fulfillment Status</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="from_wh">From</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="from_name">Sent By</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="date_sent">Date Sent</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="remarks_sender">Sender Remarks</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="to_wh">To</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="date_rec">Date Received</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="receiver_name">Received By</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="remarks_rec">Receiver Remarks</th>
             </tr>
           </thead>
           <tbody class="list" id="table-purchase-body">
@@ -100,27 +101,41 @@ if (isset($_SESSION['Stock_id'])) {
                 $truncatedText = strlen($imploded_batch_codes) > 50 ? substr($imploded_batch_codes, 0, 50) . "..." : $imploded_batch_codes;
 
                 $status_badge = match ($row['status']) {
-                  "PENDING" => '<span class="badge bg-primary">Pending</span>',
-                  "ENROUTE" => '<span class="badge bg-warning">Enroute</span>',
-                  "RECEIVED" => '<span class="badge bg-success">Received</span>',
+                  "pending" => '<span class="badge bg-primary">Pending</span>',
+                  "enroute" => '<span class="badge bg-warning">Enroute</span>',
+                  "received" => '<span class="badge bg-success">Received</span>',
                   default => '<span class="badge bg-danger">Failed</span>',
                 };
+
+                if($row['status']==="pending"){
+                  $tr_type = "table-danger";
+                } else {
+                  $tr_type = "";
+                }
             ?>
-            <tr class="btn-reveal-trigger">
-              <td class="align-middle white-space-nowrap Stock_no">
-                <a href="../../app/e-commerce/customer-details.html" type="button" data-bs-toggle="modal" data-bs-target="#pdfModal">
-                  <?php echo $truncatedText; ?>
-                </a>
+            <tr class="btn-reveal-trigger <?php echo $tr_type;?>">
+              <td>
+                <button 
+                  class="btn btn-transparent view-button" 
+                  type="button" 
+                  data-bs-toggle="modal" 
+                  data-bs-target="#tr" 
+                  data-id="<?php echo $row['id']; ?>">
+                  <span class="fas fa-eye"></span>
+                </button>
               </td>
-              <td class="align-middle white-space-nowrap warehouse"><?php echo $status_badge; ?></td>
-              <td class="align-middle white-space-nowrap date"><?php echo $row['from_warehouse_name']; ?></td>
-              <td class="align-middle white-space-nowrap receiver"><?php echo $row['from_fullname']; ?></td>
-              <td class="align-middle white-space-nowrap receiver"><?php echo $row['date_out']; ?></td>
-              <td class="align-middle white-space-nowrap receiver"><?php echo $row['remarks_sender']; ?></td>
-              <td class="align-middle white-space-nowrap receiver"><?php echo $row['to_warehouse_name']; ?></td>
-              <td class="align-middle white-space-nowrap receiver"><?php echo $row['date_received']; ?></td>
-              <td class="align-middle white-space-nowrap receiver"><?php echo $row['receiver_fullname']; ?></td>
-              <td class="align-middle white-space-nowrap receiver"><?php echo $row['remarks_receiver']; ?></td>
+              <td class="align-middle white-space-nowrap batch">
+                  <?php echo $truncatedText; ?>
+              </td>
+              <td class="align-middle white-space-nowrap text-center status"><?php echo $status_badge; ?></td>
+              <td class="align-middle white-space-nowrap from_wh"><?php echo $row['from_warehouse_name']; ?></td>
+              <td class="align-middle white-space-nowrap from_name"><?php echo $row['from_fullname']; ?></td>
+              <td class="align-middle white-space-nowrap date_out"><?php echo $row['date_out']; ?></td>
+              <td class="align-middle white-space-nowrap remarks_sender"><?php echo $row['remarks_sender']; ?></td>
+              <td class="align-middle white-space-nowrap to_wh"><?php echo $row['to_warehouse_name']; ?></td>
+              <td class="align-middle white-space-nowrap date_rec"><?php echo $row['date_received']; ?></td>
+              <td class="align-middle white-space-nowrap receiver_name"><?php echo $row['receiver_fullname']; ?></td>
+              <td class="align-middle white-space-nowrap remarks_rec"><?php echo $row['remarks_receiver']; ?></td>
             </tr>
             <?php 
               }
@@ -140,3 +155,56 @@ if (isset($_SESSION['Stock_id'])) {
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="tr" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="button">Understood </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  // Select all buttons with the 'view-button' class
+  const viewButtons = document.querySelectorAll(".view-button");
+
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      // Get the row ID from the data-id attribute
+      const rowId = this.getAttribute("data-id");
+
+      // Build the URL for the modal content
+      const modalUrl = `modal-content.php?id=${rowId}`;
+
+      // Select the modal body and update its content using AJAX
+      const modalBody = document.querySelector("#tr .modal-body");
+      
+      // Show a loading spinner or placeholder while loading content
+      modalBody.innerHTML = '<div class="text-center p-3"><span class="spinner-border"></span> Loading...</div>';
+
+      // Fetch the modal content
+      fetch(modalUrl)
+        .then(response => response.text())
+        .then(html => {
+          modalBody.innerHTML = html; // Insert the fetched content
+        })
+        .catch(error => {
+          console.error("Error loading modal content:", error);
+          modalBody.innerHTML = '<div class="text-center p-3">An error occurred. Please try again.</div>';
+        });
+    });
+  });
+});
+
+</script>

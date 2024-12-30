@@ -71,7 +71,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
       <div id="bulk-select-replace-element"><button class="btn btn-falcon-success btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="ms-1">New</span></button></div>
       <div class="d-none ms-3" id="bulk-select-actions">
         <div class="d-flex">
-          <form action="../Supplier-selection/index.php" method="POST">
+          <form action="../Create-stock-transfer-select-product/index.php" method="POST">
             <pre id="selectedRows" hidden></pre>
             <button class="btn btn-falcon-danger btn-sm ms-2" type="submit">Next</button>
           </form>
@@ -106,6 +106,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
             LEFT JOIN category ON category.hashed_id = product.category
             LEFT JOIN brand ON brand.hashed_id = product.brand
             WHERE stocks.warehouse = '$warehouse_for_transfer' AND stocks.item_status = 0
+            GROUP BY stocks.batch_code
             ORDER BY stocks.batch_code DESC
           ";
           $product_list_res = $conn->query($product_list_query);
@@ -116,7 +117,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
               $product_category = $row['category_name'];
               $product_brand = $row['brand_name'];
               $product_des = $row['description'];
-              $product_pbarcode = $row['unique_barcode'];
+              $product_pbarcode = $row['parent_barcode'];
               $product_date = $row['date'];
               $batch_code = $row['batch_code'];
               
@@ -127,7 +128,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
           <tr>
             <td class="align-middle white-space-nowrap">
               <div class="form-check mb-0">
-                <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='unique_barcode[]' value='<?php echo $product_pbarcode; ?>' checked=''>}" />
+                <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='batch_code[]' value='<?php echo $batch_code; ?>' checked=''>}" />
               </div>
             </td>
             <td>
