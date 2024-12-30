@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
         $fromWarehouseResult = $conn->query($fromWarehouseQuery);
         $fromWarehouseName = ($fromWarehouseResult && $fromWarehouseResult->num_rows > 0) ? $fromWarehouseResult->fetch_assoc()['warehouse_name'] : '<b class="text-danger">?!</b>';
 
-        $toWarehouseName = '<b class="text-danger">?!</b>';
+        $toWarehouseName = '<b class="text-danger">?!</b><button><span class="far fa-edit"></span></button>';
         if (!empty($toWarehouse)) {
             $toWarehouseQuery = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$toWarehouse' LIMIT 1";
             $toWarehouseResult = $conn->query($toWarehouseQuery);
@@ -54,7 +54,35 @@ if (isset($_GET['id'])) {
             "received" => '<span class="badge bg-success">Received</span>',
             default => '<span class="badge bg-danger">Failed</span>',
         };
-        
+        ?>
+        <div class="table-responsive mt-5">
+            <table class="table bordered-table table-sm">
+                <thead>
+                    <tr>
+                        <th><b>FROM:</b></th>
+                        <td><?php echo $fromWarehouseName;?></td>
+                        <th><b>STATUS:</b></th>
+                        <td><?php echo $statusBadge;?></td>
+                    </tr>
+                    <tr>
+                        <th>PROCESSED BY:</th>
+                        <td><?php echo $fromFullname;?></td>
+                        <th>DATE SENT:</th>
+                        <td><?php echo $dateSent;?></td>
+                    </tr>
+                    <tr>
+                        <th>TO:</th>
+                        <td>
+                            <?php echo $toWarehouseName;?>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+        </div>
+        <?php
     } else {
         echo "<p>No record found for the provided ID.</p>";
     }
