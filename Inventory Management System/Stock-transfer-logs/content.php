@@ -166,10 +166,6 @@ if (isset($_SESSION['Stock_id'])) {
       <div class="modal-body p-0">
 
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary" type="button">Understood </button>
-      </div>
     </div>
   </div>
 </div>
