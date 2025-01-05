@@ -1,5 +1,6 @@
 <?php
 include "../config/database.php";
+include "../config/on_session.php";
 
 if (isset($_GET['id'])) {
     $getid = $conn->real_escape_string($_GET['id']);
@@ -18,9 +19,27 @@ if (isset($_GET['id'])) {
         $dateSent = $row['date_out'];
         $dateReceived = $row['date_received'];
         $remarksSender = $row['remarks_sender'];
+        $remarksReceiver = $row['remarks_receiver'];
+        $submitBTN = '';
+
+        if(empty($remarksSender) && !isset($toWarehouse)){
+            if(strpos($warehouses, $fromWarehouse)!==false && $fromUserId === $user_id){
+                $remarksSender = '<textarea class="form-control" name="remarks_sender" id=""></textarea>';
+            } else {
+                $remarksSender = '<b class="text-danger">You cant proccess this because you are not the sender.</b>';
+            }
+        }
+
+        if(empty($remarksReceiver) && strpos($warehouses, $toWarehouse)!==false && isset($toWarehouse)){
+            if(strpos($warehouses, $toWarehouse)!==false){
+                $remarksReceiver = '<textarea class="form-control" name="remarks_receiver" id=""></textarea>';
+            } else {
+                $remarksReceiver = '<b class="text-danger">You cant proccess this because you are not the sender.</b>';
+            }
+        }
 
         if(!isset($row['date_out'])){
-            $dateSent = '<b class="text-danger">Current Time</b>';
+            $dateSent = '<b class="text-danger">Will be automatically filled out by the system.</b>';
         } else {
             $dateSent = $row['date_out'];
         }
@@ -29,7 +48,25 @@ if (isset($_GET['id'])) {
         $fromWarehouseResult = $conn->query($fromWarehouseQuery);
         $fromWarehouseName = ($fromWarehouseResult && $fromWarehouseResult->num_rows > 0) ? $fromWarehouseResult->fetch_assoc()['warehouse_name'] : '<b class="text-danger">?!</b>';
 
-        $toWarehouseName = '<select name="to_warehouse" class="form-select" id=""></select>' ;
+        // $toWarehouseName = '<select name="to_warehouse" class="form-select" id=""></select>' ;
+        // Query the warehouse table
+        $warehouse_st_sql = "SELECT hashed_id, warehouse_name FROM warehouse WHERE hashed_id != '$fromWarehouse' ORDER BY warehouse_name";
+        $result = $conn->query($warehouse_st_sql);
+
+        // Build the select element
+        $toWarehouseName = '<select name="to_warehouse" class="form-select" id=""><option value="" selected>Select Receiving Warehouse</option>';
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                // Append each warehouse as an option
+                $toWarehouseName .= '<option value="' . htmlspecialchars($row['hashed_id']) . '">' . htmlspecialchars($row['warehouse_name']) . '</option>';
+            }
+        } else {
+            // Handle case where no warehouses are found
+            $toWarehouseName .= '<option value="">No warehouses available</option>';
+        }
+
+        $toWarehouseName .= '</select>';
         if (!empty($toWarehouse)) {
             $toWarehouseQuery = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$toWarehouse' LIMIT 1";
             $toWarehouseResult = $conn->query($toWarehouseQuery);
@@ -42,8 +79,15 @@ if (isset($_GET['id'])) {
         $fromUserQuery = "SELECT CONCAT(user_fname, ' ', user_lname) AS fullname FROM users WHERE hashed_id = '$fromUserId' LIMIT 1";
         $fromUserResult = $conn->query($fromUserQuery);
         $fromFullname = ($fromUserResult && $fromUserResult->num_rows > 0) ? $fromUserResult->fetch_assoc()['fullname'] : '<b class="text-danger">?!</b>';
-
-        $receiverName = '<b class="text-danger">?!</b>';
+        
+        $receiverName = '<b class="text-danger">Will be automatically filled out by the receiving user.</b>';
+        if(!empty($toWarehouse)){
+            if(strpos($warehouses, $fromWarehouse)!==false){
+                $receiverName = '<input type="text" name="receiver_userid" class="form-control" value="' . $user_id . '" hidden><input type="text" class="form-control" value="' . $user_fullname . '"><input type="text" name="receiver_warehouse" value="' . $toWarehouse . '" hidden>' ;    
+            } else {
+                $receiverName = '<b class="text-danger">Will be automatically filled out by the receiving user.</b>';
+            }
+        }
         if (!empty($receivedUserId)) {
             $toUserQuery = "SELECT CONCAT(user_fname, ' ', user_lname) AS fullname FROM users WHERE hashed_id = '$receivedUserId' LIMIT 1";
             $toUserResult = $conn->query($toUserQuery);
@@ -59,10 +103,20 @@ if (isset($_GET['id'])) {
             "received" => '<span class="badge bg-success">Received</span>',
             default => '<span class="badge bg-danger">Failed</span>',
         };
+
+        if(empty($dateReceived)){
+            $dateReceived =  '<b class="text-danger">Will be automatically filled out by the system once received by the receiving user.</b>';
+            $submitBTN =    '<div class="text-center mt-3">
+                                <button class="btn btn-primary" type="submit">Submit</button>
+                            </div>';
+        }
+
         ?>
         <div class="card overflow-hidden" >
         <div class="card-img-top text-center bg-dark"><img class="img-fluid" src="../../assets/img/sample/pending.jpg" alt="Card image cap" /></div>
         <div class="card-body">
+            <form action="../config/stock-transfer.php?status=enroute" method="POST">
+            <input type="text" name="id" value="<?php echo $getid;?>" readonly hidden>
             <h5 class="card-title"><?php echo $statusBadge;?></h5>
             <div class="table-responsive">
                 <table class="table bordered-table table-bordered">
@@ -95,7 +149,7 @@ if (isset($_GET['id'])) {
                                 </tr>
                                 <tr>
                                     <td><?php echo $remarksSender;?></td>
-                                    <td><?php echo $remarksSender;?></td>
+                                    <td><?php echo $remarksReceiver;?></td>
                                 </tr>
                             </table>
                         </td>
@@ -193,6 +247,11 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
+            <?php 
+            echo $submitBTN;
+            ?>
+
+            </form>
         </div>
         </div>
         <?php

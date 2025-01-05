@@ -53,10 +53,88 @@ if($status === "pending"){
                     $stock_timeline_query = "INSERT INTO stock_timeline SET unique_barcode = '$unique_barcode', title = 'STOCK TRANSFER', `action` = '$stock_action', `date` = '$currentDateTime', user_id = '$user_id'";
                     if($conn->query($stock_timeline_query) === TRUE){
                         echo "<br>successfully inserted to stock_timeline<br>";
+                        header("Location: ../Stock-transfer-logs/?pending=success");
                     }
                 } 
                 
             }
         }
     }
+} elseif($status === "enroute"){
+
+    // Check if the request is a POST request
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Validate the inputs
+        $id = $conn->real_escape_string($_POST['id'] ?? '');
+
+        if(isset($_POST['to_warehouse'])){
+            $toWarehouse = $conn->real_escape_string($_POST['to_warehouse'] ?? '');
+            $remarks = $_POST['remarks_sender'];
+            $warehousename_sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$toWarehouse' LIMIT 1";
+            $result = $conn->query($warehouse_sql);
+            $row = $result->fetch_assoc();
+            $toWarehouse_name = $row['warehouse_name'];
+            $update = "UPDATE stock_transfer SET to_warehouse = '$toWarehouse', `status` = 'enroute', date_out = '$currentDateTime', remarks_sender	= '$remarks' WHERE id = '$id'";
+            if($conn->query($update) === TRUE){
+                $action = "#" . $stock_transferID . " is now enroute to " . $toWarehouse_name  . ".";
+                $logs_sql = "INSERT INTO logs SET title = 'STOCK TRANSFER', `action` = '$action', `date` = '$currentDateTime', user_id = '$user_id'";
+                if($conn->query($logs_sql) === TRUE){
+                    $stock_transfer_content_items_sql = "SELECT unique_barcode FROM stock_transfer_content WHERE st_id = '$id'";
+                    $result = $conn->query($stock_transfer_content_items_sql);
+                    while($row=$result->fetch_assoc()){
+                        $unique_barcode = $row['unique_barcode'];
+
+                        $update_stock = "UPDATE stocks SET item_status = 2, item_location = '' WHERE unique_barcode = '$unique_barcode'";
+                        if($conn->query($update_stock) === TRUE){
+                            $stock_action = "Is now enroute to " . $toWarehouse_name . ". transfer #" . $id;
+                            $stock_timeline_query = "INSERT INTO stock_timeline SET unique_barcode = '$unique_barcode', title = 'STOCK TRANSFER', `action` = '$stock_action', `date` = '$currentDateTime', user_id = '$user_id'";
+                            if($conn->query($stock_timeline_query) === TRUE){
+                                echo "<br>successfully inserted to stock_timeline<br>";
+                                header("Location: ../Stock-transfer-logs/?enroute=success");
+                            }
+                        }
+                        
+                    }
+                }
+
+            }
+        }
+
+        if(isset($_POST['receiver_userid'])){
+            $receiverUserId = $conn->real_escape_string($_POST['receiver_userid'] ?? '');
+            $remarks = $_POST['remarks_receiver'];
+            $receiver_warehouse = $_POST['receiver_warehouse'];
+            $warehousename_sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$toWarehouse' LIMIT 1";
+            $result = $conn->query($warehouse_sql);
+            $row = $result->fetch_assoc();
+            $toWarehouse_name = $row['warehouse_name'];
+            $update = "UPDATE stock_transfer SET received_userid = '$receiverUserId', `status` = 'received', date_received = '$currentDateTime', remarks_receiver = '$remarks' WHERE id = '$id'";
+            if($conn->query($update) === TRUE){
+                $action = "#" . $stock_transferID . " has been received by " . $user_fullname  . ".";
+                $logs_sql = "INSERT INTO logs SET title = 'STOCK TRANSFER', `action` = '$action', `date` = '$currentDateTime', user_id = '$user_id'";
+                if($conn->query($logs_sql) === TRUE){
+                    $stock_transfer_content_items_sql = "SELECT unique_barcode FROM stock_transfer_content WHERE st_id = '$id'";
+                    $result = $conn->query($stock_transfer_content_items_sql);
+                    while($row=$result->fetch_assoc()){
+                        $unique_barcode = $row['unique_barcode'];
+
+                        $update_stock = "UPDATE stocks SET item_status = 0, warehouse = '$receiver_warehouse', item_location = '' WHERE unique_barcode = '$unique_barcode'";
+                        if($conn->query($update_stock) === TRUE){
+                            $stock_action = "has been received by " . $toWarehouse_name . ". transfer #" . $id;
+                            $stock_timeline_query = "INSERT INTO stock_timeline SET unique_barcode = '$unique_barcode', title = 'STOCK TRANSFER', `action` = '$stock_action', `date` = '$currentDateTime', user_id = '$user_id'";
+                            if($conn->query($stock_timeline_query) === TRUE){
+                                echo "<br>successfully inserted to stock_timeline<br>";
+                                header("Location: ../Stock-transfer-logs/?received=success");
+                            }
+                        }
+                        
+                    }
+                }
+
+            }
+        }
+    } else {
+        echo "<p class='text-danger'>Invalid request method.</p>";
+    }
+
 }

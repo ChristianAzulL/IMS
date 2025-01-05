@@ -19,6 +19,7 @@ if(empty($_SESSION['pfp'])){
 $warehouse_ids_array = array_map('trim', $user_warehouse_ids);
 
 // Initialize an array to store the select options
+$warehouses = $_SESSION['warehouse_ids'];
 $warehouse_options = [];
 $warehouse_options2 = [];
 
