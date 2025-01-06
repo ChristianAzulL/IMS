@@ -15,7 +15,7 @@ include "../config/unique-key.php";
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- ===============================================--><!--    Document Title--><!-- ===============================================-->
-    <title>Falcon | Dashboard &amp; Web App Template</title>
+    <title>LPO</title>
     <?php include "../page_properties/header.php";?>
   </head>
 
