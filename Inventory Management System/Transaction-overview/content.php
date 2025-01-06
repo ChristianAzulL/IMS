@@ -39,14 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Debugging: Output the query
-    echo "<pre>$query</pre>";
 
     // Execute query
-    $result = mysqli_query($conn, $query);
+    $result = $conn->query($query);
     if ($result) {
-        $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-        print_r($rows);
+        while($row = $result->fetch_assoc()){
+            echo $row['hashed_id'] . "<br>";
+        }
+        
     } else {
         echo "Error: " . mysqli_error($conn);
     }
