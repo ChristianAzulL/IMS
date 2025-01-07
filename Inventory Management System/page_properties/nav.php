@@ -688,15 +688,7 @@
           <!-- Product Submenu -->
           <ul class="nav collapse" id="events">
             <?php 
-            if(strpos($access, "product_list")!==false){
-            ?>
-            <li class="nav-item">
-              <a class="nav-link" href="../Product-list/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product list</span></div>
-              </a>
-            </li>
-            <?php 
-            }if(strpos($access, "stock")!==false){
+            if(strpos($access, "stock")!==false){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Inventory-stock/">
@@ -779,7 +771,7 @@
              data-bs-toggle="collapse" aria-expanded="false" aria-controls="forms">
             <div class="d-flex align-items-center">
               <span class="nav-link-icon"><span class="fas fa-retweet"></span></span>
-              <span class="nav-link-text ps-1">Returns</span>
+              <span class="nav-link-text ps-1">Returns <span class="text-danger">not functional yet</span></span>
             </div>
           </a>
           
@@ -832,7 +824,7 @@
              data-bs-toggle="collapse" aria-expanded="false" aria-controls="authentication">
             <div class="d-flex align-items-center">
               <span class="nav-link-icon"><span class="fas fa-chart-bar"></span></span>
-              <span class="nav-link-text ps-1">Forecasting</span>
+              <span class="nav-link-text ps-1">Forecasting <span class="text-danger">not functional yet</span></span>
             </div>
           </a>
           
@@ -885,6 +877,17 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Brand</span></div>
               </a>
             </li>
+            <?php
+            if(strpos($access, "product_list")!==false){
+              ?>
+              <li class="nav-item">
+                <a class="nav-link" href="../Product-list/">
+                  <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product list</span></div>
+                </a>
+              </li>
+              <?php 
+              }
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Warehouses/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Warehouses</span></div>

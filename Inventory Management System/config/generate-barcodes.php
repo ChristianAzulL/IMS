@@ -52,6 +52,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
         </head>
         <body>
                 <img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>
+                <img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>
         </body>
         </html>";
 

@@ -20,7 +20,7 @@ if (isset($_SESSION['inbound_id'])) {
 <div id="tableExample4" data-list='{"valueNames":["inbound_no","po_no","supplier","date","receiver","warehouse"]}'>
   <div class="row justify-content-end justify-content-end gx-3 gy-0 px-3">
     <div class="col-auto mb-3">
-      <button class="btn btn-primary py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Create</button>
+      <button class="btn btn-primary py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#error-modal" disabled>Create</button>
       <button class="btn btn-warning py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#csv-modal"><span class="fas fa-file-csv"></span> Upload CSV</button>
     </div>
     <!-- <div class="col-sm-auto"><select class="form-select form-select-sm mb-3" data-list-filter="country">

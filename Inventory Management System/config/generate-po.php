@@ -33,7 +33,6 @@ if ($row) {  // Check if the query returned any rows
         while ($row = $po_content_result->fetch_assoc()) {
             $orders[] = '<tr>
                             <td><small>' . $row['description'] . '</small></td>
-                            <td><small>' . $row['parent_barcode'] . '</small></td>
                             <td><small>' . $row['brand_name'] . '</small></td>
                             <td><small>' . $row['category_name'] . '</small></td>
                             <td><small>' . $row['qty'] . '</small></td>
@@ -48,59 +47,132 @@ if ($row) {  // Check if the query returned any rows
     <!DOCTYPE html>
     <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Purchase Order</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <style>
-            body { font-family: Arial, sans-serif; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #f8f8f8; }
-            .purchase-order {
-            width: 100%;
-            text-align: center;
-            }
-            header { text-align: center; margin-bottom: 20px; }
-            header h1 { font-size: 1.8em; margin: 0; }
-            header p { font-size: 1.2em; color: #555; }
-            .company-info { text-align: right; margin: 20px 0; }
-            .company-info p { margin-bottom: 0px; }
-            .supplier-info { margin: 20px 0; }
-            .creator-info { text-align: right; font-size: 0.9em; color: #666; margin-top: 120px;}
-            table { width: 100%; border-collapse: collapse; }
-            thead th { border: 2px solid black; padding: 10px;}
-            thead tr { border: 2px solid black; }
-            tbody td { padding: 10px; }
-        </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Order</title>
+    <style>
+        body {
+        font-family: \'Calibri\', sans-serif; /* Calibri font applied */
+        margin: 0;
+        padding: 0;
+        }
+        .container {
+        margin: 20px auto;
+        padding: 20px;
+        }
+        .logo-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        }
+        
+        .company-name {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        flex: 1;
+        }
+        
+        .header {
+        text-align: center;
+        margin-bottom: 20px;
+        }
+        .header h1 {
+        font-size: 26px;
+        margin: 0;
+        }
+        .details-table {
+        width: 100%;
+        margin-bottom: 30px;
+        }
+        .details-table td {
+        padding: 10px;
+        text-align: left;
+        vertical-align: top;
+        }
+        .details-table th {
+        width: 30%;
+        font-weight: bold;
+        }
+        .product-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        }
+        .product-table th, .product-table td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: left;
+        }
+        .product-table th {
+        background-color: #f0f0f0;
+        }
+        .footer {
+        margin-top: 20px;
+        text-align: right;
+        font-size: 14px;
+        }
+    </style>
     </head>
     <body>
-        <div class="purchase-order">
-            <header><h1>Purchase Order</h1></header>
-            <section class="company-info">
-                <p>Purchase Order - ' . $po_id . '</p>
-                <p>Date: January 1, 2024</p>
-                <p>Company Name</p>
-                <p>Company Address</p>
-                <p>Contact No.</p>
-            </section>
-            <section class="supplier-info"><p>Supplier: ' . htmlspecialchars($po_supplier) . '</p></section>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Parent Barcode</th>
-                        <th>Brand</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ' . $orderRows . '
-                </tbody>
-            </table>
-            <section class="creator-info"><p>Requested by: John Jone</p></section>
+    <div class="container">
+        <!-- Logo Section -->
+        <div class="logo-section">
+        <img src="../../assets/img/logo/LPO Logo.png" style="width: 80px;" alt="Company Logo">
+        <div class="company-name">
+            <!-- Company name or other text could be here if needed -->
         </div>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        </div>
+        
+        <!-- Header -->
+        <div class="header">
+        <h1>Purchase Order</h1>
+        </div>
+
+        <!-- Details Table -->
+        <table class="details-table">
+        <tr>
+            <th style="text-align: left;">P.O #:</th>
+            <td>' . $po_id . '</td>
+            <th style="text-align: left;">Supplier:</th>
+            <td>' . htmlspecialchars($po_supplier) . '</td>
+        </tr>
+        <tr>
+            <th style="text-align: left;">Order Date:</th>
+            <td>2025-01-07</td>
+            <th style="text-align: left;">Ship To:</th>
+            <td>XYZ Warehouse</td>
+        </tr>
+        </table>
+
+        <!-- Product Table with Description, Brand, Category, and Quantity -->
+        <table class="product-table">
+        <thead>
+            <tr>
+            <th>Description</th>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            ' . $orderRows . '
+        </tbody>
+        </table>
+
+        <!-- Footer -->
+        <div class="footer">
+        <p>Prepared by: <span>Michael Yao</span></p>
+        </div>
+        <div class="barcode-container" style="align-items: center; text-align: center;">
+            <!-- Barcode Image on Top Right Corner -->
+            <img src="../../assets/barcode/barcode.php?codetype=Code128&size=50&text=LPO 4-8888901000-' . $po_id . '&print=true" alt="Company Barcode" class="barcode-img" style="width: 120px;">
+        </div>
+    </div>
     </body>
-    </html>';
+    </html>
+    ';
 
     $pdfname = "PO-" . $po_id . " - " . $po_supplier . ".pdf";
     // Initialize mPDF and generate the PDF

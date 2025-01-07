@@ -7,7 +7,7 @@
         <div class="card-header position-relative">
             <div class="row">
                 <div class="col-4">
-                    <h5 class="mb-0 mt-1">All Courses</h5>
+                    <h5 class="mb-0 mt-1">All Products</h5>
                 </div>
                 <div class="col-8 text-end">
                     <div>
