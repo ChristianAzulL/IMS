@@ -45,14 +45,14 @@
                             <th class="text-900 sort" data-sort="email">Email</th>
                             <th class="text-900 sort" data-sort="bday">Birth Date</th>
                             <th class="text-900 sort" data-sort="address" hidden>Address</th>
-                            <th class="text-900 sort" ></th>
+                            <th class="text-900 sort" style="min-width: 200px;"></th>
                         </tr>
                     </thead>
                     <tbody class="list bg-light">
                         <?php
                         $user_Query = "SELECT u.*, up.position_name
                                         FROM users u
-                                        LEFT JOIN user_position up ON up.id = u.user_position
+                                        LEFT JOIN user_position up ON up.hashed_id = u.user_position
                                         ORDER BY u.id DESC";
                         $user_res = $conn->query($user_Query);
                         if($user_res->num_rows>0){
@@ -80,7 +80,7 @@
                                     // Prepare the SQL statement
                                     $sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = ?";
                                     $stmt = $conn->prepare($sql);
-                                    $stmt->bind_param("i", $id);
+                                    $stmt->bind_param("s", $id);
                                     $stmt->execute();
                                     $stmt->bind_result($warehouse_name);
 
@@ -108,7 +108,7 @@
                                     if($row['status'] == 0){
                                     ?>
                                     <a href="../config/employee-set-status.php?user=<?php echo $row['hashed_id']; ?>&activate=true" 
-                                    class="btn-activate btn btn-transparent py-0" 
+                                    class="btn-activate btn btn-transparent py-0 mx-0" 
                                     data-hashed-id="<?php echo $row['hashed_id']; ?>"
                                     title="activate">
                                         <small><span class="fas fa-user-check"></span></small>
@@ -117,7 +117,7 @@
                                     } else {
                                     ?>
                                     <a href="../config/employee-set-status.php?user=<?php echo $row['hashed_id']; ?>&activate=false" 
-                                    class="btn-disable btn btn-transparent py-0" 
+                                    class="btn-disable btn btn-transparent py-0 mx-0" 
                                     data-hashed-id="<?php echo $row['hashed_id']; ?>"
                                     title="disable">
                                         <small><span class="fas fa-user-alt-slash"></span></small>
@@ -126,6 +126,14 @@
                                     <?php 
                                     }
                                     ?>
+                                    <button class="btn btn-transparent py-0 mx-0" title="update access" type="button" data-bs-toggle="modal" data-bs-target="#modal<?php echo $row['hashed_id'];?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
+                                    <!-- Form HTML -->
+                                    <form id="resetpwd" action="../config/resetuserpassword.php" method="post">
+                                        <input type="text" name="user_id" value="<?php echo $row['hashed_id']; ?>" hidden>
+                                        <button class="btn btn-transparent py-0 mx-0" type="button" id="resetPwdBtn" title="reset password">
+                                            <small><span class="fas fa-circle-notch"></span></small>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php 
@@ -151,7 +159,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Add employee Modal -->
 <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <form action="../config/add-employee.php" id="myForm" method="POST">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -234,6 +242,92 @@
         </div>
     </form>
 </div>
+
+<?php 
+$requery_modals = "SELECT hashed_id, user_position, warehouse_access FROM users";
+$result = $conn->query($requery_modals);
+if($result->num_rows>0){
+    while($row=$result->fetch_assoc()){
+        $modal_id = $row['hashed_id'];
+        $position_id = $row['user_position'];
+        $staff_wh_access = $row['warehouse_access']; // Sample data: "asdasd, asdasdqwe, qweqdasda, asdasdasd"
+
+        
+        ?>
+        <div class="modal fade" id="modal<?php echo $modal_id;?>" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                <form id="update_form" action="../config/update_employee.php" method="POST">
+                <div class="modal-content position-relative">
+                        <input type="text" name="user_id" value="<?php echo $modal_id;?>" hidden>
+                        <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+                            <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-0">
+                            <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+                            <h4 class="mb-1" id="modalExampleDemoLabel">Update Employee Information </h4>
+                            </div>
+                            <div class="p-4 pb-0">
+                            <form>
+                                <div class="mb-3">
+                                <label class="col-form-label" for="recipient-name">Position</label>
+                                <select class="form-select" name="position" id="" required>
+                                    <option value="">Select Position</option>
+                                    <?php 
+                                    $employee_position_query = "SELECT * FROM user_position ORDER BY position_name ASC";
+                                    $epq_result = $conn->query($employee_position_query);
+                                    if($epq_result->num_rows>0){
+                                        while($row=$epq_result->fetch_assoc()){
+                                            $position_selection = $row['position_name'];
+                                            $position_selection_id = $row['hashed_id'];
+                                            if($position_selection_id === $position_id){
+                                                echo '<option value="' . $position_selection_id . '" selected>' . $position_selection . '</option>';
+                                            } else {
+                                                echo '<option value="' . $position_selection_id . '">' . $position_selection . '</option>';
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                                </div>
+                                <div class="mb-3">
+                                <label class="col-form-label" for="message-text">Message:</label>
+                                <div class="row">
+                                    <?php 
+                                    $warehouse_access_queries = "SELECT hashed_id, warehouse_name FROM warehouse";
+                                    $waq_result = $conn->query($warehouse_access_queries);
+                                    if($waq_result->num_rows>0){
+                                        while($row=$waq_result->fetch_Assoc()){
+                                            $warehouse_selection_id = $row['hashed_id'];
+                                            $warehouse_selection_name = $row['warehouse_name'];
+                                    ?>
+                                    <div class="col-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" name="warehouse_access[]" id="<?php echo $warehouse_selection_id;?>" type="checkbox" value="<?php echo $warehouse_selection_id;?>" <?php if(strpos($staff_wh_access, $warehouse_selection_id)!==false){ echo 'checked=""';}?>/>
+                                            <label class="form-check-label" for="<?php echo $warehouse_selection_id;?>"><?php echo $warehouse_selection_name;?></label>
+                                        </div>
+                                    </div>
+                                    <?php 
+                                        }
+                                    }
+                                    ?>
+                                </div>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="submit">Submit </button>
+                        </div>
+                    
+                </div>
+                </form>
+            </div>
+        </div>
+        <?php
+    }
+}
+?>
 
 <script>
     $(document).ready(function() {
@@ -375,4 +469,98 @@ document.querySelectorAll('.btn-disable').forEach(button => {
         });
     });
 });
+</script>
+
+<script>
+document.getElementById('update_form').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to submit the changes?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, submit it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Collect form data
+            const formData = new FormData(this);
+
+            // Send data using fetch
+            fetch(this.action, {
+                method: this.method,
+                body: formData
+            })
+            .then(response => response.json()) // Assuming the server responds with JSON
+            .then(data => {
+                console.log('Server Response:', data); // Log server response to the console
+
+                // Show success message
+                Swal.fire(
+                    'Submitted!',
+                    'The changes have been successfully submitted.',
+                    'success'
+                );
+            })
+            .catch(error => {
+                console.error('Error:', error);
+
+                // Show error message
+                Swal.fire(
+                    'Error!',
+                    'There was an error submitting the form. Please try again.',
+                    'error'
+                );
+            });
+        }
+    });
+});
+</script>
+
+<script>
+    // Attach event listener to the button
+    document.getElementById('resetPwdBtn').addEventListener('click', function () {
+        // Show SweetAlert2 confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to reset the password?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, reset it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Form data preparation
+                const form = document.getElementById('resetpwd');
+                const formData = new FormData(form);
+
+                // Send the form data using fetch
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                })
+                .then(response => response.json()) // Assuming the server sends JSON
+                .then(data => {
+                    // Show response in SweetAlert2
+                    Swal.fire({
+                        title: data.success ? 'Success' : 'Error',
+                        text: data.message,
+                        icon: data.success ? 'success' : 'error'
+                    });
+                })
+                .catch(error => {
+                    // Handle errors
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Something went wrong! Please try again.',
+                        icon: 'error'
+                    });
+                    console.error('Error:', error);
+                });
+            }
+        });
+    });
 </script>
