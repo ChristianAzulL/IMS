@@ -260,7 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form action="../Transaction-overview/index.php" method="POST">
             <div class="tab-content row">
                 <div class="col-lg-2 mb-3">
-                    <label for="barcode_keyword">Filter by Barcode /Keyword</label>
+                    <label class="fs--6" for="barcode_keyword">Filter by Barcode /Keyword</label>
                     <input type="text" name="barcode_keyword" id="barcode_keyword" class="form-control" />
                 </div>
                 <div class="col-lg-2 mb-3">

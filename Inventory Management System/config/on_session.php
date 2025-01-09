@@ -35,4 +35,47 @@ foreach ($warehouse_ids_array as $warehouse_id) {
         $warehouse_options2[] = '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
     }
 }
+// Get the current file name
+$currentFile = basename($_SERVER['PHP_SELF']);
+
+// Check if the current file is 'logout.php'
+if ($currentFile === 'logout.php') {
+   echo $currentFile;
+} else {
+    if(!isset($_SESSION['logged_in'])){
+        $_SESSION['logged_in'] = true;
+        $logged_in = $_SESSION['logged_in'];
+    } else {
+        unset($_SESSION['logged_in']);
+        $logged_in = false;
+    }
+}
+
+
+
+if ($logged_in === true) {
+    // Use prepared statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT `status` FROM users WHERE hashed_id = ? LIMIT 1");
+    $stmt->bind_param("s", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        
+        if ($row['status'] == 0) {
+            $_SESSION['account_status'] = 0;
+            $logged_in = false;
+
+            // Redirect to disabled account page
+            header("Location: ../Account/?status=disabled");
+            $stmt->close();
+            $conn->close();
+            exit;
+        }
+    }
+    $stmt->close();
+} else {
+    
+}
 ?>

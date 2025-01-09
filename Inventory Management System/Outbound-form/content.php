@@ -42,7 +42,7 @@ if(!isset($_SESSION['warehouse_outbound'])){
 ?>
     <div class="row">
         <div class="col-lg-12">
-            <div class="card" style="height: 85vh;">
+            <div class="card">
                 <!-- Card Header -->
                 <div class="card-header">
                     Transaction
@@ -70,10 +70,6 @@ if(!isset($_SESSION['warehouse_outbound'])){
 
                         </table>
                     </div>    
-                </div>
-
-                <!-- Card Footer -->
-                <div class="card-footer">
                     <div class="row">
 
                         <!-- Left Column -->

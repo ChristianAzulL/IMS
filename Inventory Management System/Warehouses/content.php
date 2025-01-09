@@ -57,10 +57,35 @@
                             ?>
                             <tr>
                                 <td class="name"><b><small><?php echo $warehouse_name;?></small></b></td>
-                                <td class="status"><?php echo $status;?></td>
+                                <td class="status text-center"><?php echo $status;?></td>
                                 <td class="email"><small><?php echo $publish_date;?></small></td>
                                 <td class="age"><small><?php echo $publish_by;?></small></td>
-                                <td class="py-1 px-0"><button class="btn btn-danger py-0" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="disable"><small><span class="fas fa-minus"></span></small></button></td>
+                                <td class="py-1 px-0">
+                                <?php 
+                                    if($status == 0){
+                                    ?>
+                                    <a href="../config/employee-set-status.php?user=<?php echo $row['hashed_id']; ?>&activate=true" 
+                                    class="btn-activate btn btn-transparent py-0 mx-0" 
+                                    data-hashed-id="<?php echo $row['hashed_id']; ?>"
+                                    title="activate">
+                                        <small><span class="far fa-check-circle"></span></small>
+                                    </a>
+                                    <?php 
+                                    } else {
+                                    ?>
+                                    <a href="../config/employee-set-status.php?user=<?php echo $row['hashed_id']; ?>&activate=false" 
+                                    class="btn-disable btn btn-transparent py-0 mx-0" 
+                                    data-hashed-id="<?php echo $row['hashed_id']; ?>"
+                                    title="disable">
+                                        <small><span class="fas fa-skull"></span></small>
+                                    </a>
+
+                                    <?php 
+                                    }
+                                    ?>
+                                    <button class="btn btn-transparent py-0 mx-0" title="update access" type="button" data-bs-toggle="modal" data-bs-target="#modal<?php echo $row['hashed_id'];?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
+                                    
+                                </td>
                             </tr>
                             <?php
                             }

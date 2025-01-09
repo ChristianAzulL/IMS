@@ -673,7 +673,7 @@
         }
         ?>
         <?php 
-        if(strpos($access, "product_list")!==false || strpos($access, "stock")!==false){
+        if(strpos($access, "stock")!==false){
         ?>
         <!-- Product Dropdown -->
         <li class="nav-item">
@@ -681,7 +681,7 @@
              data-bs-toggle="collapse" aria-expanded="false" aria-controls="events">
             <div class="d-flex align-items-center">
               <span class="nav-link-icon"><span class="fas fa-boxes"></span></span>
-              <span class="nav-link-text ps-1">Product</span>
+              <span class="nav-link-text ps-1">Inventory</span>
             </div>
           </a>
           
