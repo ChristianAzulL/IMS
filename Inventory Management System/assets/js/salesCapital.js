@@ -4,14 +4,12 @@ var myChart = echarts.init(document.getElementById('salesCapital'));
 // Function to fetch data from the server and render the chart
 function fetchData() {
     // Fetch data from the PHP script
-    fetch('../../API/users_logs/salesCapital.php')
+    fetch('../API/users_logs/salesCapital.php')
         .then(response => response.json())  // Parse the JSON response
         .then(data => {
             // Prepare the chart options
             var option = {
-                title: {
-                    text: 'Sales, Capital, and Profit'
-                },
+                
                 tooltip: {},
                 legend: {
                     data: ['Capital', 'Sales', 'Profit']

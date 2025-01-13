@@ -54,23 +54,20 @@
   </div>
 
   <!-- Compare Capital and Sales Card -->
-  <div class="col-lg-6 mb-3">
+  <div class="col-lg-7 mb-3 p-0">
     <div class="card">
       <div class="card-body">
         <!-- Description and Toggle Buttons -->
         <p class="text-muted mb-3">Compare the capital and sales for each month</p>
-        <div class="mb-3 text-center">
-          <span class="badge bg-primary" data-series="Capital" onclick="toggleSeries('Capital')">Capital</span>
-          <span class="badge bg-success" data-series="Sales" onclick="toggleSeries('Sales')">Sales</span>
-        </div>
+        
         <!-- Main Chart Container -->
-        <div id="main" style="min-height: 300px;" data-echart-responsive="true"></div>
+        <div class="me-0" id="salesCapital" style="min-height: 300px;" data-echart-responsive="true"></div>
       </div>
     </div>
   </div>
 
   <!-- Best Selling Products Table -->
-  <div class="col-lg-6 mb-3">
+  <div class="col-lg-5 mb-3">
     <div class="card h-lg-100 overflow-hidden">
       <div class="card-body p-0">
         <!-- Table for Product Data -->
@@ -130,7 +127,7 @@
     </div>
   </div>
 </div>
-
+<script src="../assets/js/salesCapital.js"></script>
 <script>
   // Initialize ECharts instance for Capital vs Sales
   var chart = echarts.init(document.getElementById('main'));

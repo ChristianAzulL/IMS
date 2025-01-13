@@ -8,7 +8,7 @@ $profit_data = [];
 $months = [];
 
 // Get the last 7 months' data
-for ($i = 6; $i >= 0; $i--) {
+for ($i = 5; $i >= 0; $i--) {
     $month = date('Y-m', strtotime("-$i month"));
     $months[] = $month;
 
