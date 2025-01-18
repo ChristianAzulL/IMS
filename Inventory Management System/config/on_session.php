@@ -51,6 +51,8 @@ if ($currentFile === 'logout.php') {
     }
 }
 
+$user_warehouse_id = "'".implode("','", $warehouse_ids_array)."'"; // For arrays
+
 
 
 if ($logged_in === true) {
