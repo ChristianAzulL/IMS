@@ -23,7 +23,6 @@ if ($result1->num_rows > 0) {
         $not_brand_name = $row1['brand_name'];
         $not_category_name = $row1['category_name'];
 
-        $notification_item_quantity = 0;
 
         // Query to fetch stock information
         $notification2 = "SELECT
@@ -41,11 +40,6 @@ if ($result1->num_rows > 0) {
                 $not_item_status = $row2['item_status'];
                 $not_date_added = $row2['date'];
                 $not_warehouse = $row2['warehouse_name'];
-
-                // Increment quantity for specific item statuses
-                if ($not_item_status == 0 || $not_item_status == 2 || $not_item_status == 3) {
-                    $notification_item_quantity++;
-                }
 
                 // Convert the input date into a DateTime object
                 $not_dateTime = new DateTime($not_date_added);
@@ -71,16 +65,11 @@ if ($result1->num_rows > 0) {
                     }
                 } elseif ($not_totalMonths >= 3) {
                     if ($not_item_status == 0 || $not_item_status == 2 || $not_item_status == 3) {
-                        echo "<br>Product_image: " . $not_product_img .  "<br>Description: $not_product_description<br>Brand: $not_brand_name<br>Category: $not_category_name<br>is now more than 3 months on our store since $formatted_date_added";
+                        echo "<br>Product_image: " . $not_product_img .  "<br>Description: $not_product_description<br>Brand: $not_brand_name<br>Category: $not_category_name<br>Warehouse: $not_warehouse<br>is now more than 3 months on our store since $formatted_date_added";
                     }
                 }
 
             }
-        }
-
-        // Safety level notification
-        if ($notification_item_quantity <= $not_safety) {
-            echo "<br>Product_image: " . $not_product_img .  "<br>---------------------------<br>Description: $not_product_description<br>Brand: $not_brand_name<br>Category: $not_category_name<br>Quantity: $notification_item_quantity<br>Note: Quantity is less than the safety level.<br>-------------------------------";
         }
     }
 }

@@ -10,6 +10,7 @@
 <script src="../vendors/list.js/list.min.js"></script>
 <script src="../assets/js/theme.js"></script>
 <script src="../vendors/choices/choices.min.js"></script>
+<script src="../js/prolongitems.js"></script>
 <!-- <script>
     // Disable right-click
     document.addEventListener('contextmenu', function(e) {
