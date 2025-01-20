@@ -1,25 +1,55 @@
 <div class="row g-3 mb-3">
     <!-- Main Container -->
-    <div class="col-xxl-14 col-xl-12 col-4">
-        <div class="card">
-            <div class="card-body">
-
+    <div class="col-xxl-4 col-xl-4 col-4">
+        <div class="card h-md-100 ecommerce-card-min-width">
+            <div class="card-header pb-0">
+                <h6 class="mb-0 mt-2 d-flex align-items-center">
+                    Inventory Access
+                    <span class="ms-1 text-400" data-bs-toggle="tooltip" data-bs-placement="top" title="all accessible warehouse/ Inventory">
+                    <span class="far fa-question-circle" data-fa-transform="shrink-1"></span>
+                    </span>
+                </h6>
             </div>
+            <a href="../Inventory-stock/">
+                <div class="card-body d-flex flex-column justify-content-end">
+                    <div class="row">
+                        <div class="col-lg-12 mb-4 mb-lg-0">
+                            <div class="row">
+                                <div class="col">
+                                    <p class="font-sans-serif lh-1 mb-4 fs-5 text-dark">
+                                        <?php 
+                                        // Split the string into an array using the comma as a delimiter
+                                        $unique_warehouse_ids_array = explode(",", $user_warehouse_id);
+
+                                        // Trim whitespace from each element in the array (optional, in case of spaces)
+                                        $unique_warehouse_ids_array = array_map('trim', $unique_warehouse_ids_array);
+
+                                        // Count the number of elements in the array
+                                        $unique_count = count($unique_warehouse_ids_array);
+
+                                        echo $unique_count;
+                                        ?>
+                                    </p>
+                                    <span></span>
+                                </div>
+                            </div>   
+                        </div>
+                    </div>
+                    <!-- -------------------- -->
+                </div>
+            </a>
         </div>
     </div>
 
-    <div class="col-xxl-14 col-xl-12 col-4">
+    <div class="col-xxl-4 col-xl-4 col-4">
         
                 <?php include "belowsafety.php";?>
         
     </div>
 
-    <div class="col-xxl-14 col-xl-12 col-4">
-        <div class="card">
-            <div class="card-body">
-                
-            </div>
-        </div>
+    <div class="col-xxl-4 col-xl-4 col-4">
+                <?php include "prolongitems.php";?>
+            
     </div>
 
 
@@ -119,7 +149,6 @@
     </div>
     </div>
 </div>
-
 
 
 <script>

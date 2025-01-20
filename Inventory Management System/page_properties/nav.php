@@ -868,6 +868,11 @@
           <!-- Administration Submenu -->
           <ul class="nav collapse" id="email">
             <li class="nav-item">
+              <a class="nav-link" href="../Audit/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Audit</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="../Category/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Category</span></div>
               </a>

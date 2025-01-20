@@ -20,6 +20,7 @@
 <link href="../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
 <link href="../assets/css/user.min.css" rel="stylesheet" id="user-style-default">
 <link href="../vendors/choices/choices.min.css" rel="stylesheet" />
+<link href="../vendors/swiper/swiper-bundle.min.css" rel="stylesheet" />
 <script src="../vendors/echarts/echarts.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">

@@ -35,7 +35,7 @@ if($result->num_rows>0){
         
         $api[] = [
             'warehouse' => $notification_warehouse_name,
-            'quantity' => $quantity
+            'quantity' => $BELOW_SAFETY
         ];
     }
 }
