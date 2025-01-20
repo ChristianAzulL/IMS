@@ -1,5 +1,30 @@
 <div class="row g-3 mb-3">
     <!-- Main Container -->
+    <div class="col-xxl-14 col-xl-12 col-4">
+        <div class="card">
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xxl-14 col-xl-12 col-4">
+        <div class="card">
+            <div class="card-body">
+                <?php include "belowsafety.php";?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xxl-14 col-xl-12 col-4">
+        <div class="card">
+            <div class="card-body">
+                
+            </div>
+        </div>
+    </div>
+
+
     <div class="col-xxl-14 col-xl-12 col-12">
     <!-- Courses Section Card -->
     <div class="card mb-3">
