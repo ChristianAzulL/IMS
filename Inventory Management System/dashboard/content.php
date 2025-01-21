@@ -127,6 +127,10 @@
     </div>
   </div>
 </div>
+
+<?php 
+include "message.php";
+?>
 <script src="../assets/js/salesCapital.js"></script>
 <script>
   // Initialize ECharts instance for Capital vs Sales
@@ -198,4 +202,10 @@
       .catch(error => console.error("Error fetching weekly sales:", error));
   });
 
+</script>
+<script>
+  $(document).ready(function() {
+    // Trigger the click event on the button with the id "prototype-message"
+    $('#prototype-message').click();
+  });
 </script>
