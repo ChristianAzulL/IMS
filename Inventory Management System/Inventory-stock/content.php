@@ -189,7 +189,7 @@
                                         <div class="hoverbox h-md-100">
                                             <a class="text-decoration-none" href="${item.product_img || '#'}" data-gallery="attachment-bg">
                                                 <img class="h-100 w-100 object-fit-cover" 
-                                                src="${item.product_img || '../../assets/img/def_img.png'}" 
+                                                src="../../assets/img/${item.product_img || 'def_img.png'}" 
                                                 alt="${item.product_name || 'No Image'}" />
                                             </a>
                                         </div>
@@ -236,6 +236,11 @@
                                                             <span class="fas fa-info-circle"></span>
                                                             <span class="ms-1 d-none d-lg-inline">View details</span>
                                                         </button>
+                                                        <a class="btn btn-md btn-primary fs-10" 
+                                                                href="../Product-list/?update=${item.key_product}"> <!-- Added data-wh attribute -->
+                                                            <span class="fas fa-pen-square"></span>
+                                                            <span class="ms-1 d-none d-lg-inline">Edit product details</span>
+                                                        </a>
 
                                                     </div>
                                                 </div>

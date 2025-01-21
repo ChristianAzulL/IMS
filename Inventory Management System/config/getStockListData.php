@@ -20,6 +20,7 @@ try {
                 ), 0) AS quantity,
             s.product_id,
             p.id, 
+            p.id AS key_product,
             p.description AS product_name, 
             p.product_img, 
             c.category_name AS category, 

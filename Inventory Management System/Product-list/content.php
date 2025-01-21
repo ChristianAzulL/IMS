@@ -207,7 +207,7 @@
 
 <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document" >
-    <form action="../config/edit-product.php" method="POST">
+    <form id="editProductForm" action="../config/edit-product.php" method="POST"  enctype="multipart/form-data">
       <div class="modal-content position-relative">
         <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
           <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -217,13 +217,75 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-          <button class="btn btn-primary" type="submit">Submit </button>
+          <button id="submitBtn" class="btn btn-primary" type="submit">Submit </button>
         </div>
       </div>
     </form>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  $(document).ready(function () {
+    $('#editProductForm').submit(function (e) {
+      e.preventDefault(); // Prevent form from submitting the traditional way
+
+      // Disable the submit button and show "Loading..."
+      var submitBtn = $('#submitBtn');
+      submitBtn.prop('disabled', true).text('Loading...');
+
+      // Perform the AJAX request
+      $.ajax({
+        url: $(this).attr('action'), // The URL from the form's action attribute
+        type: 'POST',
+        data: new FormData(this),
+        processData: false, // Important: prevents jQuery from trying to convert the FormData
+        contentType: false, // Important: prevents jQuery from setting the content type
+        success: function (response) {
+          var jsonResponse = JSON.parse(response); // Parse the JSON response
+
+          if (jsonResponse.status === 'success') {
+            // Show a SweetAlert2 success message
+            Swal.fire({
+              title: 'Update Successful!',
+              text: jsonResponse.message,
+              icon: 'success',
+              confirmButtonText: 'Close'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Reload the page after the alert is closed
+                location.reload();
+              }
+            });
+          } else {
+            // Handle failure (e.g., show an error message if response is not 'success')
+            Swal.fire({
+              title: 'Error!',
+              text: jsonResponse.message,
+              icon: 'error',
+              confirmButtonText: 'Close'
+            }).then(() => {
+              // Re-enable the submit button
+              submitBtn.prop('disabled', false).text('Submit');
+            });
+          }
+        },
+        error: function () {
+          // If AJAX request fails
+          Swal.fire({
+            title: 'Error!',
+            text: 'There was an issue with the request. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'Close'
+          }).then(() => {
+            submitBtn.prop('disabled', false).text('Submit');
+          });
+        }
+      });
+    });
+  });
+
+</script>
 <script>
   $(document).on('click', 'button[data-bs-target="#edit-modal"]', function () {
     const targetId = $(this).attr('target-id');
@@ -237,4 +299,28 @@
       editContentDiv.html('<p>Error loading content.</p>');
     });
   });
+</script>
+
+<?php
+// Check if $_GET['update'] is set and get the value, otherwise leave it empty
+$update_id = isset($_GET['update']) ? $_GET['update'] : null;
+?>
+
+<script>
+// Wait for the document to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if the update id exists (i.e., $_GET['update'] was set)
+    var updateId = <?php echo json_encode($update_id); ?>;
+
+    // Only proceed if updateId is set and not null
+    if (updateId) {
+        // Find the button with the matching target-id
+        var button = document.querySelector('button[target-id="' + updateId + '"]');
+        
+        // If the button exists, click it
+        if (button) {
+            button.click();
+        }
+    }
+});
 </script>

@@ -24,10 +24,11 @@ if (isset($_GET['product_id'])) {
         $category_id = $row['category_id'];
         $brand_id = $row['brand_id'];
 ?>
+<input type="text" name="product_id" value="<?php echo $product_id ?>" hidden>
 <div class="row">
     <div class="col-3">
             <div class="avatar avatar-5xl shadow-sm img-thumbnail mt-3 ms-3">
-                <div class="h-100 w-100 overflow-hidden position-relative"> <img src="../../assets/img/<?php echo $product_img; ?>"  alt="" /><input class="d-none" name="profile-pic" id="profile-image" type="file" /><label class="mb-0 overlay-icon d-flex flex-center" for="profile-image"><span class="bg-holder overlay overlay-0"></span><span class="z-1 text-white dark__text-white text-center fs-10"><span class="fas fa-camera"></span><span class="d-block">Update</span></span></label></div>
+                <div class="h-100 w-100 overflow-hidden position-relative"> <img src="../../assets/img/<?php echo $product_img; ?>"  alt="" /><input class="d-none" name="profile-pic" id="profile-image" type="file" accept="image/png, image/jpeg, image/jpg" /><label class="mb-0 overlay-icon d-flex flex-center" for="profile-image"><span class="bg-holder overlay overlay-0"></span><span class="z-1 text-white dark__text-white text-center fs-10"><span class="fas fa-camera"></span><span class="d-block">Update</span></span></label></div>
             </div>
     </div>
     <div class="col-9">
