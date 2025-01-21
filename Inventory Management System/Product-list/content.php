@@ -112,7 +112,7 @@
                   <td class="by"><small><?php echo $product_publisher; ?></small></td>
                   <td class="date"><small><?php echo $product_date; ?></small></td>
                   <td>
-                    <button class="btn btn-transparent py-0" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit product information">
+                    <button class="btn btn-transparent py-0" type="button" target-id="<?php echo $product_id;?>" data-bs-toggle="modal" data-bs-target="#edit-modal" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit product information">
                       <span class="far fa-edit m-0 p-0"></span>
                     </button>
                   </td>
@@ -203,3 +203,38 @@
   </div>
   </form>
 </div>
+
+
+<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document" >
+    <form action="../config/edit-product.php" method="POST">
+      <div class="modal-content position-relative">
+        <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+          <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div id="edit-content"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+          <button class="btn btn-primary" type="submit">Submit </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  $(document).on('click', 'button[data-bs-target="#edit-modal"]', function () {
+    const targetId = $(this).attr('target-id');
+    const editContentDiv = $('#edit-content');
+    
+    editContentDiv.html('<p>Loading...</p>');
+
+    $.get(`edit-content.php?product_id=${targetId}`, function (data) {
+      editContentDiv.html(data);
+    }).fail(function () {
+      editContentDiv.html('<p>Error loading content.</p>');
+    });
+  });
+</script>

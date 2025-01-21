@@ -1,3 +1,3 @@
 item,keyword,Qty,Price,supplier,Barcode,batch,brand,category,5
-Laptop Charger Type C,kwrd,10,165.00,Black Mamba Corp,10000021,Batch_10001,Acer,Laptop Charger,5
-Laptop Charger Type C for ROG ally Z1,kwrd,10,1165.00,ROG Ph,1000992,Batch_0008,ROG,Laptop Charger,5
+Laptop Charger Type C,kwrd,10,165.00,Black Mamba Corp,,Batch_10001,Acer,Laptop Charger,5
+Laptop Charger Type C for ROG ally Z1,kwrd,10,1165.00,ROG Ph,,Batch_0008,ROG,Laptop Charger,5

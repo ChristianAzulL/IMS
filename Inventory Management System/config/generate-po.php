@@ -6,10 +6,16 @@ $po_id = $_POST['poid'];
 $selected_warehouse = $_SESSION['selected_warehouse_id'];
 $user_id = $_SESSION['user_id'];  // Ensure this is defined
 
+$sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$selected_warehouse' LIMIT 1";
+$result = $conn->query($sql);
+if($result->num_rows>0){
+    $row=$result->fetch_assoc();
+    $powarehouse_name = $row['warehouse_name'];
+}
 $po_logs = "SELECT po.*, u.user_fname, u.user_lname, s.supplier_name
             FROM purchased_order po
-            LEFT JOIN users u ON u.id = po.user_id
-            LEFT JOIN supplier s ON s.id = po.supplier
+            LEFT JOIN users u ON u.hashed_id = po.user_id
+            LEFT JOIN supplier s ON s.hashed_id = po.supplier
             WHERE po.id = '$po_id' AND po.warehouse = '$selected_warehouse' AND po.user_id = '$user_id'
             ORDER BY po.id DESC LIMIT 1";
 
@@ -20,11 +26,12 @@ if ($row) {  // Check if the query returned any rows
     $po_id = $row['id'];
     $po_supplier = $row['supplier_name'];
     $pdf = $row['pdf'];
+    $pdf_creator = $row['user_fname'] . " " . $row['user_lname'];
 
     $po_content_query = "SELECT po.*, p.description, p.parent_barcode, c.category_name, b.brand_name FROM purchased_order_content po
-                            LEFT JOIN product p ON p.id = po.product_id
-                            LEFT JOIN category c ON c.id = p.category
-                            LEFT JOIN brand b ON b.id = p.brand 
+                            LEFT JOIN product p ON p.hashed_id = po.product_id
+                            LEFT JOIN category c ON c.hashed_id = p.category
+                            LEFT JOIN brand b ON b.hashed_id = p.brand 
                             WHERE po_id = '$po_id'";
     $po_content_result = mysqli_query($conn, $po_content_query);
     $orders = [];  // Initialize the array for rows
@@ -142,7 +149,7 @@ if ($row) {  // Check if the query returned any rows
             <th style="text-align: left;">Order Date:</th>
             <td>2025-01-07</td>
             <th style="text-align: left;">Ship To:</th>
-            <td>XYZ Warehouse</td>
+            <td>' . htmlspecialchars($powarehouse_name) . '</td>
         </tr>
         </table>
 
@@ -163,7 +170,7 @@ if ($row) {  // Check if the query returned any rows
 
         <!-- Footer -->
         <div class="footer">
-        <p>Prepared by: <span>Michael Yao</span></p>
+        <p>Prepared by: <span>' . htmlspecialchars($pdf_creator) . '</span></p>
         </div>
         <div class="barcode-container" style="align-items: center; text-align: center;">
             <!-- Barcode Image on Top Right Corner -->

@@ -3,6 +3,8 @@ $_SESSION['selected_warehouse_id'] = $_GET['ware'];
 $_SESSION['selected_warehouse_name'] = $_GET['waren'];
 $selected_warehouse_id = $_SESSION['selected_warehouse_id'];
 $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
+
+
 ?>
 
 <div class="card">
@@ -41,7 +43,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           <?php 
           $product_list_query = "
             SELECT 
-                s.product_id,
+                p.hashed_id,
                 s.parent_barcode,
                 p.description AS description,
                 b.brand_name AS brand_name,
@@ -62,7 +64,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           $product_list_res = $conn->query($product_list_query);
           if($product_list_res->num_rows > 0) {
             while($row = $product_list_res->fetch_assoc()) {
-              $product_id = $row['product_id'];
+              $product_id = $row['hashed_id'];
               $product_img = $row['product_img'];
               $product_category = $row['category_name'];
               $product_brand = $row['brand_name'];
@@ -79,7 +81,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           <tr>
             <td class="align-middle white-space-nowrap">
               <div class="form-check mb-0">
-                <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='product_id[]' value='<?php echo $product_id; ?>' checked=''><input type='checkbox' name='product_image[]' value='<?php echo basename($product_img)?>' checked=''><input type='checkbox' name='product_desc[]' value='<?php echo $product_des;?>' checked=''><input type='checkbox' name='parent_barcode[]' value='<?php echo $product_pbarcode; ?>' checked=''><input type='checkbox' name='brand[]' value='<?php echo $product_brand; ?>' checked=''><input type='checkbox' name='category[]' value='<?php echo $product_category; ?>' checked=''><input type='checkbox' name='qty[]' value='<?php echo $current_stock; ?>' checked=''><input type='checkbox' name='trans_day[]' value='<?php echo $current_total_transaction_daily; ?>' checked=''><input type='checkbox' name='trans_month[]' value='<?php echo $current_total_transaction_monthly; ?>' checked=''><input type='checkbox' name='trans_year[]' value='<?php echo $current_total_transaction_yearly;?>' checked=''>}" />
+              <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='product_id[]' value='<?php echo $product_id; ?>' checked=''><input type='checkbox' name='product_image[]' value='<?php echo basename($product_img)?>' checked=''><input type='checkbox' name='product_desc[]' value='<?php echo $product_des;?>' checked=''><input type='checkbox' name='parent_barcode[]' value='<?php echo $product_pbarcode; ?>' checked=''><input type='checkbox' name='brand[]' value='<?php echo $product_brand; ?>' checked=''><input type='checkbox' name='category[]' value='<?php echo $product_category; ?>' checked=''><input type='checkbox' name='qty[]' value='<?php echo $current_stock; ?>' checked=''><input type='checkbox' name='trans_day[]' value='<?php echo $current_total_transaction_daily; ?>' checked=''><input type='checkbox' name='trans_month[]' value='<?php echo $current_total_transaction_monthly; ?>' checked=''><input type='checkbox' name='trans_year[]' value='<?php echo $current_total_transaction_yearly;?>' checked=''>}" />
               </div>
             </td>
             <td>

@@ -17,18 +17,7 @@ include "../config/on_session.php";
     <title>generating barcodes</title>
 
     <?php include "../page_properties/header.php";?>
-    <?php
-    if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_key'])) {
-    ?>
-    <script>
-    window.onload = function() {
-        window.location.href = "../config/generate-barcodes.php?success=0";
-    };
-    </script>
-
-    <?php 
-    }
-    ?>
+    
     <script>
       var isRTL = JSON.parse(localStorage.getItem('isRTL'));
       if (isRTL) {
@@ -156,6 +145,18 @@ include "../config/on_session.php";
 
     <!-- ===============================================--><!--    JavaScripts--><!-- ===============================================-->
     <?php include "../page_properties/footer_main.php";?>
+    <?php
+    if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_key'])) {
+    ?>
+    <script>
+    window.onload = function() {
+        window.location.href = "../config/generate-barcodes.php?success=0";
+    };
+    </script>
+
+    <?php 
+    }
+    ?>
   </body>
 
 

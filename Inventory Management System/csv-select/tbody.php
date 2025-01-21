@@ -26,7 +26,23 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                         [$item, $keyword, $qty, $price, $supplier, $barcode, $batch, $brand, $category, $safety] = $data;
                         $rowIndex++;
                         
+                        if (empty($barcode)) {
+                            do {
+                                // Generate a random 10-digit barcode
+                                $barcode = str_pad(mt_rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
                         
+                                // Query the database to check if the barcode already exists
+                                $query = "SELECT COUNT(*) AS count FROM product WHERE parent_barcode = ?";
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param("s", $barcode); // Bind the barcode as a string
+                                $stmt->execute();
+                                $stmt->bind_result($count);
+                                $stmt->fetch();
+                                $stmt->close();
+                            } while ($count > 0); // Regenerate if the barcode already exists
+                        }
+
+                        $barcode = "LPO-" . $barcode;
                         ?>
                         <tr>
                             <td>

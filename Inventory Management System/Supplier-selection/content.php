@@ -89,7 +89,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
                                             <th class="align-middle barcode"><?php echo $product_pbarcode; ?></th>
                                             <td class="align-middle brand"><?php echo $product_brand; ?></td>
                                             <td class="align-middle cat"><?php echo $product_category; ?></td>
-                                            <td class="align-middle cat" hidden>
+                                            <td class="align-middle cat" >
                                                 <input type="text" name="product_id[]" value="<?php echo $product_id;?>" readonly hidden>
                                                 <input type="text" name="parent_barcode[]" value="<?php echo $product_pbarcode;?>" readonly hidden>
                                                 <input type="text" name="product_desc[]" value="<?php echo $product_des;?>" readonly hidden>

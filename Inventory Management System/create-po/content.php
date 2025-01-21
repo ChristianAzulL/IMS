@@ -51,7 +51,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           $product_list_res = $conn->query($product_list_query);
           if($product_list_res->num_rows > 0) {
             while($row = $product_list_res->fetch_assoc()) {
-              $product_id = $row['id'];
+              $product_id = $row['hashed_id'];
               $product_img = $row['product_img'];
               $product_category = $row['category_name'];
               $product_brand = $row['brand_name'];

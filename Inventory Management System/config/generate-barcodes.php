@@ -11,7 +11,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
     // Query to fetch required data
     $query = "
         SELECT 
-            s.unique_barcode,
+            s.product_id,
             p.description AS product_description,
             b.brand_name,
             c.category_name
@@ -19,7 +19,8 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
         JOIN product p ON s.product_id = p.hashed_id
         JOIN brand b ON p.brand = b.hashed_id
         JOIN category c ON p.category = c.hashed_id
-        WHERE s.unique_key = ?";
+        WHERE s.unique_key = ?
+        GROUP BY s.product_id, s.unique_key";
   
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $uniqueKey);
@@ -33,11 +34,19 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
 
     // Loop through the results and generate PDFs
     while ($row = $result->fetch_assoc()) {
-        $uniqueBarcode = $row['unique_barcode'];
         $productDescription = $row['product_description'];
         $brandName = $row['brand_name'];
         $categoryName = $row['category_name'];
-
+        $product_id = $row['product_id'];
+        $images = [];
+        $unique_barcode_query = "SELECT unique_barcode FROM stocks WHERE product_id = '$product_id' AND unique_key = '$uniqueKey' ";
+        $res = $conn->query($unique_barcode_query);
+        if($res->num_rows>0){
+            while($row=$res->fetch_assoc()){
+                $uniqueBarcode = $row['unique_barcode'];
+                $images[] = "<img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>";
+            }
+        }
         // Generate HTML content for PDF
         $html = "
         <html>
@@ -51,8 +60,8 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
             </style>
         </head>
         <body>
-                <img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>
-                <img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>
+                "  . implode('', $images) .  "
+                
         </body>
         </html>";
 
@@ -68,7 +77,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
         $mpdf->WriteHTML($html);
 
         // Save the PDF to a temporary file
-        $fileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', "$productDescription - $brandName - $categoryName - $uniqueBarcode") . '.pdf';
+        $fileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', "$productDescription - $brandName - $categoryName") . '.pdf';
         $pdfPath = sys_get_temp_dir() . '/' . $fileName;
         $mpdf->Output($pdfPath, 'F');
 
