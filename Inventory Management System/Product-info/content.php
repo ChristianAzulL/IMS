@@ -232,15 +232,34 @@ $result = $conn->query($product_query);
                 </div>
             </article>
 
+
             <div class="row">
-                <div class="col-lg-7 col-md-12 col-sm-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="SpecificItemChart" style="height: 300px;"></div> <!-- Chart Container -->
+                <div class="col-lg-12 d-flex justify-content-center align-items-center">
+                    <ul class="nav nav-pills" id="pill-myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="pill-home-tab" data-bs-toggle="tab" href="#pill-tab-home" role="tab" aria-controls="pill-tab-home" aria-selected="true">Stock Chart <span class="far fa-chart-bar"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="pill-profile-tab" data-bs-toggle="tab" href="#pill-tab-profile" role="tab" aria-controls="pill-tab-profile" aria-selected="false">Product History <span class="fas fa-calendar-day"></span></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            
+            <div class="tab-content border p-3 mt-3" id="pill-myTabContent">
+                <div class="tab-pane fade show active" id="pill-tab-home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="SpecificItemChart" style="height: 300px;"></div> <!-- Chart Container -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-5 col-md-3">
+                <div class="tab-pane fade" id="pill-tab-profile" role="tabpanel" aria-labelledby="profile-tab">
                     <div class="card-body px-sm-4 px-md-1 px-lg-1 px-xxl-8">
                         <div class="row my-3">
                             <div class="col-lg-12 text-center">
@@ -341,15 +360,13 @@ $result = $conn->query($product_query);
                                     }
                                     
                                 }
-                            } else {
-                                echo "<h1>Nothing yet!</h1>";
                             }
                             ?>
                         </div>
                     </div>
                 </div>
-                
             </div>
+
             <div class="modal fade" id="change-location-modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
                     <div class="modal-content position-relative p-3">
