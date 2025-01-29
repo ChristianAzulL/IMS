@@ -7,7 +7,7 @@
             $row = $inbound_res->fetch_assoc();
             $inbound_id = $row['id'];
         } else {
-            $inbound_id = 0;
+            $inbound_id = 1000;
         }
         
         
