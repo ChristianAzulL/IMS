@@ -3,11 +3,11 @@ include "../config/database.php";
 include "../config/on_session.php";
 if (isset($_GET['id'])) {
     $unique_key = htmlspecialchars($_GET['id']);
-    
+    $total = 0;
     $SQL = "SELECT il.*, w.warehouse_name, u.user_fname, u.user_lname, s.supplier_name, up.position_name, s.local_international
             FROM inbound_logs il
             LEFT JOIN supplier s ON s.hashed_id = il.supplier
-            LEFT JOIN  users u ON u.hashed_id = il.user_id
+            LEFT JOIN users u ON u.hashed_id = il.user_id
             LEFT JOIN warehouse w ON w.hashed_id = il.warehouse
             LEFT JOIN user_position up ON up.hashed_id = u.user_position
             WHERE il.unique_key = '$unique_key'
@@ -20,9 +20,8 @@ if (isset($_GET['id'])) {
         $inbound_receiver = $row['user_fname'] . " " . $row['user_lname'];
         $inbound_receiver_pos = $row['position_name'];
         $supplier_info = $row['local_international'];
-        $date_received = $row['date_received']; //sample: 2025-01-01 00:00:00
-        $date_received = new DateTime($date_received);
-        $date_received = $date_received->format('F j, Y'); // Output: January 1, 2025
+        $date_received = new DateTime($row['date_received']);
+        $date_received = $date_received->format('F j, Y');
     }
     ?>
     <style>
@@ -64,31 +63,56 @@ if (isset($_GET['id'])) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Laptop</td>
-                                <td>Brand</td>
-                                <td>Category</td>
-                                <td>Parent Barcode</td>
-                                <td class="text-end">5</td>
-                                <td class="text-end">$800</td>
-                                <td class="text-end">$4000</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Monitor</td>
-                                <td>Brand</td>
-                                <td>Category</td>
-                                <td>Parent Barcode</td>
-                                <td class="text-end">3</td>
-                                <td class="text-end">$200</td>
-                                <td class="text-end">$600</td>
-                            </tr>
+                            <?php
+                            $query = "
+                                SELECT 
+                                    COUNT(s.product_id) AS quantity, 
+                                    s.capital, 
+                                    p.description, 
+                                    b.brand_name, 
+                                    c.category_name, 
+                                    p.parent_barcode
+                                FROM stocks s
+                                LEFT JOIN product p ON s.product_id = p.hashed_id
+                                LEFT JOIN brand b ON p.brand = b.hashed_id
+                                LEFT JOIN category c ON p.category = c.hashed_id
+                                WHERE s.unique_key = '$unique_key'
+                                GROUP BY s.product_id, s.capital, p.description, b.brand_name, c.category_name, p.parent_barcode, s.batch_code
+                            ";
+                            $result = $conn->query($query);
+                            if($result->num_rows>0){
+                                $number = 0;
+                                while($row=$result->fetch_assoc()){
+                                    $description = $row['description'];
+                                    $brand_name = $row['brand_name'];
+                                    $category_name = $row['category_name'];
+                                    $product_quantity = $row['quantity'];
+                                    $parent_barcode = $row['parent_barcode'];
+                                    $unit_price = $row['capital'];
+                                    $subtotal = $unit_price * $product_quantity;
+                                    $number ++;
+                                    $total += $subtotal;
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $number;?></td>
+                                        <td><?php echo $description;?></td>
+                                        <td><?php echo $brand_name;?></td>
+                                        <td><?php echo $category_name; ?></td>
+                                        <td><?php echo $parent_barcode;?></td>
+                                        <td class="text-end"><?php echo $product_quantity;?></td>
+                                        <td class="text-end">₱<?php echo number_format($unit_price, 2); ?></td>
+                                        <td class="text-end">₱<?php echo number_format($subtotal, 2);?></td>
+                                    </tr>
+                                    <?php 
+                                }
+                            }
+                            ?>
                         </tbody>
                         <tfoot class="table-info">
                             <tr>
-                                <td class="text-end" colspan="7"><strong>Total</strong></td>
-                                <td class="text-end"><strong>$4600</strong></td>
+                                <td class="text-start" colspan="6"><b><i>Total</i></b></td>
+                                <td class="text-end"><strong><b>₱</b></strong></td>
+                                <td class="text-end"><b><i>₱<?php echo number_format($total, 2);?></i></b></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -102,9 +126,9 @@ if (isset($_GET['id'])) {
                         <b class="mb-0 mt-0"><small> <?php echo $inbound_warehouse_name;?></small></b>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
     <?php
 }
+$conn->close();
