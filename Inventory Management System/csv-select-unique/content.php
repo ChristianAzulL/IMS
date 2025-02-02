@@ -28,7 +28,7 @@
         ?>
         <div class="row">
             <div class="col-lg-12">
-                <form id="myForm" action="csv_process.php" method="POST" enctype="multipart/form-data">
+                <form id="myForm" action="new_csv_process.php" method="POST" enctype="multipart/form-data">
                     <div class="row justify-content-end">
                         <div class="col-auto mb-3">
                             <button class="btn btn-primary" id="submitBTN" type="button">Submit</button>
@@ -87,7 +87,7 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
 
             var formData = new FormData(document.getElementById('myForm'));
 
-            fetch('csv_process.php', {
+            fetch('new_csv_process.php', {
                 method: 'POST',
                 body: formData
             })
@@ -105,7 +105,7 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
                         confirmButtonText: "OK"
                     }).then(() => {
                         // Redirect to the dashboard after clicking "OK"
-                        window.location.href = '../New-Unique-Barcodes?success=0';
+                        window.location.href = '../Unique-Barcodes?success=0';
                     });
                 } else if (data.status === 'info') {
                     Swal.fire("Info", data.message, "info");

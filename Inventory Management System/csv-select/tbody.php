@@ -6,8 +6,7 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
     $inbound_warehouse = $_POST['warehouse'];
     $file = $_FILES['csv_file'];
     $date_received = $_POST['received_date'];
-    $po_id = $_POST['po_id'];
-    $_SESSION['inbound_po_id'] = (int)$_POST['po_id'];  // Ensuring it's an integer
+    $_SESSION['inbound_po_id'] = 0;  // Ensuring it's an integer
     $_SESSION['inbound_received_date'] = htmlspecialchars($_POST['received_date']);
     $_SESSION['inbound_warehouse'] = htmlspecialchars($_POST['warehouse']);
 
@@ -26,7 +25,17 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                         [$item, $keyword, $qty, $price, $supplier, $barcode, $batch, $brand, $category, $safety] = $data;
                         $rowIndex++;
                         
-                        if (empty($barcode)) {
+                        $check_product = "SELECT p.description, p.keyword, p.parent_barcode, b.brand_name, c.category_name
+                                            FROM product p
+                                            LEFT JOIN brand b ON b.hashed_id = p.brand
+                                            LEFT JOIN category c ON c.hashed_id = p.category
+                                            WHERE p.description = '$item' AND b.brand_name = '$brand' AND c.category_name = '$category' LIMIT 1";
+                        $result = $conn->query($check_product);
+                        if($result->num_rows>0){
+                            $row=$result->fetch_assoc();
+                            $barcode = $row['parent_barcode'];
+                        } elseif (empty($barcode)) {
+                            
                             do {
                                 // Generate a random 10-digit barcode
                                 $barcode = str_pad(mt_rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
@@ -40,9 +49,12 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                                 $stmt->fetch();
                                 $stmt->close();
                             } while ($count > 0); // Regenerate if the barcode already exists
+                        
+                            $barcode = "LPO-" . $barcode;
                         }
 
-                        $barcode = "LPO-" . $barcode;
+                        
+
                         ?>
                         <tr>
                             <td>
