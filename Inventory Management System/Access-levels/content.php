@@ -162,6 +162,13 @@ if (empty($_SESSION['csrf_token'])) {
                             </div>
                         </div>
                         <div class="col-lg-12 mb-3">
+                            <label for="">Product Returns</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returnproduct" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Returned Products</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-3">
                             <label for="">Returns</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returns" />
@@ -390,6 +397,13 @@ if($result->num_rows>0){
                             <div class="form-check form-switch">
                                 <input class="form-check-input" <?php if(strpos($account_position_access, "stock_transfer")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_transfer" />
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Stock Transfer</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-3">
+                            <label for="">Product Returns</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" <?php if(strpos($account_position_access, "returnproduct")!==false){echo 'checked=""';}?>  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returnproduct" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Returned Products</label>
                             </div>
                         </div>
                         <div class="col-lg-12 mb-3">

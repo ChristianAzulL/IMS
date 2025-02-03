@@ -762,6 +762,33 @@
         </li>
         <?php
         }
+        if(strpos($access, "returnproduct")!==false){
+        ?>
+        <li class="nav-item">
+          <a class="nav-link dropdown-indicator" href="#returns" role="button" 
+             data-bs-toggle="collapse" aria-expanded="false" aria-controls="forms">
+            <div class="d-flex align-items-center">
+              <span class="nav-link-icon"><span class="fas fa-sign-out-alt"></span></span>
+              <span class="nav-link-text ps-1">Returns </span>
+            </div>
+          </a>
+          
+          <!-- Returns Submenu -->
+          <ul class="nav collapse" id="returns">
+            <li class="nav-item">
+              <a class="nav-link" href="../Return-logs/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Return logs</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Create-Return/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Return Product</span></div>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <?php
+        }
         if(strpos($access, "returns")!==false){
         ?>
 
@@ -789,6 +816,8 @@
             </li>
           </ul>
         </li>
+
+        
         <?php
         }
         if(strpos($access, "finance")!==false){
