@@ -73,6 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $stmt_logs->bind_param("sss", $unique_barcode, $currentDateTime, $user_id);
                     $stmt_logs->execute();
                 }
+
+                $update = "UPDATE stocks SET item_status = 3 WHERE unique_barcode = '$unique_barcode'";
+                if($conn->query($update)){
+
+                }
             }
         }
 

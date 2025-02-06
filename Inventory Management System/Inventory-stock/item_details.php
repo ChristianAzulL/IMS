@@ -115,8 +115,10 @@
                                 $item_status = '<span class="badge rounded-pill bg-danger">Sold</span>';
                             } elseif($row['item_status'] == 2) {
                                 $item_status = '<span class="badge rounded-pill bg-primary">Enroute</span>';
-                            } else {
+                            } elseif($row['item_status'] == 3) {
                                 $item_status = '<span class="badge rounded-pill bg-warning">For Enroute</span>';
+                            } else {
+                                $item_status = '<span class="badge rounded-pill bg-warning">Returned</span>';
                             }
                             // Display product details for the current batch code
                             echo "
