@@ -73,7 +73,7 @@
                             <th class="text-900 sort" data-sort="orn" style="width: 200px;">Outbound Reference no.</th>
                             <th class="text-900 sort" data-sort="date" style="width: 200px;">Return Date</th>
                             <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
-                            <th class="text-900 sort" data-sort="staff">Staff</th>
+                            <th class="text-900 sort" data-sort="staff" style="width: 250px;">Staff</th>
                         </tr>
                     </thead>
                     <tbody class="list">
@@ -118,7 +118,12 @@
                                 $category = $row['category_name'];
                                 $rwarehouse = $row['warehouse_name'];
                                 $author = $row['user_fname'] . " " . $row['user_lname'];
-                                $author_pfp = $row['pfp'] ?? "../../assets/img/def_pfp.png" ;
+                                if(empty($row['pfp'])){
+                                    $author_pfp = "../../assets/img/def_pfp.png" ;
+                                } else {
+                                    $author_pfp = "../../assets/" . $row['pfp'] ;
+                                }
+                                
                         ?>
                         <tr>
                             <td class="text-end"><?php echo $number;?></td>
@@ -130,10 +135,11 @@
                             <td class="orn"><span class="badge rounded-pill bg-primary"><?php echo $outbound_id;?></span></td>
                             <td class="date"><?php echo $rdate;?></td>
                             <td class="warehouse"><?php echo $rwarehouse;?></td>
-                            <td class="staff"><img class="img img-fluid rounded-circle" src="../../../assets/<?php echo $author_pfp;?>" alt=""></td>
+                            <td class="staff"><img class="img rounded-circle" src="<?php echo $author_pfp;?>" height="30" alt=""> <?php echo $author;?></td>
                         </tr>
-                        $number ++;
-                        <?php 
+                        
+                        <?php
+                        $number ++; 
                             }
                         } else {
                         ?>

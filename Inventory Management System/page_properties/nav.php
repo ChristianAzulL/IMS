@@ -798,7 +798,7 @@
              data-bs-toggle="collapse" aria-expanded="false" aria-controls="forms">
             <div class="d-flex align-items-center">
               <span class="nav-link-icon"><span class="fas fa-retweet"></span></span>
-              <span class="nav-link-text ps-1">Returns <span class="text-danger">not functional yet</span></span>
+              <span class="nav-link-text ps-1">Returns</span>
             </div>
           </a>
           

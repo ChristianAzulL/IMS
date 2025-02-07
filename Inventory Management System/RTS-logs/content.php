@@ -89,32 +89,19 @@
 </div>
 
 <div class="modal fade" id="view-modal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
     <div class="modal-content position-relative">
       <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
         <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-0">
+      <div class="modal-body p-0" style="min-height: 500px;">
         <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
-          <h4 class="mb-1" id="modalExampleDemoLabel">Add a new illustration </h4>
         </div>
-        <div id="preview"></div> this is where I want to load the content of preview.php?id=clicked target-id
-        <!-- <div class="p-4 pb-0">
-          <form>
-            <div class="mb-3">
-              <label class="col-form-label" for="recipient-name">Recipient:</label>
-              <input class="form-control" id="recipient-name" type="text" />
-            </div>
-            <div class="mb-3">
-              <label class="col-form-label" for="message-text">Message:</label>
-              <textarea class="form-control" id="message-text"></textarea>
-            </div>
-          </form>
-        </div> -->
+        <div id="preview"></div> 
+        
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary" type="button">Understood </button>
       </div>
     </div>
   </div>
@@ -122,23 +109,70 @@
 
 <script>
 $(document).ready(function(){
+    // Handle modal show event to load preview.php without reloading the page
     $('#view-modal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); 
         var targetId = button.attr('target-id'); 
         if (targetId) {
             $('#preview').html('<p>Loading...</p>'); 
-            $.ajax({
-                url: 'preview.php',
-                type: 'GET',
-                data: { id: targetId },
-                success: function(response) {
-                    $('#preview').html(response);
-                },
-                error: function() {
-                    $('#preview').html('<p class="text-danger">Error loading content.</p>');
-                }
-            });
+            loadPreview(targetId); // Load content dynamically
         }
     });
+
+    // Function to load preview content dynamically
+    function loadPreview(targetId) {
+        $.ajax({
+            url: 'preview.php',
+            type: 'GET',
+            data: { id: targetId },
+            success: function(response) {
+                $('#preview').html(response);
+            },
+            error: function() {
+                $('#preview').html('<p class="text-danger">Error loading content.</p>');
+            }
+        });
+    }
+
+    // Handle replace and refund button clicks with SweetAlert2 confirmation
+    $(document).on("click", "#replace-btn, #refund-btn", function(e){
+        e.preventDefault(); // Prevent default link navigation
+        var url = $(this).attr("href"); // Get the link URL
+        var action = $(this).attr("id") === "replace-btn" ? "replace this item" : "refund this item"; // Identify action
+        var targetId = new URLSearchParams(window.location.search).get('id'); // Get current target ID from URL
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you really want to " + action + "? This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, proceed!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url, // Send AJAX request to process the action
+                    type: "GET",
+                    success: function(response){
+                        Swal.fire({
+                            title: "Success!",
+                            text: "The action has been completed.",
+                            icon: "success",
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        // Hide both the clicked anchor tag and its sibling anchor tag
+                        $(e.target).closest('td').find('a').hide(); // Hide both anchors in the same <td>
+                    },
+                    error: function(){
+                        Swal.fire("Error!", "There was a problem processing your request.", "error");
+                    }
+                });
+            }
+        });
+    });
 });
+
 </script>

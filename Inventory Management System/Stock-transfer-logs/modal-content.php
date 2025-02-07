@@ -113,7 +113,6 @@ if (isset($_GET['id'])) {
 
         ?>
         <div class="card overflow-hidden" >
-        <div class="card-img-top text-center bg-dark"><img class="img-fluid" src="../../assets/img/sample/pending.jpg" alt="Card image cap" /></div>
         <div class="card-body">
             <form action="../config/stock-transfer.php?status=enroute" method="POST">
             <input type="text" name="id" value="<?php echo $getid;?>" readonly hidden>
