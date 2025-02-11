@@ -1,18 +1,25 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
+
+if (!isset($_POST['warehouse'])) {
+    die("Error: Warehouse ID is required.");
+}
+
 $selected_warehouse_id = $_POST['warehouse'];
 
-$query = "SELECT * FROM warehouse WHERE hashed_id = '$selected_warehouse_id' LIMIT 1";
-$result = $conn->query($query);
-if($result->num_rows>0){
-    $selected_warehouse_name = $row['warehouse_name'];
-} 
-$_SESSION['selected_warehouse_id'] = $selected_warehouse_id;
-$_SESSION['selected_warehouse_name'] = $selected_warehouse_name;
+$query = "SELECT warehouse_name FROM warehouse WHERE hashed_id = ? LIMIT 1";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $selected_warehouse_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if(isset($selected_warehouse_name)){
+if ($row = $result->fetch_assoc()) {
+    $_SESSION['selected_warehouse_id'] = $selected_warehouse_id;
+    $_SESSION['selected_warehouse_name'] = $row['warehouse_name'];
     header("Location: ../create-po/");
+    exit;
 } else {
-    echo "Error: Supplier Name is required.";
+    die("Error: Invalid Warehouse ID.");
 }
+?>
