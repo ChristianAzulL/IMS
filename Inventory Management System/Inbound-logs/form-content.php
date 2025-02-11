@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
                                 LEFT JOIN brand b ON p.brand = b.hashed_id
                                 LEFT JOIN category c ON p.category = c.hashed_id
                                 WHERE s.unique_key = '$unique_key'
-                                GROUP BY s.product_id, s.capital, p.description, b.brand_name, c.category_name, p.parent_barcode, s.batch_code
+                                GROUP BY s.product_id
                             ";
                             $result = $conn->query($query);
                             if($result->num_rows>0){

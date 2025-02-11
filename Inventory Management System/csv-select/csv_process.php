@@ -8,7 +8,14 @@ $po_id = $_SESSION['inbound_po_id'];
 $received_date = $_SESSION['inbound_received_date'];
 $warehouse_inbound = $_SESSION['inbound_warehouse'];
 
-
+$po_query = "SELECT warehouse_name 
+             FROM warehouse 
+             WHERE hashed_id='$warehouse_inbound' LIMIT 1";
+$po_result = $conn->query($po_query);
+if($row = $po_result->fetch_assoc()){
+$inbound_warehouse = $warehouse_inbound;
+$inbound_warehouse_name = $row['warehouse_name'];
+}
 $insert_inbound = "INSERT INTO inbound_logs SET po_id = '$po_id', date_received = '$received_date', user_id = '$user_id', warehouse = '$warehouse_inbound', unique_key = '$unique_key'";
 if($conn->query($insert_inbound)===true){
     $inbound_id = $conn->insert_id;
@@ -156,11 +163,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hash_stock = hash('sha256', $stock_id);
                 $update_stock = "UPDATE stocks SET hashed_id = '$hash_stock' WHERE id ='$stock_id'";
                 $conn->query($update_stock);
-                $success++; // Increment success count if insertion was successful
+                // Increment success count if insertion was successful
             } else {
                 error_log("Failed to insert stock: " . $conn->error);
             }
+            $stock_timeline = "INSERT INTO stock_timeline 
+                                (unique_barcode, title, `action`, `date`, user_id) 
+                                VALUES 
+                                ('$unique_barcode', 'INBOUND', 'Product was inbounded to $inbound_warehouse_name', '$currentDateTime', '$user_id')";
+
+            if ($conn->query($stock_timeline) === TRUE) {
+                $logs = "INSERT INTO logs 
+                            (title, `action`, `date`, user_id) 
+                            VALUES 
+                            ('INBOUND', 'Inbound Reference no. $inbound_id has been successfully inbounded to $inbound_warehouse_name.', '$currentDateTime', '$user_id')";
+
+                if ($conn->query($logs) === TRUE) {
+                    
+                }
+            }
         }        
+        $success++; 
     }
 
     // Update the response to success if there are any valid changes

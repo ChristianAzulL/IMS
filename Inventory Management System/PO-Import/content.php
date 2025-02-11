@@ -19,7 +19,12 @@
     
     <div class="col-7">
         <div class="card">
-            <form action="">
+            <div class="row p-3">
+                <div class="col-md-12">
+                    <h4>Inbounded Items:</h4>
+                </div>
+            </div>
+            <form action="../config/save-inbound.php" id="save-inbound" method="POST">
                 <div class="card-body overflow-hidden">
                     <div id="tableExample" data-list='{"valueNames":["name","email","age"],"page":5,"pagination":true}'>
                         <div class="table-responsive scrollbar">
@@ -32,16 +37,23 @@
                                         <th class="text-900 sort" data-sort="age">Parent Barcode</th>
                                         <th class="text-900 sort" data-sort="age">Quantity Ordered</th>
                                         <th class="text-900 sort" data-sort="age">Quantity Received</th>
-                                        <th class="text-900 sort" data-sort="age">Unit Price</th>
+                                        <th class="text-900 sort" id="unit_amount" data-sort="age">Unit Price</th>
+                                        <th class="text-900 sort" id="subtotal_th" data-sort="age">Subtotal</th>
                                     </tr>
                                 </thead>
-                                <tbody class="list" id="preview"></tbody>
+                                <tbody class="scrollbar overflow-auto" style="max-height: 500px;" id="preview"></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td class="text-end" colspan="7"><b><i>Total:</i></b></td>
+                                        <td class="text-end sticky-bottom"><b><i id="total_amount"></i></b></td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
                 </div>
                 <div class="text-end p-3">
-                    <button class="btn btn-primary">Submit</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
                 </div>
             </form>
         </div>
@@ -57,10 +69,43 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
+    function calculateSubtotal() {
+        let total = 0;
+
+        $("#preview tr").each(function () {
+            let qtyReceived = $(this).find("#qty_received").val();
+            let unitAmount = $(this).find("#unit_amount").val();
+            let subtotalTd = $(this).find("#subtotal_td");
+
+            // Ensure values are numbers
+            qtyReceived = parseFloat(qtyReceived) || 0;
+            unitAmount = parseFloat(unitAmount) || 0;
+            let subtotal = qtyReceived * unitAmount;
+
+            // Display subtotal
+            subtotalTd.text(subtotal.toFixed(2));
+
+            // Add to total amount
+            total += subtotal;
+        });
+
+        // Update the total amount display
+        $("#total_amount").text(total.toFixed(2));
+    }
+
+    // Attach event listeners
+    $(document).on("input", "#qty_received, #unit_amount", function () {
+        calculateSubtotal();
+    });
+
+    
     function loadPreview() {
-        $("#preview").load("preview.php");
+        $("#preview").load("preview.php", function () {
+            calculateSubtotal(); // Recalculate after loading preview
+        });
     }
     loadPreview();
 
@@ -104,32 +149,93 @@ $(document).ready(function() {
         }).get();
         
         if (selectedBarcodes.length === 0) {
-            alert("Please select at least one product.");
+            Swal.fire("Warning", "Please select at least one product.", "warning");
             return;
         }
 
-        $.ajax({
-            url: "import.php",
-            type: "POST",
-            data: { parent_barcodes: selectedBarcodes },
-            dataType: "json",
-            success: function(response) {
-                let toastMessage = $("#toastMessage");
-                if (response.status === "success") {
-                    toastMessage.removeClass("bg-danger").addClass("bg-success");
-                    loadPreview();
-                } else {
-                    toastMessage.removeClass("bg-success").addClass("bg-danger");
-                }
-                $("#toastBody").text(response.message);
-                new bootstrap.Toast(toastMessage[0]).show();
-                $("#import")[0].reset();
-                $("#showhere").html("");
-            },
-            error: function() {
-                $("#toastMessage").removeClass("bg-success").addClass("bg-danger");
-                $("#toastBody").text("Something went wrong. Please try again.");
-                new bootstrap.Toast(document.getElementById("toastMessage")).show();
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to submit the selected products?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, submit!",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "import.php",
+                    type: "POST",
+                    data: { parent_barcodes: selectedBarcodes },
+                    dataType: "json",
+                    success: function(response) {
+                        let toastMessage = $("#toastMessage");
+                        if (response.status === "success") {
+                            toastMessage.removeClass("bg-danger").addClass("bg-success");
+                            loadPreview();
+                        } else {
+                            toastMessage.removeClass("bg-success").addClass("bg-danger");
+                        }
+                        $("#toastBody").text(response.message);
+                        new bootstrap.Toast(toastMessage[0]).show();
+                        $("#import")[0].reset();
+                        $("#showhere").html("");
+                    },
+                    error: function() {
+                        $("#toastMessage").removeClass("bg-success").addClass("bg-danger");
+                        $("#toastBody").text("Something went wrong. Please try again.");
+                        new bootstrap.Toast(document.getElementById("toastMessage")).show();
+                    }
+                });
+            }
+        });
+    });
+
+    $("#save-inbound").submit(function (event) {
+        event.preventDefault(); // Prevent normal submission
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to submit this inbound data?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, submit!",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                let formData = $(this).serialize();
+
+                $.ajax({
+                    url: "../config/save-inbound.php",
+                    type: "POST",
+                    data: formData,
+                    dataType: "json",
+                    beforeSend: function () {
+                        Swal.fire({
+                            title: "Processing...",
+                            text: "Please wait while we submit your data.",
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: response.status === "success" ? "Success!" : "Error!",
+                            text: response.message,
+                            icon: response.status === "success" ? "success" : "error",
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            if (response.status === "success") {
+                                window.location.href = "../Inbound-logs/";
+                            }
+                        });
+                    },
+                    error: function () {
+                        Swal.fire("Error!", "Something went wrong. Please try again.", "error");
+                    }
+                });
             }
         });
     });
