@@ -99,7 +99,7 @@ if (isset($_GET['id'])) {
                                 $table_headers = [
                                     '#', 'Item Name', 'Brand', 'Category', 'Fullfilment Status', 'Parent Barcode', 
                                     'Quantity before', 'Quantity', 'Quantity after', 
-                                    'Capital', 'Unit Price', 'Profit', 'Total', ''
+                                    'Capital', 'Unit Price', 'Profit', 'Total'
                                 ];
                                 foreach ($table_headers as $header) {
                                     echo "<th class='fs-10 text-end'>{$header}</th>";
@@ -159,7 +159,6 @@ if (isset($_GET['id'])) {
                                         <td class="text-end fs-10" style="width: 250px;">₱ ' . number_format($soldPrice, 2) . '</td>
                                         <td class="text-end fs-10" style="width: 250px;">₱ ' . number_format($sub_profit, 2)  . '</td>
                                         <td class="text-end fs-10" style="width: 250px;">₱ ' . number_format($sub_Total, 2) . '</td>
-                                        <td class="fs-10" style="width: 150px;"><a href="" class="btn btn-transparent fs-10"><span class="fas fa-archive"></span>Return</a></td>
                                     </tr>
                                     ';
                                     $count++;
@@ -175,13 +174,13 @@ if (isset($_GET['id'])) {
                         <tfoot class="table-info">
                             
                             <tr>
-                                <td class="text-start fs-10 text-end" colspan="10"><b><i>Total Profit</i></b></td>
+                                <td class="text-start fs-10 text-end" colspan="11"><b><i>Total Profit</i></b></td>
                                 <td class="text-end fs-10"><strong>₱</strong></td>
                                 <td class="text-end fs-10"><b><i>₱<?php echo number_format($total_profit, 2); ?></i></b></td>
                             </tr>
 
                             <tr>
-                                <td class="text-start fs-10 text-end" colspan="10"><b><i>Total Sales</i></b></td>
+                                <td class="text-start fs-10 text-end" colspan="11"><b><i>Total Sales</i></b></td>
                                 <td class="text-end fs-10"><strong>₱</strong></td>
                                 <td class="text-end fs-10"><b><i>₱<?php echo number_format($total, 2); ?></i></b></td>
                             </tr>

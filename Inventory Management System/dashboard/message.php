@@ -1,4 +1,4 @@
-<button id="prototype-message" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#message-modal">Chanchan</button>
+<button id="prototype-message" class="btn btn-primary d-none" type="button" data-bs-toggle="modal" data-bs-target="#message-modal">Chanchan</button>
 <div class="modal fade" id="message-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content position-relative">

@@ -54,7 +54,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
     </div>
     <div class="col-lg-5">
         <div class="card">
-            <div class="card-body" style="min-height: 500px;">
+            <div class="card-body">
                 <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
                     <li class="nav-item"><a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#tab-home" role="tab">Single Transfer</a></li>
                     <li class="nav-item"><a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#tab-profile" role="tab">Batch Transfer</a></li>

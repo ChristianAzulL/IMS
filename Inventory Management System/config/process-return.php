@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $response['status'] = 'success';
         $response['message'] = 'Stock transfer request submitted successfully.';
+        header("Location: ../RTS-logs/");
     } else {
         $response['status'] = 'error';
         $response['message'] = 'Error processing the request. Please try again.';

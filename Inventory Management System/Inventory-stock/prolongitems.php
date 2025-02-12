@@ -1,17 +1,17 @@
 <div class="card h-md-100 ecommerce-card-min-width">
     <div class="card-header pb-0">
         <h6 class="mb-0 mt-2 d-flex align-items-center">
-            More than 1 month
+            More than 3 months
             <span class="ms-1 text-400" data-bs-toggle="tooltip" data-bs-placement="top" title="Items that are taking longer to sell">
                 <span class="far fa-question-circle" data-fa-transform="shrink-1"></span>
             </span>
         </h6>
     </div>
-    <a href="../Extended-Shelf-Items">
+    <a href="../Extended-Shelf-Items/">
     <div class="card-body d-flex flex-column justify-content-end">
         <?php 
         // Calculate the threshold for "more than 1 month ago"
-        $dateThreshold = date('Y-m-d H:i:s', strtotime('-1 month'));
+        $dateThreshold = date('Y-m-d H:i:s', strtotime('-3 month'));
 
         // SQL query for items older than 1 month
         $sql = "

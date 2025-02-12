@@ -75,7 +75,7 @@ if (isset($_SESSION['unique_key'])) {
     </td>
     <td>
         <input type="text" name="parent_barcode[]" value="<?php echo $row['parent_barcode']?>" hidden>
-        <select name="item_location[]" class="form-select" id="" required>
+        <select name="item_location[]" class="form-select" id="">
             <option value="">Select Item Location</option>
             <?php 
             $item_loc_query = "SELECT * FROM item_location WHERE warehouse = '$selected_warehouse_SIL' ORDER BY location_name";
@@ -91,7 +91,7 @@ if (isset($_SESSION['unique_key'])) {
         </select>
     </td>
     <td>
-        <input type="number" name="item_loc_qty[]" class="form-control" min="0" max="<?php echo $row['quantity']; ?>" placeholder="left behind will be 'For SKU'" required>
+        <input type="number" name="item_loc_qty[]" class="form-control" min="0" max="<?php echo $row['quantity']; ?>" placeholder="left behind will be 'For SKU'" >
     </td>
 </tr>
 <?php
