@@ -31,7 +31,7 @@
                     <thead class="bg-200">
                         <tr>
                             <th class="text-900 sort" data-sort="name">Warehouse name</th>
-                            <th class="text-900 sort" data-sort="status">Status</th>
+                            <!-- <th class="text-900 sort" data-sort="status">Status</th> -->
                             <th class="text-900 sort" data-sort="email">Published date</th>
                             <th class="text-900 sort" data-sort="age">Publish by</th>
                             <th class="text-900 sort" ></th>
@@ -57,33 +57,12 @@
                             ?>
                             <tr>
                                 <td class="name"><b><small><?php echo $warehouse_name;?></small></b></td>
-                                <td class="status text-center"><?php echo $status;?></td>
+                                <!-- <td class="status text-center"><?php //echo $status;?></td> -->
                                 <td class="email"><small><?php echo $publish_date;?></small></td>
                                 <td class="age"><small><?php echo $publish_by;?></small></td>
                                 <td class="py-1 px-0">
-                                <?php 
-                                    if($status == 0){
-                                    ?>
-                                    <a href="../config/employee-set-status.php?user=<?php echo $row['hashed_id']; ?>&activate=true" 
-                                    class="btn-activate btn btn-transparent py-0 mx-0" 
-                                    data-hashed-id="<?php echo $row['hashed_id']; ?>"
-                                    title="activate">
-                                        <small><span class="far fa-check-circle"></span></small>
-                                    </a>
-                                    <?php 
-                                    } else {
-                                    ?>
-                                    <a href="../config/employee-set-status.php?user=<?php echo $row['hashed_id']; ?>&activate=false" 
-                                    class="btn-disable btn btn-transparent py-0 mx-0" 
-                                    data-hashed-id="<?php echo $row['hashed_id']; ?>"
-                                    title="disable">
-                                        <small><span class="fas fa-skull"></span></small>
-                                    </a>
-
-                                    <?php 
-                                    }
-                                    ?>
-                                    <button class="btn btn-transparent py-0 mx-0" title="update access" type="button" data-bs-toggle="modal" data-bs-target="#modal<?php echo $row['hashed_id'];?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
+                                
+                                    <button class="btn btn-transparent py-0 mx-0" title="update access"type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['hashed_id']; ?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
                                     
                                 </td>
                             </tr>
@@ -138,6 +117,111 @@
         </div>
     </form>
 </div>
+
+
+
+<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="update-form" action="../config/update-admin.php?type=warehouse" method="POST">
+        <div class="modal-body p-0">
+            <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+            <h4 class="mb-1" id="modalExampleDemoLabel">Update </h4>
+            </div>
+            <div class="p-4 pb-0">
+                <div id="form-content" class="mb-3">
+                
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary" type="submit">Submit </button>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $("#update-form").on("submit", function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to update this warehouse?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, update it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading alert
+                    Swal.fire({
+                        title: "Processing...",
+                        text: "Please wait while updating the warehouse.",
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Submit the form via AJAX
+                    $.ajax({
+                        url: $("#update-form").attr("action"),
+                        type: $("#update-form").attr("method"),
+                        data: $("#update-form").serialize(),
+                        success: function(response) {
+                            // Assuming the server responds with a success message
+                            Swal.fire({
+                                title: "Updated!",
+                                text: "warehouse has been successfully updated.",
+                                icon: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+
+                            setTimeout(() => {
+                                location.reload(); // Reload after success
+                            }, 2000);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Error!",
+                                text: "Something went wrong. Please try again.",
+                                icon: "error"
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // When the edit button is clicked
+        $(document).on("click", "[data-bs-target='#edit-modal']", function() {
+            var targetId = $(this).attr("target-id"); // Get the target-id attribute
+            if (targetId) {
+                // Load the form-content.php inside #form-content
+                $("#form-content").load("form-content.php?id=" + targetId);
+            }
+        });
+    });
+</script>
+
+
+
 
 
 <script>

@@ -18,6 +18,7 @@ function generateUniqueKey($conn) {
 }
 
 $unique_key = generateUniqueKey($conn);
+$_SESSION['unique_key'] = $unique_key;
 
 $currentDateTime = $_SESSION['inbound_received_date'] ?? date('Y-m-d H:i:s');
 

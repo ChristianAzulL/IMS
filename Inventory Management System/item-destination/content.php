@@ -105,7 +105,7 @@
                                                     <td class="email<?php echo $_id;?>"><?php echo htmlspecialchars($publish_Date); ?></td>
                                                     <td class="age<?php echo $_id;?>"><?php echo htmlspecialchars($by); ?></td>
                                                     <td>
-                                                        <button class="btn btn-secondary me-1 py-1"><small>Edit</small></button><button class="btn btn-danger py-1"><small>delete</small></button>
+                                                        <button class="btn btn-transparent" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['id']; ?>"><span class="far fa-edit"></span></button>
                                                     </td>
                                                 </tr>
                                                 <?php 
@@ -179,7 +179,7 @@
                                                     <td class="email<?php echo $_id;?>"><?php echo htmlspecialchars($publish_Date); ?></td>
                                                     <td class="age<?php echo $_id;?>"><?php echo htmlspecialchars($by); ?></td>
                                                     <td>
-                                                        <button class="btn btn-secondary me-1 py-1"><small>Edit</small></button><button class="btn btn-danger py-1"><small>delete</small></button>
+                                                    <button class="btn btn-transparent" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['id']; ?>"><span class="far fa-edit"></span></button>
                                                     </td>
                                                 </tr>
                                                 <?php 
@@ -262,4 +262,105 @@ foreach ($user_warehouse_ids as $m_id) {
     <?php
 }
 ?>
+
+<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="update-form" action="../config/update-admin.php?type=location" method="POST">
+        <div class="modal-body p-0">
+            <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+            <h4 class="mb-1" id="modalExampleDemoLabel">Update </h4>
+            </div>
+            <div class="p-4 pb-0">
+                <div id="form-content" class="mb-3">
+                
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            <button class="btn btn-primary" type="submit">Submit </button>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $("#update-form").on("submit", function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to update this location?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, update it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading alert
+                    Swal.fire({
+                        title: "Processing...",
+                        text: "Please wait while updating the location.",
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Submit the form via AJAX
+                    $.ajax({
+                        url: $("#update-form").attr("action"),
+                        type: $("#update-form").attr("method"),
+                        data: $("#update-form").serialize(),
+                        success: function(response) {
+                            // Assuming the server responds with a success message
+                            Swal.fire({
+                                title: "Updated!",
+                                text: "location has been successfully updated.",
+                                icon: "success",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+
+                            setTimeout(() => {
+                                location.reload(); // Reload after success
+                            }, 2000);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "Error!",
+                                text: "Something went wrong. Please try again.",
+                                icon: "error"
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // When the edit button is clicked
+        $(document).on("click", "[data-bs-target='#edit-modal']", function() {
+            var targetId = $(this).attr("target-id"); // Get the target-id attribute
+            if (targetId) {
+                // Load the form-content.php inside #form-content
+                $("#form-content").load("form-content.php?id=" + targetId);
+            }
+        });
+    });
+</script>
+
 

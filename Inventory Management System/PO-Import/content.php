@@ -228,7 +228,7 @@ $(document).ready(function() {
                             showConfirmButton: false
                         }).then(() => {
                             if (response.status === "success") {
-                                window.location.href = "../Inbound-logs/";
+                                window.location.href = "../New-Unique-Barcodes?success=0";
                             }
                         });
                     },

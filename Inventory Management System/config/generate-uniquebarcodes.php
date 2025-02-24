@@ -43,7 +43,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
                 $uniqueBarcode = $row['unique_barcode'];
                 $barcode_ext = $row['barcode_extension'];
                 if($barcode_ext >= $start && $barcode_ext <= $end){
-                    $images[] = "<img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>";
+                    $images[] = "<img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=30&text=$uniqueBarcode&print=true'/>";
                 }
             }
         }

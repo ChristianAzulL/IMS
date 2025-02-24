@@ -38,7 +38,7 @@ if (empty($_SESSION['csrf_token'])) {
                     <thead class="bg-200">
                         <tr>
                             <th class="text-900 sort" data-sort="name">Position name</th>
-                            <th class="text-900 sort" data-sort="status">Status</th>
+                            <!-- <th class="text-900 sort" data-sort="status">Status</th> -->
                             <th class="text-900 sort" data-sort="email">Published date</th>
                             <th class="text-900 sort" data-sort="age">Publish by</th>
                             <th class="text-900 sort" ></th>
@@ -64,7 +64,7 @@ if (empty($_SESSION['csrf_token'])) {
                             ?>
                             <tr>
                                 <td class="name"><b><small><?php echo $position_name;?></small></b></td>
-                                <td class="status"><?php echo $status;?></td>
+                                <!-- <td class="status"><?php // echo $status;?></td> -->
                                 <td class="email"><small><?php echo $publish_date;?></small></td>
                                 <td class="age"><small><?php echo $publish_by;?></small></td>
                                 <td class="py-1 px-0">

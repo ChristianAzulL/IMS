@@ -43,7 +43,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
         $res = $conn->query($unique_barcode_query);
         if($res->num_rows>0){
             while($row=$res->fetch_assoc()){
-                $uniqueBarcode = $row['unique_barcode'];
+                $uniqueBarcode = "LPO " . $row['unique_barcode'];
                 $images[] = "<img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=20&text=$uniqueBarcode&print=true'/>";
             }
         }

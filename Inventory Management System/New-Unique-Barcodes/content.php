@@ -33,6 +33,7 @@ $unique_key = $_SESSION['unique_key'];
                                     LEFT JOIN brand b ON b.hashed_id = p.brand
                                     LEFT JOIN category c ON c.hashed_id = p.category
                                     WHERE s.unique_key = '$unique_key'
+                                    ORDER BY s.barcode_extension DESC
                             ";
 
                             $result = $conn->query($query);
@@ -45,6 +46,7 @@ $unique_key = $_SESSION['unique_key'];
                                     $brandName = $row['brand_name'];
                                     $categoryName = $row['category_name'];
                                     $description = $row['description'] . " / " . $brandName . " / " . $categoryName;
+                                    $barcode_extension = $row['barcode_extension'];
 
                                     // Store items under the same parent barcode
                                     if (!isset($groupedData[$parentBarcode])) {
@@ -62,9 +64,10 @@ $unique_key = $_SESSION['unique_key'];
 
                                 for ($i = 0; $i < $totalCount; $i += $batchSize) {
                                     $end = min($start + $batchSize - 1, $totalCount);
+                                    $max = $barcode_extension + $end -1;
                                     echo "<tr>
-                                            <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$start}&end={$end}'><span class='fas fa-download'></span> {$items[0]}</a></td>
-                                            <td>{$start}-{$end}</td>
+                                            <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$barcode_extension}&end={$max}'><span class='fas fa-download'></span> {$items[0]}</a></td>
+                                            <td>{$barcode_extension}-{$max}</td>
                                             <td>{$parentBarcode}</td>
                                           </tr>";
                                     $start = $end + 1;

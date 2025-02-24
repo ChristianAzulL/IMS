@@ -1,0 +1,43 @@
+[
+    {
+        "outbound_id": "0000000000000001",
+        "warehouse": "Administration",
+        "outbound_date": "2025-02-24 08:48:44",
+        "products": [
+            {
+                "barcode": "LPO 3794-1",
+                "description": "Laptop Charger Type C",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "200.00",
+                "product_id": "1",
+                "capital": "165.00"
+            },
+            {
+                "barcode": "LPO 3794-10",
+                "description": "Laptop Charger Type C",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "200.00",
+                "product_id": "1",
+                "capital": "165.00"
+            }
+        ]
+    },
+    {
+        "outbound_id": "0000000000000002",
+        "warehouse": "Administration",
+        "outbound_date": "2025-02-24 08:50:13",
+        "products": [
+            {
+                "barcode": "LPO 4310-10",
+                "description": "Laptop Charger Type C for ROG ally Z1",
+                "brand_name": "ROG",
+                "category_name": "Laptop Charger",
+                "sold_price": "2000.00",
+                "product_id": "2",
+                "capital": "1165.00"
+            }
+        ]
+    }
+]

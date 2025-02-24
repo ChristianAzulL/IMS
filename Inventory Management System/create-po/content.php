@@ -7,7 +7,16 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
     <div class="card-body overflow-hidden py-6 px-2">
       <h5>SELECT PRODUCTS</h5>
     <div class="card shadow-none">
-  <div class="card-body p-0 pb-3"  data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"]}'>
+  <div class="card-body p-0 pb-3"  data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"],"page":10,"pagination":true}'>
+  <div class="row justify-content-end g-0">
+    <div class="col-auto col-sm-5 mb-3">
+      <form>
+        <div class="input-group"><input class="form-control form-control-sm shadow-none search" type="search" placeholder="Search..." aria-label="search" />
+          <div class="input-group-text bg-transparent"><span class="fa fa-search fs-10 text-600"></span></div>
+        </div>
+      </form>
+    </div>
+  </div>
     <div class="d-flex align-items-center justify-content-end my-3">
       <div id="bulk-select-replace-element"><button class="btn btn-falcon-success btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="ms-1">New</span></button></div>
       <div class="d-none ms-3" id="bulk-select-actions">
@@ -52,7 +61,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           if($product_list_res->num_rows > 0) {
             while($row = $product_list_res->fetch_assoc()) {
               $product_id = $row['hashed_id'];
-              $product_img = $row['product_img'];
+              $product_img = $row['product_img'] ?? 'def_img.png';
               $product_category = $row['category_name'];
               $product_brand = $row['brand_name'];
               $product_des = $row['description'];
@@ -65,9 +74,59 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
               $stock_row = $stock_res->fetch_assoc();
               $current_stock = $stock_row['total_quantity'];
 
-              $current_total_transaction_daily = rand(1, 100);
-              $current_total_transaction_monthly = rand(1, 500);
-              $current_total_transaction_yearly = rand(1, 1000);
+              $query_daily = "
+                  SELECT COUNT(*) / DAY(NOW()) AS avg_daily 
+                  FROM outbound_content oc
+                  JOIN stocks s ON oc.unique_barcode = s.unique_barcode
+                  JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                  WHERE ol.warehouse = '$selected_warehouse_id'
+                  AND s.product_id = '$product_id'
+                  AND MONTH(ol.date_sent) = MONTH(NOW()) 
+                  AND YEAR(ol.date_sent) = YEAR(NOW())
+              ";
+
+
+              $query_monthly = "
+                  SELECT COUNT(*) / MONTH(NOW()) AS avg_monthly 
+                  FROM outbound_content oc
+                  JOIN stocks s ON oc.unique_barcode = s.unique_barcode
+                  JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                  WHERE ol.warehouse = '$selected_warehouse_id'
+                  AND s.product_id = '$product_id'
+                  AND YEAR(ol.date_sent) = YEAR(NOW())
+              ";
+
+              $query_yearly = "
+                  SELECT COUNT(*) / (YEAR(NOW()) - (SELECT MIN(YEAR(ol.date_sent)) 
+                  FROM outbound_logs ol
+                  JOIN outbound_content oc ON ol.hashed_id = oc.hashed_id
+                  JOIN stocks s ON oc.unique_barcode = s.unique_barcode
+                  WHERE ol.warehouse = '$selected_warehouse_id' AND s.product_id = '$product_id') + 1) AS avg_yearly
+                  FROM outbound_content oc
+                  JOIN stocks s ON oc.unique_barcode = s.unique_barcode
+                  JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                  WHERE ol.warehouse = '$selected_warehouse_id'
+                  AND s.product_id = '$product_id'
+              ";
+
+
+              // Get Average Daily Transactions
+              $res_daily = $conn->query($query_daily);
+              $row_daily = $res_daily->fetch_assoc();
+              $avg_daily = round($row_daily['avg_daily'], 2);
+
+              // Get Average Monthly Transactions
+              $res_monthly = $conn->query($query_monthly);
+              $row_monthly = $res_monthly->fetch_assoc();
+              $avg_monthly = round($row_monthly['avg_monthly'], 2);
+
+              // Get Average Yearly Transactions
+              $res_yearly = $conn->query($query_yearly);
+              $row_yearly = $res_yearly->fetch_assoc();
+              $avg_yearly = round($row_yearly['avg_yearly'], 2);
+
+
+
 
 
               
@@ -76,7 +135,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           <tr>
             <td class="align-middle white-space-nowrap">
               <div class="form-check mb-0">
-                <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='product_id[]' value='<?php echo $product_id; ?>' checked=''><input type='checkbox' name='product_image[]' value='<?php echo basename($product_img)?>' checked=''><input type='checkbox' name='product_desc[]' value='<?php echo $product_des;?>' checked=''><input type='checkbox' name='parent_barcode[]' value='<?php echo $product_pbarcode; ?>' checked=''><input type='checkbox' name='brand[]' value='<?php echo $product_brand; ?>' checked=''><input type='checkbox' name='category[]' value='<?php echo $product_category; ?>' checked=''><input type='checkbox' name='qty[]' value='<?php echo $current_stock; ?>' checked=''><input type='checkbox' name='trans_day[]' value='<?php echo $current_total_transaction_daily; ?>' checked=''><input type='checkbox' name='trans_month[]' value='<?php echo $current_total_transaction_monthly; ?>' checked=''><input type='checkbox' name='trans_year[]' value='<?php echo $current_total_transaction_yearly;?>' checked=''>}" />
+                <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='product_id[]' value='<?php echo $product_id; ?>' checked=''><input type='checkbox' name='product_image[]' value='<?php echo basename($product_img)?>' checked=''><input type='checkbox' name='product_desc[]' value='<?php echo $product_des;?>' checked=''><input type='checkbox' name='parent_barcode[]' value='<?php echo $product_pbarcode; ?>' checked=''><input type='checkbox' name='brand[]' value='<?php echo $product_brand; ?>' checked=''><input type='checkbox' name='category[]' value='<?php echo $product_category; ?>' checked=''><input type='checkbox' name='qty[]' value='<?php echo $current_stock; ?>' checked=''><input type='checkbox' name='trans_day[]' value='<?php echo $avg_daily; ?>' checked=''><input type='checkbox' name='trans_month[]' value='<?php echo $avg_monthly; ?>' checked=''><input type='checkbox' name='trans_year[]' value='<?php echo $avg_yearly;?>' checked=''>}" />
               </div>
             </td>
             <td>
@@ -87,9 +146,9 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
             <td class="align-middle brand"><?php echo $product_brand; ?></td>
             <td class="align-middle cat"><?php echo $product_category; ?></td>
             <td class="align-middle white-space-nowrap text-end pe-3 qty"><?php echo $current_stock;?></td>
-            <td class="align-middle text-end pe-3 trans_dd"><?php echo $current_total_transaction_daily;?></td>
-            <td class="align-middle text-end pe-3 trans_mm"><?php echo $current_total_transaction_monthly;?></td>
-            <td class="align-middle text-end pe-3 trans_yy"><?php echo $current_total_transaction_yearly;?></td>
+            <td class="align-middle text-end pe-3 trans_dd"><?php echo $avg_daily;?></td>
+            <td class="align-middle text-end pe-3 trans_mm"><?php echo $avg_monthly;?></td>
+            <td class="align-middle text-end pe-3 trans_yy"><?php echo $avg_yearly;?></td>
           </tr>
           <?php 
             }
