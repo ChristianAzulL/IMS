@@ -39,5 +39,30 @@
                 "capital": "1165.00"
             }
         ]
+    },
+    {
+        "outbound_id": "0000000000000003",
+        "warehouse": "Administration",
+        "outbound_date": "2025-02-27 16:02:08",
+        "products": [
+            {
+                "barcode": "LPO 3794-152",
+                "description": "Laptop Charger Type C",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "250.00",
+                "product_id": "1",
+                "capital": "200.00"
+            },
+            {
+                "barcode": "LPO 3794-154",
+                "description": "Laptop Charger Type C",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "250.00",
+                "product_id": "1",
+                "capital": "200.00"
+            }
+        ]
     }
 ]

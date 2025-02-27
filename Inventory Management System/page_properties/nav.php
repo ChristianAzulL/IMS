@@ -758,6 +758,11 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create stock transfer</span></div>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Rack-transfer/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Rack to Rack transfer</span></div>
+              </a>
+            </li>
           </ul>
         </li>
         <?php
