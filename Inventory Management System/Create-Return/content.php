@@ -20,9 +20,10 @@
 <?php 
 if (isset($_POST['barcode'])) {
     $barcode = $_POST['barcode'];
-    $query = "SELECT p.description, b.brand_name, c.category_name, oc.sold_price, s.parent_barcode, s.warehouse, oc.hashed_id
+    $query = "SELECT p.description, b.brand_name, c.category_name, oc.sold_price, s.parent_barcode, s.warehouse, oc.hashed_id, location_name
               FROM outbound_content oc
               LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+              LEFT JOIN item_location il ON il.id = s.item_location 
               LEFT JOIN product p ON p.hashed_id = s.product_id
               LEFT JOIN brand b ON b.hashed_id = p.brand
               LEFT JOIN category c ON c.hashed_id = p.category
@@ -31,7 +32,7 @@ if (isset($_POST['barcode'])) {
     $res = $conn->query($query);
     if ($res->num_rows > 0) {
         $row = $res->fetch_assoc();
-        
+        $location = $row['location_name'] ?? 'FOR SKU';
         ?>
 
         <form action="../config/return-product.php" method="POST" id="return-form">
@@ -80,7 +81,7 @@ if (isset($_POST['barcode'])) {
                         </div>
                         <div class="col-lg-5">
                             <label>Will be returned to</label>
-                            <input type="text" class="form-control" value="Location before it was outbounded" readonly>
+                            <input type="text" class="form-control" value="<?php echo $location;?>" readonly>
                         </div>
                         <div class="col-lg-4">
                             <label>Processed and Authorized by</label>

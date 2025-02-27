@@ -150,7 +150,7 @@ $(document).ready(function(){
     $(document).on("submit", "#single", function(e){
         e.preventDefault();
         $.post($(this).attr("action"), $(this).serialize(), function(response){
-            showAlert(response);
+            // showAlert(response);
             loadSingleTransfer(); // Reload form after submission
         });
     });

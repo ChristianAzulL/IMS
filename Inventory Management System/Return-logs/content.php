@@ -98,7 +98,7 @@
                                         u.user_fname,
                                         u.user_lname,
                                         u.pfp
-                                    FROM returns r 
+                                    FROM `returns` r 
                                     LEFT JOIN stocks s ON s.unique_barcode = r.unique_barcode
                                     LEFT JOIN product p ON p.hashed_id = s.product_id
                                     LEFT JOIN brand b ON b.hashed_id = p.brand

@@ -1,10 +1,18 @@
 [
     {
-        "barcode": "LPO-4946244910-2",
+        "barcode": "LPO 3794-152",
         "product_description": "Laptop Charger Type C",
-        "batch_num": "Batch_10001",
-        "brand_name": "ACER",
+        "batch_num": "PObatch-1",
+        "brand_name": "Acer",
         "category_name": "Laptop Charger",
-        "capital": "165.00"
+        "capital": "200.00"
+    },
+    {
+        "barcode": "LPO 3794-154",
+        "product_description": "Laptop Charger Type C",
+        "batch_num": "PObatch-1",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "200.00"
     }
 ]

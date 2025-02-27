@@ -106,9 +106,16 @@ if (isset($_GET['id'])) {
 
         if(empty($dateReceived)){
             $dateReceived =  '<b class="text-danger">Will be automatically filled out by the system once received by the receiving user.</b>';
-            $submitBTN =    '<div class="text-center mt-3">
+            if($fromUserId === $user_id){
+                $submitBTN =    '<div class="text-center mt-3">
+                                    <button class="btn btn-primary" type="submit" disabled>Submit</button>
+                                </div>';
+            } else {
+                $submitBTN =    '<div class="text-center mt-3">
                                 <button class="btn btn-primary" type="submit">Submit</button>
                             </div>';
+            }
+            
         }
 
         ?>
@@ -166,7 +173,7 @@ if (isset($_GET['id'])) {
                             <tr>
                                 <th class="text-900">Sent Products</th>
                                 <th class="text-900 text-end"></th>
-                                <th class="text-900 pe-x1 text-end" style="width: 8rem">(pcs)</th>
+                                <th class="text-900 pe-x1 text-end" style="width: 8rem">Barcode</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -179,8 +186,7 @@ if (isset($_GET['id'])) {
                                     p.description, 
                                     s.parent_barcode, 
                                     b.brand_name, 
-                                    c.category_name, 
-                                    COUNT(*) AS total_quantity
+                                    c.category_name
                                 FROM 
                                     stock_transfer_content stc
                                 LEFT JOIN 
@@ -193,20 +199,18 @@ if (isset($_GET['id'])) {
                                     category c ON c.hashed_id = p.category
                                 WHERE 
                                     stc.st_id = '$getid'
-                                GROUP BY 
-                                    s.batch_code, s.product_id
+                               
                             ";
                             $product_query_res = $conn->query($product_query);
                             if($product_query_res->num_rows>0){
                                 while($row=$product_query_res->fetch_assoc()){
                                     $unique_barcode = $row['unique_barcode'];
                                     $stc_status = $row['stc_status'];
-                                    $product_img = $row['product_img'];
+                                    $product_img = $row['product_img'] ?? "../../assets/img/def_img.png";
                                     $product_description = $row['description'];
                                     $parent_barcode = $row['parent_barcode'];
                                     $brand_name = $row['brand_name'];
                                     $category_name = $row['category_name'];
-                                    $total_quantity = $row['total_quantity'];
                                     ?>
                                     <tr class="border-bottom border-200">
                                         <td>
@@ -220,13 +224,9 @@ if (isset($_GET['id'])) {
                                             </div>
                                         </div>
                                         </td>
-                                        <td class="align-middle text-end fw-semi-bold"><?php echo $total_quantity;?></td>
+                                        <td class="align-middle text-end fw-semi-bold"></td>
                                         <td class="align-middle pe-x1">
-                                        <div class="d-flex align-items-center">
-                                            <div class="progress me-3 rounded-3 bg-200" style="height: 5px; width:80px;" role="progressbar" aria-valuenow="39" aria-valuemin="0" aria-valuemax="100">
-                                            <div class="progress-bar rounded-pill" style="width: <?php echo $total_quantity;?>%;"></div>
-                                            </div>
-                                        </div>
+                                            <?php echo $unique_barcode;?>
                                         </td>
                                     </tr>
                                     <?php
