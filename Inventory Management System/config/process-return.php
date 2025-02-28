@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $from_warehouse = $_SESSION['hashed_warehouse'] ?? null;
     $to_warehouse = $_POST['supplier'] ?? null;
     $remarks = trim($_POST['remarks'] ?? '');
-    $user_id = $_SESSION['user_id']; // Assuming a user session is available
     $to_status = $_POST['to_status'];
 
 

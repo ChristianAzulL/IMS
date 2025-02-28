@@ -7,7 +7,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
     <div class="card-body overflow-hidden py-6 px-2">
       <h5>SELECT PRODUCTS</h5>
     <div class="card shadow-none">
-  <div class="card-body p-0 pb-3"  data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"],"page":10,"pagination":true}'>
+  <div id="tableExample" class="card-body p-0 pb-3"  data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"],"page":5,"pagination":true}'>
   <div class="row justify-content-end g-0">
     <div class="col-auto col-sm-5 mb-3">
       <form>
@@ -30,7 +30,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
       </div>
     </div>
     <div class="table-responsive scrollbar">
-      <table class="table mb-0">
+      <table class="table table-bordered table-striped fs-10 mb-0">
         <thead class="bg-200">
           <tr>
             <th class="align-middle white-space-nowrap">
@@ -167,6 +167,17 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
       <button id="btn_to_trigger" class="btn btn-warning" data-selected-rows="data-selected-rows" hidden>Get Selected Rows</button>
       <!-- <pre id="selectedRows"></pre> -->
     </div>
+    <div class="row align-items-center mt-3">
+    <div class="pagination d-none"></div>
+    <div class="col">
+      <p class="mb-0 fs-10">
+        <span class="d-none d-sm-inline-block" data-list-info="data-list-info"></span>
+        <span class="d-none d-sm-inline-block"> &mdash;</span>
+        <a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View Less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+      </p>
+    </div>
+    <div class="col-auto d-flex"><button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Previous</span></button><button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Next</span></button></div>
+  </div>
   </div>
 </div>
     </div>

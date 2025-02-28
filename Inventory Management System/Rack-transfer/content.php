@@ -121,8 +121,16 @@ if(!isset($_SESSION['warehouse_rack_transfer']) && !isset($_SESSION['rack'])){
         </div>
     </div>
     <div class="col-lg-7">
-      <form action="../config/process-return.php" id="to-process" method="POST">
-        <div class="pt-3 overflow-auto" id="preview" style="height: 400px;"></div>
+      <form action="../config/process-rack-transfer.php" id="to-process" method="POST">
+        <div class="card mb-1" style="height: 400px;">
+            <div class="card-body overflow-auto">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="pt-3" id="preview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card">
           <div class="card-body" style="height: 100px;">
             <div class="row">
