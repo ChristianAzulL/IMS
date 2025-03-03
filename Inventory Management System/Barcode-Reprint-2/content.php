@@ -1,83 +1,69 @@
-<?php 
-$unique_key = $_SESSION['unique_key'];
-?>
-<div class="row mb-3">
-    <div class="col-12 text-end">
-        <a class="btn btn-primary btn-sm mt-3" href="../set-item-locations/"><span class="fas fa-home me-2"></span>Set item locations.</a>
-    </div>
-</div>
-<div class="card mb-1">
-    <div class="card-body overflow-hidden">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="table-responsive">
-                    <table class="table table-sm fs-10">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Sequence</th>
-                                <th>Parent Barcode</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            // Query to fetch the required data
-                            $query = "SELECT 
-                                        p.description,
-                                        p.parent_barcode,
-                                        b.brand_name,
-                                        c.category_name,
-                                        s.barcode_extension
-                                    FROM stocks s
-                                    LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    LEFT JOIN category c ON c.hashed_id = p.category
-                                    WHERE s.unique_key = '$unique_key'
-                                    ORDER BY s.barcode_extension DESC
-                            ";
+<div class="card">
+    <div class="card-body overflow-hidden py-6 px-2">
+        <form action="../config/create_po.php" method="POST">
+            <h5 class="ms-3">Finish download before downloading the next</h5>
+            <div class="card shadow-none">
+                <div class="card-body p-0 pb-3">
+                    <div class="d-flex align-items-center justify-content-end my-3">
+                        <div class="col-auto text-end mb-3 me-1">
+                            <div id="bulk-select-replace-element">
+                                <button class="btn btn-falcon-success btn-sm" type="submit">
+                                    <span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span>
+                                    <span class="ms-1">Submit</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                            $result = $conn->query($query);
-                            $groupedData = [];
+                    <div class="table-responsive scrollbar">
+                        <table class="table mb-0 table-sm">
+                            <thead class="bg-200">
+                                <tr>
+                                    <th class="text-black dark__text-white align-middle">Description</th>
+                                    <th class="text-black dark__text-white align-middle">Barcode Range</th>
+                                    <th class="text-black dark__text-white align-middle">Reprint Link</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bulk-select-body" class="list">
+                                <?php 
+                                if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['product_id']) && is_array($_POST['product_id'])) {
+                                    $product_groups = array_chunk($_POST['parent_barcode'], 100);
+                                    $total_products = count($_POST['parent_barcode']);
+                                    $start = 1;
 
-                            // Group data by parent barcode
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $parentBarcode = $row['parent_barcode'];
-                                    $brandName = $row['brand_name'];
-                                    $categoryName = $row['category_name'];
-                                    $description = $row['description'] . " / " . $brandName . " / " . $categoryName;
-                                    $barcode_extension = $row['barcode_extension'];
+                                    foreach ($product_groups as $group) {
+                                        $end = $start + count($group) - 1;
+                                        $query_string = http_build_query(['product_id' => $group]);
 
-                                    // Store items under the same parent barcode
-                                    if (!isset($groupedData[$parentBarcode])) {
-                                        $groupedData[$parentBarcode] = [];
+                                        echo '<tr>';
+                                        echo '<td class="align-middle">Selected Products</td>';
+                                        echo '<td class="align-middle">Barcode ' . $start . '-' . $end . '</td>';
+                                        echo '<td class="align-middle"><a href="../config/reprint.php?' . $query_string . '" target="_blank">Reprint Batch</a></td>';
+                                        echo '</tr>';
+
+                                        $start = $end + 1;
                                     }
-                                    $groupedData[$parentBarcode][] = $description;
                                 }
-                            }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
 
-                            // Display grouped data with sequence numbering
-                            foreach ($groupedData as $parentBarcode => $items) {
-                                $totalCount = count($items);
-                                $batchSize = 100;
-                                $start = 1;
-
-                                for ($i = 0; $i < $totalCount; $i += $batchSize) {
-                                    $end = min($start + $batchSize - 1, $totalCount);
-                                    $max = $barcode_extension + $end -1;
-                                    echo "<tr>
-                                            <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$barcode_extension}&end={$max}'><span class='fas fa-download'></span> {$items[0]}</a></td>
-                                            <td>{$barcode_extension}-{$max}</td>
-                                            <td>{$parentBarcode}</td>
-                                          </tr>";
-                                    $start = $end + 1;
-                                }
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                    <div class="row align-items-center mt-3">
+                        <div class="pagination d-none"></div>
+                        <div class="col">
+                            <p class="mb-0 fs-10">
+                                <a class="fw-semi-bold" href="#" data-list-view="*">View all</a>
+                                <a class="fw-semi-bold d-none" href="#" data-list-view="less">View Less</a>
+                            </p>
+                        </div>
+                        <div class="col-auto d-flex">
+                            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev">Previous</button>
+                            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next">Next</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>    
+        </form>
     </div>
 </div>

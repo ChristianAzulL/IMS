@@ -105,9 +105,9 @@
                             }
 
                             if(empty($row['location_name'])){
-                                $location_name = 'For SKU';
+                                $location_name = '<span class="badge rounded-pill badge-subtle-warning">For SKU</span>';
                             } else {
-                                $location_name = $row['location_name'];
+                                $location_name = '<span class="badge rounded-pill badge-subtle-primary">' . $row['location_name'] . '</span>';
                             }
                             if($row['item_status'] == 0) {
                                 $item_status = '<span class="badge rounded-pill bg-success">Available</span>';
@@ -127,7 +127,7 @@
                                     <td class='status" . $row['batch_code'] . " text-center'>" . $item_status . "</td>
                                     <td class='capital" . $row['batch_code'] . " text-end'><small>" . htmlspecialchars($row['capital']) . "</small></td>
                                     <td class='sold" . $row['batch_code'] . "'><small>" . $row['price'] . "</small></td>
-                                    <td class='location" . $row['batch_code'] . "'><small>" . htmlspecialchars($location_name) . "</small></td>
+                                    <td class='location" . $row['batch_code'] . "'><small>" . $location_name . "</small></td>
                                 </tr>
                             ";
                         }

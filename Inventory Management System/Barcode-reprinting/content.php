@@ -1,11 +1,6 @@
-<?php 
-$selected_warehouse_id = $_SESSION['selected_warehouse_id'];
-$selected_warehouse_name = $_SESSION['selected_warehouse_name'];
-?>
-
 <div class="card">
     <div class="card-body overflow-hidden py-6 px-2">
-      <h5>SELECT PRODUCTS</h5>
+      <h5>SELECT PRODUCTS FOR BARCODE REPRINTING</h5>
     <div class="card shadow-none">
   <div id="tableExample" class="card-body p-0 pb-3"  data-list='{"valueNames":["desc","barcode","unique","brand","cat","qty","trans"],"page":5,"pagination":true}'>
   <div class="row justify-content-end g-0">
@@ -76,7 +71,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           <tr>
             <td class="align-middle white-space-nowrap">
               <div class="form-check mb-0">
-                <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='product_id[]' value='<?php echo $product_id; ?>' checked=''><input type='checkbox' name='product_image[]' value='<?php echo basename($product_img)?>' checked=''><input type='checkbox' name='product_desc[]' value='<?php echo $product_des;?>' checked=''><input type='checkbox' name='parent_barcode[]' value='<?php echo $product_pbarcode; ?>' checked=''><input type='checkbox' name='brand[]' value='<?php echo $product_brand; ?>' checked=''><input type='checkbox' name='category[]' value='<?php echo $product_category; ?>' checked=''><input type='checkbox' name='qty[]' value='<?php echo $current_stock; ?>' checked=''><input type='checkbox' name='trans_day[]' value='<?php echo $avg_daily; ?>' checked=''><input type='checkbox' name='trans_month[]' value='<?php echo $avg_monthly; ?>' checked=''><input type='checkbox' name='trans_year[]' value='<?php echo $avg_yearly;?>' checked=''>}" />
+                <input class="form-check-input" type="checkbox" id="checkbox-1" data-bulk-select-row="{<input type='checkbox' name='product_id[]' value='<?php echo $product_id; ?>' checked=''><input type='checkbox' name='product_image[]' value='<?php echo basename($product_img)?>' checked=''><input type='checkbox' name='product_desc[]' value='<?php echo $product_des;?>' checked=''><input type='checkbox' name='parent_barcode[]' value='<?php echo $product_unique_barcode; ?>' checked=''><input type='checkbox' name='brand[]' value='<?php echo $product_brand; ?>' checked=''><input type='checkbox' name='category[]' value='<?php echo $product_category; ?>' checked=''><input type='checkbox' name='qty[]' value='<?php echo $current_stock; ?>' checked=''><input type='checkbox' name='trans_day[]' value='<?php echo $avg_daily; ?>' checked=''><input type='checkbox' name='trans_month[]' value='<?php echo $avg_monthly; ?>' checked=''><input type='checkbox' name='trans_year[]' value='<?php echo $avg_yearly;?>' checked=''>}" />
               </div>
             </td>
             <td>

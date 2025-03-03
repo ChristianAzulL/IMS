@@ -43,7 +43,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
                 $uniqueBarcode = $row['unique_barcode'];
                 $barcode_ext = $row['barcode_extension'];
                 if($barcode_ext >= $start && $barcode_ext <= $end){
-                    $images[] = "<img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=30&text=$uniqueBarcode&print=true'/>";
+                    $images[] = "<img alt='Barcode' src='../../assets/barcode/barcode.php?codetype=Code128&size=60&text=$uniqueBarcode&print=true'/>";
                 }
             }
         }
@@ -67,7 +67,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
 
         // Initialize mPDF with custom paper size for thermal printer (58mm x 30mm) and no margins
         $mpdf = new \Mpdf\Mpdf([
-            'format' => [30, 10], // 58mm width x 30mm height
+            'format' => [18, 10], // 58mm width x 30mm height
             'margin_left' => 0,
             'margin_right' => 0,
             'margin_top' => 0,
