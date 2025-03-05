@@ -1,6 +1,25 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
+
+//unfinished
+// // Use prepared statements to prevent SQL injection
+// $stmt = $conn->prepare("SELECT first_login FROM users WHERE hashed_id = ? LIMIT 1");
+// $stmt->bind_param("s", $user_id);
+// $stmt->execute();
+// $result = $stmt->get_result();
+
+// if ($row = $result->fetch_assoc()) {
+//     if ($row['first_login'] !== "false") {
+//         header("Location: ../Authentication/");
+//         exit(); // Ensure script stops execution after redirection
+//     }
+// } else {
+//     echo "Invalid user ID"; // Handle cases where no result is found
+// }
+
+// // Close statement
+// $stmt->close();
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
