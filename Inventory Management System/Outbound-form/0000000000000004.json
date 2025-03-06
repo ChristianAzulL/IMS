@@ -1,1 +1,74 @@
-[]
+[
+    {
+        "barcode": "LPO 9763-230",
+        "product_description": "Lapzzzzzzzzzzzz",
+        "batch_num": "Baasdasda1231231",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "165.00"
+    },
+    {
+        "barcode": "LPO 9763-212",
+        "product_description": "Lapzzzzzzzzzzzz",
+        "batch_num": "Baasdasda1231231",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "165.00"
+    },
+    {
+        "barcode": "LPO 9763-203",
+        "product_description": "Lapzzzzzzzzzzzz",
+        "batch_num": "Baasdasda1231231",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "165.00"
+    },
+    {
+        "barcode": "LPO 9763-240",
+        "product_description": "Lapzzzzzzzzzzzz",
+        "batch_num": "Baasdasda1231231",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "165.00"
+    },
+    {
+        "barcode": "LPO 9763-24",
+        "product_description": "Lapzzzzzzzzzzzz",
+        "batch_num": "Baasdasda1231231",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "165.00"
+    },
+    {
+        "barcode": "LPO 3221-23",
+        "product_description": "Gaming Laptop Backpack",
+        "batch_num": "Batch_87051",
+        "brand_name": "Razer",
+        "category_name": "Bags",
+        "capital": "55.00"
+    },
+    {
+        "barcode": "LPO 3221-24",
+        "product_description": "Gaming Laptop Backpack",
+        "batch_num": "Batch_87051",
+        "brand_name": "Razer",
+        "category_name": "Bags",
+        "capital": "55.00"
+    },
+    {
+        "barcode": "LPO 3221-26",
+        "product_description": "Gaming Laptop Backpack",
+        "batch_num": "Batch_87051",
+        "brand_name": "Razer",
+        "category_name": "Bags",
+        "capital": "55.00"
+    },
+    {
+        "barcode": "LPO 3221-10",
+        "product_description": "Gaming Laptop Backpack",
+        "batch_num": "Batch_87051",
+        "brand_name": "Razer",
+        "category_name": "Bags",
+        "capital": "55.00"
+    }
+]

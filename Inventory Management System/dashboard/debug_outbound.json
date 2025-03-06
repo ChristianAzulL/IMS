@@ -64,5 +64,93 @@
                 "capital": "200.00"
             }
         ]
+    },
+    {
+        "outbound_id": "0000000000000004",
+        "warehouse": "Administration",
+        "outbound_date": "2025-03-06 09:47:48",
+        "products": [
+            {
+                "barcode": "LPO 9763-24",
+                "description": "Lapzzzzzzzzzzzz",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "200.00",
+                "product_id": "36",
+                "capital": "165.00"
+            },
+            {
+                "barcode": "LPO 9763-203",
+                "description": "Lapzzzzzzzzzzzz",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "200.00",
+                "product_id": "36",
+                "capital": "165.00"
+            },
+            {
+                "barcode": "LPO 9763-212",
+                "description": "Lapzzzzzzzzzzzz",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "200.00",
+                "product_id": "36",
+                "capital": "165.00"
+            },
+            {
+                "barcode": "LPO 9763-230",
+                "description": "Lapzzzzzzzzzzzz",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "200.00",
+                "product_id": "36",
+                "capital": "165.00"
+            },
+            {
+                "barcode": "LPO 9763-240",
+                "description": "Lapzzzzzzzzzzzz",
+                "brand_name": "Acer",
+                "category_name": "Laptop Charger",
+                "sold_price": "200.00",
+                "product_id": "36",
+                "capital": "165.00"
+            },
+            {
+                "barcode": "LPO 3221-10",
+                "description": "Gaming Laptop Backpack",
+                "brand_name": "Razer",
+                "category_name": "Bags",
+                "sold_price": "200.00",
+                "product_id": "31",
+                "capital": "55.00"
+            },
+            {
+                "barcode": "LPO 3221-23",
+                "description": "Gaming Laptop Backpack",
+                "brand_name": "Razer",
+                "category_name": "Bags",
+                "sold_price": "200.00",
+                "product_id": "31",
+                "capital": "55.00"
+            },
+            {
+                "barcode": "LPO 3221-24",
+                "description": "Gaming Laptop Backpack",
+                "brand_name": "Razer",
+                "category_name": "Bags",
+                "sold_price": "200.00",
+                "product_id": "31",
+                "capital": "55.00"
+            },
+            {
+                "barcode": "LPO 3221-26",
+                "description": "Gaming Laptop Backpack",
+                "brand_name": "Razer",
+                "category_name": "Bags",
+                "sold_price": "200.00",
+                "product_id": "31",
+                "capital": "55.00"
+            }
+        ]
     }
 ]
