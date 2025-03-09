@@ -94,368 +94,11 @@ if (empty($_SESSION['csrf_token'])) {
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <form action="../config/add-position.php" method="POST">
-    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>" />
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content position-relative">
-                <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
-                        <h4 class="mb-1" id="modalExampleDemoLabel">Add a new position</h4>
-                    </div>
-                    <div class="p-4 pb-0">
-                        <div class="mb-3">
-                            <label class="col-form-label" for="position-name">position Name:</label>
-                            <input class="form-control" name="position-name" id="position-name" type="text" />
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">position name already exist</div>
-                        </div>
 
-                    </div>
-                    <div class="row p-4 pb-0 mb-3">
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Inbounds</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="po_logs" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Purchased Order logs</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_po" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Create Purchased Order</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="inbound_logs" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Inbound logs</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Product Management</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_list" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Product list</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Create and create item destination</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View stock</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Logistics</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Logistics Access</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Stock Transfer</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_transfer" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Stock Transfer</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Product Returns</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returnproduct" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Returned Products</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Returns</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returns" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Return to Supplier</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Finance</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="finance" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Access on finance module</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Forecasting</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="forecasting" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and create forecast</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Users</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="users" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View  and create user employee accounts</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">administration</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="administration" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Administrator Access</label>
-                            </div>
-                        </div>
 
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" id="btnsubmit" type="submit" disabled>Submit</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <form action="../config/add-position.php" id="myForm" method="POST">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content position-relative">
-                <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
-                        <h4 class="mb-1" id="modalExampleDemoLabel">Add a new position</h4>
-                    </div>
-                    <div class="p-4 pb-0">
-                        <div class="mb-3">
-                            <label class="col-form-label" for="position-name">position Name:</label>
-                            <input class="form-control" name="position-name" id="position-name" type="text" />
-                        </div>
-
-                    </div>
-                    <div class="row p-4 pb-0 mb-3">
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Inbounds</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="po_logs" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Purchased Order logs</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_po" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Create Purchased Order</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="inbound_logs" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Inbound logs</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Product Management</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_list" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Product list</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Create and create item destination</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View stock</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Logistics</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Logistics Access</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Stock Transfer</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_transfer" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Stock Transfer</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Returns</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returns" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Return to Supplier</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Finance</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="finance" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Access on finance module</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Forecasting</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="forecasting" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and create forecast</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Users</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="users" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View  and create user employee accounts</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">administration</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="administration" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Administrator Access</label>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" id="btnsubmit" type="submit">Submit</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-
-<?php
-$repeat = "SELECT * FROM user_position";
-$result = mysqli_query($conn, $repeat);
-if($result->num_rows>0){
-    while($row=$result->fetch_assoc()){
-        $account_position_id = $row['id'];
-        $account_position_name = $row['position_name'];
-        $account_position_access = $row['access'];
-?>
-<!-- Modal -->
-<div class="modal fade" id="edit-modal_<?php echo $account_position_id;?>" tabindex="-1" role="dialog" aria-hidden="true">
-    <form action="../config/add-position.php" method="POST">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content position-relative">
-                <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
-                        <h4 class="mb-1" id="modalExampleDemoLabel">Add a new position</h4>
-                    </div>
-                    <div class="p-4 pb-0">
-                        <div class="mb-3">
-                            <label class="col-form-label" for="position-name">position Name:</label>
-                            <input class="form-control" name="position-name" id="position-name" type="text" value="<?php echo $account_position_name;?>"/>
-                        </div>
-
-                    </div>
-                    <div class="row p-4 pb-0 mb-3">
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Inbounds</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "po_logs")!==false){echo 'checked=""';}?>  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="po_logs" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Purchased Order logs</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "new_po")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_po" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Create Purchased Order</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "inbound_logs")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="inbound_logs" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Inbound logs</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Product Management</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "product_list")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_list" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Product list</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "product_destination")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Create and create item destination</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "stock")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View stock</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Logistics</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "logistics")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Logistics Access</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Stock Transfer</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "stock_transfer")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_transfer" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Stock Transfer</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Product Returns</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "returnproduct")!==false){echo 'checked=""';}?>  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returnproduct" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Returned Products</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Returns</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "returns")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returns" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Return to Supplier</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Finance</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "finance")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="finance" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Access on finance module</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Forecasting</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "forecasting")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="forecasting" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View and create forecast</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">Users</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "users")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="users" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View  and create user employee accounts</label>
-                            </div>
-                        </div>
-                        <div class="col-lg-12 mb-3">
-                            <label for="">administration</label>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" <?php if(strpos($account_position_access, "administration")!==false){echo 'checked=""';}?> name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="administration" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Administrator Access</label>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit">Submit</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-<?php
-
-    }
-}
+<?php 
+include "add_position.php";
+include "update_position.php";
 ?>
 
 
@@ -493,11 +136,70 @@ if($result->num_rows>0){
                         }
                     },
                     error: function() {
-                        // Handle any errors that occur during the AJAX request
                         alert('Error checking position name.');
                     }
                 });
             }, 500); // Delay of 500ms after the user stops typing
+        });
+
+        // *** New functionality for update position modal ***
+
+        // Enable #update_btnsubmit when checkboxes are changed
+        $('.modal').on('change', 'input[type="checkbox"]', function() {
+            let modal = $(this).closest('.modal');
+            modal.find('#update_btnsubmit').prop('disabled', false);
+        });
+
+        // Form submission event
+        $('.modal').on('submit', '#update_access', function(e) {
+            e.preventDefault(); // Prevent page reload
+
+            let form = $(this);
+            let modal = form.closest('.modal');
+            let submitBtn = modal.find('#update_btnsubmit');
+            let loadingBtn = modal.find('#updateloading_btn');
+
+            // Show loading button, hide submit button
+            submitBtn.hide();
+            loadingBtn.show();
+
+            // Send AJAX request
+            $.ajax({
+                url: form.attr('action'),
+                type: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    // Show success message with SweetAlert2
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Position updated successfully!',
+                        timer: 1000, // 1-second delay
+                        showConfirmButton: false
+                    });
+
+                    // Close modal after 1 second
+                    setTimeout(function() {
+                        modal.modal('hide');
+                        submitBtn.show();
+                        loadingBtn.hide();
+                        submitBtn.prop('disabled', true); // Disable again after update
+                    }, 1000);
+                },
+                error: function() {
+                    // Show error message with SweetAlert2
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to update position!',
+                        showConfirmButton: true
+                    });
+
+                    // Re-enable submit button on failure
+                    submitBtn.show();
+                    loadingBtn.hide();
+                }
+            });
         });
     });
 </script>

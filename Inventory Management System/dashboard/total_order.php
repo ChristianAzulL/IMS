@@ -50,7 +50,7 @@ foreach ($weeklySales as $week => $sales) {
 
 ?>
 
-<div class="card-body d-flex flex-column justify-content-end">
+<div class="card-body d-flex flex-column justify-content-end" style="height: 210px;">
   <div class="row justify-content-between">
 
     <!-- Order Count -->

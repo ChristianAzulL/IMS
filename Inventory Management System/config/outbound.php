@@ -125,6 +125,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sss", $log_action, $user_id, $currentDateTime);
         $stmt->execute();
 
+        $filePath = "../Outbound-form/" . $outbound_id . ".json"; // Adjust the path accordingly
+
+        if (file_exists($filePath)) {
+            if (unlink($filePath)) {
+                // File deleted successfully, now unset the session variables
+                unset($_SESSION['warehouse_outbound']);
+                unset($_SESSION['outbound_id']);
+            } else {
+                echo "Error deleting the file.";
+            }
+        } else {
+            // File does not exist, still unset the session variables
+            unset($_SESSION['warehouse_outbound']);
+            unset($_SESSION['outbound_id']);
+        }
+
         $conn->commit();
         echo json_encode(['status' => 'success', 'message' => 'Order saved successfully.']);
     } catch (Exception $e) {

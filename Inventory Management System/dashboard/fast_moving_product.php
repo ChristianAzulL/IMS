@@ -1,32 +1,4 @@
 <?php
-
-// Fetch the JSON data from outbound API
-function fetchAPI($url) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    return $response;
-}
-
-$json_data = fetchAPI('http://localhost/IMS/Inventory%20Management%20System/API/outbound.php');
-
-if ($json_data === false) {
-    die("Error: Unable to fetch data from API.");
-}
-
-// Debug: Log the raw JSON response
-file_put_contents("debug_outbound.json", $json_data);
-
-// Attempt to decode JSON
-$data = json_decode($json_data, true);
-
-if ($data === null || !is_array($data)) {
-    die("Error: JSON decoding failed - " . json_last_error_msg() . "<br>Raw Output: <pre>" . htmlspecialchars($json_data) . "</pre>");
-}
-
 $products_count = [];
 $current_week_start = date("Y-m-d", strtotime("monday this week"));
 $current_week_end = date("Y-m-d", strtotime("sunday this week"));

@@ -28,11 +28,17 @@ $inbound_res = $conn->query($inbound_sql);
         <div class="row justify-content-between gx-3 gy-0 px-3">
             <div id="tableExample3" data-list='{"valueNames":["inbound_no","po_no","warehouse","supplier","date","receiver"],"page":5,"pagination":true}'>
                 <div class="row justify-content-end g-0">
+                    <?php 
+                    if(strpos($access, "new_inbound")!==false){
+                    ?>
                     <div class="col-auto mb-3">
                         <button class="btn btn-primary py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Create</button>
                         <button class="btn btn-warning py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#csv-modal"><span class="fas fa-file-csv"></span> Upload CSV</button>
                         <button class="btn btn-warning py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#csv-modal-unique"><span class="fas fa-file-csv"></span> Upload CSV(Unique Barcodes)</button>
                     </div>
+                    <?php 
+                    }
+                    ?>
                     <div class="col-sm-auto">
                         <select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
                             <option selected value="">Select warehouse</option>

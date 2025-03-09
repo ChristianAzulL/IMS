@@ -50,6 +50,11 @@ $fast_moving_categories = array_slice($category_count, 0, 50);
 ?>
 
 <div id="tableExample3" data-list='{"valueNames":["cat_id","category_cat","cat_qty"],"page":5,"pagination":true}'>
+<div class="row">
+        <div class="col-12 mb-3 ms-3 mt-3">
+            <h6>Top 50 Fast Moving by Category (This Week)</h6>
+        </div>
+    </div>
   <div class="row justify-content-end g-0">
     <div class="col-auto col-sm-5 mb-3">
       <form>
@@ -65,7 +70,7 @@ $fast_moving_categories = array_slice($category_count, 0, 50);
             <tr>
                 <th class="text-900" data-sort="cat_id">#</th>
                 <th class="text-900" data-sort="category_cat">Category</th>
-                <th class="text-900" data-sort="cat_qty">Sold Qty</th>
+                <th class="text-900 text-end" data-sort="cat_qty">Sold Qty</th>
             </tr>
         </thead>
         <tbody class="list">
@@ -75,7 +80,7 @@ foreach ($fast_moving_categories as $category) {
     echo "<tr>";
     echo "<td class='cat_id'>{$rank}</td>";
     echo "<td class='category_cat'>{$category['category_name']}</td>";
-    echo "<td class='cat_qty'>{$category['total_sold']}</td>";
+    echo "<td class='cat_qty text-end'>{$category['total_sold']}</td>";
     echo "</tr>";
     $rank++;
 }

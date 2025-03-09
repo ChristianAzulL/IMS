@@ -733,7 +733,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "stock_transfer")!==false){
+        if(strpos($access, "stock_transfer")!==false || strpos($access, "rack_transfer")!==false){
         ?>
 
         <!-- Stock Transfer Dropdown -->
@@ -758,11 +758,17 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create stock transfer</span></div>
               </a>
             </li>
+            <?php 
+            if(strpos($access, "rack_transfer")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Rack-transfer/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Rack to Rack transfer</span></div>
               </a>
             </li>
+            <?php 
+            }
+            ?>
           </ul>
         </li>
         <?php
@@ -774,7 +780,7 @@
              data-bs-toggle="collapse" aria-expanded="false" aria-controls="forms">
             <div class="d-flex align-items-center">
               <span class="nav-link-icon"><span class="fas fa-sign-out-alt"></span></span>
-              <span class="nav-link-text ps-1">Returns </span>
+              <span class="nav-link-text ps-1">Product Returns </span>
             </div>
           </a>
           
@@ -886,7 +892,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "administration") !==false || strpos($access, "destination")!==false ){
+        if(strpos($access, "audit")!==false || strpos($access, "admin_category")!==false || strpos($access, "admin_brand")!==false || strpos($access, "product_list")!==false || strpos($access, "admin_warehouse")!==false || strpos($access, "admin_supplier")!==false || strpos($access, "admin_platform")!==false || strpos($access, "barcode_reprint")!==false || strpos($access, "admin_accessess")!==false || strpos($access, "product_destination")!==false){
         ?>
 
         <!-- Administration Dropdown -->
@@ -901,22 +907,34 @@
           
           <!-- Administration Submenu -->
           <ul class="nav collapse" id="email">
+            <?php
+            if(strpos($access, "audit")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Audit/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Audit</span></div>
               </a>
             </li>
+            <?php
+            }
+            if(strpos($access, "admin_category")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Category/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Category</span></div>
               </a>
             </li>
+            <?php
+            }
+            if(strpos($access, "admin_brand")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Brand/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Brand</span></div>
               </a>
             </li>
             <?php
+            }
             if(strpos($access, "product_list")!==false){
               ?>
               <li class="nav-item">
@@ -925,39 +943,61 @@
                 </a>
               </li>
               <?php 
-              }
+            }
+            if(strpos($access, "admin_warehouse")!==false){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Warehouses/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Warehouses</span></div>
               </a>
             </li>
+            <?php
+            }
+            if(strpos($access, "admin_supplier")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Suppliers/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Suppliers</span></div>
               </a>
             </li>
+            <?php
+            }
+            if(strpos($access, "admin_platform")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../logistic-partner/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Platform</span></div>
               </a>
             </li>
+            <?php
+            }
+            if(strpos($access, "admin_courier")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Courier/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Courier</span></div>
               </a>
             </li>
+            <?php
+            }
+            if(strpos($access, "barcode_reprint")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Barcode-reprinting/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Barcode Reprinting</span></div>
               </a>
             </li>
+            <?php
+            }
+            if(strpos($access, "admin_accessess")!==false){
+            ?>
             <li class="nav-item">
               <a class="nav-link" href="../Access-levels/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Access levels</span></div>
               </a>
             </li>
             <?php
+              }
               if(strpos($access, "product_destination")!==false){
               ?>
               <li class="nav-item">
