@@ -10,20 +10,17 @@ function fetchAPI($url) {
   return $response;
 }
 
-$json_data = fetchAPI('http://localhost/IMS/Inventory%20Management%20System/API/outbound.php');
+$json_data = fetchAPI('http://localhost/Inventory%20Management%20System/API/outbound.php');
 
 if ($json_data === false) {
   die("Error: Unable to fetch data from API.");
 }
 
-// Debug: Log the raw JSON response
-file_put_contents("debug_outbound.json", $json_data);
-
 // Attempt to decode JSON
 $data = json_decode($json_data, true);
 
 if ($data === null || !is_array($data)) {
-  die("Error: JSON decoding failed - " . json_last_error_msg() . "<br>Raw Output: <pre>" . htmlspecialchars($json_data) . "</pre>");
+  die("Error: JSON decoding failed - " . json_last_error_msg());
 }
 ?>
 <div class="row">
