@@ -612,7 +612,7 @@
     </div>
 
     <!-- Navbar Brand Logo -->
-    <a class="navbar-brand" href="../index.html">
+    <a class="navbar-brand" href="../dashboard/">
       <div class="d-flex align-items-center py-3">
         <img class="me-2" src="../../assets/img/logo/LPO Emblem.png" alt="" width="70" />
         <span class="font-sans-serif text-secondary"> IMS</span>
@@ -635,7 +635,7 @@
           </a>
         </li>
         <?php 
-        if(strpos($access, "po_logs")!==false || strpos($access, "new_po")!==false || strpos($access, "inbound_logs")!==false){
+        if(strpos($access, "po_logs")!==false || strpos($access, "new_po")!==false || strpos($access, "inbound_logs")!==false || $user_position_name === "Administrator"){
         ?>
         <!-- Inbounds Dropdown -->
         <li class="nav-item">
@@ -649,7 +649,7 @@
           <!-- Inbounds Submenu -->
           <ul class="nav collapse" id="social">
             <?php
-              if(strpos($access, "po_logs")!==false){
+              if(strpos($access, "po_logs")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../PO-logs/">
@@ -657,7 +657,7 @@
               </a>
             </li>
             <?php
-              }if(strpos($access, "inbound_logs")!==false){
+              }if(strpos($access, "inbound_logs")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Inbound-logs/">
@@ -673,7 +673,7 @@
         }
         ?>
         <?php 
-        if(strpos($access, "stock")!==false){
+        if(strpos($access, "stock")!==false || $user_position_name === "Administrator"){
         ?>
         <!-- Product Dropdown -->
         <li class="nav-item">
@@ -688,7 +688,7 @@
           <!-- Product Submenu -->
           <ul class="nav collapse" id="events">
             <?php 
-            if(strpos($access, "stock")!==false){
+            if(strpos($access, "stock")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Inventory-stock/">
@@ -705,7 +705,7 @@
         ?>
         <!-- tobecontinue -->
         <?php 
-        if(strpos($access, "logistics")!==false){
+        if(strpos($access, "logistics")!==false || $user_position_name === "Administrator"){
         ?>
         <!-- Logistics Dropdown -->
         <li class="nav-item">
@@ -733,7 +733,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "stock_transfer")!==false || strpos($access, "rack_transfer")!==false){
+        if(strpos($access, "stock_transfer")!==false || strpos($access, "rack_transfer")!==false || $user_position_name === "Administrator"){
         ?>
 
         <!-- Stock Transfer Dropdown -->
@@ -759,7 +759,7 @@
               </a>
             </li>
             <?php 
-            if(strpos($access, "rack_transfer")!==false){
+            if(strpos($access, "rack_transfer")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Rack-transfer/">
@@ -773,7 +773,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "returnproduct")!==false){
+        if(strpos($access, "returnproduct")!==false || $user_position_name === "Administrator"){
         ?>
         <li class="nav-item">
           <a class="nav-link dropdown-indicator" href="#returns" role="button" 
@@ -800,7 +800,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "returns")!==false){
+        if(strpos($access, "returns")!==false || $user_position_name === "Administrator"){
         ?>
 
         <!-- Returns Dropdown -->
@@ -831,7 +831,7 @@
         
         <?php
         }
-        if(strpos($access, "finance")!==false){
+        if(strpos($access, "finance")!==false || $user_position_name === "Administrator"){
         ?>
 
         <!-- Finance Dropdown -->
@@ -855,7 +855,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "forecasting") !==false){
+        if(strpos($access, "forecasting") !==false || $user_position_name === "Administrator"){
         ?>
 
         <!-- Forecasting Dropdown -->
@@ -880,7 +880,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "users")!==false){
+        if(strpos($access, "users")!==false || $user_position_name === "Administrator"){
         ?>
         <!-- Users Section -->
         <li class="nav-item">
@@ -893,7 +893,7 @@
         </li>
         <?php
         }
-        if(strpos($access, "audit")!==false || strpos($access, "admin_category")!==false || strpos($access, "admin_brand")!==false || strpos($access, "product_list")!==false || strpos($access, "admin_warehouse")!==false || strpos($access, "admin_supplier")!==false || strpos($access, "admin_platform")!==false || strpos($access, "barcode_reprint")!==false || strpos($access, "admin_accessess")!==false || strpos($access, "product_destination")!==false){
+        if(strpos($access, "audit")!==false || strpos($access, "admin_category")!==false || strpos($access, "admin_brand")!==false || strpos($access, "product_list")!==false || strpos($access, "admin_warehouse")!==false || strpos($access, "admin_supplier")!==false || strpos($access, "admin_platform")!==false || strpos($access, "barcode_reprint")!==false || strpos($access, "admin_accessess")!==false || strpos($access, "product_destination")!==false || $user_position_name === "Administrator"){
         ?>
 
         <!-- Administration Dropdown -->
@@ -909,7 +909,7 @@
           <!-- Administration Submenu -->
           <ul class="nav collapse" id="email">
             <?php
-            if(strpos($access, "audit")!==false){
+            if(strpos($access, "audit")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Audit/">
@@ -918,7 +918,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "admin_category")!==false){
+            if(strpos($access, "admin_category")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Category/">
@@ -927,7 +927,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "admin_brand")!==false){
+            if(strpos($access, "admin_brand")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Brand/">
@@ -936,7 +936,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "product_list")!==false){
+            if(strpos($access, "product_list")!==false || $user_position_name === "Administrator"){
               ?>
               <li class="nav-item">
                 <a class="nav-link" href="../Product-list/">
@@ -945,7 +945,7 @@
               </li>
               <?php 
             }
-            if(strpos($access, "admin_warehouse")!==false){
+            if(strpos($access, "admin_warehouse")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Warehouses/">
@@ -954,7 +954,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "admin_supplier")!==false){
+            if(strpos($access, "admin_supplier")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Suppliers/">
@@ -963,7 +963,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "admin_platform")!==false){
+            if(strpos($access, "admin_platform")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../logistic-partner/">
@@ -972,7 +972,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "admin_courier")!==false){
+            if(strpos($access, "admin_courier")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Courier/">
@@ -981,7 +981,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "barcode_reprint")!==false){
+            if(strpos($access, "barcode_reprint")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Barcode-reprinting/">
@@ -990,7 +990,7 @@
             </li>
             <?php
             }
-            if(strpos($access, "admin_accessess")!==false){
+            if(strpos($access, "admin_accessess")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
               <a class="nav-link" href="../Access-levels/">
@@ -999,7 +999,7 @@
             </li>
             <?php
               }
-              if(strpos($access, "product_destination")!==false){
+              if(strpos($access, "product_destination")!==false || $user_position_name === "Administrator"){
               ?>
               <li class="nav-item">
                 <a class="nav-link" href="../item-destination/">

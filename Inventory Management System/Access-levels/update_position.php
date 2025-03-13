@@ -181,7 +181,7 @@ if($result->num_rows>0){
                             </div>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="item-destination" <?php if(strpos($account_position_access, "product_destination")!==false){echo 'checked=""';}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" <?php if(strpos($account_position_access, "product_destination")!==false){echo 'checked=""';}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Item Destination</label>
                             </div>
 

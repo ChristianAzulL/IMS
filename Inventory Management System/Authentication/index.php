@@ -4,9 +4,7 @@ include "../config/on_session.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-require '../../assets/email/PHPMailer/PHPMailer.php';
-require '../../assets/email/PHPMailer/Exception.php';
-require '../../assets/email/PHPMailer/SMTP.php';
+require "../config/vendor/autoload.php";
 
 $query = "SELECT otp FROM users WHERE hashed_id = '$user_id' LIMIT 1";
 $res = $conn->query($query);
@@ -31,25 +29,30 @@ if ($res->num_rows > 0) {
 $password = $otp;
 
 $mail = new PHPMailer;
-$mail->isSMTP();
-// $mail->Host = 'smtp.gmail.com';
-// $mail->SMTPAuth = true;
-// $mail->Username = 'pdm.azulchristian@gmail.com'; // Update with your email address
-// $mail->Password = 'inzgajfxruvxqwbm'; // Update with your email password
-$mail->Host = 'smtp.hostinger.com';
-$mail->SMTPAuth = true;
-$mail->Username = 'no_reply@dmp-motors.com'; // Update with your email address
-$mail->Password = '4koSiDMP123*';
-$mail->SMTPSecure = 'tls';
-$mail->Port = 587;
-$mail->setFrom('no_reply@dmp-motors.com', 'Danielle Motors'); // Update with your name and email address
-$mail->addAddress($user_email); // Set the recipient email address
-$mail->Subject = 'Laptop PC Outlet OTP';
-$mail->Body = 'Your otp is: "' . $password . '".';
-if (!$mail->send()) {
-  echo "Mailer Error: " . $mail->ErrorInfo;
-} else {
-  echo "Email sent!";
+$mail = new PHPMailer(true);
+
+try {
+    $mail -> isSMTP();
+    $mail -> Host = "smtp.gmail.com";
+    $mail -> SMTPAuth = true;
+    $mail -> Username = "pdm.azulchristian@gmail.com";
+    $mail -> Password = "xucm vpjf iqob vsyb";
+    $mail -> SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail -> Port = 587;
+
+    $mail -> setFrom("noreply@lpo.com", "noreplylpo");
+    $mail -> addAddress("$user_email");
+
+    $mail -> Subject = "New Contact Form Submission";
+    $mail -> Body = "Your One time password is: $otp";
+    if($mail -> send()){
+
+    }else{
+        // echo "Message could not be sent, Error: " . $mail->ErrorInfo; 
+    }
+
+} catch (Exception $e) {
+    echo "Message could not be sent, Error: " . $mail->ErrorInfo; 
 }
 
 

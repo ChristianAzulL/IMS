@@ -68,8 +68,13 @@ if (empty($_SESSION['csrf_token'])) {
                                 <td class="email"><small><?php echo $publish_date;?></small></td>
                                 <td class="age"><small><?php echo $publish_by;?></small></td>
                                 <td class="py-1 px-0">
+                                    <?php 
+                                    if($position_name !== "Administrator"){
+                                    ?>
                                     <button class="btn btn-transparent py-0" type="button"  data-bs-toggle="modal" data-bs-target="#edit-modal_<?php echo $row['id'];?>"><small><span class="far fa-edit" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit" ></span></small></button>
-                                    <button class="btn btn-transparent py-0" title="Enable Position"><span class="far fa-check-circle"></span></button>
+                                    <?php 
+                                    }
+                                    ?>
                                 </td>
                             </tr>
                             <?php

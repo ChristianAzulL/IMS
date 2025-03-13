@@ -1,4 +1,4 @@
-<?php 
+<?php
 $unique_key = $_SESSION['unique_key'];
 ?>
 <div class="row mb-3">
@@ -60,17 +60,17 @@ $unique_key = $_SESSION['unique_key'];
                             foreach ($groupedData as $parentBarcode => $items) {
                                 $totalCount = count($items);
                                 $batchSize = 100;
-                                $start = 1;
-
+                                $start = $barcode_extension + 1;  // Starting barcode sequence for the first batch
+                                
+                                // Loop through the items and create barcode ranges
                                 for ($i = 0; $i < $totalCount; $i += $batchSize) {
-                                    $end = min($start + $batchSize - 1, $totalCount);
-                                    $max = $barcode_extension + $end -1;
+                                    $end = min($start + $batchSize - 1, $totalCount + $barcode_extension);  // Make sure end doesn't exceed total count
                                     echo "<tr>
-                                            <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$barcode_extension}&end={$max}'><span class='fas fa-download'></span> {$items[0]}</a></td>
-                                            <td>{$barcode_extension}-{$max}</td>
+                                            <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$start}&end={$end}'><span class='fas fa-download'></span> {$items[0]}</a></td>
+                                            <td>{$start}-{$end}</td>
                                             <td>{$parentBarcode}</td>
                                           </tr>";
-                                    $start = $end + 1;
+                                    $start = $end + 1;  // Update the start for the next batch
                                 }
                             }
                             ?>

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand" style="display: none;">
             <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
-            <a class="navbar-brand me-1 me-sm-3" href="../index.html">
+            <a class="navbar-brand me-1 me-sm-3" href="../dashboard/">
               <div class="d-flex align-items-center"><img class="me-2" src="../../assets/img/logo/LPO Emblem.png" alt="" width="70" /><span class="font-sans-serif text-secondary">IMS</span></div>
             </a>
            
@@ -14,7 +14,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                   <div class="bg-white dark__bg-1000 rounded-2 py-2">
-                    <a class="dropdown-item" href="../settings.php">Settings</a>
+                    <a class="dropdown-item" href="../Authentication/">Settings</a>
                     <a class="dropdown-item" href="../config/logout.php">Logout</a>
                   </div>
                 </div>
