@@ -90,7 +90,7 @@ if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_
                     $barcodeBase64 = 'data:image/png;base64,' . base64_encode($barcodeImageData);
 
                     // Store the barcode image as an <img> tag in the array
-                    $images[] = "<div class='container'><img src='{$barcodeBase64}' alt='{$unique_barcode}'><span>{$unique_barcode}</span></div>";
+                    $images[] = "<div class='container'><img src='{$barcodeBase64}' alt='{$unique_barcode}'><span>LPO {$unique_barcode}</span></div>";
                 }
             }
         }
