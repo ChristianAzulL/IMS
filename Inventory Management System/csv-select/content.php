@@ -31,7 +31,7 @@
                 <form id="myForm" action="csv_process.php" method="POST" enctype="multipart/form-data">
                     <div class="row justify-content-end">
                         <div class="col-auto mb-3">
-                            <button class="btn btn-primary" id="submitBTN" type="submit">Submit</button>
+                            <button class="btn btn-primary" id="submitBTN" type="button">Submit</button>
                         </div>
                     </div>
 
@@ -63,7 +63,7 @@
     </div>
 </div>
 
-<!-- <script>
+<script>
 document.getElementById('submitBTN').addEventListener('click', function(event) {
     Swal.fire({
         title: "Do you want to save the changes?",
@@ -377,4 +377,4 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
     });
 });
 
-</script> -->
+</script>
