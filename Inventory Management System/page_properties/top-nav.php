@@ -14,7 +14,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                   <div class="bg-white dark__bg-1000 rounded-2 py-2">
-                    <a class="dropdown-item" href="../Authentication/">Settings</a>
+                    <a class="dropdown-item" href="../Account-setup/">Settings</a>
                     <a class="dropdown-item" href="../config/logout.php">Logout</a>
                   </div>
                 </div>
