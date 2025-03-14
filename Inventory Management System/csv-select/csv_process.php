@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 // Include necessary files for database connection and session handling
 include '../config/database.php';
 include '../config/on_session.php';
