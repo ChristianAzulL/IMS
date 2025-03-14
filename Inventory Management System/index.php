@@ -3,7 +3,7 @@ session_start();
 
 if (isset($_SESSION['user_id'])) {
             // Redirect to Dashboard if the account is active
-            header("Location: Dashboard/");
+            header("Location: dashboard/");
             exit(); // Prevent further script execution after a redirect
     
 }
