@@ -63,7 +63,7 @@
     </div>
 </div>
 
-<script>
+<!-- <script>
 document.getElementById('submitBTN').addEventListener('click', function(event) {
     Swal.fire({
         title: "Do you want to save the changes?",
@@ -377,4 +377,4 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
     });
 });
 
-</script>
+</script> -->
