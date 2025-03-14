@@ -25,7 +25,7 @@ if ($data === null || !is_array($data)) {
 ?>
 <div class="row">
   <?php 
-  if(strpos($access, "capital_sales")!==false){
+  if(strpos($access, "capital_sales")!==false || $user_position_name === "Administrator"){
   ?>
   <!-- Compare Capital and Sales Card -->
   <div class="col-lg-12 mb-3">
@@ -39,7 +39,7 @@ if ($data === null || !is_array($data)) {
   <?php 
   }
 
-  if(strpos($access, "fast_brand")!==false){
+  if(strpos($access, "fast_brand")!==false || $user_position_name === "Administrator"){
   ?>
 
   <div class="col-lg-4 mb-3">
@@ -52,7 +52,7 @@ if ($data === null || !is_array($data)) {
   <?php 
   }
 
-  if(strpos($access, "fast_category")!==false){
+  if(strpos($access, "fast_category")!==false || $user_position_name === "Administrator"){
   ?>
 
   <div class="col-lg-4 mb-3">
@@ -70,7 +70,7 @@ if ($data === null || !is_array($data)) {
     <div class="row">
       <?php
       
-    if(strpos($access, "weekly_sales")!==false){
+    if(strpos($access, "weekly_sales")!==false || $user_position_name === "Administrator"){
     ?>
       <!-- Weekly Sales Card -->
       <div class="col-lg-12 mb-3">
@@ -99,7 +99,7 @@ if ($data === null || !is_array($data)) {
       }
 
       
-      if(strpos($access, "total_orders")!==false){
+      if(strpos($access, "total_orders")!==false || $user_position_name === "Administrator"){
       ?>
 
       <!-- Total Order Card -->
@@ -119,7 +119,7 @@ if ($data === null || !is_array($data)) {
     
   <?php 
   
-  if(strpos($access, "fast_products")!==false){
+  if(strpos($access, "fast_products")!==false || $user_position_name === "Administrator"){
   ?>
   <!-- Best Selling Products Tables -->
   <div class="col-lg-12 mb-3">
@@ -132,7 +132,7 @@ if ($data === null || !is_array($data)) {
   <?php 
   }
   
-  if(strpos($access, "stock")!==false){
+  if(strpos($access, "stock")!==false || $user_position_name === "Administrator"){
   ?>
   <!-- All Products Section -->
   <div class="col-lg-12">

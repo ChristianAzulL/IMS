@@ -60,11 +60,18 @@ $unique_key = $_SESSION['unique_key'];
                             foreach ($groupedData as $parentBarcode => $items) {
                                 $totalCount = count($items);
                                 $batchSize = 100;
-                                $start = $barcode_extension + 1;  // Starting barcode sequence for the first batch
-                                
+                                $new = true;
+                                if($new === true){
+                                    $start = $barcode_extension;  // Starting barcode sequence for the first batch
+                                } else {
+                                    $start = $barcode_extension + 1; 
+                                }
                                 // Loop through the items and create barcode ranges
-                                for ($i = 0; $i < $totalCount; $i += $batchSize) {
-                                    $end = min($start + $batchSize - 1, $totalCount + $barcode_extension);  // Make sure end doesn't exceed total count
+                                for ($i = 1; $i < $totalCount; $i += $batchSize) {
+                                    if($new===true){
+                                        $new = false;
+                                    }
+                                    $end = min($start + $batchSize - 1, $totalCount);  // Make sure end doesn't exceed total count
                                     echo "<tr>
                                             <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$start}&end={$end}'><span class='fas fa-download'></span> {$items[0]}</a></td>
                                             <td>{$start}-{$end}</td>
