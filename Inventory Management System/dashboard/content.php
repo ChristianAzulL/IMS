@@ -10,7 +10,7 @@ function fetchAPI($url) {
   return $response;
 }
 
-$json_data = fetchAPI('http://localhost/IMS/Inventory%20Management%20System/API/outbound.php');
+$json_data = fetchAPI('http://localhost/Inventory%20Management%20System/API/outbound.php');
 
 if ($json_data === false) {
   die("Error: Unable to fetch data from API.");
