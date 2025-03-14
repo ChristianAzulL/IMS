@@ -16,7 +16,7 @@
       <div id="bulk-select-replace-element"><button class="btn btn-falcon-success btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="ms-1">New</span></button></div>
       <div class="d-none ms-3" id="bulk-select-actions">
         <div class="d-flex">
-          <form action="../Barcode-reprint-2/index.php" method="POST">
+          <form action="../Barcode-Reprint-2/index.php" method="POST">
             <pre id="selectedRows" hidden></pre>
             <button class="btn btn-falcon-danger btn-sm ms-2" type="submit">Next</button>
           </form>
