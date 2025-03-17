@@ -6,6 +6,10 @@ if(!isset($_SESSION['warehouse_rack_transfer']) && !isset($_SESSION['rack'])){
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
             <div class="modal-content position-relative">
                 <form action="local_config.php" method="POST">
+                    <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+                        <!-- Remove the close button to further prevent user from closing the modal -->
+                        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                     <div class="modal-body p-0">
                         <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
                             <h4 class="mb-1" id="modalExampleDemoLabel">Select Warehouse</h4>
