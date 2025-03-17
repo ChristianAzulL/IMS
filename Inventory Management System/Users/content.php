@@ -126,7 +126,7 @@
                                     <?php 
                                     }
                                     ?>
-                                    <button class="btn btn-transparent py-0 mx-0" title="update access" type="button" data-bs-toggle="modal" data-bs-target="#modal<?php echo $row['hashed_id'];?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
+                                    <button class="btn btn-transparent py-0 mx-0" title="update access" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['hashed_id']; ?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
                                     <!-- Form HTML -->
                                     <form id="resetpwd" action="../config/resetuserpassword.php" method="post">
                                         <input type="text" name="user_id" value="<?php echo $row['hashed_id']; ?>" hidden>
@@ -243,91 +243,36 @@
     </form>
 </div>
 
-<?php 
-$requery_modals = "SELECT hashed_id, user_position, warehouse_access FROM users";
-$result = $conn->query($requery_modals);
-if($result->num_rows>0){
-    while($row=$result->fetch_assoc()){
-        $modal_id = $row['hashed_id'];
-        $position_id = $row['user_position'];
-        $staff_wh_access = $row['warehouse_access']; // Sample data: "asdasd, asdasdqwe, qweqdasda, asdasdasd"
 
-        
-        ?>
-        <div class="modal fade" id="modal<?php echo $modal_id;?>" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
-                <form id="update_form" action="../config/update_employee.php" method="POST">
-                <div class="modal-content position-relative">
-                        <input type="text" name="user_id" value="<?php echo $modal_id;?>" hidden>
-                        <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                            <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body p-0">
-                            <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
-                            <h4 class="mb-1" id="modalExampleDemoLabel">Update Employee Information </h4>
-                            </div>
-                            <div class="p-4 pb-0">
-                            <form>
-                                <div class="mb-3">
-                                <label class="col-form-label" for="recipient-name">Position</label>
-                                <select class="form-select" name="position" id="" required>
-                                    <option value="">Select Position</option>
-                                    <?php 
-                                    $employee_position_query = "SELECT * FROM user_position ORDER BY position_name ASC";
-                                    $epq_result = $conn->query($employee_position_query);
-                                    if($epq_result->num_rows>0){
-                                        while($row=$epq_result->fetch_assoc()){
-                                            $position_selection = $row['position_name'];
-                                            $position_selection_id = $row['hashed_id'];
-                                            if($position_selection_id === $position_id){
-                                                echo '<option value="' . $position_selection_id . '" selected>' . $position_selection . '</option>';
-                                            } else {
-                                                echo '<option value="' . $position_selection_id . '">' . $position_selection . '</option>';
-                                            }
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                                </div>
-                                <div class="mb-3">
-                                <label class="col-form-label" for="message-text">Message:</label>
-                                <div class="row">
-                                    <?php 
-                                    $warehouse_access_queries = "SELECT hashed_id, warehouse_name FROM warehouse";
-                                    $waq_result = $conn->query($warehouse_access_queries);
-                                    if($waq_result->num_rows>0){
-                                        while($row=$waq_result->fetch_Assoc()){
-                                            $warehouse_selection_id = $row['hashed_id'];
-                                            $warehouse_selection_name = $row['warehouse_name'];
-                                    ?>
-                                    <div class="col-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" name="warehouse_access[]" id="<?php echo $warehouse_selection_id;?>" type="checkbox" value="<?php echo $warehouse_selection_id;?>" <?php if(strpos($staff_wh_access, $warehouse_selection_id)!==false){ echo 'checked=""';}?>/>
-                                            <label class="form-check-label" for="<?php echo $warehouse_selection_id;?>"><?php echo $warehouse_selection_name;?></label>
-                                        </div>
-                                    </div>
-                                    <?php 
-                                        }
-                                    }
-                                    ?>
-                                </div>
-                                </div>
-                            </form>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="button" id="submitBtn">Submit</button>
-                        </div>
-                    
+<div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+        <form id="update_form" action="../config/update_employee.php" method="POST">
+        <div class="modal-content position-relative">
+                <input type="text" name="user_id" value="<?php echo $modal_id;?>" hidden>
+                <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                </form>
-            </div>
+                <div class="modal-body p-0">
+                    <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+                    <h4 class="mb-1" id="modalExampleDemoLabel">Update Employee Information </h4>
+                    </div>
+                    <div class="p-4 pb-0">
+                    <form>
+                        <div id="form-content" class="mb-3">
+                        
+                        </div>
+                    </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            
         </div>
-        <?php
-    }
-}
-?>
+        </form>
+    </div>
+</div>
 
 <script>
     $(document).ready(function() {
@@ -364,8 +309,18 @@ if($result->num_rows>0){
         });
     });
 
-    // Handle form submission when the button is clicked
-    document.getElementById('submitBtn').addEventListener('click', function () {
+    // When the edit button is clicked
+    $(document).on("click", "[data-bs-target='#edit-modal']", function() {
+        var targetId = $(this).attr("target-id"); // Get the target-id attribute
+        if (targetId) {
+            // Load the form-content.php inside #form-content
+            $("#form-content").load("form-content.php?id=" + targetId);
+        }
+    });
+
+    document.getElementById('update_form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submission
+
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to submit the changes?",
@@ -376,18 +331,38 @@ if($result->num_rows>0){
             confirmButtonText: 'Yes, submit it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                const form = document.getElementById('update_form');
-                const formData = new FormData(form);
-                fetch(form.action, {
-                    method: form.method,
+                // Collect form data
+                const formData = new FormData(this);
+
+                // Send data using fetch
+                fetch(this.action, {
+                    method: this.method,
                     body: formData
                 })
-                .then(response => response.json())
+                .then(response => response.json()) // Assuming the server responds with JSON
                 .then(data => {
-                    Swal.fire('Submitted!', 'The changes have been successfully submitted.', 'success');
+                    console.log('Server Response:', data); // Log server response to the console
+
+                    // Show success message
+                    Swal.fire(
+                        'Submitted!',
+                        'The changes have been successfully submitted.',
+                        'success'
+                    );
+                    setTimeout(function() {
+                        location.reload();
+                    }, 1000); // 1000 milliseconds = 1 second
+
                 })
                 .catch(error => {
-                    Swal.fire('Error!', 'There was an error submitting the form. Please try again.', 'error');
+                    console.error('Error:', error);
+
+                    // Show error message
+                    Swal.fire(
+                        'Error!',
+                        'There was an error submitting the form. Please try again.',
+                        'error'
+                    );
                 });
             }
         });
