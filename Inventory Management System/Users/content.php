@@ -317,7 +317,7 @@ if($result->num_rows>0){
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" id="update_btn" type="button">Submit </button>
+                            <button class="btn btn-primary" type="submit">Submit </button>
                         </div>
                     
                 </div>
@@ -336,16 +336,12 @@ if($result->num_rows>0){
         $('#user-email').on('input', function() {
             const userEmail = $(this).val();
 
-            // Clear the previous timeout
             clearTimeout(debounceTimer);
-
-            // Set a new timeout for checking the warehouse name
             debounceTimer = setTimeout(function() {
-                // Perform the AJAX request to check the warehouse name
                 $.ajax({
                     url: '../config/check-employee.php',
                     type: 'POST',
-                    data: { 'email': userEmail }, // Match key in PHP
+                    data: { 'email': userEmail },
                     dataType: 'json',
                     success: function(response) {
                         if (response.exists) {
@@ -364,19 +360,15 @@ if($result->num_rows>0){
                         alert('Error checking email.');
                     }
                 });
-            }, 500); // Delay of 500ms after the user stops typing
+            }, 500);
         });
     });
-</script>
 
-<script>
-   // Handle activation
+    // Handle activation
     document.querySelectorAll('.btn-activate').forEach(button => {
         button.addEventListener('click', function (event) {
             event.preventDefault();
-
             const hashedId = this.getAttribute('data-hashed-id');
-
             Swal.fire({
                 title: "Are you sure to activate this user?",
                 showDenyButton: true,
@@ -387,9 +379,7 @@ if($result->num_rows>0){
                 if (result.isConfirmed) {
                     fetch('../config/employee-set-status.php', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `user=${encodeURIComponent(hashedId)}&activate=true`
                     })
                     .then(response => response.json())
@@ -407,11 +397,7 @@ if($result->num_rows>0){
                         }
                     })
                     .catch(error => {
-                        Swal.fire({
-                            title: "Error!",
-                            text: error.message,
-                            icon: "error"
-                        });
+                        Swal.fire({ title: "Error!", text: error.message, icon: "error" });
                     });
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
@@ -424,9 +410,7 @@ if($result->num_rows>0){
     document.querySelectorAll('.btn-disable').forEach(button => {
         button.addEventListener('click', function (event) {
             event.preventDefault();
-
             const hashedId = this.getAttribute('data-hashed-id');
-
             Swal.fire({
                 title: "Are you sure to disable this user?",
                 showDenyButton: true,
@@ -437,9 +421,7 @@ if($result->num_rows>0){
                 if (result.isConfirmed) {
                     fetch('../config/employee-set-status.php', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                         body: `user=${encodeURIComponent(hashedId)}&activate=false`
                     })
                     .then(response => response.json())
@@ -457,24 +439,18 @@ if($result->num_rows>0){
                         }
                     })
                     .catch(error => {
-                        Swal.fire({
-                            title: "Error!",
-                            text: error.message,
-                            icon: "error"
-                        });
+                        Swal.fire({ title: "Error!", text: error.message, icon: "error" });
                     });
                 } else if (result.isDenied) {
                     Swal.fire("Changes are not saved", "", "info");
                 }
             });
         });
-    }); 
-</script>
+    });
 
-<script>
-    document.getElementById('update_btn').addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent default button behavior
-
+    // Handle form submission
+    document.getElementById('update_form').addEventListener('submit', function (event) {
+        event.preventDefault();
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to submit the changes?",
@@ -485,42 +461,24 @@ if($result->num_rows>0){
             confirmButtonText: 'Yes, submit it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                const form = document.getElementById('update_form');
-                const formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: form.method,
+                const formData = new FormData(this);
+                fetch(this.action, {
+                    method: this.method,
                     body: formData
                 })
-                .then(response => response.json()) // Assuming the server responds with JSON
+                .then(response => response.json())
                 .then(data => {
-                    console.log('Server Response:', data);
-
-                    Swal.fire(
-                        'Submitted!',
-                        'The changes have been successfully submitted.',
-                        'success'
-                    );
+                    Swal.fire('Submitted!', 'The changes have been successfully submitted.', 'success');
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-
-                    Swal.fire(
-                        'Error!',
-                        'There was an error submitting the form. Please try again.',
-                        'error'
-                    );
+                    Swal.fire('Error!', 'There was an error submitting the form. Please try again.', 'error');
                 });
             }
         });
     });
-</script>
 
-
-<script>
-    // Attach event listener to the button
+    // Handle password reset
     document.getElementById('resetPwdBtn').addEventListener('click', function () {
-        // Show SweetAlert2 confirmation dialog
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you really want to reset the password?",
@@ -531,18 +489,14 @@ if($result->num_rows>0){
             confirmButtonText: 'Yes, reset it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Form data preparation
                 const form = document.getElementById('resetpwd');
                 const formData = new FormData(form);
-
-                // Send the form data using fetch
                 fetch(form.action, {
                     method: form.method,
                     body: formData
                 })
-                .then(response => response.json()) // Assuming the server sends JSON
+                .then(response => response.json())
                 .then(data => {
-                    // Show response in SweetAlert2
                     Swal.fire({
                         title: data.success ? 'Success' : 'Error',
                         text: data.message,
@@ -550,13 +504,7 @@ if($result->num_rows>0){
                     });
                 })
                 .catch(error => {
-                    // Handle errors
-                    Swal.fire({
-                        title: 'Error',
-                        text: 'Something went wrong! Please try again.',
-                        icon: 'error'
-                    });
-                    console.error('Error:', error);
+                    Swal.fire({ title: 'Error', text: 'Something went wrong! Please try again.', icon: 'error' });
                 });
             }
         });
