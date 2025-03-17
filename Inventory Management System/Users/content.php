@@ -317,7 +317,7 @@ if($result->num_rows>0){
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="submit">Submit </button>
+                            <button class="btn btn-primary" id="update_btn" type="button">Submit </button>
                         </div>
                     
                 </div>
@@ -371,153 +371,151 @@ if($result->num_rows>0){
 
 <script>
    // Handle activation
-document.querySelectorAll('.btn-activate').forEach(button => {
-    button.addEventListener('click', function (event) {
-        event.preventDefault();
+    document.querySelectorAll('.btn-activate').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
 
-        const hashedId = this.getAttribute('data-hashed-id');
+            const hashedId = this.getAttribute('data-hashed-id');
 
-        Swal.fire({
-            title: "Are you sure to activate this user?",
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: "Save",
-            denyButtonText: `Don't save`
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch('../config/employee-set-status.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `user=${encodeURIComponent(hashedId)}&activate=true`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
+            Swal.fire({
+                title: "Are you sure to activate this user?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Save",
+                denyButtonText: `Don't save`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('../config/employee-set-status.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `user=${encodeURIComponent(hashedId)}&activate=true`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Good job!",
+                                text: "User activated successfully!",
+                                icon: "success"
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            throw new Error(data.error || "Failed to activate user");
+                        }
+                    })
+                    .catch(error => {
                         Swal.fire({
-                            title: "Good job!",
-                            text: "User activated successfully!",
-                            icon: "success"
-                        }).then(() => {
-                            location.reload();
+                            title: "Error!",
+                            text: error.message,
+                            icon: "error"
                         });
-                    } else {
-                        throw new Error(data.error || "Failed to activate user");
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        title: "Error!",
-                        text: error.message,
-                        icon: "error"
                     });
-                });
-            } else if (result.isDenied) {
-                Swal.fire("Changes are not saved", "", "info");
-            }
+                } else if (result.isDenied) {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
         });
     });
-});
 
-// Handle disabling
-document.querySelectorAll('.btn-disable').forEach(button => {
-    button.addEventListener('click', function (event) {
-        event.preventDefault();
+    // Handle disabling
+    document.querySelectorAll('.btn-disable').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
 
-        const hashedId = this.getAttribute('data-hashed-id');
+            const hashedId = this.getAttribute('data-hashed-id');
 
-        Swal.fire({
-            title: "Are you sure to disable this user?",
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonText: "Disable",
-            denyButtonText: `Don't disable`
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch('../config/employee-set-status.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `user=${encodeURIComponent(hashedId)}&activate=false`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
+            Swal.fire({
+                title: "Are you sure to disable this user?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Disable",
+                denyButtonText: `Don't disable`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('../config/employee-set-status.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: `user=${encodeURIComponent(hashedId)}&activate=false`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Done!",
+                                text: "User disabled successfully!",
+                                icon: "success"
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            throw new Error(data.error || "Failed to disable user");
+                        }
+                    })
+                    .catch(error => {
                         Swal.fire({
-                            title: "Done!",
-                            text: "User disabled successfully!",
-                            icon: "success"
-                        }).then(() => {
-                            location.reload();
+                            title: "Error!",
+                            text: error.message,
+                            icon: "error"
                         });
-                    } else {
-                        throw new Error(data.error || "Failed to disable user");
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        title: "Error!",
-                        text: error.message,
-                        icon: "error"
                     });
-                });
-            } else if (result.isDenied) {
-                Swal.fire("Changes are not saved", "", "info");
-            }
+                } else if (result.isDenied) {
+                    Swal.fire("Changes are not saved", "", "info");
+                }
+            });
         });
-    });
-});
+    }); 
 </script>
 
 <script>
-document.getElementById('update_form').addEventListener('submit', function (event) {
-    event.preventDefault(); // Prevent the default form submission
+    document.getElementById('update_btn').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default button behavior
 
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "Do you want to submit the changes?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, submit it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Collect form data
-            const formData = new FormData(this);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to submit the changes?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('update_form');
+                const formData = new FormData(form);
 
-            // Send data using fetch
-            fetch(this.action, {
-                method: this.method,
-                body: formData
-            })
-            .then(response => response.json()) // Assuming the server responds with JSON
-            .then(data => {
-                console.log('Server Response:', data); // Log server response to the console
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                })
+                .then(response => response.json()) // Assuming the server responds with JSON
+                .then(data => {
+                    console.log('Server Response:', data);
 
-                // Show success message
-                Swal.fire(
-                    'Submitted!',
-                    'The changes have been successfully submitted.',
-                    'success'
-                );
-            })
-            .catch(error => {
-                console.error('Error:', error);
+                    Swal.fire(
+                        'Submitted!',
+                        'The changes have been successfully submitted.',
+                        'success'
+                    );
+                })
+                .catch(error => {
+                    console.error('Error:', error);
 
-                // Show error message
-                Swal.fire(
-                    'Error!',
-                    'There was an error submitting the form. Please try again.',
-                    'error'
-                );
-            });
-        }
+                    Swal.fire(
+                        'Error!',
+                        'There was an error submitting the form. Please try again.',
+                        'error'
+                    );
+                });
+            }
+        });
     });
-});
 </script>
+
 
 <script>
     // Attach event listener to the button
