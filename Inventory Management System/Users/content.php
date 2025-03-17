@@ -364,6 +364,35 @@ if($result->num_rows>0){
         });
     });
 
+    // Handle form submission when the button is clicked
+    document.getElementById('submitBtn').addEventListener('click', function () {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to submit the changes?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, submit it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const form = document.getElementById('update_form');
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    Swal.fire('Submitted!', 'The changes have been successfully submitted.', 'success');
+                })
+                .catch(error => {
+                    Swal.fire('Error!', 'There was an error submitting the form. Please try again.', 'error');
+                });
+            }
+        });
+    });
+
     // Handle activation
     document.querySelectorAll('.btn-activate').forEach(button => {
         button.addEventListener('click', function (event) {
@@ -448,34 +477,7 @@ if($result->num_rows>0){
         });
     });
 
-    // Handle form submission when the button is clicked
-    document.getElementById('submitBtn').addEventListener('click', function () {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to submit the changes?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, submit it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const form = document.getElementById('update_form');
-                const formData = new FormData(form);
-                fetch(form.action, {
-                    method: form.method,
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    Swal.fire('Submitted!', 'The changes have been successfully submitted.', 'success');
-                })
-                .catch(error => {
-                    Swal.fire('Error!', 'There was an error submitting the form. Please try again.', 'error');
-                });
-            }
-        });
-    });
+    
 
 
     // Handle password reset
