@@ -317,7 +317,7 @@ if($result->num_rows>0){
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="submit">Submit </button>
+                            <button class="btn btn-primary" type="button" id="submitBtn">Submit</button>
                         </div>
                     
                 </div>
@@ -448,9 +448,8 @@ if($result->num_rows>0){
         });
     });
 
-    // Handle form submission
-    document.getElementById('update_form').addEventListener('submit', function (event) {
-        event.preventDefault();
+    // Handle form submission when the button is clicked
+    document.getElementById('submitBtn').addEventListener('click', function () {
         Swal.fire({
             title: 'Are you sure?',
             text: "Do you want to submit the changes?",
@@ -461,9 +460,10 @@ if($result->num_rows>0){
             confirmButtonText: 'Yes, submit it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                const formData = new FormData(this);
-                fetch(this.action, {
-                    method: this.method,
+                const form = document.getElementById('update_form');
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: form.method,
                     body: formData
                 })
                 .then(response => response.json())
@@ -476,6 +476,7 @@ if($result->num_rows>0){
             }
         });
     });
+
 
     // Handle password reset
     document.getElementById('resetPwdBtn').addEventListener('click', function () {
