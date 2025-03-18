@@ -17,7 +17,7 @@
       <div class="d-none ms-3" id="bulk-select-actions">
         <div class="d-flex">
           <form action="../Barcode-Reprint-2/index.php" method="POST">
-            <pre id="selectedRows"></pre>
+            <pre id="selectedRows" hidden></pre>
             <button class="btn btn-falcon-danger btn-sm ms-2" type="submit">Next</button>
           </form>
           <!-- <a href="../Supplier-selection/" class="btn btn-falcon-danger btn-sm ms-2">Apply</a> -->
