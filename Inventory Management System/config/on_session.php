@@ -3,6 +3,7 @@ session_start();
 $user_position_id = $_SESSION['position_id'];
 $user_id = $_SESSION['user_id'];
 $user_fullname = $_SESSION['full_name'];
+$user_fname = $_SESSION['first_name'];
 $user_email = $_SESSION['email'];
 $user_bday = $_SESSION['birth_date'];
 $user_warehouse_ids = explode(",", $_SESSION['warehouse_ids']);
@@ -80,4 +81,6 @@ if ($logged_in === true) {
 } else {
     
 }
+
+
 ?>

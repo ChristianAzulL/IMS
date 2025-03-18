@@ -1,4 +1,7 @@
-<?php 
+<?php
+include "../config/database.php";
+
+
 // Initialize sales data
 $sales = [
     "previous_week" => 0,
@@ -61,22 +64,6 @@ while ($row = $res->fetch_assoc()) {
 $previous_week = number_format($sales['previous_week'], 2);
 $current_week = number_format($sales['current_week'], 2);
 
-// Function to format numbers into K, M, B
-function formatAmount($number) {
-    if ($number >= 1_000_000_000) {
-        return number_format($number / 1_000_000_000, 2) . "B";
-    } elseif ($number >= 1_000_000) {
-        return number_format($number / 1_000_000, 2) . "M";
-    } elseif ($number >= 1_000) {
-        return number_format($number / 1_000, 2) . "K";
-    }
-    return number_format($number, 2);
-}
-
-// Create new variables for formatted sales values
-$formatted_current_week = formatAmount($sales['current_week']); // Use the raw numeric value
-
-
 // Calculate percentage change
 if ($sales['previous_week'] > 0) {
     $change = (($sales['current_week'] - $sales['previous_week']) / $sales['previous_week']) * 100;
@@ -87,27 +74,6 @@ if ($sales['previous_week'] > 0) {
 }
 
 // Display percentage change
-$weekly_sales_percentage =  ($change >= 0 ? "+" : "") . number_format($change, 2);
-if(strpos($weekly_sales_percentage, "+")!==false){
-    $formatted_weekly_sales_percentage = '<span class="badge badge-subtle-success rounded-pill fs-11">' . $weekly_sales_percentage . '%</span>';
-} else {
-    $formatted_weekly_sales_percentage = '<span class="badge badge-subtle-danger rounded-pill fs-11">' . $weekly_sales_percentage . '%</span>';
-}
+echo ($change >= 0 ? "+" : "") . number_format($change, 2);
+
 ?>
-<div class="col-md-6">
-    <div class="card h-md-100 ecommerce-card-min-width">
-    <div class="card-header pb-0">
-        <h6 class="mb-0 mt-2 d-flex align-items-center">Weekly Sales<span class="ms-1 text-400" data-bs-toggle="tooltip" data-bs-placement="top" title="Calculated according to last week's sales"><span class="far fa-question-circle" data-fa-transform="shrink-1"></span></span></h6>
-    </div>
-    <div class="card-body d-flex flex-column justify-content-end">
-        <div class="row">
-        <div class="col">
-            <p class="font-sans-serif lh-1 mb-1 fs-7">₱<?php echo $formatted_current_week;?></p><?php echo $formatted_weekly_sales_percentage;?>
-        </div>
-        <div class="col-auto ps-0">
-            <div class="echart-bar-weekly-sales h-100 echart-bar-weekly-sales-smaller-width"></div>
-        </div>
-        </div>
-    </div>
-    </div>
-</div>

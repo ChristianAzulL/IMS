@@ -38,7 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['position_id'] = $row['user_position'];
         $position_id = $_SESSION['position_id'];
         $_SESSION['user_id'] = $row['hashed_id'];
-        $_SESSION['full_name'] = $row['user_fname'] . " " . $row['user_lname'];
+        $_SESSION['first_name'] = ucfirst(strtolower($row['user_fname']));
+        $_SESSION['full_name'] = ucfirst(strtolower($row['user_fname'])) . " " . ucfirst(strtolower($row['user_lname']));
         $_SESSION['pfp'] = $row['pfp'];
         $_SESSION['email'] = $row['email'];
         $_SESSION['birth_date'] = $row['birth_date'];

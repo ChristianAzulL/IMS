@@ -14014,100 +14014,88 @@ var weeklyGoalsInit = function weeklyGoalsInit() {
 var weeklySalesInit = function weeklySalesInit() {
   var ECHART_BAR_WEEKLY_SALES = '.echart-bar-weekly-sales';
   var $echartBarWeeklySales = document.querySelector(ECHART_BAR_WEEKLY_SALES);
+  
   if ($echartBarWeeklySales) {
-    // Get options from data attribute
     var userOptions = utils.getData($echartBarWeeklySales, 'options');
-    var data = [120, 200, 150, 80, 70, 110, 120];
-
-    // Max value of data
-    // const yMax = Math.max(...data);
-
-    // const dataBackground = data.map(() => yMax);
     var chart = window.echarts.init($echartBarWeeklySales);
 
-    // Default options
-    var getDefaultOptions = function getDefaultOptions() {
-      return {
-        tooltip: {
-          trigger: 'axis',
-          padding: [7, 10],
-          formatter: '{b0} : {c0}',
-          transitionDuration: 0,
-          backgroundColor: utils.getGrays()['100'],
-          borderColor: utils.getGrays()['300'],
-          textStyle: {
-            color: utils.getGrays()['1100']
-          },
-          borderWidth: 1,
-          position: function position(pos, params, dom, rect, size) {
-            return getPosition(pos, params, dom, rect, size);
-          }
-        },
-        xAxis: {
-          type: 'category',
-          data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-          boundaryGap: false,
-          axisLine: {
-            show: false
-          },
-          axisLabel: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          },
-          axisPointer: {
-            type: 'none'
-          }
-        },
-        yAxis: {
-          type: 'value',
-          splitLine: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          axisLabel: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          },
-          axisPointer: {
-            type: 'none'
-          }
-        },
-        series: [{
-          type: 'bar',
-          showBackground: true,
-          backgroundStyle: {
-            borderRadius: 10
-          },
-          barWidth: '5px',
-          itemStyle: {
-            barBorderRadius: 10,
-            color: utils.getColors().primary
-          },
-          data: data,
-          z: 10,
-          emphasis: {
-            itemStyle: {
-              color: utils.getColors().primary
-            }
-          }
-        }],
-        grid: {
-          right: 5,
-          left: 10,
-          top: 0,
-          bottom: 0
+    // Fetch sales data from the API
+    fetch('../API/weekly-sales.php')
+      .then(response => response.json())
+      .then(data => {
+        if (!data || !data.length) {
+          console.error("No data received from API");
+          return;
         }
-      };
-    };
-    echartSetOption(chart, userOptions, getDefaultOptions);
+
+        var salesData = data[0]; // Extract the first (and only) object
+        var values = Object.values(salesData); // Extract numeric sales values
+
+        var getDefaultOptions = function getDefaultOptions() {
+          return {
+            tooltip: {
+              trigger: 'axis',
+              padding: [7, 10],
+              formatter: '{b0} : {c0}',
+              transitionDuration: 0,
+              backgroundColor: utils.getGrays()['100'],
+              borderColor: utils.getGrays()['300'],
+              textStyle: {
+                color: utils.getGrays()['1100']
+              },
+              borderWidth: 1,
+              position: function position(pos, params, dom, rect, size) {
+                return getPosition(pos, params, dom, rect, size);
+              }
+            },
+            xAxis: {
+              type: 'category',
+              data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'], // Days of the week
+              boundaryGap: false,
+              axisLine: { show: false },
+              axisLabel: { show: false },
+              axisTick: { show: false },
+              axisPointer: { type: 'none' }
+            },
+            yAxis: {
+              type: 'value',
+              splitLine: { show: false },
+              axisLine: { show: false },
+              axisLabel: { show: false },
+              axisTick: { show: false },
+              axisPointer: { type: 'none' }
+            },
+            series: [{
+              type: 'bar',
+              showBackground: true,
+              backgroundStyle: { borderRadius: 10 },
+              barWidth: '5px',
+              itemStyle: {
+                barBorderRadius: 10,
+                color: utils.getColors().primary
+              },
+              data: values, // Dynamically set sales data
+              z: 10,
+              emphasis: {
+                itemStyle: { color: utils.getColors().primary }
+              }
+            }],
+            grid: {
+              right: 5,
+              left: 10,
+              top: 0,
+              bottom: 0
+            }
+          };
+        };
+
+        // Initialize chart with new data
+        echartSetOption(chart, userOptions, getDefaultOptions);
+      })
+      .catch(error => console.error("Error fetching weekly sales data:", error));
   }
 };
+
 
 /* -------------------------------------------------------------------------- */
 /*                            Theme Initialization                            */
