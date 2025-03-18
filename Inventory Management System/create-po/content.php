@@ -69,7 +69,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
               $product_date = $row['date'];
               $product_publisher = $row['user_fname'] . " " . $row['user_lname'];
               
-              $stock_query = "SELECT IFNULL(SUM(product_id), 0) AS total_quantity FROM stocks WHERE warehouse = '$selected_warehouse_id' AND product_id = '$product_id'";
+              $stock_query = "SELECT IFNULL(COUNT(product_id), 0) AS total_quantity FROM stocks WHERE warehouse = '$selected_warehouse_id' AND product_id = '$product_id'";
               $stock_res = $conn->query($stock_query);
               $stock_row = $stock_res->fetch_assoc();
               $current_stock = $stock_row['total_quantity'];

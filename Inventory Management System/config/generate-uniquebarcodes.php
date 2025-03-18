@@ -1,5 +1,7 @@
 <?php 
 error_reporting(E_ALL);
+ini_set('max_execution_time', 300);  // 5 minutes
+ini_set('memory_limit', '4G');  // Set memory limit to 4 GB
 ini_set('display_errors', 1); 
 include "database.php";
 include "on_session.php";

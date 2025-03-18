@@ -1,5 +1,6 @@
 <?php
 $unique_key = $_SESSION['unique_key'];
+
 ?>
 <div class="row mb-3">
     <div class="col-12 text-end">
@@ -27,17 +28,17 @@ $unique_key = $_SESSION['unique_key'];
                                         p.parent_barcode,
                                         b.brand_name,
                                         c.category_name,
-                                        s.barcode_extension
+                                        COUNT(s.parent_barcode) AS item_qty
                                     FROM stocks s
                                     LEFT JOIN product p ON p.hashed_id = s.product_id
                                     LEFT JOIN brand b ON b.hashed_id = p.brand
                                     LEFT JOIN category c ON c.hashed_id = p.category
                                     WHERE s.unique_key = '$unique_key'
+                                    GROUP BY s.parent_barcode
                                     ORDER BY s.barcode_extension DESC
                             ";
 
                             $result = $conn->query($query);
-                            $groupedData = [];
 
                             // Group data by parent barcode
                             if ($result->num_rows > 0) {
@@ -46,38 +47,26 @@ $unique_key = $_SESSION['unique_key'];
                                     $brandName = $row['brand_name'];
                                     $categoryName = $row['category_name'];
                                     $description = $row['description'] . " / " . $brandName . " / " . $categoryName;
-                                    $barcode_extension = $row['barcode_extension'];
+                                    $totalCount = $row['item_qty'];
 
-                                    // Store items under the same parent barcode
-                                    if (!isset($groupedData[$parentBarcode])) {
-                                        $groupedData[$parentBarcode] = [];
-                                    }
-                                    $groupedData[$parentBarcode][] = $description;
-                                }
-                            }
 
-                            // Display grouped data with sequence numbering
-                            foreach ($groupedData as $parentBarcode => $items) {
-                                $totalCount = count($items);
-                                $batchSize = 100;
-                                $new = true;
-                                if($new === true){
-                                    $start = $barcode_extension;  // Starting barcode sequence for the first batch
-                                } else {
-                                    $start = $barcode_extension + 1; 
-                                }
-                                // Loop through the items and create barcode ranges
-                                for ($i = 1; $i < $totalCount; $i += $batchSize) {
-                                    if($new===true){
-                                        $new = false;
+
+                                    $sequence_query = "SELECT barcode_extension FROM stocks WHERE unique_key = '$unique_key' AND parent_barcode = '$parentBarcode' ORDER BY barcode_extension LIMIT 1";
+                                    $sequence_result = $conn->query($sequence_query);
+                                    if($sequence_result->num_rows>0){
+                                        $row=$sequence_result->fetch_assoc();
+                                        $barcode_extension = $row['barcode_extension'];
                                     }
-                                    $end = min($start + $batchSize - 1, $totalCount);  // Make sure end doesn't exceed total count
-                                    echo "<tr>
-                                            <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$start}&end={$end}'><span class='fas fa-download'></span> {$items[0]}</a></td>
-                                            <td>{$start}-{$end}</td>
-                                            <td>{$parentBarcode}</td>
-                                          </tr>";
-                                    $start = $end + 1;  // Update the start for the next batch
+                                    $batch_size = 100;
+                                    $max = $barcode_extension + $totalCount -1;
+                                    for($start=$barcode_extension; $start < $max; $start += $batch_size){
+                                        $end = min($batch_size + $start -1, $max);
+                                        echo "<tr>
+                                                <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$start}&end={$end}'><span class='fas fa-download'></span> {$description}</a></td>
+                                                <td>{$start}-{$end}</td>
+                                                <td>{$parentBarcode}</td>
+                                                </tr>";
+                                    }
                                 }
                             }
                             ?>
