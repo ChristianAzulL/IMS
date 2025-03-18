@@ -26,6 +26,10 @@
                             </thead>
                             <tbody id="bulk-select-body" class="list">
                                 <?php 
+                                ini_set('max_input_vars', '100000');
+                                ini_set('max_input_time', '300');
+                                ini_set('memory_limit', '512M');
+                                
                                 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['product_id']) && is_array($_POST['product_id'])) {
                                     $product_groups = array_chunk($_POST['parent_barcode'], 100);
                                     $total_products = count($_POST['parent_barcode']);

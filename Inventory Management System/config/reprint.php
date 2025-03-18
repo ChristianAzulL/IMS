@@ -1,6 +1,9 @@
 <?php
 include "database.php"; // Include database connection
 include "on_session.php"; // Include session handling
+ini_set('max_input_vars', '100000');
+ini_set('max_input_time', '300');
+ini_set('memory_limit', '512M');
 
 require_once '../../vendor/autoload.php'; // Load mPDF
 use Picqer\Barcode\BarcodeGeneratorPNG;

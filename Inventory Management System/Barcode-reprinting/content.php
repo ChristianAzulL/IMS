@@ -41,6 +41,10 @@
         </thead>
         <tbody id="bulk-select-body" class="list">
           <?php 
+          ini_set('max_input_vars', '100000');
+          ini_set('max_input_time', '300');
+          ini_set('memory_limit', '512M');
+          
           $product_list_query = "
             SELECT stocks.*, product.description, category.category_name, brand.brand_name
             FROM stocks
