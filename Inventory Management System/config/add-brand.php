@@ -25,10 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $hashed_id = hash('sha256', $brand_id);
         $update = "UPDATE brand SET hashed_id ='$hashed_id' WHERE id = '$brand_id'";
         if($conn->query($update)===TRUE){
-            header("Location: ../brand/?success=true");
+            header("Location: ../Brand/?success=true");
         }
     } else {
-        header("Location: ../brand/?success=false");
+        header("Location: ../Brand/?success=false");
     }
 
     // Close connections
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 } else {
     // Redirect back if accessed without POST
-    header("Location: ../brand.php");
+    header("Location: ../Brand.php");
     exit;
 }
 ?>
