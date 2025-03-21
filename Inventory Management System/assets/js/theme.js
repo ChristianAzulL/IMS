@@ -12635,7 +12635,7 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
         series: [{
           name: 'lastMonth',
           type: 'line',
-          data: [50, 80, 60, 80, 65, 90, 130, 90, 30, 40, 30, 70],
+          data: [50, 80, 60, 80, 65, 90, 130, 90, 30, 40, 30],
           lineStyle: {
             color: utils.getColor('primary')
           },

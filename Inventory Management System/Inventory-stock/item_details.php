@@ -90,7 +90,7 @@
                                         <td class='p-0 m-0' colspan='6'>
                                             <div id=\"tableExample\" data-list='{\"valueNames\":[\"barcode" . $row['batch_code'] . "\",\"status" . $row['batch_code'] . "\",\"capital" . $row['batch_code'] . "\",\"sold" . $row['batch_code'] . "\",\"location" . $row['batch_code'] . "\"],\"pagination\":false}'>
                                                 <div class='table-responsive scrollbar'>
-                                                        <table class='table table-hover table-striped table-bordered border-info table-sm'>
+                                                        <table class=xamp'table table-hover table-striped table-bordered border-info table-sm'>
                                                             <thead class='table-info'>
                                                                 <tr>
                                                                     <th class='text-900 sort' data-sort='barcode" . $row['batch_code'] . "'>Barcode</th>

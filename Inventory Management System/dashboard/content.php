@@ -73,6 +73,7 @@ if ($hour >= 5 && $hour < 12) {
                                 <h6 class="mb-0">Total Sales</h6>
                             </div>
                             <div class="col-auto d-flex">
+                                <?php include "monthly_sales.php";?>
                                 <div class="form-check mb-0 d-flex">
                                     <input class="form-check-input form-check-input-primary" id="ecommerceLastMonth" type="checkbox" checked>
                                     <label class="form-check-label ps-2 fs-11 text-600 mb-0" for="ecommerceLastMonth">Last Month<span class="text-1100 d-none d-md-inline">: $32,502.00</span></label>
