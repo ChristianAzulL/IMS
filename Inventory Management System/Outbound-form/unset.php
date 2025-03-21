@@ -19,5 +19,9 @@ if (isset($_SESSION['outbound_id'])) {
         unset($_SESSION['warehouse_outbound']);
         unset($_SESSION['outbound_id']);
     }
+    header("Location: ../Outbound-form/");
+} else {
+    header("Location: ../Outbound-form/");
 }
+
 ?>
