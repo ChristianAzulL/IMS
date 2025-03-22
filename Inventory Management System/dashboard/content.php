@@ -46,6 +46,32 @@ if ($hour >= 5 && $hour < 12) {
         <?php include "inventory.php";?>
     </div>
 </div>
+<script>
+$(document).ready(function() {
+    // Function to load the warehouse preview
+    function loadWarehousePreview(warehouse) {
+        if (warehouse) {
+            $.get('dashboard-wh-preview.php', { warehouse: warehouse }, function(data) {
+                $('#dashboard-wh-preview').html(data);
+            }).fail(function() {
+                $('#dashboard-wh-preview').html('Failed to load preview.');
+            });
+        }
+    }
+
+    // Get the initial selected warehouse value
+    var initialWarehouse = $('#dashboard-wh').val();
+
+    // Load the preview for the initially selected warehouse
+    loadWarehousePreview(initialWarehouse);
+
+    // When the user changes the warehouse, update the preview
+    $('#dashboard-wh').on('change', function() {
+        var warehouse = $(this).val();
+        loadWarehousePreview(warehouse);
+    });
+});
+</script>
 
 <?php 
 // Uncomment the following line to close the conditional statement
