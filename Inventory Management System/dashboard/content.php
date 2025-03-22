@@ -1,7 +1,4 @@
-<?php 
-// Uncomment the following line if you want to restrict this section to testers
-// if($user_position_name === "tester" || $user_position_name === "Tester") {
-
+<?php
 // Determine the time of day
 $hour = date("H"); // Get the current hour in 24-hour format
 if ($hour >= 5 && $hour < 12) {
@@ -72,8 +69,3 @@ $(document).ready(function() {
     });
 });
 </script>
-
-<?php 
-// Uncomment the following line to close the conditional statement
-// }
-?>

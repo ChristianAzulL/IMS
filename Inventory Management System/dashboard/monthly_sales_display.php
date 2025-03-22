@@ -63,17 +63,30 @@
                     $row = $customers_res->fetch_assoc();
                     $customer_qty = number_format($row['customer_qty']);
                     $customer_qty_prev = number_format($row['customer_qty_prev']);
+                } else {
+                    $customer_qty = 0;
+                    $customer_qty_prev = 0;
                 }
             
                 
-                $customer_percentage = ($customer_qty / $customer_qty_prev) * 100;
-                if($customer_qty >= $customer_qty_prev){
+                if ($customer_qty_prev != 0) {
+                    $customer_percentage = ($customer_qty / $customer_qty_prev) * 100;
+                } else {
+                    // Handle the case where the previous quantity is zero
+                    $customer_percentage = 0; // or set a default value or message
+                }
+                
+                if($customer_qty > $customer_qty_prev){
                     $customer_display = '<h6 class="fs-11 ps-3 mb-0 text-success" data-bs-toggle="tooltip" data-bs-placement="bottom" title="number of customers previous month">
                                             <span class="me-1 fas fa-caret-up"></span>' . $customer_percentage . '%
                                         </h6>';
-                } else {
+                } elseif($customer_qty < $customer_qty_prev) {
                     $customer_display = '<h6 class="fs-11 ps-3 mb-0 text-danger" data-bs-toggle="tooltip" data-bs-placement="bottom" title="number of customers previous month">
                                             <span class="me-1 fas fa-caret-down"></span>' . $customer_percentage . '%
+                                        </h6>';
+                } else {
+                    $customer_display = '<h6 class="fs-11 ps-3 mb-0 text-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="number of customers previous month">
+                                            <span class="me-1 fas fa-caret-right"></span> nothing yet
                                         </h6>';
                 }
                 
