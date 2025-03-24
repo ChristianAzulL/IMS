@@ -11,13 +11,7 @@ try {
 
     $baseQuery = "
         SELECT 
-            COALESCE((
-                    SELECT COUNT(*) 
-                    FROM stocks 
-                    WHERE item_status = 0 
-                        AND product_id = s.product_id 
-                        AND warehouse = s.warehouse
-                ), 0) AS quantity,
+            COUNT(CASE WHEN s.item_status = 0 AND s.warehouse = w.hashed_id THEN 1 END) AS quantity,
             s.product_id,
             p.id, 
             p.id AS key_product,

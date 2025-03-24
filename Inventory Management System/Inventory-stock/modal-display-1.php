@@ -43,7 +43,7 @@ if(isset($_GET['target_id'])){
             // Display product details for the current batch code
             echo "
                 <tr>
-                    <td class='barcode'><a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "'><small>LPO " . trim(htmlspecialchars($batch_code)) . "</small></a></td>
+                    <td class='barcode'><a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "'><small>LPO " . htmlspecialchars($row['unique_barcode']) . "</small></a></td>
                     <td class='status text-center'>" . $item_status . "</td>
                     <td class='capital text-end'><small>" . htmlspecialchars($row['capital']) . "</small></td>
                     <td class='sold'><small>" . $row['sold_price'] . "</small></td>
