@@ -166,18 +166,28 @@
 
 <script>
 
-$(document).ready(function () {
-        // Load item-details.php dynamically into the container
-        $("#item-details-container").load("item-details.php?id=123&wh=ABC");
+    $(document).on("click", "a[data-bs-toggle='modal']", function () {
+        var targetId = $(this).attr("target-id").trim(); // Trim spaces
 
-        // Use event delegation for dynamically loaded elements
-        $(document).on("click", "a[data-bs-toggle='modal']", function () {
-            var targetId = $(this).attr("target-id"); // Get target-id value
+        console.log("Extracted targetId:", "'" + targetId + "'"); // Debugging
 
-            // Load modal content dynamically
-            $("#modal-1-display").load("modal-display-1.php?target_id=" + targetId);
+        $("#modal-1-display").html('<div class="text-center p-3"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+        $.ajax({
+            url: "modal-display-1.php",
+            type: "GET",
+            data: { target_id: targetId },
+            success: function (response) {
+                // console.log("AJAX Success Response:", response);
+                $("#modal-1-display").html(response);
+            },
+            error: function (xhr, status, error) {
+                // console.error("AJAX Error:", error);
+                $("#modal-1-display").html('<p class="text-danger">Failed to load content.</p>');
+            }
         });
     });
+
 
     let currentPage = 1;
     let limit = 9;
