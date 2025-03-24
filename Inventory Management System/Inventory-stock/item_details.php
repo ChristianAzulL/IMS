@@ -34,12 +34,7 @@
                         sup.supplier_name,
                         COALESCE(sup.local_international, 'Not set yet') AS import_status,
                         CONCAT(u.user_fname, ' ', u.user_lname) AS added_by,
-                        s.date,
-                        s.unique_barcode, 
-                        s.capital, 
-                        s.item_status,
-                        s.price,
-                        r.location_name
+                        s.date
                     FROM stocks s
                     LEFT JOIN supplier sup ON s.supplier = sup.hashed_id
                     LEFT JOIN users u ON s.user_id = u.hashed_id
@@ -76,7 +71,7 @@
                                 echo "
                                     <tr>
                                         <td scope='row'>
-                                            <a data-bs-toggle='collapse' href='#product-details-modal" . htmlspecialchars($row['batch_code']) . '-' . $id . '-' . $warehouse . "' role='button' aria-expanded='false' aria-controls='product-details-modal" . htmlspecialchars($row['batch_code']) . '-' . $id . '-' . $warehouse . "'>
+                                            <a data-bs-toggle='modal' href='#firstModal' role='button' target-id='" . htmlspecialchars($row['batch_code']) . "' >
                                                 " . htmlspecialchars($row['batch_code']) . "
                                             </a>
                                         </td>
@@ -86,54 +81,13 @@
                                         <td>" . htmlspecialchars($row['added_by']) . "</td>
                                         <td>" . htmlspecialchars($row['date']) . "</td>
                                     </tr>
-                                    <tr class='collapse p-0 m-0' id='product-details-modal" . htmlspecialchars($row['batch_code']) . '-' . $id . '-' . $warehouse . "'>
-                                        <td class='p-0 m-0' colspan='6'>
-                                            <div id=\"tableExample\" data-list='{\"valueNames\":[\"barcode" . $row['batch_code'] . "\",\"status" . $row['batch_code'] . "\",\"capital" . $row['batch_code'] . "\",\"sold" . $row['batch_code'] . "\",\"location" . $row['batch_code'] . "\"],\"pagination\":false}'>
-                                                <div class='table-responsive scrollbar'>
-                                                        <table class=xamp'table table-hover table-striped table-bordered border-info table-sm'>
-                                                            <thead class='table-info'>
-                                                                <tr>
-                                                                    <th class='text-900 sort' data-sort='barcode" . $row['batch_code'] . "'>Barcode</th>
-                                                                    <th class='text-900 sort' data-sort='status" . $row['batch_code'] . "'>Fullfilment Status</th>
-                                                                    <th class='text-900 sort' data-sort='capital" . $row['batch_code'] . "'>Capital</th>
-                                                                    <th class='text-900 sort' data-sort='sold" . $row['batch_code'] . "'>Sold Amount</th>
-                                                                    <th class='text-900 sort' data-sort='location" . $row['batch_code'] . "'>Item Location</th>
-                                                                </tr>
-                                                            </thead>
-                                                        <tbody>
+                                    
                                 ";
                             }
 
-                            if(empty($row['location_name'])){
-                                $location_name = '<span class="badge rounded-pill badge-subtle-warning">For SKU</span>';
-                            } else {
-                                $location_name = '<span class="badge rounded-pill badge-subtle-primary">' . $row['location_name'] . '</span>';
-                            }
-                            if($row['item_status'] == 0) {
-                                $item_status = '<span class="badge rounded-pill bg-success">Available</span>';
-                            } elseif($row['item_status'] == 1) {
-                                $item_status = '<span class="badge rounded-pill bg-danger">Sold</span>';
-                            } elseif($row['item_status'] == 2) {
-                                $item_status = '<span class="badge rounded-pill bg-primary">Enroute</span>';
-                            } elseif($row['item_status'] == 3) {
-                                $item_status = '<span class="badge rounded-pill bg-warning">For Enroute</span>';
-                            } else {
-                                $item_status = '<span class="badge rounded-pill bg-warning">Returned</span>';
-                            }
-                            // Display product details for the current batch code
-                            echo "
-                                <tr>
-                                    <td class='barcode" . $row['batch_code'] . "'><a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "'><small>" . htmlspecialchars($row['unique_barcode']) . "</small></a></td>
-                                    <td class='status" . $row['batch_code'] . " text-center'>" . $item_status . "</td>
-                                    <td class='capital" . $row['batch_code'] . " text-end'><small>" . htmlspecialchars($row['capital']) . "</small></td>
-                                    <td class='sold" . $row['batch_code'] . "'><small>" . $row['price'] . "</small></td>
-                                    <td class='location" . $row['batch_code'] . "'><small>" . $location_name . "</small></td>
-                                </tr>
-                            ";
+                            
                         }
 
-                        // Close the last batch details table
-                        echo "</tbody></table></div></div></td></tr>";
                     } else {
                         echo "<tr><td colspan='6'>No data found for the given product ID and warehouse.</td></tr>";
                     }
