@@ -154,7 +154,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="scrollinglongcontentLabel">Modal title</h5><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="scrollinglongcontentLabel">Items</h5><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body modal-dialog modal-dialog-scrollable mt-0">
         <div id="modal-1-display"></div>
@@ -167,17 +167,21 @@
 <script>
 
 $(document).ready(function () {
-        // Load item-details.php dynamically into the container
-        $("#item-details-container").load("item-details.php?id=123&wh=ABC");
+    // Load item-details.php dynamically into the container
+    $("#item-details-container").load("item-details.php?id=123&wh=ABC");
 
-        // Use event delegation for dynamically loaded elements
-        $(document).on("click", "a[data-bs-toggle='modal']", function () {
-            var targetId = $(this).attr("target-id"); // Get target-id value
+    // Use event delegation for dynamically loaded elements
+    $(document).on("click", "a[data-bs-toggle='modal']", function () {
+        var targetId = $(this).attr("target-id"); // Get target-id value
 
-            // Load modal content dynamically
-            $("#modal-1-display").load("modal-display-1.php?target_id=" + targetId);
-        });
+        // Show loading spinner while content loads
+        $("#modal-1-display").html('<div class="text-center p-3"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+        // Load modal content dynamically
+        $("#modal-1-display").load("modal-display-1.php?target_id=" + targetId);
     });
+});
+
 
     let currentPage = 1;
     let limit = 9;
