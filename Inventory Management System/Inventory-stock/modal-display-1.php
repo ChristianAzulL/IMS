@@ -31,7 +31,7 @@
                       LEFT JOIN item_location il ON il.id = s.item_location 
                       LEFT JOIN outbound_content ol ON ol.unique_barcode = s.unique_barcode 
                       WHERE s.batch_code = ? 
-                      ORDER BY s.barcode_extension ASC";
+                      ORDER BY s.barcode_extension ASC LIMIT 1000";
 
             if ($stmt = $conn->prepare($query)) {
                 $stmt->bind_param("s", $batch_code);
