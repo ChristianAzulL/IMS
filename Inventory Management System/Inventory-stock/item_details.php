@@ -23,14 +23,7 @@
                 $query = "
                     SELECT 
                         s.batch_code,
-                        COALESCE((
-                            SELECT COUNT(*) 
-                            FROM stocks 
-                            WHERE item_status = 0 
-                            AND batch_code = s.batch_code 
-                            AND product_id = s.product_id 
-                            AND warehouse = s.warehouse
-                        ), 0) AS available_quantity,
+                        COUNT(s.unique_barcode) AS available_quantity,
                         sup.supplier_name,
                         COALESCE(sup.local_international, 'Not set yet') AS import_status,
                         CONCAT(u.user_fname, ' ', u.user_lname) AS added_by,
