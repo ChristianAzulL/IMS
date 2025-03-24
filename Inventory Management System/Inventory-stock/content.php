@@ -150,44 +150,66 @@
     </div>
 </div>
 
-<div class="modal fade" id="firstModal" data-keyboard="false" tabindex="-1" aria-labelledby="scrollinglongcontentLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<!-- Modal -->
+<div class="modal fade" id="firstModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="scrollinglongcontentLabel">Items</h5><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="exampleModalToggleLabel">Batch Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body modal-dialog modal-dialog-scrollable mt-0">
-        <div id="modal-1-display"></div>
+      <div class="modal-body">
+        <!-- Content will be loaded dynamically here -->
+        <div id="modal-1-display" class="text-center">
+          <!-- Initially Empty (Progress Bar will appear) -->
+        </div>
       </div>
-      <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button></div>
     </div>
   </div>
 </div>
-
 <script>
 
     $(document).ready(function() {
         $(document).on("click", "[data-bs-toggle='modal']", function() {
-            let targetId = $(this).attr("target-id"); // Get target ID from clicked button
+            let targetId = $(this).attr("target-id"); // Get target ID
             let modalContent = $("#modal-1-display"); // Target modal content area
             
-            // Show loading spinner
-            modalContent.html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+            // Show progress bar initially
+            modalContent.html(`
+                <div class="progress">
+                    <div id="loading-progress" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+                </div>
+            `);
 
-            // Load content dynamically from PHP file
-            $.ajax({
-                url: "modal-display-1.php",
-                type: "GET",
-                data: { target_id: targetId }, // Pass the selected batch code
-                success: function(response) {
-                    modalContent.html(response); // Replace spinner with fetched content
-                },
-                error: function() {
+            // Create AJAX Request with Progress Tracking
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "modal-display-1.php?target_id=" + encodeURIComponent(targetId), true);
+
+            xhr.onprogress = function(event) {
+                if (event.lengthComputable) {
+                    let percentComplete = (event.loaded / event.total) * 100;
+                    $("#loading-progress").css("width", percentComplete + "%");
+                } else {
+                    $("#loading-progress").addClass("progress-bar-animated"); // Keep animation if size unknown
+                }
+            };
+
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    modalContent.html(xhr.responseText); // Load fetched content
+                } else {
                     modalContent.html('<div class="alert alert-danger">Error loading content.</div>');
                 }
-            });
+            };
+
+            xhr.onerror = function() {
+                modalContent.html('<div class="alert alert-danger">Network error occurred.</div>');
+            };
+
+            xhr.send();
         });
     });
+
 
 
 
