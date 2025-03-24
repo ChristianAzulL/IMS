@@ -19,7 +19,7 @@ include "../config/database.php";
 if(isset($_GET['target_id'])){
     $batch_code = $_GET['target_id'];
 
-    $query = "SELECT s.unique_barcode, s.item_status, il.location_name, s.capital, ol.sold_price FROM stocks s LEFT JOIN item_location il ON il.id = s.item_location LEFT JOIN outbound_content ol ON ol.unique_barcode = s.unique_barcode WHERE s.batch_code = '$batch_code' ORDER BY s.barcode_extension ASC LIMIT 100";
+    $query = "SELECT s.unique_barcode, s.item_status, il.location_name, s.capital, ol.sold_price FROM stocks s LEFT JOIN item_location il ON il.id = s.item_location LEFT JOIN outbound_content ol ON ol.unique_barcode = s.unique_barcode WHERE s.batch_code = '$batch_code' ORDER BY s.barcode_extension ASC";
     $res = $conn->query($query);
     if($res->num_rows>0){
         while($row=$res->fetch_assoc()){
