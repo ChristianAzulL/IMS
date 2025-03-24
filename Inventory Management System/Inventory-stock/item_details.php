@@ -41,6 +41,7 @@
                     LEFT JOIN item_location r ON s.item_location = r.id
                     WHERE s.product_id = ? 
                       AND s.warehouse = ?
+                    GROUP BY s.batch_code
                     ORDER BY s.date
                 ";
 
