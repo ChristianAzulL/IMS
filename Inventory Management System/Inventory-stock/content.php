@@ -166,27 +166,29 @@
 
 <script>
 
-    $(document).on("click", "a[data-bs-toggle='modal']", function () {
-        var targetId = $(this).attr("target-id").trim(); // Trim spaces
+    $(document).ready(function() {
+        $(document).on("click", "[data-bs-toggle='modal']", function() {
+            let targetId = $(this).attr("target-id"); // Get target ID from clicked button
+            let modalContent = $("#modal-1-display"); // Target modal content area
+            
+            // Show loading spinner
+            modalContent.html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
 
-        console.log("Extracted targetId:", "'" + targetId + "'"); // Debugging
-
-        $("#modal-1-display").html('<div class="text-center p-3"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-
-        $.ajax({
-            url: "modal-display-1.php",
-            type: "GET",
-            data: { target_id: targetId },
-            success: function (response) {
-                // console.log("AJAX Success Response:", response);
-                $("#modal-1-display").html(response);
-            },
-            error: function (xhr, status, error) {
-                // console.error("AJAX Error:", error);
-                $("#modal-1-display").html('<p class="text-danger">Failed to load content.</p>');
-            }
+            // Load content dynamically from PHP file
+            $.ajax({
+                url: "modal-display-1.php",
+                type: "GET",
+                data: { target_id: targetId }, // Pass the selected batch code
+                success: function(response) {
+                    modalContent.html(response); // Replace spinner with fetched content
+                },
+                error: function() {
+                    modalContent.html('<div class="alert alert-danger">Error loading content.</div>');
+                }
+            });
         });
     });
+
 
 
     let currentPage = 1;
