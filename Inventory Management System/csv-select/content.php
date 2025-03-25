@@ -64,6 +64,7 @@
 </div>
 
 <button class="d-none" id="alert-button"></button>
+<button class="d-none" id="batch-btn"></button>
 <script>
     document.getElementById("alert-button").addEventListener("click", function() {
         Swal.fire({
