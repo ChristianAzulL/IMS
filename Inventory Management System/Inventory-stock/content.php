@@ -170,44 +170,63 @@
 <script>
 
     $(document).ready(function() {
+        let targetId, offset = 0;
+
         $(document).on("click", "[data-bs-toggle='modal']", function() {
-            let targetId = $(this).attr("target-id"); // Get target ID
-            let modalContent = $("#modal-1-display"); // Target modal content area
-            
-            // Show progress bar initially
+            targetId = $(this).attr("target-id");
+            offset = 0; // Reset offset on modal open
+            let modalContent = $("#modal-1-display");
+
             modalContent.html(`
-                <div class="progress">
-                    <div id="loading-progress" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%;"></div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Unique Barcode</th>
+                                <th>Status</th>
+                                <th>Capital</th>
+                                <th>Sold Amount</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+                <div class="text-center my-3">
+                    <button id="load-more-btn" class="btn btn-primary d-none">Load More</button>
                 </div>
             `);
 
-            // Create AJAX Request with Progress Tracking
-            let xhr = new XMLHttpRequest();
-            xhr.open("GET", "modal-display-1.php?target_id=" + encodeURIComponent(targetId), true);
+            loadMoreData(); // Load initial data
 
-            xhr.onprogress = function(event) {
-                if (event.lengthComputable) {
-                    let percentComplete = (event.loaded / event.total) * 100;
-                    $("#loading-progress").css("width", percentComplete + "%");
-                } else {
-                    $("#loading-progress").addClass("progress-bar-animated"); // Keep animation if size unknown
-                }
-            };
-
-            xhr.onload = function() {
-                if (xhr.status == 200) {
-                    modalContent.html(xhr.responseText); // Load fetched content
-                } else {
-                    modalContent.html('<div class="alert alert-danger">Error loading content.</div>');
-                }
-            };
-
-            xhr.onerror = function() {
-                modalContent.html('<div class="alert alert-danger">Network error occurred.</div>');
-            };
-
-            xhr.send();
+            $("#load-more-btn").click(function() {
+                loadMoreData();
+            });
         });
+
+        function loadMoreData() {
+            $("#load-more-btn").prop("disabled", true).text("Loading...");
+            
+            $.ajax({
+                url: "modal-display-1.php",
+                type: "GET",
+                data: { target_id: targetId, offset: offset },
+                dataType: "json",
+                success: function(response) {
+                    $("#table-body").append(response.html);
+                    offset += 100;
+
+                    if (response.has_more) {
+                        $("#load-more-btn").removeClass("d-none").prop("disabled", false).text("Load More");
+                    } else {
+                        $("#load-more-btn").addClass("d-none");
+                    }
+                },
+                error: function() {
+                    $("#load-more-btn").text("Error! Try Again").prop("disabled", false);
+                }
+            });
+        }
     });
 
 

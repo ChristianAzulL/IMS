@@ -103,27 +103,65 @@
 
   <script>
 
-$(document).on("click", "a[data-bs-toggle='modal']", function () {
-    var targetId = $(this).attr("target-id").trim(); // Trim spaces
+    $(document).ready(function() {
+        let targetId, offset = 0;
 
-    console.log("Extracted targetId:", "'" + targetId + "'"); // Debugging
+        $(document).on("click", "[data-bs-toggle='modal']", function() {
+            targetId = $(this).attr("target-id");
+            offset = 0; // Reset offset on modal open
+            let modalContent = $("#modal-1-display");
 
-    $("#modal-1-display").html('<div class="text-center p-3"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+            modalContent.html(`
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Unique Barcode</th>
+                                <th>Status</th>
+                                <th>Capital</th>
+                                <th>Sold Amount</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body"></tbody>
+                    </table>
+                </div>
+                <div class="text-center my-3">
+                    <button id="load-more-btn" class="btn btn-primary d-none">Go to Inventory page to load more</button>
+                </div>
+            `);
 
-    $.ajax({
-        url: "../Inventory-stock/modal-display-1.php",
-        type: "GET",
-        data: { target_id: targetId },
-        success: function (response) {
-            // console.log("AJAX Success Response:", response);
-            $("#modal-1-display").html(response);
-        },
-        error: function (xhr, status, error) {
-            // console.error("AJAX Error:", error);
-            $("#modal-1-display").html('<p class="text-danger">Failed to load content.</p>');
+            loadMoreData(); // Load initial data
+
+            $("#load-more-btn").click(function() {
+                loadMoreData();
+            });
+        });
+
+        function loadMoreData() {
+            $("#load-more-btn").prop("disabled", true).text("Loading...");
+            
+            $.ajax({
+                url: "modal-display-1.php",
+                type: "GET",
+                data: { target_id: targetId, offset: offset },
+                dataType: "json",
+                success: function(response) {
+                    $("#table-body").append(response.html);
+                    offset += 100;
+
+                    if (response.has_more) {
+                        $("#load-more-btn").removeClass("d-none").prop("disabled", false).text("Go to Inventory Page to load more");
+                    } else {
+                        $("#load-more-btn").addClass("d-none");
+                    }
+                },
+                error: function() {
+                    $("#load-more-btn").text("Error! Try Again").prop("disabled", false);
+                }
+            });
         }
     });
-});
 
 
 let currentPage = 1;
