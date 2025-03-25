@@ -18,6 +18,26 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
 
         if ($fileExtension === 'csv') {
             if (($handle = fopen($fileTmpPath, 'r')) !== false) {
+                // Read the first row (header)
+                $header = fgetcsv($handle, 1000, ",");
+                // Expected headers
+                $expectedHeaders = ["description", "keyword", "qty", "price", "supplier", "parent barcode", "batch code", "brand", "category", "safety"];
+
+                if ($header !== $expectedHeaders) {
+                    echo "<script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            var alertButton = document.getElementById('alert-button');
+                            if (alertButton) {
+                                alertButton.click();
+                            } else {
+                                alert('CSV headers are incorrect!');
+                            }
+                        });
+                    </script>";
+                }
+                
+
+
                 $rowIndex = 0;
 
                 while (($data = fgetcsv($handle, 1000, ",")) !== false) {
@@ -50,7 +70,6 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                                 $stmt->close();
                             } while ($count > 0); // Regenerate if the barcode already exists
                         
-                            $barcode = "LPO " . $barcode;
                         }
 
                         

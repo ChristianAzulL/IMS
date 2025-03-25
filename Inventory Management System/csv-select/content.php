@@ -13,7 +13,7 @@
         
         if (isset($_SESSION['inbound_id'])) {
             // $inbound_id = $inbound_id + 1;
-            echo $inbound_id . " - " . $_SESSION['inbound_id'];
+            // echo $inbound_id . " - " . $_SESSION['inbound_id'];
             if ($_SESSION['inbound_id'] < $inbound_id) {
                 echo '<script type="text/javascript">';
                 echo 'window.location.href = "../Inbound-logs/";'; // Redirect with JavaScript
@@ -63,6 +63,20 @@
     </div>
 </div>
 
+<button class="d-none" id="alert-button"></button>
+<script>
+    document.getElementById("alert-button").addEventListener("click", function() {
+        Swal.fire({
+            icon: "error",
+            title: "Invalid CSV Format",
+            text: "Please use the correct header format: description, keyword, qty, price, supplier, parent barcode, batch code, brand, category, safety.",
+            confirmButtonText: "Go Back",
+            allowOutsideClick: false
+        }).then(() => {
+            window.location.href = "../Inbound-logs/";
+        });
+    });
+</script>
 <script>
 document.getElementById('submitBTN').addEventListener('click', function(event) {
     Swal.fire({
