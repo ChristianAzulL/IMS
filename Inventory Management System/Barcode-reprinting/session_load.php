@@ -3,7 +3,7 @@ session_start();
 
 // Check if session variable exists
 if (!isset($_SESSION['stored_data']) || empty($_SESSION['stored_data'])) {
-    echo "<div class='text-center'><h4>No Data Yet!</h4></div>";
+    echo "<tr><td class='text-center' colspan='5'>No Data Yet!</td></tr>";
     exit;
 }
 ?>

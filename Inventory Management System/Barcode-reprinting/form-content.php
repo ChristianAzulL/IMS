@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-12 mb-3">
         <h3 class="mb-0">Enter Barcode Sequence</h3>
-        <small>Maximum of 500 data only will be recorded</small>
+        <small class="text-danger">Maximum of 500 data only will be recorded</small>
     </div>
     <hr>
     <div class="col-md-12 mb-3">

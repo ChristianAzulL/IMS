@@ -48,6 +48,8 @@
                                         $start = $end + 1;
                                     }
                                 }
+
+                                unset($_SESSION['stored_data']);
                                 ?>
                             </tbody>
                         </table>
