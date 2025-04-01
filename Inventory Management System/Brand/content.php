@@ -35,7 +35,7 @@
                             </thead>
                             <tbody class="list">
                                 <?php 
-                                $brand_query = "SELECT brand.*, users.user_fname, users.user_lname FROM brand LEFT JOIN users ON users.hashed_id = brand.user_id ORDER BY brand.id DESC";
+                                $brand_query = "SELECT brand.*, users.user_fname, users.user_lname FROM brand LEFT JOIN users ON users.hashed_id = brand.user_id WHERE brand.current_status = 0 ORDER BY brand.id DESC";
                                 $brand_result = mysqli_query($conn, $brand_query);
                                 if ($brand_result->num_rows > 0) {
                                     while ($row = $brand_result->fetch_assoc()) {
@@ -306,3 +306,18 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<?php
+if (isset($_GET['update']) && $_GET['update'] === "success") {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'The update was successful.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>

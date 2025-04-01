@@ -42,6 +42,7 @@
                             $Query = "SELECT s.*, u.user_fname, u.user_lname 
                                         FROM supplier s
                                         LEFT JOIN users u ON u.hashed_id = s.user_id 
+                                        WHERE s.current_status = 0
                                         ORDER BY s.id DESC";
                   
                             $res = $conn->query($Query);
@@ -307,3 +308,18 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<?php
+if (isset($_GET['update']) && $_GET['update'] === "success") {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'The update was successful.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>

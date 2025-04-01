@@ -92,7 +92,7 @@
                                             </thead>
                                             <tbody class="list">
                                                 <?php 
-                                                    $item_location_query = "SELECT item_location.*, users.user_fname, users.user_lname FROM item_location LEFT JOIN users ON users.id = item_location.user_id WHERE item_location.warehouse = '$_id' ORDER BY item_location.id DESC";
+                                                    $item_location_query = "SELECT item_location.*, users.user_fname, users.user_lname FROM item_location LEFT JOIN users ON users.id = item_location.user_id WHERE item_location.warehouse = '$_id' AND item_location.current_status = 0 ORDER BY item_location.id DESC";
                                                     $item_location_result = mysqli_query($conn, $item_location_query);
                                                     if ($item_location_result->num_rows > 0) {
                                                         while ($row = $item_location_result->fetch_assoc()) {
@@ -388,3 +388,18 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<?php
+if (isset($_GET['update']) && $_GET['update'] === "success") {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'The update was successful.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>

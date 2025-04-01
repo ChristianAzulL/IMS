@@ -63,7 +63,7 @@
                                 <td class="py-1 px-0 d-flex align-items-center">
                                 
                                     <button class="btn btn-transparent py-0 mx-0" title="update access"type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['hashed_id']; ?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
-                                    <a href="../config/delete.php?from=warehouse&id=<?php echo $row['hashed_id'];?>" class="btn btn-transparent text-danger ms-1 custom-clicked" ><span class="far fa-trash-alt"></span></a>
+                                    <!-- <a href="../config/delete.php?from=warehouse&id=<?php //echo $row['hashed_id'];?>" class="btn btn-transparent text-danger ms-1 custom-clicked" ><span class="far fa-trash-alt"></span></a> -->
                                 </td>
                             </tr>
                             <?php

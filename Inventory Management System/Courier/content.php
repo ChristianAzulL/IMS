@@ -41,6 +41,7 @@
                             $Query = "SELECT cr.*, u.user_fname, u.user_lname 
                                         FROM courier cr
                                         LEFT JOIN users u ON u.hashed_id = cr.user_id 
+                                        WHERE cr.current_status = 0
                                         ORDER BY cr.id DESC";
                   
                             $res = $conn->query($Query);
@@ -291,3 +292,18 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<?php
+if (isset($_GET['update']) && $_GET['update'] === "success") {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'The update was successful.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>

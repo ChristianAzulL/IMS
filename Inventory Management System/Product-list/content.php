@@ -82,6 +82,7 @@
                 LEFT JOIN users ON users.hashed_id = product.user_id 
                 LEFT JOIN category ON category.hashed_id = product.category
                 LEFT JOIN brand ON brand.hashed_id = product.brand
+                WHERE product.current_status = 0
                 ORDER BY product.id DESC
               ";
               $product_list_res = $conn->query($product_list_query);
@@ -348,3 +349,19 @@ $(document).ready(function() {
     });
 });
 </script>
+
+
+<?php
+if (isset($_GET['update']) && $_GET['update'] === "success") {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'The update was successful.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>

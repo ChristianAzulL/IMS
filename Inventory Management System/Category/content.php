@@ -35,7 +35,7 @@
                             </thead>
                             <tbody class="list">
                                 <?php 
-                                $category_query = "SELECT category.*, users.user_fname, users.user_lname FROM category LEFT JOIN users ON users.hashed_id = category.user_id ORDER BY category.id DESC";
+                                $category_query = "SELECT category.*, users.user_fname, users.user_lname FROM category LEFT JOIN users ON users.hashed_id = category.user_id WHERE category.current_status = 0 ORDER BY category.id DESC";
                                 $category_result = mysqli_query($conn, $category_query);
                                 if ($category_result->num_rows > 0) {
                                     while ($row = $category_result->fetch_assoc()) {
@@ -267,3 +267,18 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<?php
+if (isset($_GET['update']) && $_GET['update'] === "success") {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                title: 'Success!',
+                text: 'The update was successful.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>

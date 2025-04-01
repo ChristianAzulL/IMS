@@ -170,7 +170,7 @@ if(isset($_GET['type'])){
     } elseif($type === "supplier"){
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $supplier_name = trim($_POST['supplier_name']);
-            $supplier_id = trim($_POST['id']);
+            $supplier_id = $_POST['id'];
             $supplier_type = $_POST['type'];
 
             // Validate input
@@ -194,14 +194,10 @@ if(isset($_GET['type'])){
             }
             $stmt->close();
 
-            // If the new name is the same as the current name, return "No changes"
-            if ($current_name === $supplier_name) {
-                echo json_encode(["status" => "no_change", "message" => "No changes detected."]);
-                exit;
-            }
+            
 
             // Update the supplier
-            $update_query = "UPDATE supplier SET supplier_name = ?, date = ?, local_international = ? WHERE hashed_id = ?";
+            $update_query = "UPDATE supplier SET supplier_name = ?, `date` = ?, local_international = ? WHERE hashed_id = ?";
             $stmt_update = $conn->prepare($update_query);
             $stmt_update->bind_param("ssss", $supplier_name, $currentDateTime, $supplier_type, $supplier_id);
 

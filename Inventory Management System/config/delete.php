@@ -3,59 +3,77 @@ include "database.php";
 include "on_session.php";
 
 if (isset($_GET['id']) && isset($_GET['from'])) {
-    $identification = $_GET['id'];
+    $identification = $conn->real_escape_string($_GET['id']);
     $type = $_GET['from'];
 
     switch ($type) {
         case "category":
-            $case = "category SET current_status = 1 WHERE hashed_id";
-            // Your code for handling category case
+            $table = "category";
+            $column = "hashed_id";
+            $link = "Category";
             break;
 
         case "brand":
-            $case = "brand SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "brand";
+            $column = "hashed_id";
+            $link = "Brand";
             break;
 
         case "product_list":
-            $case = "product SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "product";
+            $column = "id";
+            $link = "Product-list";
             break;
 
         case "warehouse":
-            $case = "warehouse SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "warehouse";
+            $column = "hashed_id";
+            $link = "Warehouses";
             break;
-    
+
         case "supplier":
-            $case = "supplier SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "supplier";
+            $column = "hashed_id";
+            $link = "Suppliers";
             break;
 
         case "platform":
-            $case = "logistic_partner SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "logistic_partner";
+            $column = "hashed_id";
+            $link = "logistic-partner";
             break;
 
         case "courier":
-            $case = "courier SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "courier";
+            $column = "hashed_id";
+            $link = "Courier";
             break;
 
         case "access_level":
-            $case = "user_position SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "user_position";
+            $column = "id";
+            $link = "Access-levels";
             break;
 
         case "item-destination":
-            $case = "item_location SET current_status = 1 WHERE hashed_id";
-            // Your code for handling product case
+            $table = "item_location";
+            $column = "id";
+            $link = "item-destination";
             break;
+
         default:
-            // Default case if no match
-            break;
+            exit("Invalid type.");
     }
 
+    // Construct the query
+    $update_query = "UPDATE $table SET current_status = 1 WHERE $column = '$identification'";
 
+    if ($conn->query($update_query) === TRUE) {
+        header("Location: ../$link/?update=success");
+        $conn->close();
+        exit;
+    } else {
+        echo "Error updating record: " . $conn->error;
+    }
 }
 ?>
