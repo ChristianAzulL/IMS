@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-xxl-6 mb-3">
+    <div class="col-xxl-4 mb-3">
         <div class="row">
             <div class="col-lg-12">
                 <form id="ajax-form" action="action.php" method="POST">
@@ -17,7 +17,7 @@
             </div>
         </div>
     </div>
-    <div class="col-xxl-6 mb-3">
+    <div class="col-xxl-8 mb-3">
       <div class="card">
         <div class="card-body">
           <div id="session_load"></div>

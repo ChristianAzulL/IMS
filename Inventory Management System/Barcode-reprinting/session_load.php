@@ -8,29 +8,30 @@ if (!isset($_SESSION['stored_data']) || empty($_SESSION['stored_data'])) {
 }
 ?>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Unique Barcode</th>
-            <th>Warehouse</th>
-            <th>Description</th>
-            <th>Brand</th>
-            <th>Category</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($_SESSION['stored_data'] as $item): ?>
+<div class="table-responsive scrollbar">
+    <table class="table table-bordered table-sm">
+        <thead>
             <tr>
-                <td><?= htmlspecialchars($item['unique_barcode']) ?></td>
-                <td><?= htmlspecialchars($item['warehouse']) ?></td>
-                <td><?= htmlspecialchars($item['description']) ?></td>
-                <td><?= htmlspecialchars($item['brand_name']) ?></td>
-                <td><?= htmlspecialchars($item['category_name']) ?></td>
-                <td>
-                    <button class="btn btn-danger btn-sm delete-session-item" data-barcode="<?= htmlspecialchars($item['unique_barcode']) ?>">Delete</button>
-                </td>
+                <th style="min-width: 175px;">Unique Barcode</th>
+                <th>Description</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Action</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach ($_SESSION['stored_data'] as $item): ?>
+                <tr>
+                    <td><?= htmlspecialchars($item['unique_barcode']) ?></td>
+                    <td><?= htmlspecialchars($item['description']) ?></td>
+                    <td><?= htmlspecialchars($item['brand_name']) ?></td>
+                    <td><?= htmlspecialchars($item['category_name']) ?></td>
+                    <td>
+                        <button class="btn btn-danger btn-sm delete-session-item" data-barcode="<?= htmlspecialchars($item['unique_barcode']) ?>">Delete</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+
