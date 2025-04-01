@@ -12,7 +12,7 @@
 <script src="../vendors/swiper/swiper-bundle.min.js"></script>
 <script src="../vendors/choices/choices.min.js"></script>
 <!-- <script src="../js/prolongitems.js"></script> -->
-<!-- <script>
+<script>
     // Disable right-click
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
@@ -26,4 +26,4 @@
             e.preventDefault();
         }
     });
-</script> -->
+</script>
