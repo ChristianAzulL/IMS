@@ -11,6 +11,9 @@
 <script src="../assets/js/theme.js"></script>
 <script src="../vendors/swiper/swiper-bundle.min.js"></script>
 <script src="../vendors/choices/choices.min.js"></script>
+<script src="../vendors/datatables.net/dataTables.min.js"></script>
+<script src="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.js"></script>
+<script src="../vendors/datatables.net-fixedcolumns/dataTables.fixedColumns.min.js"></script>
 <!-- <script src="../js/prolongitems.js"></script> -->
 <!-- <script>
     // Disable right-click

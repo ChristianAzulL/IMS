@@ -22,8 +22,9 @@
 <link href="../vendors/choices/choices.min.css" rel="stylesheet" />
 <link href="../vendors/swiper/swiper-bundle.min.css" rel="stylesheet" />
 <script src="../vendors/echarts/echarts.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="../vendors/jquery/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- <script src="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.css"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var isRTL = JSON.parse(localStorage.getItem('isRTL'));
