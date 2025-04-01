@@ -19,9 +19,35 @@
     </div>
     <div class="col-xxl-8 mb-3">
       <div class="card">
-        <div class="card-body">
-          <div id="session_load"></div>
+        <form action="../Barcode-Reprint-2/index.php" method="POST">
+        <div class="my-heading py-3 ps-3 d-inline-flex w-100 justify-content-between align-items-center">
+            <div>
+                <h3>Live Preview</h3>
+            </div>
+            <div>
+                <button class="btn btn-primary me-3">Submit</button>
+            </div>
         </div>
+
+            <div class="card-body overflow-auto p-2" style="height: 80vh;">
+                
+                <div class="table-responsive scrollbar">
+                    <table class="table table-bordered table-sm overflow-auto">
+                        <thead class="table-info">
+                            <tr>
+                                <th></th>
+                                <th style="min-width: 175px;">Unique Barcode</th>
+                                <th>Description</th>
+                                <th>Brand</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="session_load">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
       </div>
     </div>
 </div>

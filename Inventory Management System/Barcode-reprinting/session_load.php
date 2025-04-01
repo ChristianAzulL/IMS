@@ -3,35 +3,28 @@ session_start();
 
 // Check if session variable exists
 if (!isset($_SESSION['stored_data']) || empty($_SESSION['stored_data'])) {
-    echo "<p>No data stored in session.</p>";
+    echo "<div class='text-center'><h4>No Data Yet!</h4></div>";
     exit;
 }
 ?>
 
-<div class="table-responsive scrollbar">
-    <table class="table table-bordered table-sm">
-        <thead>
-            <tr>
-                <th style="min-width: 175px;">Unique Barcode</th>
-                <th>Description</th>
-                <th>Brand</th>
-                <th>Category</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
+    
             <?php foreach ($_SESSION['stored_data'] as $item): ?>
                 <tr>
+                    <td>
+                        <button class="btn text-danger btn-sm delete-session-item" type="button" data-barcode="<?= htmlspecialchars($item['unique_barcode']) ?>"><span class="far fa-window-close"></span></button>
+                        <input type='checkbox' name='product_id[]' value='<?php echo $item['product_id']; ?>' checked='' hidden>
+                        <input type='checkbox' name='product_image[]' value='<?php echo basename($item['image']);?>' checked='' hidden>
+                        <input type='checkbox' name='product_desc[]' value='<?php echo $item['description'];?>' checked='' hidden>
+                        <input type='checkbox' name='parent_barcode[]' value='<?php echo $item['unique_barcode']; ?>' checked='' hidden>
+                        <input type='checkbox' name='brand[]' value='<?php echo $item['brand_name']; ?>' checked='' hidden>
+                        <input type='checkbox' name='category[]' value='<?php echo $item['category_name']; ?>' checked='' hidden>
+                    </td>
                     <td><?= htmlspecialchars($item['unique_barcode']) ?></td>
                     <td><?= htmlspecialchars($item['description']) ?></td>
                     <td><?= htmlspecialchars($item['brand_name']) ?></td>
                     <td><?= htmlspecialchars($item['category_name']) ?></td>
-                    <td>
-                        <button class="btn btn-danger btn-sm delete-session-item" data-barcode="<?= htmlspecialchars($item['unique_barcode']) ?>">Delete</button>
-                    </td>
                 </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
+        
 

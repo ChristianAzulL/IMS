@@ -14,17 +14,17 @@ if (isset($_POST['parent'], $_POST['start'], $_POST['end'])) {
         $conn->close();
         exit;
     }
-
+    $count = 1;
     // Define an empty array for storing data
     $data = [];
 
     // Prepared statement for data retrieval
-    $query = "SELECT stocks.*, product.description, category.category_name, brand.brand_name
+    $query = "SELECT stocks.*, product.description, category.category_name, brand.brand_name, product.product_img, product.hashed_id AS product_id
               FROM stocks
               LEFT JOIN product ON product.hashed_id = stocks.product_id
               LEFT JOIN category ON category.hashed_id = product.category
               LEFT JOIN brand ON brand.hashed_id = product.brand
-              WHERE stocks.parent_barcode = ? AND stocks.barcode_extension BETWEEN ? AND ?
+              WHERE stocks.parent_barcode = ? AND stocks.barcode_extension BETWEEN ? AND ? AND stocks.item_status = 0
               ORDER BY product.id DESC";
 
     $stmt = $conn->prepare($query);
@@ -35,6 +35,8 @@ if (isset($_POST['parent'], $_POST['start'], $_POST['end'])) {
     if ($res->num_rows > 0) {
         while ($row = $res->fetch_assoc()) {
             $item = [
+                'image' => $row['product_img'],
+                'product_id' => $row['product_id'],
                 'unique_barcode' => $row['unique_barcode'],
                 'warehouse' => $row['warehouse'],
                 'description' => $row['description'],
@@ -43,6 +45,11 @@ if (isset($_POST['parent'], $_POST['start'], $_POST['end'])) {
             ];
 
             $data[] = $item;
+            if($count < 500){
+                $count ++;
+            } else {
+                break;
+            }
         }
     }
 
@@ -69,9 +76,13 @@ if (isset($_POST['parent'], $_POST['start'], $_POST['end'])) {
             $_SESSION['stored_data'][] = $newItem;
         }
     }
-
-    // Return updated session data
-    echo json_encode(['status' => 'success', 'data' => 'data added successfully!']);
+    if($count < 10){
+        // Return updated session data
+        echo json_encode(['status' => 'success', 'data' => 'data added successfully! maximum of 500 data only']);
+    } else {
+        // Return updated session data
+        echo json_encode(['status' => 'success', 'data' => 'data added successfully!']);
+    }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid form submission.']);
 }
