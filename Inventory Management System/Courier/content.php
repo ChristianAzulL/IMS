@@ -58,8 +58,9 @@
                                 </td>
                                 <td class="email"><small><?php echo $publish_date;?></small></td>
                                 <td class="age"><small><?php echo $publish_by;?></small></td>
-                                <td class="py-1 px-0">
+                                <td class="py-1 px-0 d-flex align-items-center">
                                     <button class="btn btn-transparent" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['hashed_id']; ?>"><span class="far fa-edit"></span></button>
+                                    <a href="../config/delete.php?from=courier&id=<?php echo $row['hashed_id'];?>" class="btn btn-transparent text-danger ms-1 custom-clicked" ><span class="far fa-trash-alt"></span></a>
                                 </td>
                             </tr>
                             <?php
@@ -266,4 +267,27 @@
             }, 500); // Delay of 500ms after the user stops typing
         });
     });
+</script>
+
+<script>
+$(document).ready(function() {
+    $(document).on("click", ".custom-clicked", function(e) {
+        e.preventDefault();
+        let link = $(this).attr("href");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = link;
+            }
+        });
+    });
+});
 </script>

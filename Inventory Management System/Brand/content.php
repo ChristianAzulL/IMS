@@ -47,8 +47,9 @@
                                     <td class="name"><?php echo htmlspecialchars($brand_name); ?></td>
                                     <td class="email"><?php echo htmlspecialchars($publish_Date); ?></td>
                                     <td class="age"><?php echo htmlspecialchars($by); ?></td>
-                                    <td>
+                                    <td class="d-flex align-items-center">
                                         <button class="btn btn-transparent" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['hashed_id']; ?>"><span class="far fa-edit"></span></button>
+                                        <a href="../config/delete.php?from=brand&id=<?php echo $row['hashed_id'];?>" class="btn btn-transparent text-danger ms-1 custom-clicked" ><span class="far fa-trash-alt"></span></a>
                                     </td>
                                 </tr>
                                 <?php 
@@ -281,4 +282,27 @@
     });
 });
 
+</script>
+
+<script>
+$(document).ready(function() {
+    $(document).on("click", ".custom-clicked", function(e) {
+        e.preventDefault();
+        let link = $(this).attr("href");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = link;
+            }
+        });
+    });
+});
 </script>

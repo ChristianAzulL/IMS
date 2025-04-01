@@ -72,6 +72,7 @@ if (empty($_SESSION['csrf_token'])) {
                                     if($position_name !== "Administrator"){
                                     ?>
                                     <button class="btn btn-transparent py-0" type="button"  data-bs-toggle="modal" data-bs-target="#edit-modal_<?php echo $row['id'];?>"><small><span class="far fa-edit" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit" ></span></small></button>
+                                    <a href="../config/delete.php?from=access_level&id=<?php echo $row['id'];?>" class="btn btn-transparent text-danger ms-1 custom-clicked" ><span class="far fa-trash-alt"></span></a>
                                     <?php 
                                     }
                                     ?>
@@ -207,4 +208,28 @@ include "update_position.php";
             });
         });
     });
+</script>
+
+
+<script>
+$(document).ready(function() {
+    $(document).on("click", ".custom-clicked", function(e) {
+        e.preventDefault();
+        let link = $(this).attr("href");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = link;
+            }
+        });
+    });
+});
 </script>

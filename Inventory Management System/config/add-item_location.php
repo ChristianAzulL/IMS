@@ -22,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Execute the query
     if ($stmt->execute()) {
-        header("Location: ../Item-destination/?success=true");
+        header("Location: ../item-destination/?success=true");
     } else {
-        header("Location: ../Item-destination/?success=false");
+        header("Location: ../item-destination/?success=false");
     }
 
     // Close connections
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 } else {
     // Redirect back if accessed without POST
-    header("Location: ../Item-destination.php");
+    header("Location: ../item-destination.php");
     exit;
 }
 ?>
