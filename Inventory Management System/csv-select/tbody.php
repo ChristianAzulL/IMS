@@ -77,35 +77,35 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                         
                         if ($check_batch_code_res->num_rows > 0) {
                             echo "<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        let timeLeft = 5; // Countdown starts from 5 seconds
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        let timeLeft = 5; // Countdown starts from 5 seconds
 
-        Swal.fire({
-            icon: 'warning',
-            title: 'Batch Code Exists!',
-            html: 'You will be redirected back to the previous page in <b>' + timeLeft + '</b> seconds.',
-            allowOutsideClick: false,
-            showConfirmButton: false, // Hide OK button
-            didOpen: () => {
-                const swalContainer = Swal.getHtmlContainer();
-                
-                // Update countdown every second
-                const timerInterval = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft >= 0) {
-                        swalContainer.innerHTML = 'You will be redirected back to the previous page in <b>' + timeLeft + '</b> seconds.';
-                    }
-                }, 1000);
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Batch Code Exists!',
+                                            html: 'You will be redirected back to the previous page in <b>' + timeLeft + '</b> seconds.',
+                                            allowOutsideClick: false,
+                                            showConfirmButton: false, // Hide OK button
+                                            didOpen: () => {
+                                                const swalContainer = Swal.getHtmlContainer();
+                                                
+                                                // Update countdown every second
+                                                const timerInterval = setInterval(() => {
+                                                    timeLeft--;
+                                                    if (timeLeft >= 0) {
+                                                        swalContainer.innerHTML = 'You will be redirected back to the previous page in <b>' + timeLeft + '</b> seconds.';
+                                                    }
+                                                }, 1000);
 
-                // Redirect after 5 seconds
-                setTimeout(() => {
-                    clearInterval(timerInterval); // Stop countdown updates
-                    window.location.href = document.referrer || '../Inbound-logs/'; // Redirect
-                }, 5000);
-            }
-        });
-    });
-</script>";
+                                                // Redirect after 5 seconds
+                                                setTimeout(() => {
+                                                    clearInterval(timerInterval); // Stop countdown updates
+                                                    window.location.href = document.referrer || '../Inbound-logs/'; // Redirect
+                                                }, 5000);
+                                            }
+                                        });
+                                    });
+                                </script>";
 
                         }
                         
