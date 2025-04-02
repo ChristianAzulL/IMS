@@ -25,28 +25,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Dashboard</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="capital_sales" <?php if(strpos($account_position_access, "capital_sales")!==false){echo 'checked=""';}?>/>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Compare the capital and sales for each month</label>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="dashboard_outbound" <?php if(strpos($account_position_access, "dashboard_outbound")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Outbound on Dashboard</label>
                             </div>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="fast_brand" <?php if(strpos($account_position_access, "fast_brand")!==false){echo 'checked=""';}?>/>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Top 50 Fast Moving by Brands (This Week)</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="fast_category" <?php if(strpos($account_position_access, "fast_category")!==false){echo 'checked=""';}?>/>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Top 50 Fast Moving by Category (This Week)</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="weekly_sales" <?php if(strpos($account_position_access, "weekly_sales")!==false){echo 'checked=""';}?>/>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Weekly Sales</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="total_orders" <?php if(strpos($account_position_access, "total_orders")!==false){echo 'checked=""';}?>/>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Total Orders</label>
-                            </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="fast_products" <?php if(strpos($account_position_access, "fast_products")!==false){echo 'checked=""';}?>/>
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Fast Moving Products</label>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="dashboard_inventory" <?php if(strpos($account_position_access, "dashboard_inventory")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Inventory on Dashboard</label>
                             </div>
                         </div>
                         <div class="col-lg-12 mb-3">

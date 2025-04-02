@@ -242,6 +242,27 @@ $(document).ready(function(){
             }
         });
     }
+
+    // Handle delete button click (event delegation)
+    $(document).on("click", ".delete-session-item", function() {
+        var barcode = $(this).data("barcode");
+
+        $.ajax({
+            url: "delete_session.php",
+            type: "POST",
+            data: { barcode: barcode },
+            success: function(response) {
+                $("#preview").load("preview.php"); // Reload session table after deletion
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to delete item.'
+                });
+            }
+        });
+    });
 });
 </script>
 

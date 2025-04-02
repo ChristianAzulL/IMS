@@ -170,10 +170,12 @@
 <script>
 
     $(document).ready(function() {
-        let targetId, offset = 0;
+        let targetId, targetPId, warehouseID, offset = 0;
 
         $(document).on("click", "[data-bs-toggle='modal']", function() {
             targetId = $(this).attr("target-id");
+            targetPId = $(this).attr("target-Pid");
+            warehouseID = $(this).attr("target-wh");
             offset = 0; // Reset offset on modal open
             let modalContent = $("#modal-1-display");
 
@@ -210,7 +212,7 @@
             $.ajax({
                 url: "modal-display-1.php",
                 type: "GET",
-                data: { target_id: targetId, offset: offset },
+                data: { target_id: targetId, targetPId, warehouseID, offset: offset },
                 dataType: "json",
                 success: function(response) {
                     $("#table-body").append(response.html);
@@ -269,7 +271,7 @@
                                     <!-- Product Image -->
                                     <div class="col-md-4 col-lg-3">
                                         <div class="hoverbox h-md-100">
-                                            <a class="text-decoration-none" href="${item.product_img || '#'}" data-gallery="attachment-bg">
+                                            <a class="text-decoration-none" href="#" data-gallery="attachment-bg">
                                                 <img class="h-100 w-100 object-fit-cover" 
                                                 src="../../assets/img/${item.product_img || 'def_img.png'}" 
                                                 alt="${item.product_name || 'No Image'}" />

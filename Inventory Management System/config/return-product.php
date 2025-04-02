@@ -31,6 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt_logs->bind_param("sss", $barcode, $currentDateTime, $user_id);
 
             if ($stmt_logs->execute()) {
+                $update_stock_status = "UPDATE stocks SET item_status = 0 WHERE unique_barcode = ?";
+                $stmt_update_stock_status = $conn->prepare($update_stock_status);
+                $stmt_update_stock_status->bind_param("s", $barcode);
+                $stmt_update_stock_status->execute();
                 // Insert into logs
                 $logs = "INSERT INTO logs (title, `action`, `date`, user_id) VALUES ('PRODUCT RETURN', ?, ?, ?)";
                 $stmt_log = $conn->prepare($logs);

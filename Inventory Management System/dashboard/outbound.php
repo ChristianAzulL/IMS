@@ -89,7 +89,7 @@ if($under_safety_res->num_rows>0){
                     $product_qty ++;
                 }
             }
-            if($product_qty<$under_safety){
+            if($product_qty<$product_safety){
                 $under_safety++;
             }
         }

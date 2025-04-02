@@ -1,4 +1,5 @@
 <?php
+session_set_cookie_params(0);
 session_start();
 $user_position_id = $_SESSION['position_id'];
 $user_id = $_SESSION['user_id'];
@@ -16,6 +17,9 @@ if(empty($_SESSION['pfp'])){
 }
 
 
+if(!isset($user_id)){
+    header("Location: ../");
+}
 // Trim any extra whitespace from each ID
 $warehouse_ids_array = array_map('trim', $user_warehouse_ids);
 

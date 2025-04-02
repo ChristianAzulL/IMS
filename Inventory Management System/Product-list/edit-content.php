@@ -4,7 +4,7 @@ include "../config/on_session.php";
 
 if (isset($_GET['product_id'])) {
     $product_id = $_GET['product_id'];
-    $stmt = $conn->prepare("SELECT product.id, product.description, product.product_img, product.parent_barcode, category.category_name, brand.brand_name, category.hashed_id AS category_id, brand.hashed_id AS brand_id
+    $stmt = $conn->prepare("SELECT product.id, product.description, product.product_img, product.safety, product.parent_barcode, category.category_name, brand.brand_name, category.hashed_id AS category_id, brand.hashed_id AS brand_id
                             FROM product
                             LEFT JOIN category ON category.hashed_id = product.category
                             LEFT JOIN brand ON brand.hashed_id = product.brand
@@ -23,6 +23,7 @@ if (isset($_GET['product_id'])) {
         $product_pbarcode = $row['parent_barcode'];
         $category_id = $row['category_id'];
         $brand_id = $row['brand_id'];
+        $update_safety = $row['safety'];
 ?>
 <input type="text" name="product_id" value="<?php echo $product_id ?>" hidden>
 <div class="row">
@@ -38,7 +39,7 @@ if (isset($_GET['product_id'])) {
                 <input type="text" class="form-control" name="product_description" value="<?php echo $product_des;?>">
             </div>
             
-            <div class="col-lg-6 mb-3">
+            <div class="col-lg-4 mb-3">
             <label for="">Category</label>
             <select class="form-select" name="category" id="">
                 <option value="">Select Category</option>
@@ -59,7 +60,7 @@ if (isset($_GET['product_id'])) {
                 ?>
             </select>
             </div>
-            <div class="col-lg-6 mb-3">
+            <div class="col-lg-4 mb-3">
                 <label for="">Brand</label>
                 <select class="form-select" name="brand" id="">
                     <?php 
@@ -78,6 +79,10 @@ if (isset($_GET['product_id'])) {
                     }
                     ?>
                 </select>
+            </div>
+            <div class="col-lg-4 mb-3">
+                <label for="safety">Safety</label>
+                <input type="number" name="safety" min="2" max="1000" class="form-control" value="<?php echo $update_safety; ?>">
             </div>
         </div>
     </div>

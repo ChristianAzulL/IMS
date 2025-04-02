@@ -9,6 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $category = $_POST['category'] ?? '';
     $brand = $_POST['brand'] ?? '';
     $parentBarcode = $_POST['parent_barcode'] ?? '';
+    $safety = $_POST['safety'];
     $image = $_FILES['product_image'] ?? 'def_img.png';
 
     // Function to generate a unique 9-digit number
@@ -52,11 +53,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare the SQL statement to insert product data
-    $sql = "INSERT INTO product (`description`, category, brand, parent_barcode, product_img, `date`, `user_id`) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO product (`description`, category, brand, parent_barcode, product_img, `date`, `user_id`, `safety`) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssss", $productDescription, $category, $brand, $parentBarcode, $imagePath, $currentDateTime, $user_id);
+    $stmt->bind_param("sssssssi", $productDescription, $category, $brand, $parentBarcode, $imagePath, $currentDateTime, $user_id, $safety);
 
     // Execute the query and check for success
     if ($stmt->execute()) {

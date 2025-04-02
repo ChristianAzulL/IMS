@@ -59,21 +59,23 @@ if (empty($groupedData)) {
     <table class="table table-sm table-striped fs-10 mb-0 overflow-hidden">
         <thead class="table-info">
             <tr>
-                <th>Parent Barcode</th>
+                <th></th>
+                <th>Barcode</th>
                 <th>Description</th>
                 <th>Brand</th>
                 <th>Category</th>
-                <th class="text-end">Quantity</th>
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($groupedData as $parentBarcode => $group): ?>
+            <?php foreach ($existingData as $item): ?>
                 <tr>
-                    <td><?php echo htmlspecialchars($parentBarcode); ?></td>
-                    <td><?php echo htmlspecialchars($group['item']['description'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($group['item']['brand_name'] ?? 'N/A'); ?></td>
-                    <td><?php echo htmlspecialchars($group['item']['category_name'] ?? 'N/A'); ?></td>
-                    <td class="text-end"><?php echo $group['quantity']; ?></td> <!-- Display quantity -->
+                    <td>
+                        <button class="btn text-danger btn-sm delete-session-item" type="button" data-barcode="<?= htmlspecialchars($item['unique_barcode']) ?>"><span class="far fa-window-close"></span></button>
+                    </td>
+                    <td><?php echo htmlspecialchars($item['unique_barcode']); ?></td>
+                    <td><?php echo htmlspecialchars($item['description'] ?? 'N/A'); ?></td>
+                    <td><?php echo htmlspecialchars($item['brand_name'] ?? 'N/A'); ?></td>
+                    <td><?php echo htmlspecialchars($item['category_name'] ?? 'N/A'); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

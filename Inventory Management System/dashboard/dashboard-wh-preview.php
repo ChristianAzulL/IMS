@@ -23,6 +23,7 @@ if(isset($_GET['warehouse'])){
             
             // Query to fetch content details for the outbound log
             $outbounbd_content_query = "SELECT 
+                    p.product_img,
                     p.description,
                     b.brand_name,
                     c.category_name,
@@ -37,6 +38,7 @@ if(isset($_GET['warehouse'])){
             
             if($outbounbd_content_res->num_rows > 0){
                 while($row = $outbounbd_content_res->fetch_assoc()){
+                    $product_img = $row['product_img'];
                     $product_id = $row['product_id'];
                     $product_description = $row['description'];
                     $product_brand = $row['brand_name'];
@@ -54,6 +56,7 @@ if(isset($_GET['warehouse'])){
                         $product_data_array[$product_id]['outbounded'] += 1;
                     } else {
                         $product_data_array[$product_id] = [
+                            'product_img' => $product_img,
                             'product_id' => $product_id,
                             'description' => $product_description,
                             'brand' => $product_brand,
@@ -107,6 +110,7 @@ if(isset($_GET['warehouse'])){
                 // Loop through each session variable (product)
                 foreach ($_SESSION as $product_key => $product_data) {
                     if (strpos($product_key, 'product_') === 0) {  // Ensure it's a product session key
+                        $dis_img = basename($product_data['product_img']) ?? 'def_img.png';
                         $dis_description = htmlspecialchars($product_data['description']);
                         $dis_brand = htmlspecialchars($product_data['brand']);
                         $dis_category = htmlspecialchars($product_data['category']);
@@ -118,7 +122,7 @@ if(isset($_GET['warehouse'])){
                         <tr class="border-bottom border-200">
                             <td>
                                 <div class="d-flex align-items-center position-relative">
-                                <img class="rounded-1 border border-200" src="../assets/img/ecommerce/1.jpg" width="60" alt="" />
+                                <img class="rounded-1 border border-200" src="../../assets/img/<?php echo $dis_img;?>" width="60" alt="" />
                                 <div class="flex-1 ms-3">
                                     <h6 class="mb-1 fw-semi-bold text-nowrap">
                                     <a class="text-900 stretched-link" href="#!"><?php echo $dis_brand . ": " . $dis_description;?></a>

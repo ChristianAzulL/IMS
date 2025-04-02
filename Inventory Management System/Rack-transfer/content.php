@@ -1,5 +1,5 @@
 <?php 
-if(!isset($_SESSION['warehouse_rack_transfer']) && !isset($_SESSION['rack'])){
+if(!isset($_SESSION['warehouse_rack_transfer']) && !isset($_SESSION['rack']) && strpos($warehouses, ',')!==false){
 ?>
     <button class="btn btn-primary d-none" id="tobetriggered" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Launch demo modal</button>
     <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -37,7 +37,10 @@ if(!isset($_SESSION['warehouse_rack_transfer']) && !isset($_SESSION['rack'])){
     </script>
 
 <?php
-} elseif(isset($_SESSION['warehouse_rack_transfer']) && !isset($_SESSION['rack'])){
+} elseif(!isset($_SESSION['rack'])){
+    if(strpos($warehouses, ',')===false){
+        $_SESSION['warehouse_rack_transfer'] = $warehouses;
+    }
 ?>
     <button class="btn btn-primary d-none" id="tobetriggered" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Launch demo modal</button>
     <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -52,7 +55,14 @@ if(!isset($_SESSION['warehouse_rack_transfer']) && !isset($_SESSION['rack'])){
                             <select class="form-select" id="rack" required="required" name="rack">
                                 <option value="">Select rack...</option>
                                 <?php 
-                                $wh_rack = $_SESSION['warehouse_rack_transfer'];
+                                $wh_rack_id = $_SESSION['warehouse_rack_transfer'];
+                                $wh_query = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$wh_rack_id' LIMIT 1";
+                                $wh_res = $conn->query($wh_query);
+                                if($wh_res->num_rows>0){
+                                    $row=$wh_res->fetch_assoc();
+                                    $_SESSION['warehouse_rack_transfer'] = $row['warehouse_name'];
+                                }
+                                $wh_rack =$_SESSION['warehouse_rack_transfer'];
                                 $item_loc_query = "SELECT il.id, il.location_name FROM item_location il LEFT JOIN warehouse w ON w.hashed_id = il.warehouse WHERE w.warehouse_name = '$wh_rack' ORDER BY location_name ASC";
                                 $item_loc_res = $conn->query($item_loc_query);
                                 if($item_loc_res->num_rows>0){
@@ -270,6 +280,27 @@ $(document).ready(function(){
             }
         });
     }
+
+    // Handle delete button click (event delegation)
+    $(document).on("click", ".delete-session-item", function() {
+        var barcode = $(this).data("barcode");
+
+        $.ajax({
+            url: "delete_session.php",
+            type: "POST",
+            data: { barcode: barcode },
+            success: function(response) {
+                $("#preview").load("preview.php"); // Reload session table after deletion
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Failed to delete item.'
+                });
+            }
+        });
+    });
 });
 </script>
 

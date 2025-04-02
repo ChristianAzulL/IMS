@@ -1,5 +1,6 @@
 <?php 
-if(!isset($_SESSION['warehouse_outbound'])){
+if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
+   
 ?>
     <button class="btn btn-primary d-none" id="tobetriggered" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Launch demo modal</button>
     <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -39,6 +40,9 @@ if(!isset($_SESSION['warehouse_outbound'])){
     </script>
 <?php
 }else{
+    if(strpos($warehouses, ',') ===false){
+        $_SESSION['warehouse_outbound'] = $warehouses;
+    }
 ?>
     <div class="row">
         <div class="col-lg-12">

@@ -13,6 +13,9 @@ if ($hour >= 5 && $hour < 12) {
 ?>
 
 <div class="row g-3 mb-3">
+    <?php 
+    if(strpos($access, "dashboard_outbound")!==false || $user_position_name === "Administrator"){
+    ?>
     <div class="col-xxl-6 col-xl-12">
         <div class="row g-3">
             <div class="col-12">
@@ -38,25 +41,19 @@ if ($hour >= 5 && $hour < 12) {
             </div>
         </div>
     </div>
-
+    <?php 
+    }
+    if(strpos($access, "dashboard_inventory")!==false || $user_position_name === "Administrator"){
+    ?>
     <div class="col-xxl-12 col-xl-12">
         <?php include "inventory.php";?>
     </div>
+    <?php 
+    }
+    ?>
 </div>
 
-<div class="modal fade" id="firstModal" data-keyboard="false" tabindex="-1" aria-labelledby="scrollinglongcontentLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="scrollinglongcontentLabel">Items</h5><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body modal-dialog modal-dialog-scrollable mt-0">
-            <div id="modal-1-display"></div>
-            </div>
-            <div class="modal-footer"><button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button></div>
-        </div>
-    </div>
-</div>
+
 
 
 <script>

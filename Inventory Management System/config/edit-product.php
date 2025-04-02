@@ -8,13 +8,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
     $product_description = $_POST['product_description'];
     $category_id = $_POST['category'];
     $brand_id = $_POST['brand'];
+    $safety =  $_POST['safety'];
 
     // Start a transaction to ensure all updates are consistent
     $conn->begin_transaction();
 
     try {
         // Fetch current product data
-        $stmt = $conn->prepare("SELECT `description`, brand, category, product_img FROM product WHERE id = ?");
+        $stmt = $conn->prepare("SELECT `description`, brand, category, product_img, `safety` FROM product WHERE id = ?");
         $stmt->bind_param("i", $product_id);
         $stmt->execute();
         $res = $stmt->get_result();
@@ -41,6 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
         if ($product['category'] !== $category_id) {
             $stmt = $conn->prepare("UPDATE product SET category = ? WHERE id = ?");
             $stmt->bind_param("si", $category_id, $product_id);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        // Check if category is different and needs to be updated
+        if ($product['safety'] !== $safety) {
+            $stmt = $conn->prepare("UPDATE product SET `safety` = ? WHERE id = ?");
+            $stmt->bind_param("ii", $safety, $product_id);
             $stmt->execute();
             $stmt->close();
         }

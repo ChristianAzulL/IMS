@@ -70,6 +70,7 @@
                 <th data-sort="barcode"><small>Parent Barcode</small></th>
                 <th data-sort="by"><small>Created by</small></th>
                 <th data-sort="date"><small>Date</small></th>
+                <th>Safety</th>
                 <th style="width:30px;"></th>
               </tr>
             </thead>
@@ -101,6 +102,7 @@
                   $product_pbarcode = $row['parent_barcode'];
                   $product_date = $row['date'];
                   $product_publisher = $row['user_fname'] . " " . $row['user_lname'];
+                  $table_safety = $row['safety'];
               ?>
                 <tr>
                   <td class="p-0 m-0" style="height:10px;">
@@ -112,6 +114,7 @@
                   <td class="barcode"><small><?php echo $product_pbarcode; ?></small></td>
                   <td class="by"><small><?php echo $product_publisher; ?></small></td>
                   <td class="date"><small><?php echo $product_date; ?></small></td>
+                  <td class="safety text-end pe-4"><small><?php echo $table_safety;?></small></td>
                   <td class="d-flex align-items-center">
                     <button class="btn btn-transparent py-0" type="button" target-id="<?php echo $product_id;?>" data-bs-toggle="modal" data-bs-target="#edit-modal" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit product information">
                       <span class="far fa-edit m-0 p-0"></span>
@@ -152,15 +155,15 @@
         <div class="row bg-body-tertiary">
           <div class="col-lg-7 mb-3">
             <label for="">Product Description</label>
-            <input type="text" class="form-control" name="product_description">
+            <input type="text" class="form-control" name="product_description" required>
           </div>
           <div class="col-lg-5 mb-3">
             <label for="">Upload Product Image</label>
             <input type="file" class="form-control" name="product_image" id="">
           </div>
-          <div class="col-lg-4 mb-3">
+          <div class="col-lg-3 mb-3">
             <label for="">Category</label>
-            <select class="form-select" name="category" id="">
+            <select class="form-select" name="category" id="" required>
               <option value="">Select Category</option>
               <?php 
               $category_selection = "SELECT * FROM category ORDER BY category_name ASC";
@@ -175,9 +178,9 @@
               ?>
             </select>
           </div>
-          <div class="col-lg-4 mb-3">
+          <div class="col-lg-3 mb-3">
             <label for="">Brand</label>
-            <select class="form-select" name="brand" id="">
+            <select class="form-select" name="brand" id="" required>
               <?php 
               $brand_selection = "SELECT * FROM brand ORDER BY brand_name ASC";
               $brand_result = $conn->query($brand_selection);
@@ -191,9 +194,13 @@
               ?>
             </select>
           </div>
-          <div class="col-lg-4 mb-3">
+          <div class="col-lg-3 mb-3">
             <label for="">Parent Barcode</label>
             <input type="text" class="form-control" name="parent_barcode" placeholder="enter barcode">
+          </div>
+          <div class="col-lg-3 mb-3">
+            <label for="">Safety</label>
+            <input type="number" min="2" max="1000" name="safety" class="form-control" required>
           </div>
         </div>
       </div>

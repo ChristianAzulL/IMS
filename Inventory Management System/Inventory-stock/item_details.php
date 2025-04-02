@@ -23,6 +23,7 @@
                 $query = "
                     SELECT 
                         s.batch_code,
+                        s.product_id,
                         COUNT(s.unique_barcode) AS available_quantity,
                         sup.supplier_name,
                         COALESCE(sup.local_international, 'Not set yet') AS import_status,
@@ -52,9 +53,9 @@
                             if ($previous_batch_code != $row['batch_code']) {
                                 
                                 // Start a new batch code row
-                                if ($previous_batch_code != '') {
-                                    echo "</tbody></table></td></tr>"; // Close previous batch details table
-                                }
+                                // if ($previous_batch_code != '') {
+                                //     echo "</tbody></table></td></tr>"; // Close previous batch details table
+                                // }
 
                                 $previous_batch_code = $row['batch_code'];
                                 if($row['import_status'] === "Local" || $row['import_status'] === "LOCAL"){
@@ -65,7 +66,7 @@
                                 echo "
                                     <tr>
                                         <td scope='row'>
-                                            <a data-bs-toggle='modal' href='#firstModal' role='button' target-id='" . htmlspecialchars($row['batch_code']) . "' >
+                                            <a data-bs-toggle='modal' href='#firstModal' role='button' target-Pid='". htmlspecialchars($row['product_id']) ."' target-id='" . htmlspecialchars($row['batch_code']) . "' target-wh='" . htmlspecialchars($warehouse) . "' >
                                                 " . htmlspecialchars($row['batch_code']) . "
                                             </a>
                                         </td>

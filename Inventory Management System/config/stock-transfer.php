@@ -1,14 +1,18 @@
 <?php
 include "database.php";
 include "on_session.php";
-$warehouse_for_transfer = $_SESSION['warehouse_for_transfer'];
+if(isset($_SESSION['warehouse_for_transfer'])){
+    $warehouse_for_transfer = $_SESSION['warehouse_for_transfer'];
 
-$warehouse_sql = "SELECT hashed_id FROM warehouse WHERE warehouse_name = '$warehouse_for_transfer' LIMIT 1";
-$res = $conn->query($warehouse_sql);
-if($res->num_rows>0){
-    $row = $res->fetch_assoc();
-    $warehouse_for_transfer = $row['hashed_id'];
+    $warehouse_sql = "SELECT hashed_id FROM warehouse WHERE warehouse_name = '$warehouse_for_transfer' LIMIT 1";
+    $res = $conn->query($warehouse_sql);
+    if($res->num_rows>0){
+        $row = $res->fetch_assoc();
+        $warehouse_for_transfer = $row['hashed_id'];
+    }
+
 }
+
 
 $status = $_GET['status'];
 if($status === "pending"){
@@ -64,6 +68,7 @@ if($status === "pending"){
 
     // Check if the request is a POST request
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
         // Validate the inputs
         $id = $conn->real_escape_string($_POST['id'] ?? '');
 
@@ -96,16 +101,19 @@ if($status === "pending"){
                         
                     }
                 }
+    
 
             }
+        } else {
+            echo "to warehouse is not set";
         }
 
         if(isset($_POST['receiver_userid'])){
             $receiverUserId = $conn->real_escape_string($_POST['receiver_userid'] ?? '');
             $remarks = $_POST['remarks_receiver'];
             $receiver_warehouse = $_POST['receiver_warehouse'];
-            $warehousename_sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$toWarehouse' LIMIT 1";
-            $result = $conn->query($warehouse_sql);
+            $warehousename_sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$receiver_warehouse' LIMIT 1";
+            $result = $conn->query($warehousename_sql);
             $row = $result->fetch_assoc();
             $toWarehouse_name = $row['warehouse_name'];
             $update = "UPDATE stock_transfer SET received_userid = '$receiverUserId', `status` = 'received', date_received = '$currentDateTime', remarks_receiver = '$remarks' WHERE id = '$id'";

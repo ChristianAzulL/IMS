@@ -47,6 +47,9 @@ if (empty($existingData)) {
     <tbody>
         <?php foreach ($existingData as $item): ?>
             <tr>
+                <td>
+                    <button class="btn text-danger btn-sm delete-session-item" type="button" data-barcode="<?= htmlspecialchars($item['unique_barcode']) ?>"><span class="far fa-window-close"></span></button>
+                </td>
                 <td class="p-0"><img src="<?php echo $item['product_img']; ?>" style="height: 30px;" class="img img-fluid ms-0 me-0" alt=""></td>
                 <td><?php echo htmlspecialchars($item['description'] ?? 'N/A'); ?></td>
                 <td><?php echo htmlspecialchars($item['unique_barcode'] ?? 'N/A'); ?></td>

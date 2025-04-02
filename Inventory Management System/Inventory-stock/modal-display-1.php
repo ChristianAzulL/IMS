@@ -4,8 +4,10 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 include "../config/database.php";
-
+include "../config/on_session.php";
 $batch_code = $_GET['target_id'] ?? '';
+$product_id = $_GET['targetPId'];
+$warehouse = $_GET['warehouseID'];
 $limit = 100; // Load 100 records per request
 $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
 
@@ -19,12 +21,12 @@ if (!empty($batch_code)) {
               FROM stocks s 
               LEFT JOIN item_location il ON il.id = s.item_location 
               LEFT JOIN outbound_content ol ON ol.unique_barcode = s.unique_barcode 
-              WHERE s.batch_code = ? 
+              WHERE s.batch_code = ? AND s.product_id = ? AND s.warehouse = ?
               ORDER BY s.barcode_extension ASC 
               LIMIT ?, ?";
 
     if ($stmt = $conn->prepare($query)) {
-        $stmt->bind_param("sii", $batch_code, $offset, $limit);
+        $stmt->bind_param("sssii", $batch_code, $product_id, $warehouse, $offset, $limit);
         $stmt->execute();
         $res = $stmt->get_result();
 
@@ -43,22 +45,37 @@ if (!empty($batch_code)) {
             ];
             $status = $status_map[$row['item_status']] ?? 'warning|Returned';
             list($status_class, $status_text) = explode('|', $status);
-
-            $output .= "
-                <tr>
-                    <td>
-                        <a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "' class='text-decoration-none text-dark'>
-                            <small>LPO " . htmlspecialchars($row['unique_barcode']) . "</small>
-                        </a>
-                    </td>
-                    <td class='text-center'>
-                        <span class='badge bg-{$status_class}'>{$status_text}</span>
-                    </td>
-                    <td class='text-end'><small>" . $row['capital'] . "</small></td>
-                    <td class='text-end'><small>" . $row['sold_price'] . "</small></td>
-                    <td>" . $location_name . "</td>
-                </tr>
-            ";
+            if(strpos($access, "stock")!==false || $user_position_name === "Administrator"){
+                $output .= "
+                    <tr>
+                        <td>
+                            <a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "' class='text-decoration-none text-dark'>
+                                <small>LPO " . htmlspecialchars($row['unique_barcode']) . "</small>
+                            </a>
+                        </td>
+                        <td class='text-center'>
+                            <span class='badge bg-{$status_class}'>{$status_text}</span>
+                        </td>
+                        <td class='text-end'><small>" . $row['capital'] . "</small></td>
+                        <td class='text-end'><small>" . $row['sold_price'] . "</small></td>
+                        <td>" . $location_name . "</td>
+                    </tr>
+                ";
+            } else {
+                $output .= "
+                    <tr>
+                        <td>
+                            <a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "' class='text-decoration-none text-dark'>
+                                <small>LPO " . htmlspecialchars($row['unique_barcode']) . "</small>
+                            </a>
+                        </td>
+                        <td class='text-center' colspan='3'>
+                            <span class='badge bg-{$status_class}'>{$status_text}</span>
+                        </td>
+                        <td>" . $location_name . "</td>
+                    </tr>
+                ";
+            }
         }
 
         // Check if more data exists

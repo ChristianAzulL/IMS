@@ -54,7 +54,7 @@ if (isset($_GET['id'])) {
         $result = $conn->query($warehouse_st_sql);
 
         // Build the select element
-        $toWarehouseName = '<select name="to_warehouse" class="form-select" id=""><option value="" selected>Select Receiving Warehouse</option>';
+        $toWarehouseName = '<select name="to_warehouse" class="form-select" id=""><option value="' . $toWarehouse . '" selected>Select Receiving Warehouse</option>';
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -82,7 +82,7 @@ if (isset($_GET['id'])) {
         
         $receiverName = '<b class="text-danger">Will be automatically filled out by the receiving user.</b>';
         if(!empty($toWarehouse)){
-            if(strpos($warehouses, $fromWarehouse)!==false){
+            if(strpos($warehouses, $toWarehouse)!==false){
                 $receiverName = '<input type="text" name="receiver_userid" class="form-control" value="' . $user_id . '" hidden><input type="text" class="form-control" value="' . $user_fullname . '"><input type="text" name="receiver_warehouse" value="' . $toWarehouse . '" hidden>' ;    
             } else {
                 $receiverName = '<b class="text-danger">Will be automatically filled out by the receiving user.</b>';
