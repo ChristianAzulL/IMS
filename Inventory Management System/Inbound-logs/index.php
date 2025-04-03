@@ -2,6 +2,12 @@
 include "../config/database.php";
 include "../config/on_session.php";
 
+if(strpos($access, "inbound_logs")!==false || $user_position_name === "Administrator"){
+
+} else {
+  header("Location: ../500/");
+}
+
 // if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_key'])) {
 //   $uniqueKey = $_SESSION['unique_key'];
 //   require_once '../../vendor/autoload.php';

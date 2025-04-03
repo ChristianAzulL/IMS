@@ -2,6 +2,11 @@
 include "../config/database.php";
 include "../config/on_session.php";
 
+if(strpos($access, "logistics")!==false || $user_position_name === "Administrator"){
+} else {
+  header("Location: ../500/");
+}
+
 // Check if 'outbound_id' is set in the session
 if (!isset($_SESSION['outbound_id'])) {
     // Query to get the last outbound log's hashed_id
