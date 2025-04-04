@@ -16,28 +16,7 @@ if(empty($_SESSION['pfp'])){
     $user_pfp = $_SESSION['pfp'];
 }
 
-if ($user_email !== "lpo_admin@lpo.com") {
-    $check_otp = "SELECT first_login FROM users WHERE hashed_id = '$user_id' LIMIT 1";
-    $check_otp_res = $conn->query($check_otp);
 
-    if ($check_otp_res->num_rows > 0) {
-        $row = $check_otp_res->fetch_assoc();
-        $check_login = $row['first_login'];
-
-        if ($check_login !== "false" || empty($check_login)) {
-            // Get current script path
-            $current_path = $_SERVER['REQUEST_URI'];
-
-            // Ensure the user is not already on the Account-setup page
-            if (strpos($current_path, 'Account-setup') === false) {
-                header("Location: ../Account-setup/");
-                exit(); // Ensure no further execution after redirection
-            }
-        }
-    }
-}
-
-$first_login = $check_login;
 
 if(!isset($user_id)){
     header("Location: ../");

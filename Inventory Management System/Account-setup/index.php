@@ -38,7 +38,7 @@ if($user_email === "lpo_admin@lpo.com"){
           }
         </script>
         <div class="row justify-content-center pt-6">
-          <div class="col-sm-10 col-lg-7 col-xxl-5"><a class="d-flex flex-center mb-4" href="../index.html"><img class="me-2" src="../assets/img/icons/spot-illustrations/falcon.png" alt="" width="45" /><span class="font-sans-serif text-primary fw-bolder fs-5 d-inline-block">falcon</span></a>
+          <div class="col-sm-10 col-lg-7 col-xxl-5"><a class="d-flex flex-center mb-4" href="#"><img class="me-2" src="../../assets/img/logo/LPO Logo.png" alt="" width="75" /><span class="font-sans-serif text-secondary fw-bolder fs-5 d-inline-block">IMS</span></a>
             <div class="card theme-wizard mb-5" id="wizard">
               <div class="card-header bg-body-tertiary pt-3 pb-2">
                 <ul class="nav justify-content-between nav-wizard">

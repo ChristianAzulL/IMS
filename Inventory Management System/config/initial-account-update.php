@@ -1,6 +1,6 @@
 <?php
 include "database.php"; // Ensure this file establishes a valid DB connection
-include "on_session.php"; // Ensure this file initializes $user_id correctly
+include "on_session_setup.php"; // Ensure this file initializes $user_id correctly
 
 header('Content-Type: application/json');
 
@@ -15,13 +15,29 @@ if(isset($_GET['wizard'])){
                 echo json_encode(["success" => false, "message" => "Password cannot be empty."]);
                 exit;
             }
-
+            $first_login = true;
             // Hash password securely (use password_hash instead of SHA256)
             $hashedPassword = hash('sha256', $password);
+            $stmt = $conn->prepare("SELECT first_login FROM users WHERE hashed_id = ? LIMIT 1");
+            $stmt->bind_param("s", $user_id);
+            $stmt->execute();
+            $check_otp_res = $stmt->get_result();
 
-            // Update the password in the database
-            $stmt = $conn->prepare("UPDATE users SET user_pw = ? WHERE hashed_id = ?");
+            if ($check_otp_res->num_rows > 0) {
+                $row = $check_otp_res->fetch_assoc();
+                $check_login = $row['first_login'];
+                $first_login = $check_login;
+            }
+
+            if($first_login !== "false"){
+                // Update the password in the database
+                $stmt = $conn->prepare("UPDATE users SET user_pw = ?, first_login = 'false' WHERE hashed_id = ?");
+            } else {
+                // Update the password in the database
+                $stmt = $conn->prepare("UPDATE users SET user_pw = ? WHERE hashed_id = ?");
+            }
             if ($stmt->execute([$hashedPassword, $user_id])) {
+
                 echo json_encode(["success" => true, "message" => "Password updated successfully."]);
             } else {
                 echo json_encode(["success" => false, "message" => "Failed to update password."]);

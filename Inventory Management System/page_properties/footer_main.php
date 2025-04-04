@@ -15,7 +15,7 @@
 <script src="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.js"></script>
 <script src="../vendors/datatables.net-fixedcolumns/dataTables.fixedColumns.min.js"></script>
 <!-- <script src="../js/prolongitems.js"></script> -->
-<!-- <script>
+<script>
     // Disable right-click
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
@@ -29,4 +29,4 @@
             e.preventDefault();
         }
     });
-</script> -->
+</script>
