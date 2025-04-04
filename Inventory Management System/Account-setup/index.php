@@ -73,7 +73,7 @@ if($user_email === "lpo_admin@lpo.com"){
                       <div class="lottie wizard-lottie mx-auto my-3" data-options='{"path":"../assets/img/animated-icons/celebration.json"}'></div>
                     </div>
                     <h4 class="mb-1">Your account is all set!</h4>
-                    <p>Now you can access to your account</p><a class="btn btn-primary px-5 my-3" href="../Dashboard/">Proceed to dashboard</a>
+                    <p>Now you can access to your account</p><a class="btn btn-primary px-5 my-3" href="../dashboard/">Proceed to dashboard</a>
                   </div>
                 </div>
               </div>
