@@ -62,7 +62,13 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
                                     <th style="width: 30px;"></th>
                                     <th>Barcode</th>
                                     <th>Description</th>
+                                    <?php 
+                                    if(strpos($access ?? '', "stock")!==false || $user_position_name === "Administrator"){
+                                    ?>
                                     <th class="text-end">Capital(₱)</th>
+                                    <?php 
+                                    }
+                                    ?>
                                     <th>Selling Price(₱)</th>
                                     <th>Keyword</th>
                                     <th>Batch Number</th>

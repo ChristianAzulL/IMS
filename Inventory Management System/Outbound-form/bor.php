@@ -27,7 +27,13 @@ if (isset($_GET['view'])) {
                         <td><button class="btn btn-transparent action-button" type="button" data-barcode="<?php echo $product['barcode']; ?>"><span class="far fa-window-close text-danger"></span></button></td>
                         <td><input type="text" name="barcode[]" class="form-control m-0 py-0" value="<?php echo $product['barcode']; ?>" readonly></td>
                         <td><?php echo $product['product_description'];?></td>
+                        <?php 
+                        if(strpos($access ?? '', "stock")!==false || $user_position_name === "Administrator"){
+                        ?>
                         <td><?php echo $product['capital'];?></td>
+                        <?php 
+                        }
+                        ?>
                         <td><input type="number" name="selling[]" min="<?php echo $product['capital'];?>" class="form-control m-0 py-0 selling-input" step="0.01" placeholder="Selling Price" required></td>
                         <td><?php echo $product['batch_num']; ?></td>
                         <td><?php echo $product['brand_name'];?></td>

@@ -45,7 +45,7 @@ if (!empty($batch_code)) {
             ];
             $status = $status_map[$row['item_status']] ?? 'warning|Returned';
             list($status_class, $status_text) = explode('|', $status);
-            if(strpos($access, "stock")!==false || $user_position_name === "Administrator"){
+            if(strpos($access ?? '', "stock")!==false || $user_position_name === "Administrator"){
                 $output .= "
                     <tr>
                         <td>
