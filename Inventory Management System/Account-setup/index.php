@@ -1,6 +1,10 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
+
+if($user_email === "lpo_admin@lpo.com"){
+  header("Location: ../500/");
+}
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
