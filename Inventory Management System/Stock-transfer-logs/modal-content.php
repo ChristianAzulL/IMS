@@ -53,6 +53,8 @@ if (isset($_GET['id'])) {
         $warehouse_st_sql = "SELECT hashed_id, warehouse_name FROM warehouse WHERE hashed_id != '$fromWarehouse' ORDER BY warehouse_name";
         $result = $conn->query($warehouse_st_sql);
 
+
+
         // Build the select element
         $toWarehouseName = '<select name="to_warehouse" class="form-select" id=""><option value="' . $toWarehouse . '" selected>Select Receiving Warehouse</option>';
 
@@ -106,9 +108,9 @@ if (isset($_GET['id'])) {
 
         if(empty($dateReceived)){
             $dateReceived =  '<b class="text-danger">Will be automatically filled out by the system once received by the receiving user.</b>';
-            if($fromUserId === $user_id){
+            if($fromUserId === $user_id || strpos($warehouses, $toWarehouse)===false){
                 $submitBTN =    '<div class="text-center mt-3">
-                                    <button class="btn btn-primary" type="submit" disabled>Submit</button>
+                                    <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Either you dont have access on this warehouse or you are the same user that sent this." disabled>Access denied or same sender.</button>
                                 </div>';
             } else {
                 $submitBTN =    '<div class="text-center mt-3">

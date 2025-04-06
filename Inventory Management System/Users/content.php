@@ -130,7 +130,7 @@
                                     <!-- Form HTML -->
                                     <form id="resetpwd" action="../config/resetuserpassword.php" method="post">
                                         <input type="text" name="user_id" value="<?php echo $row['hashed_id']; ?>" hidden>
-                                        <button class="btn btn-transparent py-0 mx-0" type="button" id="resetPwdBtn" title="reset password">
+                                        <button class="btn btn-transparent py-0 mx-0 d-none" type="button" id="resetPwdBtn" title="reset password">
                                             <small><span class="fas fa-circle-notch"></span></small>
                                         </button>
                                     </form>

@@ -104,6 +104,8 @@ if($status === "pending"){
     
 
             }
+        } else {
+            echo "to warehouse is not set";
         }
 
         if(isset($_POST['receiver_userid'])){
