@@ -60,6 +60,7 @@ foreach ($warehouse_ids_array as $warehouse_id) {
     if ($result && $row = $result->fetch_assoc()) {
         $warehouse_options[] = '<option value="' . $row['warehouse_name'] . '">' . $row['warehouse_name'] . '</option>';
         $warehouse_options2[] = '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
+        $warehouse_dropdown[] = '<a class="dropdown-item" href="../Reports/?select_warehouse=' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</a>';
     }
 }
 // Get the current file name
