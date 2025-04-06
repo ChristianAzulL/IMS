@@ -26,10 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $location = htmlspecialchars($item_locations[$index]);
         $qty = intval($item_loc_qtys[$index]); // Ensure it's an integer
 
+        if(!isset($location) || !isset($qty) || empty($location) || empty($qty)){
+            header("Location: ../set-item-locations/?missing_field=true");
+            $conn->close();
+            exit;
+        }
         // Flag to handle barcode extension logic
         $first = true;
 
-        echo htmlspecialchars($barcode) . "<br>"; // Output sanitized barcode
+        // echo htmlspecialchars($barcode) . "<br>"; // Output sanitized barcode
 
         // Use prepared statements to prevent SQL injection
         $sql = "SELECT id, barcode_extension FROM stocks WHERE parent_barcode = ? AND item_location = '' AND unique_key = ? ORDER BY barcode_extension ASC";
@@ -44,6 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $barcode_extension = $row['barcode_extension'];
                 $stock_id = $row['id'];
 
+                // echo $barcode_extension . "<br>";
+
                 // Update session value for last extension
                 if ($first) {
                     $last_ext = $barcode_extension + $qty;
@@ -53,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $last_ext = $_SESSION['last_ext'];
                 }
 
-                echo $last_ext . "<br>"; // Output sanitized extension value
+                // // echo $last_ext . "<br>"; // Output sanitized extension value
 
                 // Check if barcode extension is less than last extension
                 if ($barcode_extension < $last_ext) {
@@ -63,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $updateStmt->bind_param("si", $location, $stock_id); // Bind parameters securely
                     $updateStmt->execute();
 
-                    echo "Unique barcode = " . htmlspecialchars($barcode) . "-" . htmlspecialchars($barcode_extension) . " successfully updated<br>";
+                    // echo "Unique barcode = " . htmlspecialchars($barcode) . "-" . htmlspecialchars($barcode_extension) . " successfully updated<br>";
                 } else {
                     $first = true;
                     // Unset the specific session variable

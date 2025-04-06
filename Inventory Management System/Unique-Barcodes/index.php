@@ -148,11 +148,11 @@ include "../config/on_session.php";
     <?php
     if (isset($_GET['success']) && $_GET['success'] == 0 && isset($_SESSION['unique_key'])) {
     ?>
-    <script>
+    <!-- <script>
     window.onload = function() {
         window.location.href = "../config/generate-barcodes.php?success=0";
     };
-    </script>
+    </script> -->
 
     <?php 
     }
