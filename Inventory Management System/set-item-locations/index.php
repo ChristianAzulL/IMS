@@ -1,6 +1,7 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
+
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
@@ -37,6 +38,20 @@ include "../config/on_session.php";
 
     <!-- ===============================================--><!--    JavaScripts--><!-- ===============================================-->
     <?php include "../page_properties/footer_main.php";?>
+    <?php
+    if (isset($_GET['missing_field']) && $_GET['missing_field'] === "true") {
+        echo "
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: 'Incomplete Fields',
+                text: 'If you input a quantity or select a location, all fields must be filled!',
+                confirmButtonText: 'OK'
+            });
+        </script>
+        ";
+    }
+    ?>
   </body>
 
 

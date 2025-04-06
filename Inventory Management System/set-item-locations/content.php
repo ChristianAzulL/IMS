@@ -17,6 +17,9 @@ if(isset($_SESSION['inbound_warehouse'])){
                 <form id="myForm" action="../config/set-item-loc.php" method="POST">
                     <div class="row justify-content-end">
                         <div class="col-auto mb-3">
+                            <a href="../Inventory-stock/" class="btn btn-info">Skip</a>
+                        </div>
+                        <div class="col-auto mb-3">
                             <button class="btn btn-primary" id="submitBTN" type="submit">Submit</button>
                         </div>
                     </div>
