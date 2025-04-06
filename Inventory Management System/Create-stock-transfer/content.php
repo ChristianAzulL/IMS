@@ -15,7 +15,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
                             <h4 class="mb-1" id="modalExampleDemoLabel">Select Warehouse</h4>
                         </div>
                         <div class="p-4 pb-0">
-                            <select class="form-select" id="warehouse" required="required" name="warehouse">
+                            <select class="form-select" id="warehouse" name="warehouse" required>
                                 <option value="">Select warehouse...</option>
                                 <?php echo implode("\n", $warehouse_options); ?>
                             </select>
@@ -85,7 +85,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
               </div>
               <div class="col-md-6">
                 <label for="">To:</label>
-                <select class="form-select" name="to_wh" id="to_wh">
+                <select class="form-select" name="to_wh" id="to_wh" required>
                   <option value="" selected>Select Warehouse</option>
                   <?php 
                   // Quote each ID in the array
