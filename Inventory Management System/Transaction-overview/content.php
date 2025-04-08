@@ -44,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($warehouse_selected) {
         $query .= " AND ol.warehouse = '$warehouse_selected'";
     }
+    
+    if (!empty($barcodeKeyword)) {
+        $query .= " AND ol.unique_barcode LIKE '%$barcodeKeyword%'";
+    }
+    
 
     // Add user filter
     if (!empty($selectedUsers)) {
@@ -273,7 +278,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="col-lg-2 mb-3">
                     <label for="staff_name">Staff Name</label>
-                    <select class="form-select js-choice" id="staff_name" multiple="multiple" size="1" name="multiple_users[]" data-options='{"removeItemButton":true,"placeholder":true}' required>
+                    <select class="form-select js-choice" id="staff_name" multiple="multiple" size="1" name="multiple_users[]" data-options='{"removeItemButton":true,"placeholder":true}'>
                         <option value="">Select staff...</option>
                         <?php 
                         $staff_sql = "SELECT * FROM users ORDER BY user_lname ASC";
