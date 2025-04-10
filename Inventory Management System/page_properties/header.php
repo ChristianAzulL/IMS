@@ -11,7 +11,11 @@
 <script src="../vendors/simplebar/simplebar.min.js"></script>
 
 <!-- ===============================================--><!--    Stylesheets--><!-- ===============================================-->
-<link href="../vendors/flatpickr/flatpickr.min.css" rel="stylesheet" />
+<link href="../vendors/select2/select2.min.css" rel="stylesheet">
+<link href="../vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet">
+<link href="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="../vendors/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../vendors/plyr/plyr.css" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.gstatic.com/">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
 <link href="../vendors/simplebar/simplebar.min.css" rel="stylesheet">
@@ -19,12 +23,13 @@
 <link href="../assets/css/theme.min.css" rel="stylesheet" id="style-default">
 <link href="../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
 <link href="../assets/css/user.min.css" rel="stylesheet" id="user-style-default">
+<link href="../vendors/flatpickr/flatpickr.min.css" rel="stylesheet" />
 <link href="../vendors/choices/choices.min.css" rel="stylesheet" />
 <link href="../vendors/swiper/swiper-bundle.min.css" rel="stylesheet" />
 <script src="../vendors/echarts/echarts.min.js"></script>
 <script src="../vendors/jquery/jquery.min.js"></script>
+<script src="../vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<!-- <script src="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.css"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var isRTL = JSON.parse(localStorage.getItem('isRTL'));
@@ -40,4 +45,10 @@
     linkRTL.setAttribute('disabled', true);
     userLinkRTL.setAttribute('disabled', true);
     }
+</script>
+<script>
+    const lightbox = GLightbox({
+        selector: '[data-glightbox]'
+    });
+
 </script>
