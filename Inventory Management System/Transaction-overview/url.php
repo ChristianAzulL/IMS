@@ -19,6 +19,15 @@ $barcode_keyword = filter_input(INPUT_GET, 'bc', FILTER_SANITIZE_STRING);
 $imploded_users = filter_input(INPUT_GET, 'staffs', FILTER_SANITIZE_STRING);
 $warehouse_transaction = filter_input(INPUT_GET, 'wh', FILTER_SANITIZE_STRING);
 
+$warehouse_trans_sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = '$warehouse_transaction' LIMIT 1";
+$warehouse_trans_res = $conn->query($warehouse_trans_sql);
+if($warehouse_trans_res->num_rows>0){
+    $row = $warehouse_trans_res->fetch_assoc();
+    $ware_treans = $row['warehouse_name'];
+} else {
+    $ware_treans = "N/A";
+}
+
 $response = array('success' => false, 'message' => 'Something went wrong.');
 $table_rows = [];
 
@@ -92,6 +101,7 @@ if ($from && $to && $warehouse_transaction) {
         <th class="label">FROM:</th><td class="value">' . date('F j, Y', strtotime($from)) . '</td>
         <th class="label">TO:</th><td class="value">' . date('F j, Y', strtotime($to)) . '</td>
         <th class="label">Date:</th><td class="value">' . date('F j, Y') . '</td>
+        <th class="label">Warehouse:</th><td class="value">' . $ware_treans . '</td>
     </tr>';
 
     $html = "
