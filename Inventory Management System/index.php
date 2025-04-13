@@ -72,7 +72,7 @@ if (isset($_SESSION['user_id'])) {
                                     <div class="position-relative p-4 pt-md-5 pb-md-7" data-bs-theme="light">
                                         <div class="bg-holder bg-auth-card-shape" style="background-image:url(assets/img/icons/spot-illustrations/half-circle.png);"></div>
                                         <div class="z-1 position-relative">
-                                            <img class="me-2" src="../assets/img/logo/LPO Logo.png" alt="" width="120" />
+                                            <img class="me-2" src="../assets/img/logo/generic.png" alt="" width="120" />
                                             <!-- <a class="link-light mb-4 font-sans-serif fs-5 d-inline-block fw-bolder" href="">IMS</a> -->
                                             <p class="opacity-75 text-dark">Inventory Management System</p>
                                         </div>
