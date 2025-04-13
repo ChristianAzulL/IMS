@@ -19,7 +19,7 @@ $quoted_warehouse_ids = array_map(function ($id) {
 
 // Create a comma-separated string of quoted IDs
 $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
-$outbound_sql = "SELECT ol.*, u.user_fname, u.user_lname, w.warehouse_name, ol.status
+$outbound_sql = "SELECT ol.*, u.user_fname, u.user_lname, w.warehouse_name, ol.status, ol.order_line_id, ol.order_num
                  FROM outbound_logs ol
                  LEFT JOIN users u ON u.hashed_id = ol.user_id
                  LEFT JOIN warehouse w ON w.hashed_id = ol.warehouse
@@ -50,6 +50,8 @@ $outbound_res = $conn->query($outbound_sql);
       <tr>
             <th class="text-900 sort" data-sort="outbound_no">Outbound no.</th>
             <th class="text-900 sort" data-sort="outbound_status">Fulfillment Status</th>
+            <th class="text-900 sort text-end" data-sort="outbound_status">Order #</th>
+            <th class="text-900 sort text-end" data-sort="outbound_status">Order Line ID</th>
             <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
             <th class="text-900 sort" data-sort="date">Date Received</th>
             <th class="text-900 sort" data-sort="receiver">Received by</th>
@@ -61,6 +63,8 @@ $outbound_res = $conn->query($outbound_sql);
             $outbound_warehouse = $row['warehouse_name'];
             $outbound_date = $row['date_sent'];
             $outbound_receiver = $row['customer_fullname'];
+            $order_no = $row['order_num'];
+            $order_line = $row['order_line_id'];
             if ($row['status'] == 0) {
               $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Outbounded</span>';
             } elseif ($row['status'] == 1) {
@@ -76,6 +80,8 @@ $outbound_res = $conn->query($outbound_sql);
               </a>
             </td>
             <td class="outbound_status"><?php echo $outbound_status; ?></td>
+            <td class="outbound_status text-end"><?php echo $order_no; ?></td>
+            <td class="outbound_status text-end"><?php echo $order_line; ?></td>
             <td class="warehouse"><?php echo $outbound_warehouse; ?></td>
             <td class="date"><?php echo $outbound_date; ?></td>
             <td class="receiver"><?php echo $outbound_receiver; ?></td>

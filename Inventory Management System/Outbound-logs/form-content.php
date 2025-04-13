@@ -97,12 +97,16 @@ if (isset($_GET['id'])) {
                             <tr>
                                 <?php
                                 $table_headers = [
-                                    '#', 'Item Name', 'Brand', 'Category', 'Fullfilment Status', 'Parent Barcode', 
+                                    '#', 'Item Name', 'Brand', 'Category', 'Parent Barcode', 
                                     'Quantity before', 'Quantity', 'Quantity after', 
                                     'Capital', 'Unit Price', 'Profit', 'Total'
                                 ];
                                 foreach ($table_headers as $header) {
-                                    echo "<th class='fs-10 text-end'>{$header}</th>";
+                                    if($header === "Parent Barcode"){
+                                        echo "<th class='fs-10 text-end' style='width: 400px;'>{$header}</th>";
+                                    } else {
+                                        echo "<th class='fs-10 text-end'>{$header}</th>";
+                                    }
                                 }
                                 ?>
                             </tr>
@@ -144,23 +148,36 @@ if (isset($_GET['id'])) {
                                     $sub_Total = $quantity * $soldPrice;
                                     $profit = $soldPrice - $productCapital;
                                     $sub_profit = $profit * $quantity;
-                                    echo '
+                                    ?>
+                                     
                                     <tr>
-                                        <td class="fs-10" style="width: 550px;">' . $count . '</td>
-                                        <td class="fs-10">' . $productDescription . '</td>
-                                        <td class="fs-10">' . $brandName . '</td>
-                                        <td class="fs-10">' . $categoryName . '</td>
-                                        <td class="fs-10" style="width: 250px;"> Status here</td>
-                                        <td class="fs-10" style="width: 250px;">' . $parentBarcode . '</td>
-                                        <td class="text-end fs-10" style="width: 250px;">' . $quantityBefore . '</td>
-                                        <td class="text-end fs-10" style="width: 250px;">' . $quantity . '</td>
-                                        <td class="text-end fs-10" style="width: 250px;">' . $quantityAfter . '</td>
-                                        <td class="text-end fs-10" style="width: 250px;">₱ ' . number_format($productCapital, 2) .'</td>
-                                        <td class="text-end fs-10" style="width: 250px;">₱ ' . number_format($soldPrice, 2) . '</td>
-                                        <td class="text-end fs-10" style="width: 250px;">₱ ' . number_format($sub_profit, 2)  . '</td>
-                                        <td class="text-end fs-10" style="width: 250px;">₱ ' . number_format($sub_Total, 2) . '</td>
+                                        <td class="fs-10" style="width: 550px;"><?php echo $count;?></td>
+                                        <td class="fs-10"><?php echo $productDescription;?></td>
+                                        <td class="fs-10"><?php echo $brandName;?></td>
+                                        <td class="fs-10"><?php echo $categoryName;?></td>
+                                        <td class="fs-11">
+                                            <?php 
+                                            echo $parentBarcode . "<br>";
+                                            $last_query = "SELECT unique_barcode FROM outbound_content WHERE hashed_id = '$outbound_id'";
+                                            $last_res = $conn->query($last_query);
+                                            if($last_res->num_rows>0){
+                                                while($row=$last_res->fetch_assoc()){
+                                                    $unique_bc = $row['unique_barcode'];
+                                                    echo $unique_bc . ", ";
+                                                }
+                                            }
+                                            ?>
+                                        </td>
+                                        <td class="text-end fs-10" style="width: 250px;"><?php echo $quantityBefore;?></td>
+                                        <td class="text-end fs-10" style="width: 250px;"><?php echo $quantity;?></td>
+                                        <td class="text-end fs-10" style="width: 250px;"><?php echo $quantityAfter;?></td>
+                                        <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($productCapital, 2);?></td>
+                                        <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($soldPrice, 2);?></td>
+                                        <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($sub_profit, 2);?></td>
+                                        <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($sub_Total, 2);?></td>
                                     </tr>
-                                    ';
+                                    
+                                            <?php
                                     $count++;
                                     $total += $sub_Total;
                                     $total_profit += $sub_profit;
@@ -174,13 +191,13 @@ if (isset($_GET['id'])) {
                         <tfoot class="table-info">
                             
                             <tr>
-                                <td class="text-start fs-10 text-end" colspan="11"><b><i>Total Profit</i></b></td>
+                                <td class="text-start fs-10 text-end" colspan="10"><b><i>Total Profit</i></b></td>
                                 <td class="text-end fs-10"><strong>₱</strong></td>
                                 <td class="text-end fs-10"><b><i>₱<?php echo number_format($total_profit, 2); ?></i></b></td>
                             </tr>
 
                             <tr>
-                                <td class="text-start fs-10 text-end" colspan="11"><b><i>Total Sales</i></b></td>
+                                <td class="text-start fs-10 text-end" colspan="10"><b><i>Total Sales</i></b></td>
                                 <td class="text-end fs-10"><strong>₱</strong></td>
                                 <td class="text-end fs-10"><b><i>₱<?php echo number_format($total, 2); ?></i></b></td>
                             </tr>

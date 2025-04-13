@@ -614,8 +614,8 @@
     <!-- Navbar Brand Logo -->
     <a class="navbar-brand" href="../dashboard/">
       <div class="d-flex align-items-center py-3">
-        <!-- <img class="me-2" src="../../assets/img/logo/LPO Emblem.png" alt="" width="70" /> -->
-        <img class="me-2" src="../../assets/img/logo/generic.png" alt="" width="70" />
+        <img class="me-2" src="../../assets/img/logo/LPO Emblem.png" alt="" width="70" />
+        <!-- <img class="me-2" src="../../assets/img/logo/generic.png" alt="" width="70" /> -->
         <span class="font-sans-serif text-secondary"> IMS</span>
       </div>
     </a>
@@ -872,7 +872,7 @@
           <!-- Forecasting Submenu -->
           <ul class="nav collapse" id="authentication">
             <li class="nav-item">
-              <!-- <a class="nav-link" href="../Forecast/"> -->
+              <a class="nav-link" href="../Forecast/">
               <a class="nav-link" href="#">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Forecast</span></div>
               </a>
