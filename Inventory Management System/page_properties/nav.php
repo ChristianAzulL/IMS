@@ -919,6 +919,15 @@
             </li>
             <?php
             }
+            if(strpos($access, "reports")!==false || $user_position_name === "Administrator"){
+              ?>
+              <li class="nav-item">
+                <a class="nav-link" href="../Reports/">
+                  <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Reports</span></div>
+                </a>
+              </li>
+              <?php
+              }
             if(strpos($access, "admin_category")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">

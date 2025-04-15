@@ -119,6 +119,11 @@
                             </div>
 
                             <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="reports" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Reports</label>
+                            </div>
+
+                            <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_category" />
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Category</label>
                             </div>

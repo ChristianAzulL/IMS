@@ -54,7 +54,7 @@ $outbound_res = $conn->query($outbound_sql);
             <th class="text-900 sort text-end" data-sort="outbound_status">Order Line ID</th>
             <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
             <th class="text-900 sort" data-sort="date">Date Received</th>
-            <th class="text-900 sort" data-sort="receiver">Received by</th>
+            <th class="text-900 sort" data-sort="receiver">Client</th>
           </tr>
       </thead>
       <tbody class="list">

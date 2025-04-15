@@ -120,6 +120,11 @@ if($result->num_rows>0){
                             </div>
 
                             <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="audit" <?php if(strpos($account_position_access, "reports")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Reports</label>
+                            </div>
+
+                            <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_category" <?php if(strpos($account_position_access, "admin_category")!==false){echo 'checked=""';}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Category</label>
                             </div>
