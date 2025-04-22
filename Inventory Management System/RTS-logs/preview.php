@@ -24,8 +24,9 @@ if(isset($_GET['id'])){
                             </thead>
                             <tbody class="list">
                                 <?php 
-                                $sql = "SELECT p.description, b.brand_name, c.category_name, rts.unique_barcode, rts.status
+                                $sql = "SELECT p.description, b.brand_name, c.category_name, rts.unique_barcode, rts.status, rtsl.for
                                             FROM rts_content rts
+                                            LEFT JOIN rts_logs rtsl ON rtsl.id = rts.rts_id
                                             LEFT JOIN stocks s ON s.unique_barcode = rts.unique_barcode
                                             LEFT JOIN product p ON p.hashed_id = s.product_id
                                             LEFT JOIN brand b ON b.hashed_id = p.brand
@@ -62,11 +63,16 @@ if(isset($_GET['id'])){
                                     <td class="">
                                         <?php 
                                     if($row['status'] == 0){
+                                        if($row['for'] === 'return and replace'){
                                     ?>
                                         <a id="replace-btn" href="../config/returned.php?type=replace&barcode=<?php echo $barcode;?>" class="btn btn-stransparent fs-10 shadow-" data-bs-toggle="tooltip" data-bs-placement="left" title="click if item already replaced!"><span class="fas fa-recycle"></span></a>
+                                    <?php
+                                        } else {
+                                    ?>
                                         <a id="refund-btn" href="../config/returned.php?type=refund&barcode=<?php echo $barcode;?>" class="btn btn-transparent fs-10 shadow-lg" data-bs-toggle="tooltip" data-bs-placement="left" title="click if item already refunded!"><span class="far fa-money-bill-alt"></span> </a>
                                     
                                     <?php 
+                                        }
                                     } else {
                                         
                                     }

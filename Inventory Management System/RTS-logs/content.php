@@ -51,10 +51,8 @@
                                 $rts_staff = $row['user_fname'] . " " . $row['user_lname'];
                                 if($row['status'] == 0){
                                     $rts_status = '<span class="badge rounded-pill badge-subtle-warning">Pending</span>';
-                                } elseif($row['status'] == 1){
-                                    $rts_status = '<span class="badge rounded-pill badge-subtle-success">Replaced</span>';
                                 } else {
-                                    $rts_status = '<span class="badge rounded-pill badge-subtle-success">Refunded</span>';
+                                    $rts_status = '<span class="badge rounded-pill badge-subtle-success">Returned</span>';
                                 }
                                 $number ++;
                         ?>

@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     // Insert the transfer request into the database
-    $stmt = $conn->prepare("INSERT INTO rts_logs (supplier, warehouse, reason, user_id, `date`, `status`) VALUES (?, ?, ?, ?, ?, '0')");
-    $stmt->bind_param("sssss", $to_warehouse, $from_warehouse, $remarks, $user_id, $currentDateTime);
+    $stmt = $conn->prepare("INSERT INTO rts_logs (supplier, warehouse, reason, user_id, `date`, `status`, `for`) VALUES (?, ?, ?, ?, ?, '0', ?)");
+    $stmt->bind_param("ssssss", $to_warehouse, $from_warehouse, $remarks, $user_id, $currentDateTime, $to_status);
 
     if ($stmt->execute()) {
         $created_id = $conn->insert_id;
