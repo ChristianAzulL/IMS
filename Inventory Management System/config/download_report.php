@@ -1,7 +1,7 @@
 <?php 
 error_reporting(E_ALL);
-ini_set('max_execution_time', 300);  // 5 minutes
-ini_set('memory_limit', '4G');       // 4 GB
+ini_set('max_execution_time', 300);
+ini_set('memory_limit', '4G');
 ini_set('display_errors', 1); 
 
 include "database.php";
@@ -10,20 +10,17 @@ require_once '../../vendor/autoload.php'; // Load mPDF
 
 $response = array('success' => false, 'message' => 'Something went wrong.');
 
-// Defaults to avoid undefined variable warnings
 $selected_wh = $_GET['select_warehouse'] ?? null;
 $user_warehouse_ids = $user_warehouse_ids ?? [];
 $productDescription = $productDescription ?? 'Product';
 $brandName = $brandName ?? 'Brand';
 $categoryName = $categoryName ?? 'Category';
 
-// Sanitize user warehouse IDs
 $quoted_warehouse_ids = array_map(function ($id) use ($conn) {
     return "'" . $conn->real_escape_string(trim($id)) . "'";
 }, $user_warehouse_ids);
 $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
 
-// Display warehouse name or "All Warehouses"
 if ($selected_wh) {
     $stmt = $conn->prepare("SELECT warehouse_name, hashed_id FROM warehouse WHERE hashed_id = ? LIMIT 1");
     $stmt->bind_param("s", $selected_wh);
@@ -38,50 +35,24 @@ if ($selected_wh) {
         $warehouses_names = $api_warehouse_name;
     }
 } else {
-    // Sanitize user warehouse IDs and quote them
-$quoted_warehouse_ids = array_map(function ($id) use ($conn) {
-    // Ensure IDs are surrounded by quotes
-    return "'" . $conn->real_escape_string(trim($id)) . "'";
-}, $user_warehouse_ids);
+    $stmt = $conn->prepare("SELECT warehouse_name FROM warehouse WHERE hashed_id IN ($imploded_warehouse_ids)");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $warehouse_names = [];
 
-// Implode the quoted warehouse IDs for the IN clause
-$imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
+    while ($row = $result->fetch_assoc()) {
+        $warehouse_names[] = $row['warehouse_name'];
+    }
 
-// Prepare the SQL with the quoted warehouse IDs
-$sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id IN ($imploded_warehouse_ids)";
-
-// Prepare the statement
-$stmt = $conn->prepare($sql);
-
-// Execute the query
-$stmt->execute();
-$result = $stmt->get_result();
-
-// Store the warehouse names
-$warehouse_names = [];
-while ($row = $result->fetch_assoc()) {
-    $warehouse_names[] = $row['warehouse_name'];
+    $warehouses_names = empty($warehouse_names) ? "No warehouses found" : implode(', ', $warehouse_names);
 }
 
-// Handle case when no warehouse names are found
-if (empty($warehouse_names)) {
-    $warehouses_names = "No warehouses found"; // Fallback message
-} else {
-    $warehouses_names = implode(', ', $warehouse_names); // Join with commas
-}
-
-
-
-}
-
-
-
-
-// Category Query
 $category_query = "SELECT category_name, hashed_id FROM category ORDER BY category_name ASC";
 $category_res = $conn->query($category_query);
 
 $rowz = [];
+$grand_total_capital = 0;
+$grand_total_qty = 0;
 
 if ($category_res && $category_res->num_rows > 0) {
     while ($row = $category_res->fetch_assoc()) {
@@ -137,16 +108,18 @@ if ($category_res && $category_res->num_rows > 0) {
                 $total_capital = floatval($stock_row['capital']);
                 $category_capital += $total_capital;
                 $category_qty += 1;
+                $grand_total_capital += $total_capital;
+                $grand_total_qty += 1;
             }
         }
 
-        $rowz[] = '<tr>
+        // CATEGORY ROW — blue background
+        $rowz[] = '<tr style="background-color:#eaf2f8;">
             <td><b>' . htmlspecialchars(ucwords(strtolower($c_category_name))) . '</b></td>
             <td class="text-end"><b>₱' . number_format($category_capital, 2) . '</b></td>
             <td class="text-end"><b>' . number_format($category_qty) . '</b></td>
         </tr>';
 
-        // ▶️ Supplier breakdown
         $supplier_query = "
             SELECT 
                 s.hashed_id AS supplier_id,
@@ -161,32 +134,28 @@ if ($category_res && $category_res->num_rows > 0) {
                 AND YEAR(st.date) = YEAR(CURDATE())
                 AND MONTH(st.date) = MONTH(CURDATE())";
 
-        if ($selected_wh && $api_warehouse_id) {
-            $supplier_query .= " AND st.warehouse = ?";
-        } else {
-            $supplier_query .= " AND st.warehouse IN ($imploded_warehouse_ids)";
-        }
+        $supplier_query .= $selected_wh && $api_warehouse_id 
+            ? " AND st.warehouse = ?" 
+            : " AND st.warehouse IN ($imploded_warehouse_ids)";
 
         $supplier_query .= " GROUP BY st.supplier";
 
         $supplier_stmt = $conn->prepare($supplier_query);
-        if ($selected_wh && $api_warehouse_id) {
-            $supplier_stmt->bind_param("ss", $c_category_id, $api_warehouse_id);
-        } else {
-            $supplier_stmt->bind_param("s", $c_category_id);
-        }
+        $selected_wh && $api_warehouse_id
+            ? $supplier_stmt->bind_param("ss", $c_category_id, $api_warehouse_id)
+            : $supplier_stmt->bind_param("s", $c_category_id);
 
         $supplier_stmt->execute();
         $supplier_result = $supplier_stmt->get_result();
 
         while ($supplier = $supplier_result->fetch_assoc()) {
-            $rowz[] = '<tr>
-                <td class="ps-4 text-muted fs-11">↳ ' .  htmlspecialchars($supplier['supplier_name']) . '</td>
-                <td class="text-end text-muted fs-11">' . number_format($supplier['total_supplier_capital'], 2) . '</td>
-                <td class="text-end text-muted fs-11">' . number_format($supplier['supplier_qty']) . '</td>
+            // SUPPLIER ROW — green background
+            $rowz[] = '<tr style="background-color:#e8f8f5;">
+                <td class="ps-4 text-muted fs-11"><b>↳ ' .  htmlspecialchars($supplier['supplier_name']) . '</b></td>
+                <td class="text-end text-muted fs-11"><b>' . number_format($supplier['total_supplier_capital'], 2) . '</b></td>
+                <td class="text-end text-muted fs-11"><b>' . number_format($supplier['supplier_qty']) . '</b></td>
             </tr>';
 
-            // ▶️ Products breakdown
             $product_details_query = "
                 SELECT 
                     p.description,
@@ -202,26 +171,23 @@ if ($category_res && $category_res->num_rows > 0) {
                     AND YEAR(st.date) = YEAR(CURDATE())
                     AND MONTH(st.date) = MONTH(CURDATE())";
 
-            if ($selected_wh && $api_warehouse_id) {
-                $product_details_query .= " AND st.warehouse = ?";
-            } else {
-                $product_details_query .= " AND st.warehouse IN ($imploded_warehouse_ids)";
-            }
-
+            $product_details_query .= $selected_wh && $api_warehouse_id 
+                ? " AND st.warehouse = ?" 
+                : " AND st.warehouse IN ($imploded_warehouse_ids)";
+                
             $product_details_query .= " GROUP BY p.hashed_id, b.hashed_id";
 
             $product_details_stmt = $conn->prepare($product_details_query);
-            if ($selected_wh && $api_warehouse_id) {
-                $product_details_stmt->bind_param("sss", $supplier['supplier_id'], $c_category_id, $api_warehouse_id);
-            } else {
-                $product_details_stmt->bind_param("ss", $supplier['supplier_id'], $c_category_id);
-            }
+            $selected_wh && $api_warehouse_id
+                ? $product_details_stmt->bind_param("sss", $supplier['supplier_id'], $c_category_id, $api_warehouse_id)
+                : $product_details_stmt->bind_param("ss", $supplier['supplier_id'], $c_category_id);
 
             $product_details_stmt->execute();
             $product_details_result = $product_details_stmt->get_result();
 
             while ($product = $product_details_result->fetch_assoc()) {
-                $rowz[] = '<tr>
+                // PRODUCT ROW — yellow background
+                $rowz[] = '<tr style="background-color:#fef9e7;">
                     <td class="ps-5 text-muted fs-11">- ↳ ' . htmlspecialchars($product['description'] . ' ' . $product['brand_name']) . '</td>
                     <td class="text-end text-muted fs-11">' . number_format($product['total_capital'], 2) . '</td>
                     <td class="text-end text-muted fs-11">' . number_format($product['product_qty']) . '</td>
@@ -231,11 +197,12 @@ if ($category_res && $category_res->num_rows > 0) {
     }
 }
 
-$tables = '<tr>
-        <th class="label">PREPARED BY:</th><td class="value">' . htmlspecialchars($user_fullname) . '</td>
-        <th class="label">Date:</th><td class="value">' . date('F j, Y') . '</td>
-        <th class="label">Warehouse:</th><td class="value">' . $warehouses_names . '</td>
-    </tr>';
+// Grand Total row
+$rowz[] = '<tr style="background-color:#f4f6f6;">
+    <td><b>Grand Total</b></td>
+    <td class="text-end"><b>₱' . number_format($grand_total_capital, 2) . '</b></td>
+    <td class="text-end"><b>' . number_format($grand_total_qty) . '</b></td>
+</tr>';
 
 $html = "
     <html>
@@ -245,34 +212,15 @@ $html = "
                 font-family: Arial, sans-serif;
                 color: #333;
                 margin: 0;
-                padding: 0;
-                padding-top: 50px;
+                padding: 50px 20px 20px 20px;
                 text-align: center;
             }
             h1 {
                 font-size: 24px;
                 margin-top: 20px;
-                text-align: center;
                 color: #2c3e50;
                 font-weight: bold;
                 text-transform: uppercase;
-            }
-            .meta-table {
-                width: 100%;
-                margin: 20px 0;
-                border-collapse: collapse;
-                font-size: 10px;
-            }
-            .meta-table th,
-            .meta-table td {
-                padding: 8px 12px;
-                text-align: left;
-                border: 1px solid #ddd;
-            }
-            .meta-table th {
-                background-color: #f4f6f6;
-                font-weight: bold;
-                color: #2c3e50;
             }
             table.container {
                 width: 100%;
@@ -290,12 +238,6 @@ $html = "
                 color: #fff;
                 font-weight: bold;
                 font-size: 12px;
-            }
-            table.container tr:nth-child(even) {
-                background-color: #f9f9f9;
-            }
-            table.container tr:hover {
-                background-color: #f1f1f1;
             }
             .text-end {
                 text-align: right;
@@ -346,7 +288,7 @@ $html = "
                 </tr>
             </thead>
             <tbody>
-                " . implode('', array_merge($rowz)) . "
+                " . implode('', $rowz) . "
             </tbody>
         </table>
         <div class='footer'>
@@ -354,11 +296,9 @@ $html = "
         </div>
     </body>
     </html>";
-    
 
-// Generate PDF
 $mpdf = new \Mpdf\Mpdf([
-    'format' => [210, 297], // 58mm x 30mm
+    'format' => [210, 297],
     'margin_left' => 0,
     'margin_right' => 0,
     'margin_top' => 0,
@@ -371,9 +311,5 @@ $fileName = preg_replace('/[^A-Za-z0-9_\-]/', '_', "$productDescription - $brand
 header('Content-Type: application/pdf');
 header('Content-Disposition: attachment; filename="' . $fileName . '"');
 $mpdf->Output($fileName, 'D');
-exit;
-
-// If PDF is not generated, return JSON
-echo json_encode($response);
 exit;
 ?>

@@ -128,12 +128,7 @@
                                     ?>
                                     <button class="btn btn-transparent py-0 mx-0" title="update access" type="button" data-bs-toggle="modal" data-bs-target="#edit-modal" target-id="<?php echo $row['hashed_id']; ?>"><small><span class="fas fa-edit"></span></small></button> <!-- update button -->
                                     <!-- Form HTML -->
-                                    <form id="resetpwd" action="../config/resetuserpassword.php" method="post">
-                                        <input type="text" name="user_id" value="<?php echo $row['hashed_id']; ?>" hidden>
-                                        <button class="btn btn-transparent py-0 mx-0 d-none" type="button" id="resetPwdBtn" title="reset password">
-                                            <small><span class="fas fa-circle-notch"></span></small>
-                                        </button>
-                                    </form>
+                                    <button class="btn btn-transparent py-0 mx-0 reset-pwd" target-id="<?php echo $row['hashed_id'];?>"><small><span class="fas fa-circle-notch"></span></small></button>
                                 </td>
                             </tr>
                         <?php 
@@ -452,39 +447,42 @@
         });
     });
 
-    
-
-
     // Handle password reset
-    document.getElementById('resetPwdBtn').addEventListener('click', function () {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you really want to reset the password?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, reset it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const form = document.getElementById('resetpwd');
-                const formData = new FormData(form);
-                fetch(form.action, {
-                    method: form.method,
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    Swal.fire({
-                        title: data.success ? 'Success' : 'Error',
-                        text: data.message,
-                        icon: data.success ? 'success' : 'error'
-                    });
-                })
-                .catch(error => {
-                    Swal.fire({ title: 'Error', text: 'Something went wrong! Please try again.', icon: 'error' });
-                });
-            }
+    document.querySelectorAll('.reset-pwd').forEach(button => {
+        button.addEventListener('click', function () {
+            const targetId = this.getAttribute('target-id');
+
+            Swal.fire({
+                title: 'Reset Password?',
+                text: 'Are you sure you want to reset the user password?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, reset it!',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`../config/resetuserpassword.php?target_id=${targetId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                title: data.success ? 'Success' : 'Error',
+                                text: data.message,
+                                icon: data.success ? 'success' : 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Something went wrong. Please try again later.',
+                                icon: 'error'
+                            });
+                            console.error('Error:', error);
+                        });
+                }
+            });
         });
     });
+
 </script>
