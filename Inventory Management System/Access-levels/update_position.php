@@ -51,6 +51,10 @@ if($result->num_rows>0){
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_inbound" <?php if(strpos($account_position_access, "new_inbound")!==false){echo 'checked=""';}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Create and Upload Inbound</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Approve Delete</label>
+                            </div>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label for="">Inventory Management</label>
@@ -64,6 +68,10 @@ if($result->num_rows>0){
                             <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" <?php if(strpos($account_position_access, "logistics")!==false){echo 'checked=""';}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Logistics Access</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="void" <?php if(strpos($account_position_access, "void")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Approve Voided Transactions</label>
                             </div>
                         </div>
                         <div class="col-lg-12 mb-3">

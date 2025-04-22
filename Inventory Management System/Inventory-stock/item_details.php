@@ -35,6 +35,7 @@
                     LEFT JOIN item_location r ON s.item_location = r.id
                     WHERE s.product_id = ? 
                       AND s.warehouse = ?
+                      AND s.item_status !=8
                     GROUP BY s.batch_code
                     ORDER BY s.date
                 ";

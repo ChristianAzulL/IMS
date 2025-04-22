@@ -50,6 +50,10 @@
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_inbound" />
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Create and Upload Inbound</label>
                             </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Approve Delete</label>
+                            </div>
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label for="">Inventory Management</label>
@@ -63,6 +67,10 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" />
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Logistics Access</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="void" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Approve Voided Transactions</label>
                             </div>
                         </div>
                         <div class="col-lg-12 mb-3">

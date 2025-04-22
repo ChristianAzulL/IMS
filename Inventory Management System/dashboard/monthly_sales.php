@@ -16,7 +16,8 @@ $previous_year = $current_year - 1;
 
 // Initialize arrays for sales data
 $last_year_sales = [];
-$current_year_sales = [];
+$current_year_sales = array_fill(1, (int)date('n'), 0); // Fill from Jan up to current month with 0
+
 
 // Query to get the outbound sales grouped by year and month
 $monthly_outbound_sales_query = "SELECT YEAR(date_sent) AS year, MONTH(date_sent) AS month, SUM(sold_price) AS total_outbound_sale 
@@ -37,9 +38,12 @@ if ($monthly_outbound_sales_res->num_rows > 0) {
         if ($year == $previous_year) {
             $last_year_sales[] = $sale;
         } else {
-            $current_year_sales[] = $sale;
+            $current_year_sales[(int)$row['month']] = $sale;
+
         }
     }
+    $current_year_sales = array_values($current_year_sales);
+
 }
 
 // Prepare response array

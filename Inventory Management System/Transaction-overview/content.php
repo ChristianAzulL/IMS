@@ -107,7 +107,7 @@
                                         <th>BARCODE</th>
                                         <th>KEYWORD</th>
                                         <th>OUTBOUND DATE</th>
-                                        <th>CAPITAL</th>
+                                        <th>UNIT COST</th>
                                         <th>SOLD AMOUNT</th>
                                         <th>OUTBOUND ID</th>
                                         <th>ORDER NO</th>

@@ -14,7 +14,7 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 // Fetch inbound log records with necessary joins
-$inbound_sql = "SELECT il.*, u.user_fname, u.user_lname, w.warehouse_name, s.supplier_name 
+$inbound_sql = "SELECT il.*, u.user_fname, u.user_lname, w.warehouse_name, s.supplier_name, il.user_id
                 FROM inbound_logs il
                 LEFT JOIN users u ON u.hashed_id = il.user_id
                 LEFT JOIN warehouse w ON w.hashed_id = il.warehouse
@@ -60,6 +60,7 @@ $inbound_res = $conn->query($inbound_sql);
                     <table class="table table-bordered table-striped fs-10 mb-0">
                         <thead class="bg-200">
                             <tr>
+                                <th class="p-0"></th>
                                 <th class="text-900 sort" data-sort="inbound_no">Inbound no.</th>
                                 <th class="text-900 sort" data-sort="po_no">P.O no.</th>
                                 <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
@@ -71,6 +72,39 @@ $inbound_res = $conn->query($inbound_sql);
                         <tbody class="list" id="table-body">
                             <?php while ($row = $inbound_res->fetch_assoc()) { ?>
                                 <tr>
+                                    <td class="p-0">
+                                      <?php 
+                                      if($row['user_id'] === $user_id && $row['status'] == 0){
+                                      ?>
+                                      <button class="btn btn-primary py-1 fs-11 undo" target-id="<?php echo $row['unique_key'];?>"><span class="fas fa-trash-alt"></span> Void</button>
+                                      <?php 
+                                      } elseif($row['user_id'] !== $user_id && $row['status'] == 0){
+                                      ?>
+                                      <span class="badge badge-subtle-primary fs-11"><span class="fas fa-check-circle"></span> Inbounded</span>
+                                      <?php
+                                      }elseif (strpos($access, "approve_inbound")!==false && $row['status'] == 1 || $user_position_name === "Administrator" && $row['status'] == 1){
+                                      ?>
+                                      <button class="btn btn-primary fs-11 approval-btn" response="approve" doc_id="<?php echo $row['unique_key'];?>" to_userid="<?php echo $row['user_id'];?>"><span class="fas fa-check"></span></button>
+                                      <button class="btn btn-danger fs-11 approval-btn" response="decline" doc_id="<?php echo $row['unique_key'];?>" to_userid="<?php echo $row['user_id'];?>"><span class="far fa-window-close"></span></button>
+                                      <?php
+                                      } elseif(strpos($access, "approve_inbound")!==true && $row['status'] == 1) {
+                                      ?>
+                                      <span class="badge rounded-pill bg-warning fs-11" type="button" disabled="">
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width: 15px; height:15px;"></span>
+                                        Pending...
+                                      </span>
+                                      <?php
+                                      } elseif($row['status'] == 2) {
+                                      ?>
+                                      <span class="badge rounded-pill bg-danger fs-11"><span class="fas fa-exclamation-triangle"></span> declined</span>
+                                      <?php
+                                      } else {
+                                      ?>
+                                      <span class="badge rounded-pill bg-success fs-11"><span class="fas fa-check"></span> Approved</span>
+                                      <?php
+                                      }
+                                      ?>
+                                    </td>
                                     <td class="inbound_no">
                                         <a type="button" data-bs-toggle="modal" data-bs-target="#view-modal" target-id="<?php echo $row['unique_key']; ?>">
                                             <strong><?php echo $row['unique_key']; ?></strong>
@@ -289,5 +323,87 @@ $inbound_res = $conn->query($inbound_sql);
 $(document).on("click", "a[data-bs-toggle='modal']", function() {
     var targetId = $(this).attr("target-id"); // Get unique key
     $("#target-id").load("form-content.php?id=" + targetId); // Load content
+});
+
+document.querySelectorAll('.undo').forEach(button => {
+    button.addEventListener('click', function () {
+        const targetId = this.getAttribute('target-id');
+
+        Swal.fire({
+            title: 'Delete Inbound?',
+            text: 'Are you sure you want to delete inbound?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`../config/undo_inbound.php?target_id=${targetId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            title: data.success ? 'Success' : 'Error',
+                            text: data.message,
+                            icon: data.success ? 'success' : 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong. Please try again later.',
+                            icon: 'error'
+                        });
+                        console.error('Error:', error);
+                    });
+            }
+        });
+    });
+});
+
+//approve
+document.querySelectorAll('.approval-btn').forEach(approvalBtn => {
+    approvalBtn.addEventListener('click', function () {
+        const responseAction = this.getAttribute('response');
+        const docID = this.getAttribute('doc_id');
+        const toUserId = this.getAttribute('to_userid');
+
+        if (responseAction === 'approve') {
+          
+        } else {
+          
+        }
+        Swal.fire({
+            title: 'Please Confirm Action',
+            text: `Are you sure you want to ${responseAction}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes, ${responseAction} it!`,
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`../config/inbound_approval.php?response=${responseAction}&&id=${docID}&&to_userid=${toUserId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            title: data.success ? 'Success' : 'Error',
+                            text: data.message,
+                            icon: data.success ? 'success' : 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Something went wrong. Please try again later.',
+                            icon: 'error'
+                        });
+                        console.error('Error:', error);
+                    });
+            }
+        });
+    });
 });
 </script>
