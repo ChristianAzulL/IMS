@@ -6,10 +6,13 @@ header('Content-Type: application/json');
 require_once 'database.php';
 require_once 'on_session.php';
 
-if (isset($_GET['id']) && isset($_GET['response']) && isset($_GET['to_userid'])) {
-    $unique_key = $_GET['id'];
-    $response = $_GET['response'];
-    $to_userid = $_GET['to_userid'];
+if (isset($_POST['target_id']) && isset($_POST['response']) && isset($_POST['to_userid'])) {
+    $unique_key = htmlspecialchars(filter_input(INPUT_POST, 'target_id', FILTER_SANITIZE_STRING));
+    $response = htmlspecialchars(filter_input(INPUT_POST, 'response', FILTER_SANITIZE_STRING));
+    $to_userid = filter_input(INPUT_POST, 'to_userid', FILTER_VALIDATE_INT);
+    $reason_raw = filter_input(INPUT_POST, 'reason_admin', FILTER_SANITIZE_STRING);
+    $reason_admin = htmlspecialchars($user_fullname . '; ' . $reason_raw);
+
 
     if($response === "approve"){
         $response_value = "approved";
@@ -21,8 +24,8 @@ if (isset($_GET['id']) && isset($_GET['response']) && isset($_GET['to_userid']))
     
 
     // Update inbound_logs
-    $stmt1 = $conn->prepare("UPDATE inbound_logs SET `status` = ? WHERE unique_key = ?");
-    $stmt1->bind_param("is", $status_value, $unique_key);
+    $stmt1 = $conn->prepare("UPDATE inbound_logs SET `status` = ?, authorize_reason = ?, date_approved = ? WHERE unique_key = ?");
+    $stmt1->bind_param("isss", $status_value, $reason_admin, $currentDateTime, $unique_key);
 
     if ($stmt1->execute()) {
 

@@ -84,8 +84,9 @@ $inbound_res = $conn->query($inbound_sql);
                                       <?php
                                       }elseif (strpos($access, "approve_inbound")!==false && $row['status'] == 1 || $user_position_name === "Administrator" && $row['status'] == 1){
                                       ?>
-                                      <button class="btn btn-primary fs-11 approval-btn" response="approve" doc_id="<?php echo $row['unique_key'];?>" to_userid="<?php echo $row['user_id'];?>"><span class="fas fa-check"></span></button>
-                                      <button class="btn btn-danger fs-11 approval-btn" response="decline" doc_id="<?php echo $row['unique_key'];?>" to_userid="<?php echo $row['user_id'];?>"><span class="far fa-window-close"></span></button>
+                                      <button class="btn btn-warning fs-11 approve" inbound-id="<?php echo $row['unique_key'];?>" to-userid="<?php echo $row['user_id'];?>" type="button" data-bs-toggle="modal" data-bs-target="#approve-modal"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width: 15px; height:15px;"></span> For review</button>
+                                      <!-- <button class="btn btn-primary fs-11 approval-btn" response="approve" doc_id="<?php //echo $row['unique_key'];?>" to_userid="<?php // echo $row['user_id'];?>"><span class="fas fa-check"></span></button>
+                                      <button class="btn btn-danger fs-11 approval-btn" response="decline" doc_id="<?php //echo $row['unique_key'];?>" to_userid="<?php // echo $row['user_id'];?>"><span class="far fa-window-close"></span></button> -->
                                       <?php
                                       } elseif(strpos($access, "approve_inbound")!==true && $row['status'] == 1) {
                                       ?>
@@ -146,6 +147,31 @@ $inbound_res = $conn->query($inbound_sql);
         </div>
         <div class="p-4 pb-0">
             <div id="load-content"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Submit </button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+
+<!-- approved modal -->
+<div class="modal fade" id="approve-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <form id="approve_form">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+          <h4 class="mb-1" id="modalExampleDemoLabel">Approve delete? </h4>
+        </div>
+        <div class="p-4 pb-0">
+            <div id="load-approve"></div>
         </div>
       </div>
       <div class="modal-footer">
@@ -406,48 +432,57 @@ $(document).on("submit", "#void_form", function(e) {
 });
 
 
-//approve
-document.querySelectorAll('.approval-btn').forEach(approvalBtn => {
-    approvalBtn.addEventListener('click', function () {
-        const responseAction = this.getAttribute('response');
-        const docID = this.getAttribute('doc_id');
-        const toUserId = this.getAttribute('to_userid');
+// approve
+$(document).on("click", ".approve", function() {
+    var inboundId = $(this).attr("inbound-id");
+    var toUserId = $(this).attr("to-userid");
+    // Load void modal content dynamically into the #load-content container
+    $("#load-approve").load(`approve_modal_content.php?inbound-id=${inboundId}&&to_userid=${toUserId}`);
+});
 
-        if (responseAction === 'approve') {
-          
-        } else {
-          
+$(document).on("submit", "#approve_form", function(e) {
+    e.preventDefault(); // Prevent the default form submission
+    
+    // Store form reference for further use
+    var form = $(this);
+    
+    // Show confirmation dialog using SweetAlert2
+    Swal.fire({
+        title: 'Please Confirm',
+        text: 'Are you sure you want to void this inbound?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, void it!',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Use AJAX to submit the form without reloading the page.
+            $.ajax({
+                url: form.attr('action') || '../config/inbound_approval.php', // use form action or default handler URL
+                method: form.attr('method') || 'POST', // use form method or default to POST
+                data: form.serialize(), // serialize all form data
+                dataType: 'json'
+            }).done(function(response) {
+                // Show the server response using SweetAlert2
+                Swal.fire({
+                    title: response.success ? 'Success' : 'Error',
+                    text: response.message,
+                    icon: response.success ? 'success' : 'error',
+                    confirmButtonText: 'OK'
+                });
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred: ' + textStatus,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
         }
-        Swal.fire({
-            title: 'Please Confirm Action',
-            text: `Are you sure you want to ${responseAction}?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: `Yes, ${responseAction} it!`,
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`../config/inbound_approval.php?response=${responseAction}&&id=${docID}&&to_userid=${toUserId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        Swal.fire({
-                            title: data.success ? 'Success' : 'Error',
-                            text: data.message,
-                            icon: data.success ? 'success' : 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Something went wrong. Please try again later.',
-                            icon: 'error'
-                        });
-                        console.error('Error:', error);
-                    });
-            }
-        });
     });
 });
+
+
+
 </script>
