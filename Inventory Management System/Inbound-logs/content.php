@@ -76,7 +76,7 @@ $inbound_res = $conn->query($inbound_sql);
                                       <?php 
                                       if($row['user_id'] === $user_id && $row['status'] == 0){
                                       ?>
-                                      <button class="btn btn-primary py-1 fs-11 undo" target-id="<?php echo $row['unique_key'];?>"><span class="fas fa-trash-alt"></span> Void</button>
+                                      <button class="btn btn-primary py-1 fs-11 undo" target-id="<?php echo $row['unique_key'];?>" type="button" data-bs-toggle="modal" data-bs-target="#void-modal"><span class="fas fa-trash-alt"></span> Void</button>
                                       <?php 
                                       } elseif($row['user_id'] !== $user_id && $row['status'] == 0){
                                       ?>
@@ -130,6 +130,31 @@ $inbound_res = $conn->query($inbound_sql);
             </div>
         </div>
     </div>
+</div>
+
+<!-- void modal -->
+<div class="modal fade" id="void-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <form id="void_form">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+          <h4 class="mb-1" id="modalExampleDemoLabel">Void Inbound? </h4>
+        </div>
+        <div class="p-4 pb-0">
+            <div id="load-content"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Submit </button>
+      </div>
+    </div>
+    </form>
+  </div>
 </div>
 
 <!-- View Modal -->
@@ -325,42 +350,61 @@ $(document).on("click", "a[data-bs-toggle='modal']", function() {
     $("#target-id").load("form-content.php?id=" + targetId); // Load content
 });
 
-document.querySelectorAll('.undo').forEach(button => {
-    button.addEventListener('click', function () {
-        const targetId = this.getAttribute('target-id');
 
-        Swal.fire({
-            title: 'Delete Inbound?',
-            text: 'Are you sure you want to delete inbound?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                fetch(`../config/undo_inbound.php?target_id=${targetId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        Swal.fire({
-                            title: data.success ? 'Success' : 'Error',
-                            text: data.message,
-                            icon: data.success ? 'success' : 'error',
-                            confirmButtonText: 'OK'
-                        });
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Something went wrong. Please try again later.',
-                            icon: 'error'
-                        });
-                        console.error('Error:', error);
-                    });
-            }
-        });
+// When the void button (with class .undo) is clicked,
+// load modal content into #load-content from void_modal_content.php
+$(document).on("click", ".undo", function() {
+    var targetId = $(this).attr("target-id");
+    // Load void modal content dynamically into the #load-content container
+    $("#load-content").load("void_modal_content.php?target-id=" + targetId);
+});
+
+
+// Override form submission for the void modal form (#void_form)
+// to show SweetAlert2 confirmation and then submit the form via AJAX
+$(document).on("submit", "#void_form", function(e) {
+    e.preventDefault(); // Prevent the default form submission
+    
+    // Store form reference for further use
+    var form = $(this);
+    
+    // Show confirmation dialog using SweetAlert2
+    Swal.fire({
+        title: 'Please Confirm',
+        text: 'Are you sure you want to void this inbound?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, void it!',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Use AJAX to submit the form without reloading the page.
+            $.ajax({
+                url: form.attr('action') || '../config/undo_inbound.php', // use form action or default handler URL
+                method: form.attr('method') || 'POST', // use form method or default to POST
+                data: form.serialize(), // serialize all form data
+                dataType: 'json'
+            }).done(function(response) {
+                // Show the server response using SweetAlert2
+                Swal.fire({
+                    title: response.success ? 'Success' : 'Error',
+                    text: response.message,
+                    icon: response.success ? 'success' : 'error',
+                    confirmButtonText: 'OK'
+                });
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'An error occurred: ' + textStatus,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        }
     });
 });
+
 
 //approve
 document.querySelectorAll('.approval-btn').forEach(approvalBtn => {

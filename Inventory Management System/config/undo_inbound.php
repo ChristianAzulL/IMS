@@ -5,12 +5,13 @@ header('Content-Type: application/json');
 include "database.php";
 include "on_session.php";
 
-if (isset($_GET['target_id'])) {
-    $unique_key = $_GET['target_id'];
+if (isset($_POST['target_id'])) {
+    $unique_key = $_POST['target_id'];
+    $reason = $_POST['reason_staff'];
 
     // Update inbound_logs
-    $stmt1 = $conn->prepare("UPDATE inbound_logs SET `status` = 1 WHERE unique_key = ?");
-    $stmt1->bind_param("s", $unique_key);
+    $stmt1 = $conn->prepare("UPDATE inbound_logs SET `status` = 1, staff_reason = ?, date_request_void = ? WHERE unique_key = ?");
+    $stmt1->bind_param("sss", $reason, $currentDateTime, $unique_key);
 
     if ($stmt1->execute()) {
 

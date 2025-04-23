@@ -4,7 +4,7 @@ include "../config/on_session.php";
 if (isset($_GET['id'])) {
     $unique_key = htmlspecialchars($_GET['id']);
     $total = 0;
-    $SQL = "SELECT il.*, w.warehouse_name, u.user_fname, u.user_lname, s.supplier_name, up.position_name, s.local_international
+    $SQL = "SELECT il.*, w.warehouse_name, u.user_fname, u.user_lname, s.supplier_name, up.position_name, s.local_international, il.staff_reason
             FROM inbound_logs il
             LEFT JOIN supplier s ON s.hashed_id = il.supplier
             LEFT JOIN users u ON u.hashed_id = il.user_id
@@ -22,6 +22,11 @@ if (isset($_GET['id'])) {
         $supplier_info = $row['local_international'];
         $date_received = new DateTime($row['date_received']);
         $date_received = $date_received->format('F j, Y');
+        $staff_reason = !empty($row['staff_reason']) ? $row['staff_reason'] : null;
+        $authorized_reason = !empty($row['authorize_reason']) ? $row['authorize_reason'] : null;
+        $void_request_date = !empty($row['date_request_void']) ? $row['date_request_void'] : null;
+        $approved_void_date = !empty($row['date_approved']) ? $row['date_approved'] : null;
+
     }
     ?>
     <style>
@@ -127,6 +132,23 @@ if (isset($_GET['id'])) {
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="container-reason bg-info">
+            <table class="table table-bordered table-sm">
+                <tr>
+                    <th>
+                        <b>Staff Reason:</b><br>
+                        <small><?php echo $void_request_date;?></small><br>
+                        <?php echo $staff_reason;?>
+                    </th>
+                    <th>
+                        <b>Reason(if declined)</b><br>
+                        <small><?php echo $approved_void_date;?></small><br>
+                        <?php echo $authorized_reason;?>
+                    </th>
+                </tr>
+            </table>
         </div>
     </div>
     <?php
