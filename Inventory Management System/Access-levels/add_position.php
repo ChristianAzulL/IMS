@@ -50,10 +50,7 @@
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_inbound" />
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Create and Upload Inbound</label>
                             </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">Approve Delete</label>
-                            </div>
+                            
                         </div>
                         <div class="col-lg-12 mb-3">
                             <label for="">Inventory Management</label>
@@ -179,6 +176,21 @@
                             <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" />
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Item Destination</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_capital"/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Unit Cost</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_profit"/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Profit</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Approve Inbound Delete & Outbound Delete</label>
                             </div>
 
                         </div>

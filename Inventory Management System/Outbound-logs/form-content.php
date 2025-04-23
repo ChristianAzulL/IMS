@@ -1,11 +1,12 @@
 <?php 
 include "../config/database.php";
+include "../config/on_session.php";
 
 if (isset($_GET['id'])) {
     $outbound_id = $_GET['id'];
 
     // Using prepared statements for the first query
-    $stmt = $conn->prepare("SELECT u.user_fname, u.user_lname, w.warehouse_name, ol.date_sent, ol.customer_fullname, ol.order_num, ol.order_line_id, lp.logistic_name, c.courier_name
+    $stmt = $conn->prepare("SELECT u.user_fname, u.user_lname, w.warehouse_name, ol.*, lp.logistic_name, c.courier_name
                             FROM outbound_logs ol
                             LEFT JOIN users u ON u.hashed_id = ol.user_id
                             LEFT JOIN warehouse w ON w.hashed_id = ol.warehouse
@@ -26,6 +27,12 @@ if (isset($_GET['id'])) {
         $logistic_name = $row['logistic_name'];
         $courier = $row['courier_name'];
         $date_Sent = $row['date_sent'];
+        $outbound_status = $row['status'];
+        $outbound_user_id = $row['user_id'];
+        $staff_reason = !empty($row['staff_reason']) ? $row['staff_reason'] : null;
+        $authorized_reason = !empty($row['authorize_reason']) ? $row['authorize_reason'] : null;
+        $void_request_date = !empty($row['date_request_void']) ? $row['date_request_void'] : null;
+        $approved_void_date = !empty($row['date_approved']) ? $row['date_approved'] : null;
     ?>
     <style>
         .header { 
@@ -46,6 +53,15 @@ if (isset($_GET['id'])) {
                 </div>
                 
                 <div class="row">
+                    <?php 
+                    if($outbound_status == 0 && $user_id === $outbound_user_id){
+                    ?>
+                    <div class="col-lg-12 text-end my-3">
+                        <button class="btn btn-primary fs-11" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo $outbound_id;?>" aria-expanded="false" aria-controls="collapse<?php echo $outbound_id;?>"><span class="fas fa-trash-alt"></span> Void</button>
+                    </div>
+                    <?php 
+                    }
+                    ?>
                     <div class="col-md-6">
                         <div class="table-responsive">
                             <table class="table table-sm">
@@ -99,7 +115,7 @@ if (isset($_GET['id'])) {
                                 $table_headers = [
                                     '#', 'Item Name', 'Brand', 'Category', 'Parent Barcode', 
                                     'Quantity before', 'Quantity', 'Quantity after', 
-                                    'Capital', 'Unit Price', 'Profit', 'Total'
+                                    'Unit Price', 'Sold Price', 'Profit', 'Total'
                                 ];
                                 foreach ($table_headers as $header) {
                                     if($header === "Parent Barcode"){
@@ -171,9 +187,21 @@ if (isset($_GET['id'])) {
                                         <td class="text-end fs-10" style="width: 250px;"><?php echo $quantityBefore;?></td>
                                         <td class="text-end fs-10" style="width: 250px;"><?php echo $quantity;?></td>
                                         <td class="text-end fs-10" style="width: 250px;"><?php echo $quantityAfter;?></td>
+                                        <?php 
+                                        if(strpos($access, "view_capital")!==false || $user_position_name === "Administrator" || $user_position_name === "administrator"){
+                                        ?>
                                         <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($productCapital, 2);?></td>
+                                        <?php 
+                                        } 
+                                        ?>
                                         <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($soldPrice, 2);?></td>
+                                        <?php 
+                                        if(strpos($access, "view_profit")!==false || $user_position_name === "Administrator" || $user_position_name === "administrator"){
+                                        ?>
                                         <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($sub_profit, 2);?></td>
+                                        <?php 
+                                        }
+                                        ?>
                                         <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($sub_Total, 2);?></td>
                                     </tr>
                                     
@@ -189,12 +217,17 @@ if (isset($_GET['id'])) {
                             
                         </tbody>
                         <tfoot class="table-info">
-                            
+                            <?php 
+                            if(strpos($access, "view_profit")!==false || $user_position_name === "Administrator" || $user_position_name === "administrator"){
+                            ?>
                             <tr>
                                 <td class="text-start fs-10 text-end" colspan="10"><b><i>Total Profit</i></b></td>
                                 <td class="text-end fs-10"><strong>₱</strong></td>
                                 <td class="text-end fs-10"><b><i>₱<?php echo number_format($total_profit, 2); ?></i></b></td>
                             </tr>
+                            <?php 
+                            }
+                            ?>
 
                             <tr>
                                 <td class="text-start fs-10 text-end" colspan="10"><b><i>Total Sales</i></b></td>
@@ -207,7 +240,81 @@ if (isset($_GET['id'])) {
             </div>
         </div>
     </div>
-    
+
+
+    <?php 
+        if($outbound_status == 0 && $user_id === $outbound_user_id){
+    ?>
+    <div class="collapse" id="collapse-<?php echo $outbound_id;?>">
+        <div class="row px-6">
+            <form class="void-form" method="POST" action="../config/void-outbound.php">
+                <input type="text" name="outbound_id" value="<?php echo $outbound_id;?>" hidden>
+                <div class="col-lg-12 mb-3">
+                    <label for="reason">Reason for Void?</label>
+                    <textarea name="reason" class="form-control" required></textarea>
+                </div>
+                <div class="col-lg-12 text-center mb-3">
+                    <button class="btn btn-primary fs-11" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php 
+        } elseif($outbound_status == 0 && $user_id !== $outbound_user_id){
+    ?>
+
+    <?php
+        } elseif($outbound_status == 3 && $user_id !== $outbound_user_id && strpos($access, "approve_inbound")!==false || $user_position_name === "Administrator"){
+    ?>
+    <div class="p-4 pb-0">
+        <div class="row">
+            <div class="col-lg-12">
+            <form class="void-decision" method="POST" action="../config/void-decision.php">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Reason for Void</th>
+                                <th>Reason for Void Authorization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <small><i><?php echo $void_request_date;?></i></small><br>
+                                    <?php echo $staff_reason;?>
+                                </td>
+                                <td>
+                                    <input class="form-control" name="outbound_id" type="text" value="<?php echo $outbound_id; ?>" hidden>
+                                    <input class="form-control" name="to_userid" type="text" value="<?php echo $outbound_user_id; ?>" hidden>
+
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="form-check form-check-inline"><input class="form-check-input" id="inlineRadio1" type="radio" name="response" value="approve" required/><label class="form-check-label" for="inlineRadio1">Approve</label></div>
+                                            <div class="form-check form-check-inline"><input class="form-check-input" id="inlineRadio2" type="radio" name="response" value="decline" required/><label class="form-check-label" for="inlineRadio2">Decline</label></div>
+                                        </div>
+                                        
+                                        <div class="col-lg-12">
+                                            <label for="reason_admin">Reason(if Decline)</label>
+                                            <textarea class="form-control" name="reason_admin" required></textarea>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                </div>
+
+                <div class="col-lg-12 text-center">
+                    <button class="btn btn-primary fs-11" type="submit">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php
+        }
+    ?>
     <?php
     }
 } else {

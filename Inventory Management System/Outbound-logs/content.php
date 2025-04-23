@@ -69,8 +69,14 @@ $outbound_res = $conn->query($outbound_sql);
               $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Outbounded</span>';
             } elseif ($row['status'] == 1) {
               $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Outbounded</span><span class="badge rounded-pill badge-subtle-danger">-1</span>';
-            } else {
+            } elseif($row['status'] == 2) {
               $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Returned</span>';
+            } elseif($row['status'] == 3){
+              $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Void Requested</span>';
+            } elseif($row['status'] == 4){
+              $outbound_status = '<span class="badge rounded-pill badge-subtle-primary">Void Approved</span>';
+            } else {
+              $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Void Rejected</span>';
             }
           ?>
           <tr>
@@ -123,4 +129,87 @@ $(document).on("click", "a[data-bs-toggle='modal']", function() {
     var targetId = $(this).attr("target-id"); // Get unique key
     $("#target-id").load("form-content.php?id=" + targetId); // Load content
 });
+
+$(document).on('submit', '.void-form', function(e) {
+    e.preventDefault(); // Stop default submission
+    const $form = $(this);
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to submit this form?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, submit it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: $form.attr('action'),
+                type: $form.attr('method'),
+                data: $form.serialize(),
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: xhr.responseText || 'Something went wrong.',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+    });
+});
+
+
+$(document).on('submit', '.void-decision', function(e) {
+    e.preventDefault(); // Prevent default form submission
+    const $decisionForm = $(this);
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you really want to submit this form?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, submit it!',
+        cancelButtonText: 'Cancel'
+    }).then((confirmation) => {
+        if (confirmation.isConfirmed) {
+            $.ajax({
+                url: $decisionForm.attr('action'),
+                type: $decisionForm.attr('method'),
+                data: $decisionForm.serialize(),
+                success: function(serverResponse) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: serverResponse,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function(errorResponse) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorResponse.responseText || 'Something went wrong.',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+    });
+});
+
 </script>

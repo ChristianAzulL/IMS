@@ -182,6 +182,21 @@ if($result->num_rows>0){
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Item Destination</label>
                             </div>
 
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_capital" <?php if(strpos($account_position_access, "view_capital")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Unit Cost</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_profit" <?php if(strpos($account_position_access, "view_profit")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Profit</label>
+                            </div>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?>/>
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Approve Inbound Delete & Outbound Void</label>
+                            </div>
+
                         </div>
 
                     </div>
