@@ -9,7 +9,7 @@ require_once 'on_session.php';
 if (isset($_POST['target_id']) && isset($_POST['response']) && isset($_POST['to_userid'])) {
     $unique_key = htmlspecialchars(filter_input(INPUT_POST, 'target_id', FILTER_SANITIZE_STRING));
     $response = htmlspecialchars(filter_input(INPUT_POST, 'response', FILTER_SANITIZE_STRING));
-    $to_userid = filter_input(INPUT_POST, 'to_userid', FILTER_VALIDATE_INT);
+    $to_userid = filter_input(INPUT_POST, 'to_userid', FILTER_SANITIZE_STRING);
     $reason_raw = filter_input(INPUT_POST, 'reason_admin', FILTER_SANITIZE_STRING);
     $reason_admin = htmlspecialchars($user_fullname . '; ' . $reason_raw);
 

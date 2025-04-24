@@ -264,7 +264,7 @@ if (isset($_GET['id'])) {
     ?>
 
     <?php
-        } elseif($outbound_status == 3 && $user_id !== $outbound_user_id && strpos($access, "approve_inbound")!==false || $user_position_name === "Administrator"){
+        } elseif($outbound_status == 3 && $user_id !== $outbound_user_id && strpos($access, "approve_inbound")!==false || $outbound_status == 3 && $user_id !== $outbound_user_id && $user_position_name === "Administrator"){
     ?>
     <div class="p-4 pb-0">
         <div class="row">
@@ -310,6 +310,38 @@ if (isset($_GET['id'])) {
                     <button class="btn btn-primary fs-11" type="submit">Submit</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <?php
+        } elseif($outbound_status == 4 && $user_id !== $outbound_user_id && strpos($access, "approve_inbound")!==false || $outbound_status == 4 && $user_id !== $outbound_user_id && $user_position_name === "Administrator" || $outbound_status == 5 && $user_id !== $outbound_user_id && strpos($access, "approve_inbound")!==false || $outbound_status == 5 && $user_id !== $outbound_user_id && $user_position_name === "Administrator"){
+    ?>
+    <div class="p-4 pb-0">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Reason for Void</th>
+                                <th>Reason for Void Authorization</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <small><i><?php echo $void_request_date;?></i></small><br>
+                                    <?php echo $staff_reason;?>
+                                </td>
+                                <td>
+                                    <small><i><?php echo $approved_void_date;?></i></small><br>
+                                    <?php echo $authorized_reason;?>
+                                </td>
+                            </tr>
+                        </tbody>
+                        
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <?php

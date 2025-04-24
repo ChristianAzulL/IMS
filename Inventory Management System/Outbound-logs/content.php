@@ -74,7 +74,7 @@ $outbound_res = $conn->query($outbound_sql);
             } elseif($row['status'] == 3){
               $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Void Requested</span>';
             } elseif($row['status'] == 4){
-              $outbound_status = '<span class="badge rounded-pill badge-subtle-primary">Void Approved</span>';
+              $outbound_status = '<span class="badge rounded-pill badge-subtle-primary">Voided</span>';
             } else {
               $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Void Rejected</span>';
             }

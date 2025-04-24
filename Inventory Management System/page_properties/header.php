@@ -1,3 +1,24 @@
+<?php 
+if (isset($_GET['notnot'])) {
+    $notification_id = $_GET['notnot'];
+    for($i = 0; $i <= 100000; $i++){
+        $hashed_num = hash('sha256', $i);
+        if($hashed_num === $notification_id){
+            // Prepare and bind
+            $stmt = $conn->prepare("UPDATE notification SET `status` = 1 WHERE id = ?");
+            $stmt->bind_param("i", $i);
+
+            // Execute the query
+            if ($stmt->execute()) {
+                // echo "Notification updated successfully.";
+                break;
+            } else {
+                echo "Error updating notification: " . $stmt->error;
+            }
+        }
+    }
+}
+?>
 
 <!-- ===============================================--><!--    Favicons--><!-- ===============================================-->
 <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicons/apple-touch-icon.png">
@@ -52,3 +73,5 @@
     });
 
 </script>
+
+<audio id="notification-sound" src="../../assets/audio/mixkit-bell-notification-933.wav" preload="auto"></audio>
