@@ -5,29 +5,56 @@ if (isset($_GET['id'])) {
     $rts_id = $_GET['id'];
 
     // Get the 'for' value from rts_logs
-    $for_query = "SELECT `for` FROM rts_logs WHERE id = '$rts_id' LIMIT 1";
+    $for_query = "SELECT `for`, `status`, images, reason FROM rts_logs WHERE id = '$rts_id' LIMIT 1";
     $for_res = $conn->query($for_query);
     $for = "";
     if ($for_res->num_rows > 0) {
         $row = $for_res->fetch_assoc();
         $for = $row['for'];
+        $rts_log_status = $row['status'];
+        $reason = $row['reason'];
+        $rts_images = $row['images']; // sample value: img_1, img_2, img_3
+        $images_array = explode(',', $rts_images);
     }
-
+    if($rts_log_status == 0){
     if ($for === 'return and replace') {
-        $linked = '<a href="../config/new_returned.php?type=replace&d=' . $rts_id . '" class="btn btn-primary mb-3 fs-10 shadow-lg refund-btn" data-bs-toggle="tooltip" data-bs-placement="left" title="click if item already replaced!">
+        $linked = '<a id="replace-btn" href="../config/returned.php?type=replace&d=' . $rts_id . '" class="btn btn-primary mb-3 fs-10 shadow-lg refund-btn" data-bs-toggle="tooltip" data-bs-placement="left" title="click if item already replaced!">
             <span class="fas fa-recycle"></span> Replace
         </a>';
         } else {
-        $linked = '<a href="../config/new_returned.php?type=refund&d=' . $rts_id . '" class="btn btn-primary mb-3 fs-10 shadow-lg refund-btn" data-bs-toggle="tooltip" data-bs-placement="left" title="click if item already refunded!">
+        $linked = '<a id="replace-btn" href="../config/returned.php?type=refund&d=' . $rts_id . '" class="btn btn-primary mb-3 fs-10 shadow-lg refund-btn" data-bs-toggle="tooltip" data-bs-placement="left" title="click if item already refunded!">
             <span class="far fa-money-bill-alt"></span> Refund
         </a>';
         }
+    }
 ?>
 <div class="p-4 pb-0">
+
     <form>
         <div class="row">
-            <div class="col-lg-12 text-end">
-                <?php echo $linked;?>
+            <?php 
+            $col = 6;
+            if(!empty($rts_images)){
+                $col = 6;
+            ?>
+            <div class="col-lg-6 text-start">
+                <button class="btn btn-info ms-sm-2 mb-3 fs-10" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">View Images</button>
+            </div>
+            <?php 
+            } else {
+                $col = 12;
+            }
+                if($rts_log_status == 0){
+            ?>
+            <div class="col-lg-<?php echo $col;?> text-end">
+                <?php echo $linked;?> 
+            </div>
+            <?php 
+                }
+            ?>
+            <div class="col-lg-12 mb-3">
+                <h5>Reason:</h5>
+                <p class="fs-11"><i><?php echo $reason;?></i></p>
             </div>
             <div class="col-lg-12">
                 <div id="tableExample" data-list='{"valueNames":["name","email","age"],"page":5,"pagination":true}'>
@@ -104,6 +131,30 @@ if (isset($_GET['id'])) {
                     </div> <!-- table-responsive -->
                 </div> <!-- tableExample -->
             </div> <!-- col-lg-12 -->
+            <div class="col-lg-12 mt-3">
+            <div class="collapse" id="collapseExample">
+                <div class="swiper theme-slider">
+                <div class="swiper-wrapper">
+                    <?php foreach ($images_array as $image): ?>
+                    <div class="swiper-slide bg-dark">
+                        <div class="swiper-zoom-container">
+                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($image); ?>" alt="" style="height: 500px;"/>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                    <?php foreach ($images_array as $image): ?>
+                    <div class="swiper-slide bg-dark">
+                        <div class="swiper-zoom-container">
+                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($image); ?>" alt="" style="height: 500px;"/>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="swiper-button-next swiper-button-white"></div>
+                <div class="swiper-button-prev swiper-button-white"></div>
+                </div>
+            </div>
+            </div>
         </div> <!-- row -->
     </form>
 </div>

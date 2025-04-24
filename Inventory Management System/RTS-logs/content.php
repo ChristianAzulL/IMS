@@ -20,7 +20,8 @@
                         <th class="text-900 sort" data-sort="name">Supplier Name</th>
                         <th class="text-900 sort" data-sort="status">Fulfillment Status</th>
                         <th class="text-900 sort" data-sort="email">From Warehouse</th>
-                        <th class="text-900 sort" data-sort="date">Date</th>
+                        <th class="text-900 sort" data-sort="date">Date Processed</th>
+                        <th class="text-900 sort" data-sort="date_returned">Date Returned</th>
                         <th class="text-900 sort" data-sort="age">Staff</th>
                         </tr>
                     </thead>
@@ -33,7 +34,7 @@
                 
                         // Create a comma-separated string of quoted IDs
                         $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
-                        $sql = "SELECT s.supplier_name, w.warehouse_name, r.date, u.user_fname, u.user_lname, r.id, r.status
+                        $sql = "SELECT s.supplier_name, w.warehouse_name, r.date, u.user_fname, u.user_lname, r.id, r.status, r.returned_date
                                 FROM rts_logs r
                                 LEFT JOIN supplier s ON s.hashed_id = r.supplier
                                 LEFT JOIN warehouse w ON w.hashed_id = r.warehouse
@@ -49,6 +50,7 @@
                                 $rts_from = $row['warehouse_name'];
                                 $rts_date = $row['date'];
                                 $rts_staff = $row['user_fname'] . " " . $row['user_lname'];
+                                $returned_date = $row['returned_date'];
                                 if($row['status'] == 0){
                                     $rts_status = '<span class="badge rounded-pill badge-subtle-warning">Pending</span>';
                                 } else {
@@ -62,6 +64,7 @@
                         <td class="status"><?php echo $rts_status;?></td>
                         <td class="email"><?php echo $rts_from;?></td>
                         <td class="date"><?php echo $rts_date;?></td>
+                        <td class="date"><?php echo $returned_date ;?></td>
                         <td class="age"><?php echo $rts_staff;?></td>
                         </tr>
                         <?php 
@@ -119,18 +122,22 @@ $(document).ready(function(){
 
     // Function to load preview content dynamically
     function loadPreview(targetId) {
-        $.ajax({
-            url: 'preview.php',
-            type: 'GET',
-            data: { id: targetId },
-            success: function(response) {
-                $('#preview').html(response);
-            },
-            error: function() {
-                $('#preview').html('<p class="text-danger">Error loading content.</p>');
-            }
-        });
+    $.ajax({
+        url: 'preview.php',
+        type: 'GET',
+        data: { id: targetId },
+        success: function(response) {
+        $('#preview').html(response);
+        initSwiper(); // ✅ Re-initialize Swiper after new content is loaded
+        },
+        error: function() {
+        $('#preview').html('<p class="text-danger">Error loading content.</p>');
+        }
+    });
     }
+
+
+
 
     // Handle replace and refund button clicks with SweetAlert2 confirmation
     $(document).on("click", "#replace-btn, #refund-btn", function(e){
@@ -172,5 +179,25 @@ $(document).ready(function(){
         });
     });
 });
+
+
+let swiperInstance;
+
+function initSwiper() {
+  if (swiperInstance) {
+    swiperInstance.destroy(true, true); // Clean up
+  }
+
+  swiperInstance = new Swiper('.theme-slider', {
+    spaceBetween: 5,
+    loop: true,
+    zoom: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev"
+    }
+  });
+}
+
 
 </script>

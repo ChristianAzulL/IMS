@@ -35,7 +35,7 @@ if (isset($_POST['barcode'])) {
         $location = $row['location_name'] ?? 'FOR SKU';
         ?>
 
-        <form action="../config/return-product.php" method="POST" id="return-form">
+        <form action="../config/return-product.php" method="POST" id="return-form" enctype="multipart/form-data">
             <div class="card mb-3 bg-transparent">
                 <div class="card-body overflow-hidden bg-transparent p-0">
                     <div class="row align-items-center">
@@ -74,18 +74,29 @@ if (isset($_POST['barcode'])) {
                         <input type="hidden" name="warehouse" value="<?php echo $row['warehouse'];?>">
                         <input type="hidden" name="outbound_id" value="<?php echo $row['hashed_id'];?>">
                         
-                        
-                        <div class="col-lg-3">
-                            <label for="amount">Amount to be refunded</label>
-                            <input type="number" step="0.01" name="amount" min="0" class="form-control" value="0.00">
+                        <div class="col-lg-5 mb-3">
+                            <label for="">Reason</label>
+                            <textarea name="reason" class="form-control" required></textarea>
                         </div>
-                        <div class="col-lg-5">
-                            <label>Will be returned to</label>
-                            <input type="text" class="form-control" value="<?php echo $location;?>" readonly>
-                        </div>
-                        <div class="col-lg-4">
-                            <label>Processed and Authorized by</label>
-                            <input type="text" class="form-control" value="<?php echo $user_fullname; ?>" readonly>
+                        <div class="col-lg-7 mb-3">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                <label for="amount">Amount to be refunded</label>
+                                    <input type="number" step="0.01" name="amount" min="0" class="form-control" value="0.00">
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Will be returned to</label>
+                                    <input type="text" class="form-control" value="<?php echo $location;?>" readonly>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Processed and Authorized by</label>
+                                    <input type="text" class="form-control" value="<?php echo $user_fullname; ?>" readonly>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="">Upload proofs</label>
+                                    <input type="file" class="form-control" name="images[]" id="imageInput" multiple accept="image/*" required>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,6 +111,13 @@ if (isset($_POST['barcode'])) {
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+            document.getElementById('imageInput').addEventListener('change', function (e) {
+            if (this.files.length < 3) {
+                alert('You can only upload 3 images.');
+                this.value = ''; // Clear the selected files
+                }
+            });
+
             document.getElementById('confirm-submit').addEventListener('click', function () {
                 Swal.fire({
                     title: 'Are you sure?',

@@ -71,7 +71,7 @@ if(!isset($_SESSION['warehouse_for_return'])){
         </div>
     </div>
     <div class="col-lg-7">
-      <form action="../config/process-return.php" id="to-process" method="POST">
+      <form action="../config/process-return.php" id="to-process" method="POST" enctype="multipart/form-data">
         <div class="card" style="height: 100px;">
           <div class="card-body">
             <div class="row">
@@ -100,7 +100,8 @@ if(!isset($_SESSION['warehouse_for_return'])){
               <div class="col-7">
                 <textarea name="remarks" class="form-control" id="" placeholder="Enter reason here....."></textarea>
               </div>
-              <div class="col-5 pt-3">
+              <div class="col-5">
+                <input type="file" class="form-control" name="images[]" id="imageInput" multiple accept="image/*" required>
                 <button class="btn btn-primary mt-1 w-100" id="to-process-btn">Submit </button>
               </div>
             </div>
@@ -135,6 +136,13 @@ $(document).ready(function(){
 
     // Check check_data.php every 3 seconds
     setInterval(checkData, 3000);
+
+    document.getElementById('imageInput').addEventListener('change', function (e) {
+    if (this.files.length > 3) {
+        alert('You can only upload a maximum of 3 images.');
+        this.value = ''; // Clear the selected files
+        }
+    });
 
     // Handle form submission for Single Transfer
     $(document).on("submit", "#single", function(e){

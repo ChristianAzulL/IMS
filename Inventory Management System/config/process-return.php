@@ -20,6 +20,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($stmt->execute()) {
         $created_id = $conn->insert_id;
+
+        $imageFilenames = [];
+
+        if (!empty($_FILES['images']['name'][0])) {
+            $folderName = $created_id;
+            $uploadDir = "../../assets/img_rts/" . $folderName . "/";
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+                $originalName = basename($_FILES['images']['name'][$key]);
+                $imageType = $_FILES['images']['type'][$key];
+
+                // // Only check image type (not size)
+                // if (!in_array($imageType, ['image/jpeg','image/jpg', 'image/png', 'image/webp', 'image/gif'])) {
+                //     error_log("Skipped file $originalName due to invalid type: $imageType");
+                //     continue;
+                // }
+
+                $destination = $uploadDir . $originalName;
+
+                if (move_uploaded_file($tmp_name, $destination)) {
+                    $imageFilenames[] = $originalName;
+                } else {
+                    error_log("Failed to move uploaded file: $originalName");
+                }
+            }
+
+            // Update rts_logs if there are images
+            if (!empty($imageFilenames)) {
+                $imploded_filenames = implode(',', $imageFilenames);
+                $stmt_update_images = $conn->prepare("UPDATE rts_logs SET images = ? WHERE id = ?");
+                $stmt_update_images->bind_param("si", $imploded_filenames, $created_id);
+                $stmt_update_images->execute();
+            }
+        } 
+
+
         
         // Retrieve and decode the scanned items from the session
         $existingData = isset($_SESSION['scanned_return']) ? json_decode($_SESSION['scanned_return'], true) : [];

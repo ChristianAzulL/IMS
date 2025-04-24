@@ -18,13 +18,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $amount = floatval($filtered_input['amount']);
         $warehouse_return = $filtered_input['warehouse'];
         $outbound_id = $filtered_input['outbound_id'];
+        $reason = $filtered_input['reason'];
+        $imploded_filenames = "";
+
+        
 
         // Insert return details
-        $insert = "INSERT INTO `returns` (unique_barcode, amount, `date`, user_id, warehouse) VALUES (?, ?, ?, ?, ?)";
+        $insert = "INSERT INTO `returns` (unique_barcode, amount, `date`, user_id, warehouse, reason) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insert);
-        $stmt->bind_param("sdsss", $barcode, $amount, $currentDateTime, $user_id, $warehouse_return);
+        $stmt->bind_param("sdssss", $barcode, $amount, $currentDateTime, $user_id, $warehouse_return, $reason);
 
         if ($stmt->execute()) {
+            $created_id = $conn->insert_id;
+            
+            $imageFilenames = [];
+
+            if (!empty($_FILES['images']['name'][0])) {
+                $folderName = $created_id;
+                $uploadDir = "../../assets/img_return/" . $folderName . "/";
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+                    $originalName = basename($_FILES['images']['name'][$key]);
+                    $imageType = $_FILES['images']['type'][$key];
+
+                    // // Only check image type (not size)
+                    // if (!in_array($imageType, ['image/jpeg','image/jpg', 'image/png', 'image/webp', 'image/gif'])) {
+                    //     error_log("Skipped file $originalName due to invalid type: $imageType");
+                    //     continue;
+                    // }
+
+                    $destination = $uploadDir . $originalName;
+
+                    if (move_uploaded_file($tmp_name, $destination)) {
+                        $imageFilenames[] = $originalName;
+                    } else {
+                        error_log("Failed to move uploaded file: $originalName");
+                    }
+                }
+
+                // Update rts_logs if there are images
+                if (!empty($imageFilenames)) {
+                    $imploded_filenames = implode(',', $imageFilenames);
+                    $stmt_update_images = $conn->prepare("UPDATE returns SET images = ? WHERE id = ?");
+                    $stmt_update_images->bind_param("si", $imploded_filenames, $created_id);
+                    $stmt_update_images->execute();
+                }
+            } 
+
+
             // Insert into stock_timeline
             $item_logs = "INSERT INTO stock_timeline (unique_barcode, title, `action`, `date`, user_id) VALUES (?, 'PRODUCT RETURN', 'Product was returned.', ?, ?)";
             $stmt_logs = $conn->prepare($item_logs);

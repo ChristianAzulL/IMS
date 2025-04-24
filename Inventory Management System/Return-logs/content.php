@@ -90,6 +90,7 @@
                                         r.unique_barcode,
                                         r.amount,
                                         r.date,
+                                        r.id AS return_id,
                                         s.outbound_id,
                                         p.description,
                                         b.brand_name,
@@ -105,10 +106,12 @@
                                     LEFT JOIN category c ON c.hashed_id = p.category
                                     LEFT JOIN users u ON u.hashed_id = r.user_id
                                     LEFT JOIN warehouse w ON w.hashed_id = r.warehouse
-                                    WHERE r.warehouse IN ($imploded_warehouse_ids)";
+                                    WHERE r.warehouse IN ($imploded_warehouse_ids)
+                                    ORDER BY r.id DESC";
                         $result = $conn->query($sql);
                         if($result->num_rows>0){
                             while($row=$result->fetch_assoc()){
+                                $return_id = $row['return_id'];
                                 $barcode = $row['unique_barcode'];
                                 $amount = $row['amount'];
                                 $rdate = $row['date'];
@@ -126,7 +129,7 @@
                                 
                         ?>
                         <tr>
-                            <td class="text-end"><?php echo $number;?></td>
+                            <td class="text-end"><a href="#" target-id="<?php echo $return_id;?>" type="button" data-bs-toggle="modal" data-bs-target="#view-modal"><?php echo $number;?></a></td>
                             <td class="description"><?php echo $description;?></td>
                             <td class="brand"><?php echo $brand;?></td>
                             <td class="category"><?php echo $category;?></td>
@@ -166,3 +169,77 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="view-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+          <h4 class="mb-1" id="modalExampleDemoLabel">Proofs </h4>
+        </div>
+        <div class="p-4 pb-0">
+          <div id="preview-proof"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="button">Understood </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Delegate click event for dynamic elements
+    $(document).on('click', 'a[target-id]', function(e) {
+        e.preventDefault(); // prevent default anchor behavior
+        const targetId = $(this).attr('target-id');
+
+        // Show loading state (optional)
+        $('#preview-proof').html('<div class="text-center py-3">Loading...</div>');
+
+        // Load content into the modal
+        loadPreview(targetId); // Load content dynamically
+    });
+
+    // Function to load preview content dynamically
+    function loadPreview(targetId) {
+    $.ajax({
+        url: 'preview.php',
+        type: 'GET',
+        data: { id: targetId },
+        success: function(response) {
+        $('#preview-proof').html(response);
+        initSwiper(); // ✅ Re-initialize Swiper after new content is loaded
+        },
+        error: function() {
+        $('#preview-proof').html('<p class="text-danger">Error loading content.</p>');
+        }
+    });
+    }
+});
+
+// Make sure Swiper is initialized with Zoom
+let swiperInstance;
+
+function initSwiper() {
+  if (swiperInstance) {
+    swiperInstance.destroy(true, true); // Clean up
+  }
+
+  swiperInstance = new Swiper('.theme-slider', {
+    spaceBetween: 5,
+    loop: true,
+    zoom: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev"
+    }
+  });
+}
+
+</script>
