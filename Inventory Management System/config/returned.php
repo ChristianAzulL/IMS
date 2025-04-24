@@ -10,8 +10,8 @@ if (isset($_GET['type']) && isset($_GET['barcode'])) {
     $action = ($type === "replace") ? "item is replaced." : "item is refunded.";
 
     // Use prepared statements to prevent SQL injection
-    $update = $conn->prepare("UPDATE rts_content SET `status` = ? WHERE unique_barcode = ?");
-    $update->bind_param("is", $set_status, $barcode);
+    $update = $conn->prepare("UPDATE rts_content SET `status` = ?, returned_date = ? WHERE unique_barcode = ?");
+    $update->bind_param("iss", $set_status, $currentDateTime, $barcode);
 
     if ($update->execute()) {
 

@@ -32,6 +32,8 @@ if (isset($_GET['notnot'])) {
 <script src="../vendors/simplebar/simplebar.min.js"></script>
 
 <!-- ===============================================--><!--    Stylesheets--><!-- ===============================================-->
+<link href="../vendors/dropzone/dropzone.css" rel="stylesheet">
+<script src="../vendors/dropzone/dropzone-min.js"></script>
 <link href="../vendors/select2/select2.min.css" rel="stylesheet">
 <link href="../vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet">
 <link href="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.css" rel="stylesheet">
