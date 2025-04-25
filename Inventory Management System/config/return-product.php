@@ -20,13 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $outbound_id = $filtered_input['outbound_id'];
         $reason = $filtered_input['reason'];
         $imploded_filenames = "";
+        $fault = $filtered_input['fault'];
+        $fault_type = $filtered_input['type_reason'];
 
         
 
         // Insert return details
-        $insert = "INSERT INTO `returns` (unique_barcode, amount, `date`, user_id, warehouse, reason) VALUES (?, ?, ?, ?, ?, ?)";
+        $insert = "INSERT INTO `returns` (unique_barcode, amount, `date`, user_id, warehouse, reason, fault, fault_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insert);
-        $stmt->bind_param("sdssss", $barcode, $amount, $currentDateTime, $user_id, $warehouse_return, $reason);
+        $stmt->bind_param("sdssssss", $barcode, $amount, $currentDateTime, $user_id, $warehouse_return, $reason, $fault, $fault_type);
 
         if ($stmt->execute()) {
             $created_id = $conn->insert_id;

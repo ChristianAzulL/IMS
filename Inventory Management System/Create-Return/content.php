@@ -81,13 +81,15 @@ if (isset($_POST['barcode'])) {
                                     <select name="fault" class="form-select" name="form-select" id="" required>
                                         <option value="CLIENT FAULT">Customer Fault</option>
                                         <option value="SELLER FAULT">Seller Fault</option>
+                                        <option value="NONE">None</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-6">
                                     <label for="">Type</label>
                                     <select name="type_reason" class="form-select" id="" required>
-                                        <option value="FAILED DELIVERY">Failed Delivery</option>
+                                        <option value="DELIVERY FAILED">Delivery Failed</option>
                                         <option value="DEFECTIVE">Defective</option>
+                                        <option value="WRONG ITEM ORDER">Wrong Item Order</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-12">

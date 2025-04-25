@@ -5,7 +5,7 @@
                 <h2><b>Return Logs</b></h2>
             </div>
         </div>
-        <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn","warehouse","staff"],"page":5,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn","warehouse","staff", "fault_reason", "fault"],"page":5,"pagination":true}'>
             
             <!-- Search Bar -->
             <div class="row justify-content-end g-0">
@@ -72,6 +72,8 @@
                             <th class="text-900 sort text-end" data-sort="barcode">Barcode</th>
                             <th class="text-900 sort" data-sort="orn" style="width: 200px;">Outbound Reference no.</th>
                             <th class="text-900 sort" data-sort="date" style="width: 200px;">Return Date</th>
+                            <th class="text-900 sort" data-sort="fault">Fault</th>
+                            <th class="text-900 sort" data-sort="fault_reason">Classification</th>
                             <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
                             <th class="text-900 sort" data-sort="staff" style="width: 250px;">Staff</th>
                         </tr>
@@ -91,6 +93,8 @@
                                         r.amount,
                                         r.date,
                                         r.id AS return_id,
+                                        r.fault,
+                                        r.fault_type,
                                         s.outbound_id,
                                         p.description,
                                         b.brand_name,
@@ -115,6 +119,8 @@
                                 $barcode = $row['unique_barcode'];
                                 $amount = $row['amount'];
                                 $rdate = $row['date'];
+                                $fault = $row['fault'];
+                                $fault_reason = $row['fault_type'];
                                 $outbound_id = $row['outbound_id'];
                                 $description = $row['description'];
                                 $brand = $row['brand_name'];
@@ -137,6 +143,8 @@
                             <td class="barcode text-end"><?php echo $barcode;?></td>
                             <td class="orn"><span class="badge rounded-pill bg-primary"><?php echo $outbound_id;?></span></td>
                             <td class="date"><?php echo $rdate;?></td>
+                            <td class="fault"><?php echo $fault;?></td>
+                            <td class="fault_reason"><?php echo $fault_reason;?></td>
                             <td class="warehouse"><?php echo $rwarehouse;?></td>
                             <td class="staff"><img class="img rounded-circle" src="<?php echo $author_pfp;?>" height="30" alt=""> <?php echo $author;?></td>
                         </tr>
