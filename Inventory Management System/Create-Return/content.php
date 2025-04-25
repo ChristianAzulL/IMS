@@ -75,8 +75,27 @@ if (isset($_POST['barcode'])) {
                         <input type="hidden" name="outbound_id" value="<?php echo $row['hashed_id'];?>">
                         
                         <div class="col-lg-5 mb-3">
-                            <label for="">Reason</label>
-                            <textarea name="reason" class="form-control" required></textarea>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label for="">Fault</label>
+                                    <select name="fault" class="form-select" name="form-select" id="" required>
+                                        <option value="CLIENT FAULT">Customer Fault</option>
+                                        <option value="SELLER FAULT">Seller Fault</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="">Type</label>
+                                    <select name="type_reason" class="form-select" id="" required>
+                                        <option value="FAILED DELIVERY">Failed Delivery</option>
+                                        <option value="DEFECTIVE">Defective</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-12">
+                                    <label for="">Reason</label>
+                                    <textarea name="reason" class="form-control" required></textarea>
+                                </div>
+                            </div>
+                            
                         </div>
                         <div class="col-lg-7 mb-3">
                             <div class="row">
