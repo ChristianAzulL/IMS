@@ -5,7 +5,7 @@
                 <h2><b>Return Logs</b></h2>
             </div>
         </div>
-        <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn","warehouse","staff", "fault_reason", "fault"],"page":5,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn", "batch","warehouse","staff", "fault_reason", "fault"],"page":5,"pagination":true}'>
             
             <!-- Search Bar -->
             <div class="row justify-content-end g-0">
@@ -71,6 +71,7 @@
                             <th class="text-900 sort text-end" data-sort="amount">Amount Refunded</th>
                             <th class="text-900 sort text-end" data-sort="barcode">Barcode</th>
                             <th class="text-900 sort" data-sort="orn" style="width: 200px;">Outbound Reference no.</th>
+                            <th class="text-900 sort" data-sort="batch">Batch</th>
                             <th class="text-900 sort" data-sort="date" style="width: 200px;">Return Date</th>
                             <th class="text-900 sort" data-sort="fault">Fault</th>
                             <th class="text-900 sort" data-sort="fault_reason">Classification</th>
@@ -102,7 +103,8 @@
                                         w.warehouse_name,
                                         u.user_fname,
                                         u.user_lname,
-                                        u.pfp
+                                        u.pfp, 
+                                        s.batch_code
                                     FROM `returns` r 
                                     LEFT JOIN stocks s ON s.unique_barcode = r.unique_barcode
                                     LEFT JOIN product p ON p.hashed_id = s.product_id
@@ -127,6 +129,7 @@
                                 $category = $row['category_name'];
                                 $rwarehouse = $row['warehouse_name'];
                                 $author = $row['user_fname'] . " " . $row['user_lname'];
+                                $batch = $row['batch_code'];
                                 if(empty($row['pfp'])){
                                     $author_pfp = "../../assets/img/def_pfp.png" ;
                                 } else {
@@ -142,6 +145,7 @@
                             <td class="amount text-end"><?php echo $amount;?></td>
                             <td class="barcode text-end"><?php echo $barcode;?></td>
                             <td class="orn"><span class="badge rounded-pill bg-primary"><?php echo $outbound_id;?></span></td>
+                            <td class="batch"><span class="badge rounded-pill bg-info"><?php echo $batch;?></span></td>
                             <td class="date"><?php echo $rdate;?></td>
                             <td class="fault"><?php echo $fault;?></td>
                             <td class="fault_reason"><?php echo $fault_reason;?></td>

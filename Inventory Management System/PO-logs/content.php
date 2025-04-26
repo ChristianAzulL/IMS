@@ -78,9 +78,13 @@
             $by = $row['user_fname'] . " " . $row['user_lname'];
             $from_warehouse = $row['warehouse_name'];
             if($row['status'] == 0){
-              $status = '<span class="badge badge rounded-pill badge-subtle-warning">Pending  <div class="spinner-border" role="status" style="height:10px; width: 10px;"><span class="visually-hidden">Loading...</span></div></span>';
+              $status = '<span class="badge badge rounded-pill badge-subtle-warning">Drafted  <div class="spinner-border" role="status" style="height:10px; width: 10px;"><span class="visually-hidden">Loading...</span></div></span>';
             } elseif($row['status'] == 1){
-              $status = '<span class="badge badge rounded-pill badge-subtle-success">Sent to Supplier<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+              $status = '<span class="badge badge rounded-pill badge-subtle-info">Sent to Supplier<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+            } elseif($row['status'] == 2) {
+              $status = '<span class="badge badge rounded-pill badge-subtle-secondary">Confirmed by Supplier<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+            } elseif($row['status'] == 3){
+              $status = '<span class="badge badge rounded-pill badge-subtle-primary">In Transit/ Shipped<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
             } else {
               $status = '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
             }
@@ -128,7 +132,20 @@ while($row = $modal_po_res->fetch_assoc()){
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-        <a href="../Receive-po/" class="btn btn-primary" type="button">Receive P.O</a>
+        <?php 
+        if($row['status'] == 0){
+          $status = '<a href="../config/receive-po.php?status=1&&po=' . $modal_po_id . '" class="btn btn-info requires-confirmation" type="button">Sent to supplier</a>';
+        } elseif($row['status'] == 1){
+          $status = '<a href="../config/receive-po.php?status=2&&po=' . $modal_po_id . '" class="btn btn-secondary requires-confirmation" type="button">Confirmed by supplier</a>';
+        } elseif($row['status'] == 2) {
+          $status = '<a href="../config/receive-po.php?status=3&&po=' . $modal_po_id . '" class="btn btn-primary requires-confirmation" type="button">In Transit/ Shipped</a>';
+        } elseif($row['status'] == 3){
+          $status = '<a href="../config/receive-po.php?status=4&&po=' . $modal_po_id . '" class="btn btn-success requires-confirmation" type="button">Received</a>';
+        } else {
+          $status = '';
+        }
+        echo $status;
+        ?>
       </div>
     </div>
   </div>
@@ -184,3 +201,35 @@ while($row = $modal_po_res->fetch_assoc()){
 
 
 
+<!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+// Wait for the page to load
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all anchor tags with class 'requires-confirmation'
+    const links = document.querySelectorAll('.requires-confirmation');
+
+    links.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Stop the default link click
+
+            const href = this.getAttribute('href'); // Get the link
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to proceed?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = href; // Redirect if confirmed
+                }
+            });
+        });
+    });
+});
+</script>
