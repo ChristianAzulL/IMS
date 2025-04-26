@@ -5,34 +5,34 @@ return "'" . trim($id) . "'";
 
 // Create a comma-separated string of quoted IDs
 $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
-$outbound_today = 0;
-$outbound_sales_today = 0;
+// $outbound_today = 0;
+// $outbound_sales_today = 0;
 
-// Query to fetch outbound logs for today
-$outbound_query = "SELECT hashed_id AS ol_id FROM outbound_logs WHERE DATE(date_sent) = CURDATE() AND warehouse IN ($imploded_warehouse_ids)";
-$outbound_res = $conn->query($outbound_query);
+// // Query to fetch outbound logs for today
+// $outbound_query = "SELECT hashed_id AS ol_id FROM outbound_logs WHERE DATE(date_sent) = CURDATE() AND warehouse IN ($imploded_warehouse_ids)";
+// $outbound_res = $conn->query($outbound_query);
 
-if ($outbound_res->num_rows > 0) {
-    while ($row = $outbound_res->fetch_assoc()) {
-        $outbound_id = $row['ol_id'];
-        $outbound_today++;
+// if ($outbound_res->num_rows > 0) {
+//     while ($row = $outbound_res->fetch_assoc()) {
+//         $outbound_id = $row['ol_id'];
+//         $outbound_today++;
 
-        // Query to fetch sold price from outbound_content
-        $total_outbound_sales_query = "SELECT sold_price FROM outbound_content WHERE hashed_id = '$outbound_id'";
-        $total_outbound_sales_res = $conn->query($total_outbound_sales_query);
+//         // Query to fetch sold price from outbound_content
+//         $total_outbound_sales_query = "SELECT sold_price FROM outbound_content WHERE hashed_id = '$outbound_id'";
+//         $total_outbound_sales_res = $conn->query($total_outbound_sales_query);
         
-        if ($total_outbound_sales_res->num_rows > 0) {
-            while ($row = $total_outbound_sales_res->fetch_assoc()) {
-                $sold_price = $row['sold_price'];
-                $outbound_sales_today += $sold_price;
-            }
-        }
-    }
-}
+//         if ($total_outbound_sales_res->num_rows > 0) {
+//             while ($row = $total_outbound_sales_res->fetch_assoc()) {
+//                 $sold_price = $row['sold_price'];
+//                 $outbound_sales_today += $sold_price;
+//             }
+//         }
+//     }
+// }
 
-// Format numbers
-$formatted_outbound_today = number_format($outbound_today);
-$formatted_outbound_sales_today = number_format($outbound_sales_today, 2);
+// // Format numbers
+// $formatted_outbound_today = number_format($outbound_today);
+// $formatted_outbound_sales_today = number_format($outbound_sales_today, 2);
 
 $morethan_3_months = 0;
 
@@ -161,16 +161,16 @@ if($available_stocks>1){
                 <h3 class="text-primary mb-1">Good <?php echo $time_name . ", " . $user_fname; ?>!</h3>
                 <p>Here’s what happening with your Inventory today</p>
             </div>
-            <div class="d-flex py-3">
+            <!-- <div class="d-flex py-3">
                 <div class="pe-3">
                     <p class="text-600 fs-10 fw-medium">Today's outbound</p>
-                    <h4 class="text-800 mb-0"><?php echo $formatted_outbound_today;?></h4>
+                    <h4 class="text-800 mb-0"><?php // echo $formatted_outbound_today;?></h4>
                 </div>
                 <div class="ps-3">
                     <p class="text-600 fs-10">Today’s outbound sales</p>
-                    <h4 class="text-800 mb-0">₱<?php echo $formatted_outbound_sales_today;?></h4>
+                    <h4 class="text-800 mb-0">₱<?php // echo $formatted_outbound_sales_today;?></h4>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="card-body p-0">

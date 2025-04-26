@@ -24,6 +24,10 @@ if ($hour >= 5 && $hour < 12) {
             <div class="col-lg-12">
                 <?php include "fast_moving_product.php";?>
             </div>
+
+            <div class="col-lg-12">
+                <?php include "inbound_outbound.php";?>
+            </div>
         </div>
     </div>
     
