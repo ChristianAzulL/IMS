@@ -23,12 +23,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fault = $filtered_input['fault'];
         $fault_type = $filtered_input['type_reason'];
 
+        $supplier_info = "SELECT sup.local_international FROM stocks s LEFT JOIN supplier sup ON sup.hashed_id = s.supplier WHERE s.unique_barcode = '$barcode' LIMIT 1";
+        $supplier_info_res = $conn->query($supplier_info);
+        if($supplier_info_res->num_rows>0){
+            $row=$supplier_info_res->fetch_assoc();
+            $supplier_type = $row['local_international'];
+        }
+
         
 
         // Insert return details
-        $insert = "INSERT INTO `returns` (unique_barcode, amount, `date`, user_id, warehouse, reason, fault, fault_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $insert = "INSERT INTO `returns` (unique_barcode, amount, `date`, user_id, warehouse, reason, fault, fault_type, supplier_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($insert);
-        $stmt->bind_param("sdssssss", $barcode, $amount, $currentDateTime, $user_id, $warehouse_return, $reason, $fault, $fault_type);
+        $stmt->bind_param("sdsssssss", $barcode, $amount, $currentDateTime, $user_id, $warehouse_return, $reason, $fault, $fault_type, $supplier_type);
 
         if ($stmt->execute()) {
             $created_id = $conn->insert_id;

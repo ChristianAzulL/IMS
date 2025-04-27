@@ -16,6 +16,8 @@ if(empty($_SESSION['pfp'])){
     $user_pfp = $_SESSION['pfp'];
 }
 
+$date_today = date("M j, Y");
+
 if ($user_email !== "lpo_admin@lpo.com") {
     $check_otp = "SELECT first_login FROM users WHERE hashed_id = '$user_id' LIMIT 1";
     $check_otp_res = $conn->query($check_otp);
@@ -64,6 +66,7 @@ foreach ($warehouse_ids_array as $warehouse_id) {
         $warehouse_options[] = '<option value="' . $row['warehouse_name'] . '">' . $row['warehouse_name'] . '</option>';
         $warehouse_options2[] = '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
         $warehouse_dropdown[] = '<a class="dropdown-item" href="../Reports/?select_warehouse=' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</a>';
+        $warehouse_dropdow_dashboard[] = '<a class="dropdown-item" href="../dashboard/?wh=' . $row['hashed_id'] . '&&wha=' . $row['warehouse_name'] . '">' . $row['warehouse_name'] . '</a>';
     }
 }
 // Get the current file name

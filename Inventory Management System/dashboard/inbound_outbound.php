@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function fetchData(date_between = null) {
         let bodyData = date_between ? "date_between=" + encodeURIComponent(date_between) : "";
 
-        fetch("test.php", {
+        fetch("test.php?wh=<?php echo $dashboard_wh;?>", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
