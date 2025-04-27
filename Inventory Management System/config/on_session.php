@@ -37,7 +37,10 @@ if ($user_email !== "lpo_admin@lpo.com") {
     }
 }
 
-$first_login = $check_login;
+if($user_fullname !== "Laptop PC Outlet"){
+    $first_login = $check_login;
+} 
+
 
 if(!isset($user_id)){
     header("Location: ../");
