@@ -32,7 +32,12 @@
                     $users_qty_disabled = number_format($row['users_qty_disabled']);
                 }
 
-                $users_percentage = ($users_qty_disabled / $users_qty) * 100;
+                if ($users_qty != 0) {
+                    $users_percentage = ($users_qty_disabled / $users_qty) * 100;
+                } else {
+                    $users_percentage = 0;
+                }
+                
 
                 ?>
                 <h6 class="pb-1 text-700">Users</h6>
