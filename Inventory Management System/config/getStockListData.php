@@ -11,7 +11,7 @@ try {
 
     $baseQuery = "
         SELECT 
-            COUNT(CASE WHEN s.item_status = 0 AND s.warehouse = w.hashed_id THEN 1 END) AS quantity,
+            COUNT(CASE WHEN s.item_status NOT IN (1, 4, 8) AND s.warehouse = w.hashed_id THEN 1 END) AS quantity,
             s.product_id,
             p.id, 
             p.id AS key_product,
@@ -72,7 +72,7 @@ try {
            OR c.category_name LIKE ? 
            OR u.user_fname LIKE ? 
            OR u.user_lname LIKE ?)
-           AND s.item_status = 0
+           AND s.item_status NOT IN (1, 4, 8)
     ";
 
     if ($warehouse) {

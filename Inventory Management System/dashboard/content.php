@@ -28,6 +28,11 @@ if ($hour >= 5 && $hour < 12) {
             <div class="col-lg-12">
                 <?php include "inbound_outbound.php";?>
             </div>
+
+            <div class="col-lg-12">
+                <?php include "fast_moving_category.php";?>
+            </div>
+            
         </div>
     </div>
     
@@ -40,8 +45,14 @@ if ($hour >= 5 && $hour < 12) {
                 </div>
             </div>
             
-            <div class="col-lg-12">
+            <div class="col-lg-12 mb-3">
                 <?php include "monthly_sales_display.php";?>
+            </div>
+            <div class="col-lg-12 mb-3">
+                <?php include "incoming_stocks.php";?>
+            </div>
+            <div class="col-lg-12 mb-3">
+                <?php include "slow_moving_category.php";?>
             </div>
         </div>
     </div>

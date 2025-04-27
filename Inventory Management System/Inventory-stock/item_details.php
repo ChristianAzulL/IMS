@@ -3,7 +3,7 @@
         <thead>
             <tr class="table-dark">
                 <th  scope="col">Batch Code</th>
-                <th  scope="col">Qty (Available)</th>
+                <th  scope="col">Qty Delivered</th>
                 <th  scope="col">Supplier</th>
                 <th  scope="col">Import</th>
                 <th  scope="col">Imbounded by</th>
@@ -36,6 +36,7 @@
                     WHERE s.product_id = ? 
                       AND s.warehouse = ?
                       AND s.item_status !=8
+                      AND s.batch_code != '-'
                     GROUP BY s.batch_code
                     ORDER BY s.date
                 ";

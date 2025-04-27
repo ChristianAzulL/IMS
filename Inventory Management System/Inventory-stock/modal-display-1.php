@@ -12,18 +12,27 @@ $limit = 100; // Load 100 records per request
 $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
 
 if (!empty($batch_code)) {
-    $query = "SELECT 
-                s.unique_barcode, 
-                s.item_status, 
-                il.location_name, 
-                s.capital, 
-                ol.sold_price 
-              FROM stocks s 
-              LEFT JOIN item_location il ON il.id = s.item_location 
-              LEFT JOIN outbound_content ol ON ol.unique_barcode = s.unique_barcode 
-              WHERE s.batch_code = ? AND s.product_id = ? AND s.warehouse = ?
-              ORDER BY s.barcode_extension ASC 
-              LIMIT ?, ?";
+    $query = "SELECT DISTINCT
+            s.unique_barcode, 
+            s.item_status, 
+            il.location_name, 
+            s.capital, 
+            ol.sold_price 
+          FROM stocks s 
+          LEFT JOIN item_location il ON il.id = s.item_location 
+          LEFT JOIN (
+            SELECT o1.*
+            FROM outbound_content o1
+            INNER JOIN (
+              SELECT unique_barcode, MAX(id) as max_id
+              FROM outbound_content
+              GROUP BY unique_barcode
+            ) o2 ON o1.unique_barcode = o2.unique_barcode AND o1.id = o2.max_id
+          ) ol ON ol.unique_barcode = s.unique_barcode 
+          WHERE s.batch_code = ? AND s.product_id = ? AND s.warehouse = ?
+          ORDER BY s.barcode_extension ASC 
+          LIMIT ?, ?";
+
 
     if ($stmt = $conn->prepare($query)) {
         $stmt->bind_param("sssii", $batch_code, $product_id, $warehouse, $offset, $limit);
