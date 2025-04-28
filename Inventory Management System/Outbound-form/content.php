@@ -40,9 +40,21 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
     </script>
 <?php
 }else{
-    if(strpos($warehouses, ',') ===false){
-        $_SESSION['warehouse_outbound'] = $warehouses;
-    }
+    if(strpos($warehouses, ',')!==true){
+        // Fetch warehouse hashed_id securely
+        $warehouse_sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = ? LIMIT 1";
+        $stmt = $conn->prepare($warehouse_sql);
+        $stmt->bind_param("s", $warehouses);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($row = $result->fetch_assoc()) {
+            $warehouse = $row['warehouse_name'];
+            $_SESSION['warehouse_outbound'] = $warehouse;
+        } else {
+            echo json_encode(['status' => 'error', 'error' => 'Invalid warehouse.']);
+            exit;
+        }
+       }
 ?>
     <div class="row">
         <div class="col-lg-12">
