@@ -133,7 +133,7 @@ if (isset($_POST['barcode'])) {
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             document.getElementById('imageInput').addEventListener('change', function (e) {
-            if (this.files.length < 3) {
+            if (this.files.length < 4) {
                 alert('You can only upload 3 images.');
                 this.value = ''; // Clear the selected files
                 }

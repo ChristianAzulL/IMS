@@ -26,8 +26,17 @@
         <h6 class="pb-1 text-700">Inbound</h6>
         <p id="inboundQty" class="font-sans-serif lh-1 mb-1 fs-7">number_format(${inbound_qty})</p> <!-- id="inboundQty" -->
         <div class="d-flex align-items-center">
-          <h6 class="fs-10 text-500 mb-0">qty</h6>
+          <h6 class="fs-10 text-500 mb-3">qty</h6>
         </div>
+        <div class="d-flex align-items-center">
+          <h6 class="fs-11 text-600 mb-0">Local:</h6>
+          <h6 id="local_qty"class="fs-11 text-600 mb-0"></h6>
+        </div>
+        <div class="d-flex align-items-center">
+          <h6 class="fs-11 text-600 mb-0">Import:</h6>
+          <h6 id="import_qty" class="fs-11 text-600 mb-0"></h6>
+        </div>
+        
       </div>
 
       <!-- Gross Sale -->
@@ -40,6 +49,14 @@
       <div class="col-6 col-md-6 border-200 border-bottom-md-0 border-end pt-4 pb-md-0 ps-md-3">
         <h6 class="pb-1 text-700">Inbound ₱</h6>
         <p id="inboundCost" class="font-sans-serif lh-1 mb-1 fs-7">₱ 365.53</p> <!-- id="inboundCost" -->
+        <div class="d-flex align-items-center">
+          <h6 class="fs-11 text-600 mb-0">Local:</h6>
+          <h6 id="local_cost" class="fs-11 text-600 mb-0"></h6>
+        </div>
+        <div class="d-flex align-items-center">
+          <h6 class="fs-11 text-600 mb-0">Import:</h6>
+          <h6 id="import_cost" class="fs-11 text-600 mb-0"></h6>
+        </div>
       </div>
 
     </div>
@@ -76,6 +93,10 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("inboundQty").innerText = numberFormat(data.inbound_qty);
             document.getElementById("outboundSales").innerText = currencyFormat(data.outbound_sales);
             document.getElementById("inboundCost").innerText = currencyFormat(data.inbound_cost);
+            document.getElementById("local_qty").innerText = numberFormat(data.local_inbound_qty);
+            document.getElementById("import_qty").innerText = numberFormat(data.import_inbound_qty);
+            document.getElementById("local_cost").innerText = currencyFormat(data.local_inbound_amount);
+            document.getElementById("import_cost").innerText = currencyFormat(data.import_inbound_amount);
         })
         .catch(error => {
             console.error("Error fetching data:", error);

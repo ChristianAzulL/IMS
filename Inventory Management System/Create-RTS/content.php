@@ -72,23 +72,27 @@ if(!isset($_SESSION['warehouse_for_return'])){
     </div>
     <div class="col-lg-7">
       <form action="../config/process-return.php" id="to-process" method="POST" enctype="multipart/form-data">
-        <div class="card" style="height: 100px;">
+        <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="col-md-3">
+              <div class="col-md-6">
                 <label for="">From:</label>
                 <input type="text" class="form-control" value="<?php echo $_SESSION['warehouse_for_return']; ?>" disabled>
               </div>
-              <div class="col-md-5">
+              <div class="col-md-6">
                 <label for="">Supplier:</label>
                 <div id="to_supplier"></div>
               </div>
-              <div class="col-md-4">
+              <div class="col-md-6">
                 <label for="">To:</label>
                 <select class="form-select" name="to_status" required>
                     <option value="return and refund">return & refund</option>
                     <option value="return and replace">return & replace</option>
                 </select>
+              </div>
+              <div class="col-md-6">
+                <label class="fs-11" for="">Proof(front, back, warranty photo)</label>
+                <input type="file" class="form-control" name="images[]" id="imageInput" multiple accept="image/*" required>
               </div>
             </div>
           </div>
@@ -101,7 +105,6 @@ if(!isset($_SESSION['warehouse_for_return'])){
                 <textarea name="remarks" class="form-control" id="" placeholder="Enter reason here....."></textarea>
               </div>
               <div class="col-5">
-                <input type="file" class="form-control" name="images[]" id="imageInput" multiple accept="image/*" required>
                 <button class="btn btn-primary mt-1 w-100" id="to-process-btn">Submit </button>
               </div>
             </div>
@@ -138,7 +141,7 @@ $(document).ready(function(){
     setInterval(checkData, 3000);
 
     document.getElementById('imageInput').addEventListener('change', function (e) {
-    if (this.files.length > 3) {
+    if (this.files.length > 4) {
         alert('You can only upload a maximum of 3 images.');
         this.value = ''; // Clear the selected files
         }
