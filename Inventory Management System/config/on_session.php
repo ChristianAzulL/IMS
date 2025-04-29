@@ -67,8 +67,14 @@ foreach ($warehouse_ids_array as $warehouse_id) {
         $warehouse_options2[] = '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
         $warehouse_dropdown[] = '<a class="dropdown-item" href="../Reports/?select_warehouse=' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</a>';
         $warehouse_dropdow_dashboard[] = '<a class="dropdown-item" href="../dashboard/?wh=' . $row['hashed_id'] . '&&wha=' . $row['warehouse_name'] . '">' . $row['warehouse_name'] . '</a>';
+
+        // Collect warehouse names
+        $for_implode_warehouse_names[] = $row['warehouse_name'];
     }
 }
+
+// Imploded warehouse names
+$imploded_warehouse_names = implode(', ', $for_implode_warehouse_names);
 // Get the current file name
 $currentFile = basename($_SERVER['PHP_SELF']);
 
