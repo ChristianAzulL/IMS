@@ -34,7 +34,7 @@ if (isset($_GET['product_id'])) {
     </div>
     <div class="col-9">
         <div class="row p-3">
-            <div class="col-lg-12 mb-3">
+            <div class="col-lg-8 mb-3">
                 <label for="">Product Description</label>
                 <input type="text" class="form-control" name="product_description" value="<?php echo $product_des;?>">
             </div>
@@ -80,9 +80,20 @@ if (isset($_GET['product_id'])) {
                     ?>
                 </select>
             </div>
-            <div class="col-lg-4 mb-3">
-                <label for="safety">Safety</label>
-                <input type="number" name="safety" min="2" max="1000" class="form-control" value="<?php echo $update_safety; ?>">
+            <div class="col-lg-3 mb-3">
+                <label for="safety">Safety(Skip if no edit)</label>
+                <input type="number" name="safety" min="2" max="1000" class="form-control" value="">
+            </div>
+            <div class="col-lg-5 mb-3">
+                <label for="">Safety for Warehouse</label>
+                <select class="form-select" name="safety_for" id="safety_for">
+                    <option value="" selected>Skip if no edit</option>
+                    <?php 
+                    foreach($warehouse_options2 AS $options){
+                        echo $options;
+                    }
+                    ?>
+                </select>
             </div>
         </div>
     </div>

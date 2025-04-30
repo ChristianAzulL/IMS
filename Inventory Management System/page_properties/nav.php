@@ -873,7 +873,6 @@
           <ul class="nav collapse" id="authentication">
             <li class="nav-item">
               <a class="nav-link" href="../Forecast/">
-              <a class="nav-link" href="#">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Forecast</span></div>
               </a>
             </li>
