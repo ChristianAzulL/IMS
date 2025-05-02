@@ -880,6 +880,37 @@
         </li>
         <?php
         }
+
+        if(strpos($access, "reports")!==false || $user_position_name === "Administrator"){
+        ?>
+
+        <!-- Forecasting Dropdown -->
+        <li class="nav-item">
+          <a class="nav-link dropdown-indicator" href="#authentication_2" role="button" 
+              data-bs-toggle="collapse" aria-expanded="false" aria-controls="authentication">
+            <div class="d-flex align-items-center">
+              <span class="nav-link-icon"><span class="fas fa-book"></span></span>
+              <span class="nav-link-text ps-1">Reports </span>
+            </div>
+          </a>
+          
+          <!-- Forecasting Submenu -->
+          <ul class="nav collapse" id="authentication_2">
+            <li class="nav-item">
+              <a class="nav-link" href="../Reports/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Staff-Report/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Staff Voids & Deletes</span></div>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <?php
+        }
+
         if(strpos($access, "users")!==false || $user_position_name === "Administrator"){
         ?>
         <!-- Users Section -->
@@ -918,15 +949,6 @@
             </li>
             <?php
             }
-            if(strpos($access, "reports")!==false || $user_position_name === "Administrator"){
-              ?>
-              <li class="nav-item">
-                <a class="nav-link" href="../Reports/">
-                  <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Reports</span></div>
-                </a>
-              </li>
-              <?php
-              }
             if(strpos($access, "admin_category")!==false || $user_position_name === "Administrator"){
             ?>
             <li class="nav-item">
