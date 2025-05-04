@@ -848,8 +848,8 @@
           <!-- Finance Submenu -->
           <ul class="nav collapse" id="support-desk">
             <li class="nav-item">
-              <a class="nav-link" href="../Transaction-overview/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Transaction Overview</span></div>
+              <a class="nav-link" href="../Finance/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Finance</span></div>
               </a>
             </li>
           </ul>
@@ -904,6 +904,11 @@
             <li class="nav-item">
               <a class="nav-link" href="../Staff-Report/">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Staff Voids & Deletes</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Transaction-overview/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Transaction Overview</span></div>
               </a>
             </li>
           </ul>
