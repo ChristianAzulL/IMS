@@ -5,7 +5,7 @@ if (isset($_GET['id'])) {
     $rts_id = $_GET['id'];
 
     // Get the 'for' value from rts_logs
-    $for_query = "SELECT `for`, `status`, images, reason FROM rts_logs WHERE id = '$rts_id' LIMIT 1";
+    $for_query = "SELECT `for`, `status`, proof, front, back, warranty, reason FROM rts_logs WHERE id = '$rts_id' LIMIT 1";
     $for_res = $conn->query($for_query);
     $for = "";
     if ($for_res->num_rows > 0) {
@@ -13,8 +13,10 @@ if (isset($_GET['id'])) {
         $for = $row['for'];
         $rts_log_status = $row['status'];
         $reason = $row['reason'];
-        $rts_images = $row['images']; // sample value: img_1, img_2, img_3
-        $images_array = explode(',', $rts_images);
+        $rts_proof = $row['proof'];
+        $rts_front = $row['front']; 
+        $rts_back = $row['back'];
+        $rts_warranty = $row['warranty'];
     }
     if($rts_log_status == 0){
     if ($for === 'return and replace') {
@@ -34,7 +36,7 @@ if (isset($_GET['id'])) {
         <div class="row">
             <?php 
             $col = 6;
-            if(!empty($rts_images)){
+            if(!empty($rts_proof)){
                 $col = 6;
             ?>
             <div class="col-lg-6 text-start">
@@ -48,6 +50,7 @@ if (isset($_GET['id'])) {
             ?>
             <div class="col-lg-<?php echo $col;?> text-end">
                 <?php echo $linked;?> 
+                <a class="btn btn-success ms-sm-2 mb-3 fs-10" href="download.php?id=<?php echo $rts_id;?>">Download</a>
             </div>
             <?php 
                 }
@@ -135,20 +138,26 @@ if (isset($_GET['id'])) {
             <div class="collapse" id="collapseExample">
                 <div class="swiper theme-slider">
                 <div class="swiper-wrapper">
-                    <?php foreach ($images_array as $image): ?>
                     <div class="swiper-slide bg-dark">
                         <div class="swiper-zoom-container">
-                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($image); ?>" alt="" style="height: 500px;"/>
+                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($rts_proof); ?>" alt="" style="height: 500px;"/>
                         </div>
                     </div>
-                    <?php endforeach; ?>
-                    <?php foreach ($images_array as $image): ?>
                     <div class="swiper-slide bg-dark">
                         <div class="swiper-zoom-container">
-                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($image); ?>" alt="" style="height: 500px;"/>
+                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($rts_front); ?>" alt="" style="height: 500px;"/>
                         </div>
                     </div>
-                    <?php endforeach; ?>
+                    <div class="swiper-slide bg-dark">
+                        <div class="swiper-zoom-container">
+                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($rts_back); ?>" alt="" style="height: 500px;"/>
+                        </div>
+                    </div>
+                    <div class="swiper-slide bg-dark">
+                        <div class="swiper-zoom-container">
+                        <img class="rounded-1 img-fluid" src="../../assets/img_rts/<?php echo $rts_id;?>/<?php echo trim($rts_warranty); ?>" alt="" style="height: 500px;"/>
+                        </div>
+                    </div>
                 </div>
                 <div class="swiper-button-next swiper-button-white"></div>
                 <div class="swiper-button-prev swiper-button-white"></div>

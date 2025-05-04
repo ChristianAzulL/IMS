@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute()) {
         $created_id = $conn->insert_id;
 
-        $imageFilenames = [];
+        $imageFilename = null;
 
-        if (!empty($_FILES['images']['name'][0])) {
+        if (!empty($_FILES['image_proof']['name'])) {
             $folderName = $created_id;
             $uploadDir = "../../assets/img_rts/" . $folderName . "/";
 
@@ -31,33 +31,94 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 mkdir($uploadDir, 0777, true);
             }
 
-            foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
-                $originalName = basename($_FILES['images']['name'][$key]);
-                $imageType = $_FILES['images']['type'][$key];
+            $originalName = basename($_FILES['image_proof']['name']);
+            $tmp_name = $_FILES['image_proof']['tmp_name'];
+            $destination = $uploadDir . $originalName;
 
-                // // Only check image type (not size)
-                // if (!in_array($imageType, ['image/jpeg','image/jpg', 'image/png', 'image/webp', 'image/gif'])) {
-                //     error_log("Skipped file $originalName due to invalid type: $imageType");
-                //     continue;
-                // }
+            if (move_uploaded_file($tmp_name, $destination)) {
+                $imageFilename = $originalName;
 
-                $destination = $uploadDir . $originalName;
+                // Update rts_logs with image filename
+                $stmt_update_image = $conn->prepare("UPDATE rts_logs SET proof = ? WHERE id = ?");
+                $stmt_update_image->bind_param("si", $imageFilename, $created_id);
+                $stmt_update_image->execute();
+            } else {
+                error_log("Failed to move uploaded image: $originalName");
+            }
+        }
 
-                if (move_uploaded_file($tmp_name, $destination)) {
-                    $imageFilenames[] = $originalName;
-                } else {
-                    error_log("Failed to move uploaded file: $originalName");
-                }
+        if (!empty($_FILES['image_front']['name'])) {
+            $folderName = $created_id;
+            $uploadDir = "../../assets/img_rts/" . $folderName . "/";
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
             }
 
-            // Update rts_logs if there are images
-            if (!empty($imageFilenames)) {
-                $imploded_filenames = implode(',', $imageFilenames);
-                $stmt_update_images = $conn->prepare("UPDATE rts_logs SET images = ? WHERE id = ?");
-                $stmt_update_images->bind_param("si", $imploded_filenames, $created_id);
-                $stmt_update_images->execute();
+            $originalName = basename($_FILES['image_front']['name']);
+            $tmp_name = $_FILES['image_front']['tmp_name'];
+            $destination = $uploadDir . $originalName;
+
+            if (move_uploaded_file($tmp_name, $destination)) {
+                $imageFilename = $originalName;
+
+                // Update rts_logs with image filename
+                $stmt_update_image = $conn->prepare("UPDATE rts_logs SET front = ? WHERE id = ?");
+                $stmt_update_image->bind_param("si", $imageFilename, $created_id);
+                $stmt_update_image->execute();
+            } else {
+                error_log("Failed to move uploaded image: $originalName");
             }
-        } 
+        }
+
+        if (!empty($_FILES['image_back']['name'])) {
+            $folderName = $created_id;
+            $uploadDir = "../../assets/img_rts/" . $folderName . "/";
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $originalName = basename($_FILES['image_back']['name']);
+            $tmp_name = $_FILES['image_back']['tmp_name'];
+            $destination = $uploadDir . $originalName;
+
+            if (move_uploaded_file($tmp_name, $destination)) {
+                $imageFilename = $originalName;
+
+                // Update rts_logs with image filename
+                $stmt_update_image = $conn->prepare("UPDATE rts_logs SET back = ? WHERE id = ?");
+                $stmt_update_image->bind_param("si", $imageFilename, $created_id);
+                $stmt_update_image->execute();
+            } else {
+                error_log("Failed to move uploaded image: $originalName");
+            }
+        }
+
+        if (!empty($_FILES['image_warranty']['name'])) {
+            $folderName = $created_id;
+            $uploadDir = "../../assets/img_rts/" . $folderName . "/";
+
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            $originalName = basename($_FILES['image_warranty']['name']);
+            $tmp_name = $_FILES['image_warranty']['tmp_name'];
+            $destination = $uploadDir . $originalName;
+
+            if (move_uploaded_file($tmp_name, $destination)) {
+                $imageFilename = $originalName;
+
+                // Update rts_logs with image filename
+                $stmt_update_image = $conn->prepare("UPDATE rts_logs SET warranty = ? WHERE id = ?");
+                $stmt_update_image->bind_param("si", $imageFilename, $created_id);
+                $stmt_update_image->execute();
+            } else {
+                error_log("Failed to move uploaded image: $originalName");
+            }
+        }
+
 
 
         

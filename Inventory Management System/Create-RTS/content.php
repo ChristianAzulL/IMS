@@ -75,15 +75,15 @@ if(!isset($_SESSION['warehouse_for_return'])){
         <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="">From:</label>
                 <input type="text" class="form-control" value="<?php echo $_SESSION['warehouse_for_return']; ?>" disabled>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="">Supplier:</label>
                 <div id="to_supplier"></div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-4">
                 <label for="">To:</label>
                 <select class="form-select" name="to_status" required>
                     <option value="return and refund">return & refund</option>
@@ -91,8 +91,20 @@ if(!isset($_SESSION['warehouse_for_return'])){
                 </select>
               </div>
               <div class="col-md-6">
-                <label class="fs-11" for="">Proof(front, back, warranty photo)</label>
-                <input type="file" class="form-control" name="images[]" id="imageInput" multiple accept="image/*" required>
+                <label class="fs-11" for="">Proof</label>
+                <input type="file" class="form-control" name="image_proof" id="imageInput" accept="image/*" required>
+              </div>
+              <div class="col-md-6">
+                <label class="fs-11" for="">Front Picture</label>
+                <input type="file" class="form-control" name="image_front" id="imageInput" accept="image/*" required>
+              </div>
+              <div class="col-md-6">
+                <label class="fs-11" for="">Back Picture</label>
+                <input type="file" class="form-control" name="image_back" id="imageInput" accept="image/*" required>
+              </div>
+              <div class="col-md-6">
+                <label class="fs-11" for="">Warranty</label>
+                <input type="file" class="form-control" name="image_warranty" id="imageInput" accept="image/*" required>
               </div>
             </div>
           </div>
@@ -140,12 +152,7 @@ $(document).ready(function(){
     // Check check_data.php every 3 seconds
     setInterval(checkData, 3000);
 
-    document.getElementById('imageInput').addEventListener('change', function (e) {
-    if (this.files.length > 4) {
-        alert('You can only upload a maximum of 3 images.');
-        this.value = ''; // Clear the selected files
-        }
-    });
+    
 
     // Handle form submission for Single Transfer
     $(document).on("submit", "#single", function(e){
