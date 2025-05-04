@@ -27,6 +27,8 @@
             // Implode raw hashed IDs
             $imploded_category = "'" . implode("','", $categories) . "'";
          }
+
+         
          
          
          
