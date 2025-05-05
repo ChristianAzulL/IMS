@@ -116,7 +116,7 @@
                                 <thead class="bg-primary">
                                     <tr>
                                         <th class="fs-10 text-white ">#</th>
-                                        <th class="fs-10 text-white " colspan="9">CATEGORY</th>
+                                        <th class="fs-10 text-white " colspan="11">CATEGORY</th>
                                         <th class="fs-10 text-white text-end ">QTY</th>
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL UNIT COST</th>
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL GROSS SALES</th>
@@ -138,8 +138,7 @@
                                     LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                     WHERE
-                                    oc.status = 0
-                                    AND s.item_status NOT IN (4, 8)
+                                    s.item_status != 8
                                     AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                     AND ol.warehouse = '$warehouse_transaction'
                                     GROUP BY c.category_name
@@ -168,7 +167,7 @@
                                                     echo '
                                                     <tr class="' . $random_bg . '">
                                                         <td class="fs-10">' . $num . '</td>
-                                                        <td class="fs-10" colspan="9">'. $category_name .'</td>
+                                                        <td class="fs-10" colspan="11">'. $category_name .'</td>
                                                         <td class="fs-10 text-end">'. $outbound_qty .'</td>
                                                         <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
                                                         <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
@@ -186,6 +185,8 @@
                                                         <td class="fs-11"><b>BRAND</b></td>
                                                         <td class="fs-11"><b>BARCODE</b></td>
                                                         <td class="fs-11"><b>BATCH</b></td>
+                                                        <td class="fs-11"><b>STAFF</b></td>
+                                                        <td class="fs-11"><b>STATUS</b></td>
                                                         <td class="fs-11 text-end"><b>UNIT COST</b></td>
                                                         <td class="fs-11 text-end"><b>GROSS SALE</b></td>
                                                         <td class="fs-11 text-end"><b>NET INCOME</b></td>
@@ -205,18 +206,22 @@
                                                         p.description,
                                                         b.brand_name,
                                                         s.batch_code,
-                                                        s.capital
+                                                        s.capital,
+                                                        u.user_fname,
+                                                        u.user_lname,
+                                                        oc.status AS outbound_status
                                                     FROM outbound_content oc
                                                     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                                     LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
                                                     LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
                                                     LEFT JOIN product p ON p.hashed_id = s.product_id
                                                     LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                    LEFT JOIN users u ON u.hashed_id = ol.user_id
                                                     WHERE p.category = '$category_id'
-                                                    AND oc.status = 0
-                                                    AND s.item_status NOT IN (4, 8)
+                                                    AND s.item_status != 8
                                                     AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                     AND ol.warehouse = '$warehouse_transaction'
+                                                    ORDER BY u.user_fname ASC
                                                     ";
                                                     $item_res = $conn->query($item_query);
                                                     if($item_res->num_rows>0){
@@ -234,6 +239,16 @@
                                                             $capital = $row['capital'];
                                                             $date_sent = $row['date_sent'];
                                                             $net_income = $sold_price - $capital;
+                                                            $staff_fullname = $row['user_fname'] . " " . $row['user_lname'];
+                                                            if($row['outbound_status'] == 0){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Paid</span>';
+                                                            } elseif($row['outbound_status'] == 1){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-warning">Returned</span>';
+                                                            } elseif($row['outbound_status'] == 2){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Voided</span>';
+                                                            } elseif($row['outbound_status'] == 6){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-primary">Outbounded</span>';
+                                                            }
                                                             
                                                             echo '
                                                             <tr class="' . $random_bg . '">
@@ -248,6 +263,8 @@
                                                                 <td class="fs-11">' . $brand_name . '</td>
                                                                 <td class="fs-11">' . $unique_barcode . '</td>
                                                                 <td class="fs-11">' . $batch_code . '</td>
+                                                                <td class="fs-11">' . $staff_fullname . '</td>
+                                                                <td class="fs-11">' . $outbound_status . '</td>
                                                                 <td class="fs-11 text-end">' . $capital . '</td>
                                                                 <td class="fs-11 text-end">' . $sold_price . '</td>
                                                                 <td class="fs-11 text-end">' . $net_income . '</td>
@@ -262,7 +279,7 @@
                                                 echo '
                                                 <tr class="' . $random_bg . '">
                                                     <td class="fs-10">' . $num . '</td>
-                                                    <td class="fs-10" colspan="9">'. $category_name .'</td>
+                                                    <td class="fs-10" colspan="11">'. $category_name .'</td>
                                                     <td class="fs-10 text-end">'. $outbound_qty .'</td>
                                                     <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
                                                     <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
@@ -280,6 +297,8 @@
                                                     <td class="fs-11"><b>BRAND</b></td>
                                                     <td class="fs-11"><b>BARCODE</b></td>
                                                     <td class="fs-11"><b>BATCH</b></td>
+                                                    <td class="fs-11"><b>STAFF</b></td>
+                                                    <td class="fs-11"><b>STATUS</b></td>
                                                     <td class="fs-11 text-end"><b>UNIT COST</b></td>
                                                     <td class="fs-11 text-end"><b>GROSS SALE</b></td>
                                                     <td class="fs-11 text-end"><b>NET INCOME</b></td>
@@ -298,18 +317,22 @@
                                                         p.description,
                                                         b.brand_name,
                                                         s.batch_code,
-                                                        s.capital
+                                                        s.capital,
+                                                        u.user_fname,
+                                                        u.user_lname,
+                                                        oc.status AS outbound_status
                                                     FROM outbound_content oc
                                                     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                                     LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
                                                     LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
                                                     LEFT JOIN product p ON p.hashed_id = s.product_id
                                                     LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                    LEFT JOIN users u ON u.hashed_id = ol.user_id
                                                     WHERE p.category = '$category_id'
-                                                    AND oc.status = 0
-                                                    AND s.item_status NOT IN (4, 8)
+                                                    AND s.item_status != 8
                                                     AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                     AND ol.warehouse = '$warehouse_transaction'
+                                                    ORDER BY u.user_fname ASC
                                                     ";
                                                     $item_res = $conn->query($item_query);
                                                     if($item_res->num_rows>0){
@@ -327,6 +350,16 @@
                                                             $capital = $row['capital'];
                                                             $date_sent = $row['date_sent'];
                                                             $net_income = $sold_price - $capital;
+                                                            $staff_fullname = $row['user_fname'] . " " . $row['user_lname'];
+                                                            if($row['outbound_status'] == 0){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Paid</span>';
+                                                            } elseif($row['outbound_status'] == 1){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-warning">Returned</span>';
+                                                            } elseif($row['outbound_status'] == 2){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Voided</span>';
+                                                            } elseif($row['outbound_status'] == 6){
+                                                                $outbound_status = '<span class="badge rounded-pill badge-subtle-primary">Outbounded</span>';
+                                                            }
                                                             
                                                             echo '
                                                             <tr class="' . $random_bg . '">
@@ -341,6 +374,8 @@
                                                                 <td class="fs-11">' . $brand_name . '</td>
                                                                 <td class="fs-11">' . $unique_barcode . '</td>
                                                                 <td class="fs-11">' . $batch_code . '</td>
+                                                                <td class="fs-11">' . $staff_fullname . '</td>
+                                                                <td class="fs-11">' . $outbound_status . '</td>
                                                                 <td class="fs-11 text-end">' . $capital . '</td>
                                                                 <td class="fs-11 text-end">' . $sold_price . '</td>
                                                                 <td class="fs-11 text-end">' . $net_income . '</td>
@@ -349,20 +384,20 @@
                                                     }
                                             }
                                             $num++;
-                                            $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
-                                            echo '<tr>
-                                                <td></td>
-                                                <td class="fs-10 text-end pe-3" colspan="9"><b><i>Total</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_qty . '</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_unit_cost . '</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_gross . '</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_net . '</i></b></td>
-                                            </tr>';
+                                            
                                         }
                                     } else {
                                         echo '<tr><td colspan="6">No Data Available</td></tr>';
                                     }
-
+                                    // $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
+                                    // echo '<tr>
+                                    //     <td></td>
+                                    //     <td class="fs-10 text-end pe-3" colspan="11"><b><i>Total</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_qty . '</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_unit_cost . '</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_gross . '</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_net . '</i></b></td>
+                                    // </tr>';
                                     ?>
                                 </tbody>
                             </table>
@@ -446,7 +481,7 @@
                                 <thead class="bg-primary">
                                     <tr>
                                         <th class="fs-10 text-white ">#</th>
-                                        <th class="fs-10 text-white " colspan="9">CATEGORY</th>
+                                        <th class="fs-10 text-white " colspan="11">CATEGORY</th>
                                         <th class="fs-10 text-white text-end ">QTY</th>
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL UNIT COST</th>
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL GROSS SALES</th>
@@ -468,8 +503,7 @@
                                     LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                     WHERE
-                                    oc.status = 0
-                                    AND s.item_status NOT IN (4, 8)
+                                    s.item_status != 8
                                     AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                     AND ol.warehouse IN ($user_warehouse_id)
                                     GROUP BY c.category_name
@@ -496,7 +530,7 @@
                                             echo '
                                             <tr class="' . $random_bg . '">
                                                 <td class="fs-10">' . $num . '</td>
-                                                <td class="fs-10" colspan="9">'. $category_name .'</td>
+                                                <td class="fs-10" colspan="11">'. $category_name .'</td>
                                                 <td class="fs-10 text-end">'. $outbound_qty .'</td>
                                                 <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
                                                 <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
@@ -514,6 +548,8 @@
                                                 <td class="fs-11"><b>BRAND</b></td>
                                                 <td class="fs-11"><b>BARCODE</b></td>
                                                 <td class="fs-11"><b>BATCH</b></td>
+                                                <td class="fs-11"><b>STAFF</b></td>
+                                                <td class="fs-11"><b>STATUS</b></td>
                                                 <td class="fs-11 text-end"><b>UNIT COST</b></td>
                                                 <td class="fs-11 text-end"><b>GROSS SALE</b></td>
                                                 <td class="fs-11 text-end"><b>NET INCOME</b></td>
@@ -532,18 +568,22 @@
                                                 p.description,
                                                 b.brand_name,
                                                 s.batch_code,
-                                                s.capital
+                                                s.capital,
+                                                u.user_fname,
+                                                u.user_lname,
+                                                oc.status AS outbound_status
                                             FROM outbound_content oc
                                             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                             LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
                                             LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
                                             LEFT JOIN product p ON p.hashed_id = s.product_id
                                             LEFT JOIN brand b ON b.hashed_id = p.brand
+                                            LEFT JOIN users u ON u.hashed_id = ol.user_id
                                             WHERE p.category = '$category_id'
-                                            AND oc.status = 0
-                                            AND s.item_status NOT IN (4, 8)
+                                            AND s.item_status != 8
                                             AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                             AND ol.warehouse IN ($user_warehouse_id)
+                                            ORDER BY u.user_fname ASC
                                             ";
                                             $item_res = $conn->query($item_query);
                                             if($item_res->num_rows>0){
@@ -561,6 +601,16 @@
                                                     $capital = $row['capital'];
                                                     $date_sent = $row['date_sent'];
                                                     $net_income = $sold_price - $capital;
+                                                    $staff_fullname = $row['user_fname'] . " " . $row['user_lname'];
+                                                    if($row['outbound_status'] == 0){
+                                                        $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Paid</span>';
+                                                    } elseif($row['outbound_status'] == 1){
+                                                        $outbound_status = '<span class="badge rounded-pill badge-subtle-warning">Returned</span>';
+                                                    } elseif($row['outbound_status'] == 2){
+                                                        $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Voided</span>';
+                                                    } elseif($row['outbound_status'] == 6){
+                                                        $outbound_status = '<span class="badge rounded-pill badge-subtle-primary">Outbounded</span>';
+                                                    }
                                                     
                                                     echo '
                                                     <tr class="' . $random_bg . '">
@@ -575,6 +625,8 @@
                                                         <td class="fs-11">' . $brand_name . '</td>
                                                         <td class="fs-11">' . $unique_barcode . '</td>
                                                         <td class="fs-11">' . $batch_code . '</td>
+                                                        <td class="fs-11">' . $staff_fullname . '</td>
+                                                        <td class="fs-11">' . $outbound_status . '</td>
                                                         <td class="fs-11 text-end">' . $capital . '</td>
                                                         <td class="fs-11 text-end">' . $sold_price . '</td>
                                                         <td class="fs-11 text-end">' . $net_income . '</td>
@@ -582,20 +634,20 @@
                                                 }
                                             }
                                             $num++;
-                                            $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
-                                            echo '<tr>
-                                                <td></td>
-                                                <td class="fs-10 text-end pe-3" colspan="9"><b><i>Total</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_qty . '</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_unit_cost . '</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_gross . '</i></b></td>
-                                                <td class="fs-10 text-end"><b><i>' . $grand_total_net . '</i></b></td>
-                                            </tr>';
+                                            
                                         }
                                     } else {
                                         echo '<tr><td colspan="6">No Data Available</td></tr>';
                                     }
-
+                                    // $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
+                                    // echo '<tr>
+                                    //     <td></td>
+                                    //     <td class="fs-10 text-end pe-3" colspan="11"><b><i>Total</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_qty . '</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_unit_cost . '</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_gross . '</i></b></td>
+                                    //     <td class="fs-10 text-end"><b><i>' . $grand_total_net . '</i></b></td>
+                                    // </tr>';
                                     ?>
                                 </tbody>
                             </table>
