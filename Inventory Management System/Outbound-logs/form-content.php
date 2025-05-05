@@ -53,15 +53,18 @@ if (isset($_GET['id'])) {
                 </div>
                 
                 <div class="row">
-                    <?php 
-                    if($outbound_status == 0 && $user_id === $outbound_user_id){
-                    ?>
                     <div class="col-lg-12 text-end my-3">
-                        <button class="btn btn-primary fs-11" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo $outbound_id;?>" aria-expanded="false" aria-controls="collapse<?php echo $outbound_id;?>"><span class="fas fa-trash-alt"></span> Void</button>
-                    </div>
+                    <?php 
+                    if($outbound_status == 6 && $user_id === $outbound_user_id){
+                    ?>
+                        <button class="btn btn-primary fs-11 me-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo $outbound_id;?>" aria-expanded="false" aria-controls="collapse<?php echo $outbound_id;?>"><span class="fas fa-trash-alt"></span> Void</button>
+                        <button class="btn btn-success fs-11 me-1 paid_btn" type="button" data-targetid="<?php echo $outbound_id;?>"><span class="far fa-check-circle"></span> Paid</button>
+                    
                     <?php 
                     }
                     ?>
+                        <a class="btn btn-warning" href="export.php?name=<?php echo $outbound_id;?>">Export</a>
+                    </div>
                     <div class="col-md-6">
                         <div class="table-responsive">
                             <table class="table table-sm">
@@ -243,7 +246,7 @@ if (isset($_GET['id'])) {
 
 
     <?php 
-        if($outbound_status == 0 && $user_id === $outbound_user_id){
+        if($outbound_status == 6 && $user_id === $outbound_user_id){
     ?>
     <div class="collapse" id="collapse-<?php echo $outbound_id;?>">
         <div class="row px-6">
@@ -260,7 +263,7 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <?php 
-        } elseif($outbound_status == 0 && $user_id !== $outbound_user_id){
+        } elseif($outbound_status == 6 && $user_id !== $outbound_user_id){
     ?>
 
     <?php
