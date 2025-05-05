@@ -66,17 +66,19 @@ $outbound_res = $conn->query($outbound_sql);
             $order_no = $row['order_num'];
             $order_line = $row['order_line_id'];
             if ($row['status'] == 0) {
-              $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Outbounded</span>';
+              $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Paid</span>';
             } elseif ($row['status'] == 1) {
-              $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Outbounded</span><span class="badge rounded-pill badge-subtle-danger">-1</span>';
+              $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Paid w/ return</span><span class="badge rounded-pill badge-subtle-danger">-1</span>';
             } elseif($row['status'] == 2) {
               $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Returned</span>';
             } elseif($row['status'] == 3){
               $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Void Requested</span>';
             } elseif($row['status'] == 4){
               $outbound_status = '<span class="badge rounded-pill badge-subtle-primary">Voided</span>';
-            } else {
+            } elseif($row['status'] == 5) {
               $outbound_status = '<span class="badge rounded-pill badge-subtle-danger">Void Rejected</span>';
+            } elseif($row['status'] == 6){
+              $outbound_status = '<span class="badge rounded-pill badge-subtle-info">Outbounded</span>';
             }
           ?>
           <tr>
@@ -212,4 +214,31 @@ $(document).on('submit', '.void-decision', function(e) {
     });
 });
 
+$(document).on("click", ".paid_btn", function () {
+    const outboundId = $(this).data("targetid");
+
+    Swal.fire({
+        title: 'Mark as Paid?',
+        text: "Are you sure you want to mark this as paid?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#198754',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, mark as paid'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Perform AJAX call to PHP
+            $.get("../config/paid_outbound.php", { name: outboundId })
+                .done(function (data) {
+                    Swal.fire('Success!', 'The record has been marked as paid.', 'success');
+                    // Optional: disable button or update status visually
+                    // $(this).prop("disabled", true);
+                    window.location.href = window.location.href;
+                })
+                .fail(function () {
+                    Swal.fire('Error!', 'There was a problem processing your request.', 'error');
+                });
+        }
+    });
+});
 </script>

@@ -4,8 +4,6 @@ include('on_session.php');
 
 $outbound_id = $_SESSION['outbound_id'];
 $warehouse_for_outbound = $_SESSION['warehouse_outbound'];
-$user_id = $_SESSION['user_id'] ?? null; // Ensure user_id is set
-$currentDateTime = date('Y-m-d H:i:s');
 
 $response = [
     'status' => 'error',
@@ -49,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Insert order details
-        $orderSql = "INSERT INTO outbound_logs (date_sent, warehouse, user_id, customer_fullname, courier, platform, order_num, order_line_id, hashed_id) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $orderSql = "INSERT INTO outbound_logs (date_sent, warehouse, user_id, customer_fullname, courier, platform, order_num, order_line_id, hashed_id, status) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 6)";
         $stmt = $conn->prepare($orderSql);
         $stmt->bind_param("sssssssss", $currentDateTime, $warehouse, $user_id, $customerName, $courier, $platform, $orderNo, $orderLineID, $outbound_id);
         if (!$stmt->execute()) {
@@ -80,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // Insert into outbound_content
-            $itemSql = "INSERT INTO outbound_content (unique_barcode, sold_price, hashed_id, quantity_before) VALUES (?, ?, ?, ?)";
+            $itemSql = "INSERT INTO outbound_content (unique_barcode, sold_price, hashed_id, quantity_before, status) VALUES (?, ?, ?, ?, 6)";
             $stmt = $conn->prepare($itemSql);
             $stmt->bind_param("sdsi", $barcode, $sellingPrice, $outbound_id, $product_quantity_before);
             if (!$stmt->execute()) {
