@@ -15,17 +15,22 @@ header('Content-Type: image/png');
 // Sanitize GET inputs
 $from = htmlspecialchars($_GET['from'] ?? '');
 $to = htmlspecialchars($_GET['to'] ?? '');
-$raw_category = $_GET['category'] ?? '';
-// Step 1: Trim spaces and split the string by commas
-$categories = array_map('trim', explode(',', $raw_category));
+if(!empty($_GET['category'])){
+    $raw_category = $_GET['category'];
+    // Step 1: Trim spaces and split the string by commas
+    $categories = array_map('trim', explode(',', $raw_category));
+    
+    // Step 2: Wrap each category in single quotes
+    $categories = array_map(function($category) {
+        return "'" . $category . "'";
+    }, $categories);
+    
+    // Step 3: Join the array elements back into a single string
+    $raw_category = implode(', ', $categories); // Reassign to $raw_category
+} else {
+    $raw_category = "";
+}
 
-// Step 2: Wrap each category in single quotes
-$categories = array_map(function($category) {
-    return "'" . $category . "'";
-}, $categories);
-
-// Step 3: Join the array elements back into a single string
-$raw_category = implode(', ', $categories); // Reassign to $raw_category
 
 // Output the final result
 // echo $raw_category;  // Outputs: 'category_1', 'category_2', 'category_3'
@@ -33,15 +38,21 @@ $raw_category = implode(', ', $categories); // Reassign to $raw_category
 // $escaped = array_map(fn($cat) => "'" . trim(htmlspecialchars($cat, ENT_QUOTES)) . "'", $categories);
 // $imploded_category = implode(',', $escaped);
 $warehouse_transaction = htmlspecialchars($_GET['wh'] ?? '');
-$get_supplier = htmlspecialchars($_GET['supplier'] ?? '');
 
-$suppliers = array_map('trim', explode(',', $get_supplier));
+if(!empty($_GET['supplier'])){
+    $get_supplier = htmlspecialchars($_GET['supplier'] ?? '');
 
-$suppliers = array_map(function($supplier){
-    return "'" . $supplier . "'";
-}, $suppliers);
+    $suppliers = array_map('trim', explode(',', $get_supplier));
 
-$get_supplier = implode(', ', $suppliers); 
+    $suppliers = array_map(function($supplier){
+        return "'" . $supplier . "'";
+    }, $suppliers);
+
+    $get_supplier = implode(', ', $suppliers); 
+} else {
+    $get_supplier = "";
+}
+
 $sup_type = htmlspecialchars($_GET['sup_type'] ?? '');
 if($sup_type === "All"){
     $display_sup = "Local/ Import";
@@ -388,7 +399,7 @@ if ($from && $to) {
         </style>
     </head>
     <body>
-        <h1>Transaction Overview</h1>
+        <h1>FINANCE</h1>
 
         <table class='meta-table'>
             $tables

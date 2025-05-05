@@ -153,7 +153,7 @@
             <div class="card-body bg-body-tertiary">
                 <div class="row">
                     <div class="col-lg-11 text-center mb-3">
-                        <h3>TRANSACTION OVERVIEW</h3> 
+                        <h3>FINANCE</h3> 
                         <p class="mb-0"><?php echo $transaction_warehouse_name;?></p>
                         <small><?php echo $formattedStartDate . " - " . $formattedEndDate;?></small>
                         <h5><?php //echo $outbound_warehouse;?></h5>
@@ -806,7 +806,7 @@
             <div class="card-body bg-body-tertiary">
                 <div class="row">
                     <div class="col-lg-11 text-center mb-3">
-                        <h3>TRANSACTION OVERVIEW AS OF <?php echo $date_today;?></h3>
+                        <h3>FINANCE AS OF <?php echo $date_today;?></h3>
                         <h5>All accessible warehouse</h5>
                     </div>
                     <div class="col-lg-1">
