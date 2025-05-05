@@ -79,7 +79,7 @@ $local_lead_time_query = "
 $local_lead_time_res = $conn->query($local_lead_time_query);
 $local_lead_time = ($local_lead_time_res->num_rows > 0) ? round($local_lead_time_res->fetch_assoc()['avg_local_days']) : 0;
 
-echo "<div><strong>Date Range:</strong> $start_date to $end_date</div>";
+// echo "<div><strong>Date Range:</strong> $start_date to $end_date</div>";
 
 $product_query = "
     SELECT 
@@ -123,8 +123,13 @@ $product_query = "
 
 $product_res = $conn->query($product_query);
 if ($product_res->num_rows > 0) {
-    echo '<table class="table table-success table-striped">
-    <thead>
+    ?>
+    <div class="card">
+        <div class="card-heading pt-3 ps-3"><h3>Forecast for <?php echo $start_date. " to " . $end_date;?></h3></div>
+        <div class="card-body">
+    <?php
+    echo '<table class="table table-striped">
+    <thead class="table-dark">
         <tr>
             <th></th>
             <th>Description</th>
@@ -209,6 +214,10 @@ if ($product_res->num_rows > 0) {
         </tr>';
     }
     echo '</tbody></table>';
+    ?>
+        </div>
+    </div>
+    <?php
 } else {
     echo "<div class='alert alert-info'>No data found for selected filters.</div>";
 }
