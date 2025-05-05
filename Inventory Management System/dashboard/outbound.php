@@ -1,10 +1,5 @@
 <?php 
-$quoted_warehouse_ids = array_map(function ($id) {
-return "'" . trim($id) . "'";
-}, $user_warehouse_ids);
 
-// Create a comma-separated string of quoted IDs
-$imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
 // $outbound_today = 0;
 // $outbound_sales_today = 0;
 
@@ -35,13 +30,21 @@ $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
 // $formatted_outbound_sales_today = number_format($outbound_sales_today, 2);
 
 $morethan_3_months = 0;
-
-$morethan_3_months_query = "
-    SELECT COUNT(unique_barcode) AS count 
-    FROM stocks 
-    WHERE DATE(`date`) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) 
-    AND warehouse IN ($imploded_warehouse_ids)
-";
+if(empty($dashboard_wh)){
+    $morethan_3_months_query = "
+        SELECT COUNT(unique_barcode) AS count 
+        FROM stocks 
+        WHERE DATE(`date`) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) 
+        AND warehouse IN ($imploded_warehouse_ids)
+    ";
+} else {
+    $morethan_3_months_query = "
+        SELECT COUNT(unique_barcode) AS count 
+        FROM stocks 
+        WHERE DATE(`date`) <= DATE_SUB(CURDATE(), INTERVAL 3 MONTH) 
+        AND warehouse = '$dashboard_wh'
+    ";
+}
 
 $morethan_3_months_res = $conn->query($morethan_3_months_query);
 
@@ -49,6 +52,7 @@ if ($morethan_3_months_res) {
     $row = $morethan_3_months_res->fetch_assoc();
     $morethan_3_months = $row['count'] ?? 0;
 }
+
 
 $morethan_3_months_display = '
     <li class="list-group-item mb-0 rounded-0 py-3 px-x1 list-group-item-' . ($morethan_3_months > 0 ? 'warning' : 'success') . ' border-x-0 border-top-0">
@@ -80,7 +84,11 @@ if($under_safety_res->num_rows>0){
         $product_safety = $row['safety'];
         $product_id = $row['product_id'];
         $product_qty = 0;
-        $stock_query = "SELECT item_status FROM stocks WHERE product_id = '$product_id' AND warehouse IN ($imploded_warehouse_ids)";
+        if(empty($dashboard_wh)){
+            $stock_query = "SELECT item_status FROM stocks WHERE product_id = '$product_id' AND warehouse IN ($imploded_warehouse_ids)";
+        } else {
+            $stock_query = "SELECT item_status FROM stocks WHERE product_id = '$product_id' AND warehouse = '$dashboard_wh'";
+        }
         $stock_res = $conn->query($stock_query);
         if($stock_res->num_rows>0){
             while($row = $stock_res->fetch_assoc()){
@@ -131,7 +139,11 @@ if($under_safety>0){
             </li>
     ';
 }
-$available_stocks_query = "SELECT count(unique_barcode) AS available_stocks FROM stocks WHERE item_status = 0 AND warehouse IN ($imploded_warehouse_ids)";
+if(empty($dashboard_wh)){
+    $available_stocks_query = "SELECT count(unique_barcode) AS available_stocks FROM stocks WHERE item_status = 0 AND warehouse IN ($imploded_warehouse_ids)";
+} else {
+    $available_stocks_query = "SELECT count(unique_barcode) AS available_stocks FROM stocks WHERE item_status = 0 AND warehouse = '$dashboard_wh'";
+}
 $available_stocks_res = $conn->query($available_stocks_query);
 if($available_stocks_res->num_rows>0){
     $row=$available_stocks_res->fetch_assoc();

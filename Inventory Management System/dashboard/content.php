@@ -38,6 +38,12 @@ if ($hour >= 5 && $hour < 12) {
                         foreach ($warehouse_dropdow_dashboard as $link_dashboard) {
                             echo $link_dashboard;
                         }
+                        $quoted_warehouse_ids = array_map(function ($id) {
+                        return "'" . trim($id) . "'";
+                        }, $user_warehouse_ids);
+                        
+                        // Create a comma-separated string of quoted IDs
+                        $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
                         ?>
                     </div>
                 </div>
@@ -101,6 +107,8 @@ if ($hour >= 5 && $hour < 12) {
             <div class="col-lg-12 mb-3">
                 <?php include "promotion.php";?>
             </div>
+
+            <?php include "under_safety.php";?>
         </div>
     </div>
 

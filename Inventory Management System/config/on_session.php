@@ -94,7 +94,6 @@ if ($currentFile === 'logout.php') {
 $user_warehouse_id = "'".implode("','", $warehouse_ids_array)."'"; // For arrays
 
 
-
 if ($logged_in === true) {
     // Use prepared statement to prevent SQL injection
     $stmt = $conn->prepare("SELECT `status` FROM users WHERE hashed_id = ? LIMIT 1");

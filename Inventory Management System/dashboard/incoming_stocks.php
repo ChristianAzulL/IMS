@@ -27,15 +27,27 @@
                                     $incoming_category = $row['category_name'];
                                     $current_stocks = 0;
                                     $incoming_qty = 0;
-
-                                    $products_query = "
-                                      SELECT 
-                                        COUNT(s.unique_barcode) AS stocks
-                                      FROM product p
-                                      LEFT JOIN stocks s ON s.product_id = p.hashed_id
-                                      WHERE s.item_status NOT IN (1, 4, 8) AND s.batch_code != '-' AND p.category = '$incoming_category_id'
-                                      GROUP BY p.category
-                                    ";
+                                    if(empty($dashboard_wh)){
+                                        $products_query = "
+                                        SELECT 
+                                            COUNT(s.unique_barcode) AS stocks
+                                        FROM product p
+                                        LEFT JOIN stocks s ON s.product_id = p.hashed_id
+                                        WHERE s.item_status NOT IN (1, 4, 8) AND s.batch_code != '-' AND p.category = '$incoming_category_id'
+                                        AND s.warehouse IN ($imploded_warehouse_ids)
+                                        GROUP BY p.category
+                                        ";
+                                    } else {
+                                        $products_query = "
+                                        SELECT 
+                                            COUNT(s.unique_barcode) AS stocks
+                                        FROM product p
+                                        LEFT JOIN stocks s ON s.product_id = p.hashed_id
+                                        WHERE s.item_status NOT IN (1, 4, 8) AND s.batch_code != '-' AND p.category = '$incoming_category_id'
+                                        AND s.warehouse = '$dashboard_wh'
+                                        GROUP BY p.category
+                                        ";
+                                    }
                                     $product_res = $conn->query($products_query);
                                     if($product_res->num_rows>0){
                                         $row=$product_res->fetch_assoc();
