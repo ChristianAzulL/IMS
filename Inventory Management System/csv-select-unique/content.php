@@ -65,6 +65,29 @@
 
 <script>
 document.getElementById('submitBTN').addEventListener('click', function(event) {
+    // Basic validation: check all required fields
+    const inputs = document.querySelectorAll('input[name="batch[]"], input[name="item[]"], input[name="brand[]"], input[name="category[]"], input[name="supplier[]"], input[name="qty[]"], input[name="price[]"], input[name="barcode[]"]');
+    let allFilled = true;
+
+    inputs.forEach(input => {
+        if (!input.value.trim()) {
+            input.classList.add('is-invalid');
+            allFilled = false;
+        } else {
+            input.classList.remove('is-invalid');
+        }
+    });
+
+    if (!allFilled) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Fields',
+            text: 'Please fill out all required fields before submitting.'
+        });
+        return; // Stop submission
+    }
+
+    // Proceed to confirmation dialog
     Swal.fire({
         title: "Do you want to save the changes?",
         showDenyButton: true,
@@ -73,14 +96,13 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
         denyButtonText: `Don't save`
     }).then((result) => {
         if (result.isConfirmed) {
-            // Show the loading spinner before the request
             const swalInstance = Swal.fire({
                 title: 'Saving...',
                 text: 'Please wait while we process your request.',
                 didOpen: () => {
-                    Swal.showLoading(); // Show the loading spinner
+                    Swal.showLoading();
                 },
-                allowOutsideClick: false, // Prevent closing the modal by clicking outside
+                allowOutsideClick: false,
                 showCancelButton: false,
                 showConfirmButton: false
             });
@@ -93,10 +115,8 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
             })
             .then(response => response.json())
             .then(data => {
-                // Close the loading spinner
                 swalInstance.close();
 
-                // Handle the response based on status
                 if (data.status === 'success') {
                     Swal.fire({
                         title: "Saved!",
@@ -104,7 +124,6 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
                         icon: "success",
                         confirmButtonText: "OK"
                     }).then(() => {
-                        // Redirect to the dashboard after clicking "OK"
                         window.location.href = '../Unique-Barcodes?success=0';
                     });
                 } else if (data.status === 'info') {
@@ -114,7 +133,6 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
                 }
             })
             .catch(error => {
-                // Close the loading spinner in case of error
                 swalInstance.close();
                 Swal.fire("Error", "There was an issue with the request.", "error");
             });
@@ -124,6 +142,7 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
     });
 });
 </script>
+
 <script>
     $(document).ready(function () {
     function checkAllRows() {

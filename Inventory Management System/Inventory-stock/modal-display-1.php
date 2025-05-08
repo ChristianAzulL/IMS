@@ -5,37 +5,53 @@ error_reporting(E_ALL);
 
 include "../config/database.php";
 include "../config/on_session.php";
+
 $batch_code = $_GET['target_id'] ?? '';
 $product_id = $_GET['targetPId'];
 $warehouse = $_GET['warehouseID'];
-$limit = 100; // Load 100 records per request
+$search = $_GET['search'] ?? ''; // <-- NEW
+$limit = 100;
 $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
 
 if (!empty($batch_code)) {
+    $search_sql = "";
+    $params = [$batch_code, $product_id, $warehouse];
+    $types = "sss";
+
+    if (!empty($search)) {
+        $search_sql = " AND s.unique_barcode LIKE ?";
+        $params[] = "%" . $search . "%";
+        $types .= "s";
+    }
+
     $query = "SELECT DISTINCT
             s.unique_barcode, 
             s.item_status, 
             il.location_name, 
             s.capital, 
             ol.sold_price 
-          FROM stocks s 
-          LEFT JOIN item_location il ON il.id = s.item_location 
-          LEFT JOIN (
+        FROM stocks s 
+        LEFT JOIN item_location il ON il.id = s.item_location 
+        LEFT JOIN (
             SELECT o1.*
             FROM outbound_content o1
             INNER JOIN (
-              SELECT unique_barcode, MAX(id) as max_id
-              FROM outbound_content
-              GROUP BY unique_barcode
+                SELECT unique_barcode, MAX(id) as max_id
+                FROM outbound_content
+                GROUP BY unique_barcode
             ) o2 ON o1.unique_barcode = o2.unique_barcode AND o1.id = o2.max_id
-          ) ol ON ol.unique_barcode = s.unique_barcode 
-          WHERE s.batch_code = ? AND s.product_id = ? AND s.warehouse = ?
-          ORDER BY s.barcode_extension ASC 
-          LIMIT ?, ?";
+        ) ol ON ol.unique_barcode = s.unique_barcode 
+        WHERE s.batch_code = ? AND s.product_id = ? AND s.warehouse = ? 
+        $search_sql
+        ORDER BY s.barcode_extension ASC 
+        LIMIT ?, ?";
 
+    $params[] = $offset;
+    $params[] = $limit;
+    $types .= "ii";
 
     if ($stmt = $conn->prepare($query)) {
-        $stmt->bind_param("sssii", $batch_code, $product_id, $warehouse, $offset, $limit);
+        $stmt->bind_param($types, ...$params);
         $stmt->execute();
         $res = $stmt->get_result();
 
@@ -54,7 +70,8 @@ if (!empty($batch_code)) {
             ];
             $status = $status_map[$row['item_status']] ?? 'warning|Returned';
             list($status_class, $status_text) = explode('|', $status);
-            if(strpos($access ?? '', "stock")!==false || $user_position_name === "Administrator"){
+
+            if ($user_position_name === "Administrator" || strpos($access, "stock") !== false) {
                 $output .= "
                     <tr>
                         <td>
@@ -74,7 +91,7 @@ if (!empty($batch_code)) {
                 $output .= "
                     <tr>
                         <td>
-                            <a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "' class='text-decoration-none text-dark'>
+                            <a href='#' class='text-decoration-none text-dark'>
                                 <small>LPO " . htmlspecialchars($row['unique_barcode']) . "</small>
                             </a>
                         </td>
@@ -87,7 +104,6 @@ if (!empty($batch_code)) {
             }
         }
 
-        // Check if more data exists
         $has_more = $res->num_rows >= $limit ? 1 : 0;
 
         echo json_encode(["html" => $output, "has_more" => $has_more]);

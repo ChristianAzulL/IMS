@@ -140,7 +140,7 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                         <td><input class="form-control" name="price[]" type="text" value="<?php echo $row['price']; ?>"></td>
                         <td><input class="form-control" name="supplier[]" type="text" value="<?php echo $row['supplier']; ?>"></td>
                         <td><input class="form-control" name="barcode[]" type="text" value="<?php echo $row['barcode']; ?>"></td>
-                        <td><input class="form-control" name="batch[]" type="text" value="<?php echo $row['batch']; ?>"></td>
+                        <td><input class="form-control" name="batch[]" type="text" value="<?php echo $row['batch']; ?>" required></td>
                         <td><input class="form-control" name="brand[]" type="text" value="<?php echo $row['brand']; ?>"></td>
                         <td><input class="form-control" name="category[]" type="text" value="<?php echo $row['category']; ?>"></td>
                         <td><input class="form-control" name="safety[]" type="number" value="<?php echo $row['safety']; ?>"></td>

@@ -167,9 +167,15 @@
     </div>
   </div>
 </div>
+
 <script>
     $(document).ready(function () {
         let targetId, targetPId, warehouseID, offset = 0;
+
+        let barcodeSearch = '';
+
+       
+
 
         $(document).on("click", "[data-bs-toggle='modal']", function () {
             targetId = $(this).attr("target-id");
@@ -180,8 +186,14 @@
             let modalContent = $("#modal-1-display");
 
             modalContent.html(`
+                <div class="row mb-3">
+                    <div class="col-12 text-start">
+                        <label for="barcode-search">Search Unique Barcode</label>
+                        <input class="form-control mb-3" id="barcode-search" type="text" placeholder="Enter barcode...">
+                    </div>
+                </div>
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover text-center">
+                    <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
                         <thead class="table-dark">
                             <tr>
                                 <th>Unique Barcode</th>
@@ -212,12 +224,17 @@
             $.ajax({
                 url: "modal-display-1.php",
                 type: "GET",
-                data: { target_id: targetId, targetPId, warehouseID, offset: offset },
+                data: { 
+                    target_id: targetId, 
+                    targetPId: targetPId, 
+                    warehouseID: warehouseID, 
+                    offset: offset, 
+                    search: barcodeSearch // new!
+                },
                 dataType: "json",
                 success: function (response) {
                     $("#table-body").append(response.html);
                     offset += 100;
-
                     if (response.has_more) {
                         $("#load-more-btn").removeClass("d-none").prop("disabled", false).text("Load More");
                     } else {
@@ -228,7 +245,15 @@
                     $("#load-more-btn").text("Error! Try Again").prop("disabled", false);
                 }
             });
+
         }
+
+        $(document).on('input', '#barcode-search', function () {
+            barcodeSearch = $(this).val().trim();
+            offset = 0;
+            $("#table-body").empty();
+            loadMoreData();
+        });
 
         // GLightbox init
         let lightbox = GLightbox({ selector: '[data-glightbox]' });
