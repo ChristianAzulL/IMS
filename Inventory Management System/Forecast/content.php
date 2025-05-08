@@ -93,7 +93,6 @@ $product_query = "
         s.warehouse, 
         COUNT(CASE WHEN s.item_status = 0 AND s.warehouse = '$selected_warehouse' THEN 1 END) AS current_available_qty,
         daily_avg.avg_sales_per_day AS average_sales_count_per_day,
-        SUM(CASE WHEN po.status NOT IN (0, 4) THEN poc.qty ELSE 0 END) AS incoming_stocks,
         w.warehouse_name,
         s2.local_international AS supplier_origin
     FROM product p 
@@ -116,7 +115,7 @@ $product_query = "
         ON daily_avg.product_id = p.hashed_id 
         AND daily_avg.warehouse = '$selected_warehouse'
     LEFT JOIN purchased_order_content poc ON poc.product_id = p.hashed_id
-    LEFT JOIN purchased_order po ON po.id = poc.po_id
+    LEFT JOIN purchased_order po ON po.id = poc.po_id AND po.warehouse = s.warehouse
     LEFT JOIN supplier s2 ON s2.hashed_id = po.supplier
     GROUP BY p.hashed_id, b.brand_name, c.category_name, s.safety, s.warehouse, daily_avg.avg_sales_per_day, s2.local_international
 ";
@@ -144,6 +143,7 @@ if ($product_res->num_rows > 0) {
             <th>Forecast (30 Days)</th>
             <th>Est. Stockout (Days)</th>
             <th>Reorder?</th>
+            <th>Reorder Quantity</th> <!-- New Column -->
         </tr>
     </thead><tbody>';
 
@@ -158,9 +158,26 @@ if ($product_res->num_rows > 0) {
         $warehouse = $row['warehouse'];
         $available_qty = $row['current_available_qty'];
         $moving_avg = $row['average_sales_count_per_day'] ?: 0;
-        $incoming_stocks = $row['incoming_stocks'];
+        
         $warehouse_name = $row['warehouse_name'];
         $supplier_origin = $row['supplier_origin'];
+
+        $po_query = "
+            SELECT
+                SUM(CASE WHEN po.status NOT IN (0, 4) THEN poc.qty ELSE 0 END) AS incoming_stocks
+            FROM purchased_order_content poc 
+            LEFT JOIN purchased_order po ON po.id = poc.po_id
+            WHERE po.warehouse = '$selected_warehouse'
+            AND poc.product_id = '$product_id'
+            GROUP BY poc.product_id
+        ";
+        $po_result = $conn->query($po_query);
+        if($po_result->num_rows>0){
+            $row = $po_result->fetch_assoc();
+            $incoming_stocks = $row['incoming_stocks'];
+        } else {
+            $incoming_stocks = 0;
+        }
 
         $sales_query = "
             SELECT DATE(ol.date_sent) AS sale_date, COUNT(*) AS qty_sold
@@ -194,8 +211,17 @@ if ($product_res->num_rows > 0) {
 
         $lead_time = ($supplier_origin == 'Local') ? $local_lead_time : $import_lead_time;
         $reorder_point = ($moving_avg_7 * $lead_time) + $safety;
+        // Calculate total future stock (available + incoming)
         $total_future_stock = $available_qty + $incoming_stocks;
+
+        // Ensure that we never fall below safety stock
+        $stock_shortfall = max(0, $safety - $total_future_stock);
+
+        // Now calculate the reorder quantity to cover forecasted sales during lead time
+        $reorder_quantity = $stock_shortfall + max(0, ($moving_avg_7 * $lead_time) - $total_future_stock);
+
         $needs_reorder = ($total_future_stock < $reorder_point) ? 'Yes' : 'No';
+        
 
         echo '<tr>
             <td><img class="img" src="../../assets/img/' . $product_img . '" style="height: 30px;" alt=""></td>
@@ -211,14 +237,11 @@ if ($product_res->num_rows > 0) {
             <td>' . $forecast_30_days . '</td>
             <td>' . $days_to_stockout . '</td>
             <td><span class="badge bg-' . ($needs_reorder == 'Yes' ? 'danger' : 'success') . '">' . $needs_reorder . '</span></td>
+            <td>' . $reorder_quantity . '</td> <!-- Display reorder quantity here -->
         </tr>';
-    }
-    echo '</tbody></table>';
-    ?>
-        </div>
-    </div>
-    <?php
-} else {
-    echo "<div class='alert alert-info'>No data found for selected filters.</div>";
 }
+
+echo '</tbody></table>';
 ?>
+</div></div>
+<?php } else { echo "<div class='alert alert-warning'>No product data found for the selected criteria.</div>"; } ?>
