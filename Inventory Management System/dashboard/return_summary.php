@@ -1,6 +1,6 @@
 <div class="row mb-3">
   <div class="col-md-6 mb-3 py-3">
-    <h6 id="module_date_label">Heading</h6>
+    <h6>Returns Summary <span id="module_date_label"></span></h6>
   </div>
   <div class="col-md-6 mb-3">
     <label class="form-label" for="module_date_range">Select Date Range</label>
@@ -92,12 +92,12 @@
             .then(response => response.json())
             .then(module_data => {
                 document.getElementById("module_date_label").innerText = module_data.date_selected;
-                document.getElementById("module_seller_fault").innerText = module_data.seller_fault;
-                document.getElementById("module_client_fault").innerText = module_data.client_fault;
-                document.getElementById("module_total_delivery_failed").innerText = module_data.total_delivery_failed;
-                document.getElementById("module_local").innerText = module_data.local;
-                document.getElementById("module_import").innerText = module_data.import;
-                document.getElementById("module_total_defective").innerText = module_data.total_defective;
+                document.getElementById("module_seller_fault").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=sf">${module_data.seller_fault}</a>`;
+                document.getElementById("module_client_fault").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=cf">${module_data.client_fault}</a>`;
+                document.getElementById("module_total_delivery_failed").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=tdf">${module_data.total_delivery_failed}</a>`;
+                document.getElementById("module_local").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=local">${module_data.local}</a>`;
+                document.getElementById("module_import").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import">${module_data.import}</a>`;
+                document.getElementById("module_total_defective").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import">${module_data.total_defective}</a>`;
             })
             .catch(module_error => {
                 console.error("Error fetching data:", module_error);

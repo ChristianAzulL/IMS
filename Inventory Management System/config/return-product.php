@@ -4,7 +4,7 @@ require 'on_session.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $filtered_input = [];
-
+    $good = true;
     // Filter input: Only process fields that have a name attribute
     foreach ($_POST as $key => $value) {
         if (!empty($key)) {
@@ -30,6 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $supplier_type = $row['local_international'];
         }
 
+        if($fault_type === "DELIVERY FAILED" && $fault === "CLIENT FAULT" || $fault_type === "DELIVERY FAILED" && $fault === "SELLER FAULT"){
+            $good = true;
+        } elseif($fault_type === "DEFECTIVE" && $fault === "NONE"){
+            $good = true;
+        } elseif($fault_type === "WRONG ITEM ORDER" && $fault === "NONE"){
+            $good = true;
+        } else {
+            $good = false;
+        }
+
+        if($good === false){
+            header("Location: ../Create-Return/?success=fault_invalid");
+            exit;
+            $conn->close();
+        }
         
 
         // Insert return details

@@ -170,4 +170,18 @@ if (isset($_POST['barcode'])) {
         </script>";
     }
 }
-?>
+
+if(isset($_GET['success'])){
+    $result = $_GET['success'];
+    if($result === "fault_invalid"){
+        echo "<script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Form input',
+                text: 'You enter a wrong combination of type reason and fault. please select the right fault for the right type.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            });
+        </script>";
+    }
+}
