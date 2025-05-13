@@ -118,8 +118,8 @@ if (count($revdrop_data) == 0) {
                         <th>Category</th>
                         <th class="text-end">This Month Outbound</th>
                         <th class="text-end">Last Month Outbound</th>
-                        <th class="text-end">This Month Capital</th>
-                        <th class="text-end">Last Month Capital</th>
+                        <th class="text-end">This Month Unit Cost</th>
+                        <th class="text-end">Last Month Unit Cost</th>
                         <th class="text-end">This Month Gross Sales</th>
                         <th class="text-end">Last Month Gross Sales</th>
                         <th class="text-end">This Month Net Income</th>

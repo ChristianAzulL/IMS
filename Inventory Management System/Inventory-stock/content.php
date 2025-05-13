@@ -198,7 +198,7 @@
                             <tr>
                                 <th>Unique Barcode</th>
                                 <th>Status</th>
-                                <th>Capital</th>
+                                <th>Unit Cost</th>
                                 <th>Sold Amount</th>
                                 <th>Location</th>
                             </tr>
