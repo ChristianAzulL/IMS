@@ -12,7 +12,6 @@
         <select class="form-select" name="warehouse_id" id="warehouse_select" required>
             <option value="">-- Choose Warehouse --</option>
             <?php
-            // Fetch and populate all warehouses
             $warehouse_query = "SELECT hashed_id, warehouse_name FROM warehouse ORDER BY warehouse_name ASC";
             $warehouse_res = $conn->query($warehouse_query);
             if ($warehouse_res->num_rows > 0) {
@@ -42,7 +41,6 @@ function convertToMySQLDate($dateStr) {
     return null;
 }
 
-// Defaults
 $start_date = date('Y-m-d', strtotime('-30 days'));
 $end_date = date('Y-m-d');
 $selected_warehouse = $_GET['warehouse_id'] ?? '';
@@ -60,26 +58,64 @@ if (empty($selected_warehouse)) {
     return;
 }
 
-// Lead times
-$import_lead_time_query = "
-    SELECT IFNULL(AVG(TIMESTAMPDIFF(DAY, po.date_order, po.date_received)), 0) AS avg_import_days
-    FROM purchased_order po
-    LEFT JOIN supplier s ON s.hashed_id = po.supplier
-    WHERE s.local_international = 'International' AND po.date_received IS NOT NULL
-";
-$import_lead_time_res = $conn->query($import_lead_time_query);
-$import_lead_time = ($import_lead_time_res->num_rows > 0) ? round($import_lead_time_res->fetch_assoc()['avg_import_days']) : 0;
+function getLeadTimes($conn) {
+    $lead_times = ['local' => 0, 'international' => 0];
 
-$local_lead_time_query = "
-    SELECT IFNULL(AVG(TIMESTAMPDIFF(DAY, po.date_order, po.date_received)), 0) AS avg_local_days
-    FROM purchased_order po
-    LEFT JOIN supplier s ON s.hashed_id = po.supplier
-    WHERE s.local_international = 'Local' AND po.date_received IS NOT NULL
-";
-$local_lead_time_res = $conn->query($local_lead_time_query);
-$local_lead_time = ($local_lead_time_res->num_rows > 0) ? round($local_lead_time_res->fetch_assoc()['avg_local_days']) : 0;
+    $import_query = "
+        SELECT IFNULL(AVG(TIMESTAMPDIFF(DAY, po.date_order, po.date_received)), 0) AS avg_import_days
+        FROM purchased_order po
+        LEFT JOIN supplier s ON s.hashed_id = po.supplier
+        WHERE s.local_international = 'International' AND po.date_received IS NOT NULL
+    ";
+    $local_query = "
+        SELECT IFNULL(AVG(TIMESTAMPDIFF(DAY, po.date_order, po.date_received)), 0) AS avg_local_days
+        FROM purchased_order po
+        LEFT JOIN supplier s ON s.hashed_id = po.supplier
+        WHERE s.local_international = 'Local' AND po.date_received IS NOT NULL
+    ";
 
-// echo "<div><strong>Date Range:</strong> $start_date to $end_date</div>";
+    $res_import = $conn->query($import_query);
+    $res_local = $conn->query($local_query);
+
+    if ($res_import->num_rows > 0) {
+        $lead_times['international'] = round($res_import->fetch_assoc()['avg_import_days']);
+    }
+    if ($res_local->num_rows > 0) {
+        $lead_times['local'] = round($res_local->fetch_assoc()['avg_local_days']);
+    }
+
+    return $lead_times;
+}
+
+$lead_times = getLeadTimes($conn);
+
+function getDailyAverageSales($conn, $start_date, $end_date) {
+    $query = "
+        SELECT 
+            s.product_id,
+            ol.warehouse,
+            COUNT(oc.unique_barcode) / DATEDIFF('$end_date', '$start_date') AS avg_sales_per_day
+        FROM outbound_logs ol
+        JOIN outbound_content oc ON oc.hashed_id = ol.hashed_id
+        JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+        WHERE oc.status = 0
+        AND DATE(ol.date_sent) BETWEEN '$start_date' AND '$end_date'
+        GROUP BY s.product_id, ol.warehouse
+    ";
+    $res = $conn->query($query);
+    $result = [];
+
+    if ($res->num_rows > 0) {
+        while ($row = $res->fetch_assoc()) {
+            $key = $row['product_id'] . '|' . $row['warehouse'];
+            $result[$key] = $row['avg_sales_per_day'];
+        }
+    }
+
+    return $result;
+}
+
+$daily_avg_sales = getDailyAverageSales($conn, $start_date, $end_date);
 
 $product_query = "
     SELECT 
@@ -92,42 +128,36 @@ $product_query = "
         s.safety, 
         s.warehouse, 
         COUNT(CASE WHEN s.item_status = 0 AND s.warehouse = '$selected_warehouse' THEN 1 END) AS current_available_qty,
-        daily_avg.avg_sales_per_day AS average_sales_count_per_day,
         w.warehouse_name,
-        s2.local_international AS supplier_origin
+        s2.local_international AS supplier_origin,
+        s2.supplier_name
     FROM product p 
     LEFT JOIN brand b ON b.hashed_id = p.brand 
     LEFT JOIN category c ON c.hashed_id = p.category 
     LEFT JOIN stocks s ON s.product_id = p.hashed_id 
     LEFT JOIN warehouse w ON w.hashed_id = s.warehouse
-    LEFT JOIN (
-        SELECT 
-            s.product_id,
-            ol.warehouse,
-            COUNT(oc.unique_barcode) / DATEDIFF('$end_date', '$start_date') AS avg_sales_per_day
-        FROM outbound_logs ol
-        JOIN outbound_content oc ON oc.hashed_id = ol.hashed_id
-        JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-        WHERE oc.status = 0
-        AND DATE(ol.date_sent) BETWEEN '$start_date' AND '$end_date'
-        GROUP BY s.product_id, ol.warehouse
-    ) AS daily_avg 
-        ON daily_avg.product_id = p.hashed_id 
-        AND daily_avg.warehouse = '$selected_warehouse'
     LEFT JOIN purchased_order_content poc ON poc.product_id = p.hashed_id
     LEFT JOIN purchased_order po ON po.id = poc.po_id AND po.warehouse = s.warehouse
     LEFT JOIN supplier s2 ON s2.hashed_id = po.supplier
-    GROUP BY p.hashed_id, b.brand_name, c.category_name, s.safety, s.warehouse, daily_avg.avg_sales_per_day, s2.local_international
+    WHERE s.warehouse = '$selected_warehouse'
+    GROUP BY p.hashed_id, b.brand_name, c.category_name, s.safety, s.warehouse, w.warehouse_name, s2.local_international, s2.supplier_name
 ";
 
 $product_res = $conn->query($product_query);
+
 if ($product_res->num_rows > 0) {
-    ?>
-    <div class="card">
-        <div class="card-heading pt-3 ps-3"><h3>Forecast for <?php echo $start_date. " to " . $end_date;?></h3></div>
-        <div class="card-body">
-    <?php
-    echo '<table class="table table-striped">
+    echo "
+    <div class='mb-3'>
+        <strong>Average Lead Times:</strong><br>
+        Local Suppliers: {$lead_times['local']} days<br>
+        International Suppliers: {$lead_times['international']} days
+    </div>";
+?>
+
+<div class="card">
+    <div class="card-heading pt-3 ps-3"><h3>Forecast for <?php echo $start_date . " to " . $end_date; ?></h3></div>
+    <div class="card-body">
+    <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
     <thead class="table-dark">
         <tr>
             <th></th>
@@ -135,6 +165,9 @@ if ($product_res->num_rows > 0) {
             <th>Category</th>
             <th>Brand</th>
             <th>Parent Barcode</th>
+            <th>Supplier</th>
+            <th>Supplier Origin</th>
+            <th>Lead Time (Days)</th>
             <th>Safety</th>
             <th>Warehouse</th>
             <th>Stocks</th>
@@ -142,11 +175,15 @@ if ($product_res->num_rows > 0) {
             <th>Incoming Stocks</th>
             <th>Forecast (30 Days)</th>
             <th>Est. Stockout (Days)</th>
+            <th>Reorder Point (Local)</th>
+            <th>Reorder Point (Intl)</th>
             <th>Reorder?</th>
-            <th>Reorder Quantity</th> <!-- New Column -->
+            <th>Reorder Quantity</th>
         </tr>
-    </thead><tbody>';
+    </thead>
+    <tbody>
 
+<?php
     while ($row = $product_res->fetch_assoc()) {
         $product_id = $row['product_id'];
         $description = $row['description'];
@@ -154,30 +191,12 @@ if ($product_res->num_rows > 0) {
         $parent_barcode = $row['parent_barcode'];
         $brand_name = $row['brand_name'];
         $category_name = $row['category_name'];
-        $safety = $row['safety'];
+        $safety = $row['safety'] ?? 0;
         $warehouse = $row['warehouse'];
         $available_qty = $row['current_available_qty'];
-        $moving_avg = $row['average_sales_count_per_day'] ?: 0;
-        
         $warehouse_name = $row['warehouse_name'];
         $supplier_origin = $row['supplier_origin'];
-
-        $po_query = "
-            SELECT
-                SUM(CASE WHEN po.status NOT IN (0, 4) THEN poc.qty ELSE 0 END) AS incoming_stocks
-            FROM purchased_order_content poc 
-            LEFT JOIN purchased_order po ON po.id = poc.po_id
-            WHERE po.warehouse = '$selected_warehouse'
-            AND poc.product_id = '$product_id'
-            GROUP BY poc.product_id
-        ";
-        $po_result = $conn->query($po_query);
-        if($po_result->num_rows>0){
-            $row = $po_result->fetch_assoc();
-            $incoming_stocks = $row['incoming_stocks'];
-        } else {
-            $incoming_stocks = 0;
-        }
+        $supplier_name = $row['supplier_name'] ?? 'N/A';
 
         $sales_query = "
             SELECT DATE(ol.date_sent) AS sale_date, COUNT(*) AS qty_sold
@@ -204,44 +223,63 @@ if ($product_res->num_rows > 0) {
         }
 
         $last_7_days_sales = array_slice($sales_data, -7);
-        $total_7_days = array_sum($last_7_days_sales);
-        $moving_avg_7 = $total_7_days / 7;
-        $forecast_30_days = round($moving_avg_7 * 30);
-        $days_to_stockout = $moving_avg_7 > 0 ? round($available_qty / $moving_avg_7) : '∞';
+        $moving_avg_7 = array_sum($last_7_days_sales) / 7;
 
-        $lead_time = ($supplier_origin == 'Local') ? $local_lead_time : $import_lead_time;
-        $reorder_point = ($moving_avg_7 * $lead_time) + $safety;
-        // Calculate total future stock (available + incoming)
+        $key = $product_id . '|' . $selected_warehouse;
+        $moving_avg = $daily_avg_sales[$key] ?? $moving_avg_7;
+
+        $incoming_stocks = 0;
+        $po_query = "
+            SELECT SUM(CASE WHEN po.status NOT IN (0, 4) THEN poc.qty ELSE 0 END) AS incoming_stocks
+            FROM purchased_order_content poc 
+            LEFT JOIN purchased_order po ON po.id = poc.po_id
+            WHERE po.warehouse = '$selected_warehouse'
+            AND poc.product_id = '$product_id'
+            GROUP BY poc.product_id
+        ";
+        $po_result = $conn->query($po_query);
+        if ($po_result->num_rows > 0) {
+            $incoming_stocks = $po_result->fetch_assoc()['incoming_stocks'];
+        }
+
+        $forecast_30_days = round($moving_avg * 30);
+        $days_to_stockout = $moving_avg > 0 ? round($available_qty / $moving_avg) : '∞';
+
+        $lead_time = ($supplier_origin == 'Local') ? $lead_times['local'] : $lead_times['international'];
+        $reorder_point_local = ($moving_avg * $lead_times['local']) + $safety;
+        $reorder_point_intl = ($moving_avg * $lead_times['international']) + $safety;
+
+        $reorder_point = $supplier_origin == 'Local' ? $reorder_point_local : $reorder_point_intl;
         $total_future_stock = $available_qty + $incoming_stocks;
-
-        // Ensure that we never fall below safety stock
         $stock_shortfall = max(0, $safety - $total_future_stock);
-
-        // Now calculate the reorder quantity to cover forecasted sales during lead time
-        $reorder_quantity = $stock_shortfall + max(0, ($moving_avg_7 * $lead_time) - $total_future_stock);
-
+        $reorder_quantity = $stock_shortfall + max(0, ($moving_avg * $lead_time) - $total_future_stock);
         $needs_reorder = ($total_future_stock < $reorder_point) ? 'Yes' : 'No';
-        
 
-        echo '<tr>
-            <td><img class="img" src="../../assets/img/' . $product_img . '" style="height: 30px;" alt=""></td>
-            <td>' . $description . '</td>
-            <td>' . $category_name . '</td>
-            <td>' . $brand_name . '</td>
-            <td>' . $parent_barcode . '</td>
-            <td>' . $safety . '</td>
-            <td>' . $warehouse_name . '</td>
-            <td>' . $available_qty . '</td>
-            <td>' . number_format($moving_avg_7, 2) . '</td>
-            <td>' . $incoming_stocks . '</td>
-            <td>' . $forecast_30_days . '</td>
-            <td>' . $days_to_stockout . '</td>
-            <td><span class="badge bg-' . ($needs_reorder == 'Yes' ? 'danger' : 'success') . '">' . $needs_reorder . '</span></td>
-            <td>' . $reorder_quantity . '</td> <!-- Display reorder quantity here -->
-        </tr>';
+        echo "<tr>
+            <td><img class='img' src='../../assets/img/{$product_img}' style='height: 30px;' alt=''></td>
+            <td>{$description}</td>
+            <td>{$category_name}</td>
+            <td>{$brand_name}</td>
+            <td>{$parent_barcode}</td>
+            <td>{$supplier_name}</td>
+            <td>{$supplier_origin}</td>
+            <td>{$lead_time}</td>
+            <td>{$safety}</td>
+            <td>{$warehouse_name}</td>
+            <td>{$available_qty}</td>
+            <td>" . number_format($moving_avg, 2) . "</td>
+            <td>{$incoming_stocks}</td>
+            <td>{$forecast_30_days}</td>
+            <td>{$days_to_stockout}</td>
+            <td>{$reorder_point_local}</td>
+            <td>{$reorder_point_intl}</td>
+            <td><span class='badge bg-" . ($needs_reorder == 'Yes' ? 'danger' : 'success') . "'>{$needs_reorder}</span></td>
+            <td>{$reorder_quantity}</td>
+        </tr>";
+    }
+
+    echo '</tbody></table></div></div>';
+} else {
+    echo "<div class='alert alert-warning'>No product data found for the selected criteria.</div>";
 }
-
-echo '</tbody></table>';
 ?>
-</div></div>
-<?php } else { echo "<div class='alert alert-warning'>No product data found for the selected criteria.</div>"; } ?>
