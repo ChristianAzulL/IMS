@@ -12,11 +12,11 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
                     </div>
                     <div class="modal-body p-0">
                         <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
-                            <h4 class="mb-1" id="modalExampleDemoLabel">Select Warehouse</h4>
+                            <h4 class="mb-1" id="modalExampleDemoLabel">Select item from</h4>
                         </div>
                         <div class="p-4 pb-0">
                             <select class="form-select" id="warehouse" name="warehouse" required>
-                                <option value="">Select warehouse...</option>
+                                <option value="">Select from...</option>
                                 <?php echo implode("\n", $warehouse_options); ?>
                             </select>
                         </div>

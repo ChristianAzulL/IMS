@@ -97,8 +97,8 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
                                                 <input type="text" name="category[]" value="<?php echo $product_category;?>" readonly hidden>
                                                 
                                             </td>
-                                            <td class="align-middle cat">
-                                                <input type="number" name="order_qty[]" class="form-control" min="0" placeholder="Order Qty">
+                                            <td class="align-middle cat table-primary">
+                                                <input type="number" name="order_qty[]" class="form-control bg-danger" min="0" placeholder="Order Qty">
                                             </td>
                                             <td class="align-middle white-space-nowrap text-end pe-3 qty"><?php echo $current_stock; ?></td>
                                             <td class="align-middle text-end pe-3 trans_dd"><?php echo $current_total_transaction_daily; ?></td>

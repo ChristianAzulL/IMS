@@ -35,6 +35,7 @@ if($row = $po_result->fetch_assoc()){
     $inbound_warehouse_name = $row['warehouse_name'];
     $supplier = $row['supplier'];
 }
+$_SESSION['inbound_warehouse'] = $inbound_warehouse;
 
 
 $update_po = "UPDATE purchased_order SET `status` = 1, date_received = '$currentDateTime' WHERE id = '$po_id'";
