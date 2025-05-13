@@ -418,6 +418,12 @@ $(document).on("submit", "#void_form", function(e) {
                     text: response.message,
                     icon: response.success ? 'success' : 'error',
                     confirmButtonText: 'OK'
+                }).then(() => {
+                    if (response.success) {
+                        setTimeout(function() {
+                            location.reload(); // Reload the page after 2 seconds
+                        }, 1000);
+                    }
                 });
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 Swal.fire({
@@ -470,6 +476,12 @@ $(document).on("submit", "#approve_form", function(e) {
                     text: response.message,
                     icon: response.success ? 'success' : 'error',
                     confirmButtonText: 'OK'
+                }).then(() => {
+                    if (response.success) {
+                        setTimeout(function() {
+                            location.reload(); // Reload the page after 2 seconds
+                        }, 1000);
+                    }
                 });
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 Swal.fire({
