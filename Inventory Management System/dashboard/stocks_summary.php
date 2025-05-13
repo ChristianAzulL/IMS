@@ -42,9 +42,12 @@ if($dashboard_supplier_res->num_rows>0){
                     p.category = '$category_id' 
                     AND s.item_status NOT IN (1, 4, 8)
                     AND s.warehouse = '$warehouse_dashboard_id'
+                    AND p.category = '$category_id'
+                    AND s.supplier = '$supplier_id'
                     AND (s.batch_code IS NOT NULL AND s.batch_code != '-')
                 ";
             } else {
+
                 // Convert into quoted format
                 $warehouse_list = explode(',', $_SESSION['warehouse_ids']);
                 // Sanitize each warehouse ID string to avoid SQL injection
@@ -64,6 +67,8 @@ if($dashboard_supplier_res->num_rows>0){
                     p.category = '$category_id' 
                     AND s.item_status NOT IN (1, 4, 8)
                     AND s.warehouse IN ($warehouse_dashboard_id)
+                    AND p.category = '$category_id'
+                    AND s.supplier = '$supplier_id'
                     AND (s.batch_code IS NOT NULL AND s.batch_code != '-')
                 ";
             }            
@@ -81,7 +86,7 @@ if($dashboard_supplier_res->num_rows>0){
                 // Add stock row to summary
                 $stock_summary[] = '<tr>
                     <td>' . $supplier_name . '</td>
-                    <td>' . $category_name . '</td>
+                    <td><a href="#">' . $category_name . '</a></td>
                     <td>' . $total_qty . '</td>
                     <td>' . number_format($total_capital, 2) . '</td> <!-- Currency Format --> 
                 </tr>';
