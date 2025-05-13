@@ -28,7 +28,7 @@ if($dashboard_supplier_res->num_rows>0){
             $category_name = $category['category_name'];
 
             // Warehouse selection logic
-            if (!empty($_GET['wh'])) {
+            if (isset($_GET['wh']) || !empty($_GET['wh'])) {
                 $warehouse_dashboard_id = $_GET['wh']; // sample: warehouse1
                 $warehouse_dashboard_id = mysqli_real_escape_string($conn, $warehouse_dashboard_id); // Sanitize the input
 
