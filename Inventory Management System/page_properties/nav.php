@@ -852,6 +852,11 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Finance</span></div>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Auditing/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Auditing</span></div>
+              </a>
+            </li>
           </ul>
         </li>
         <?php
