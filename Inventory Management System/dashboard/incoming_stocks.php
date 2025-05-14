@@ -72,8 +72,8 @@
 
                                     echo '<tr>
                                         <td>' . htmlspecialchars($incoming_category) . '</td>
-                                        <td class="text-end">' . $current_stocks . '</td>
-                                        <td class="text-end">' . $incoming_qty . '</td>
+                                        <td class="text-end"><a href="../incoming-stocks/?name=' . $incoming_category_id . '&&type=current">' . $current_stocks . '</td>
+                                        <td class="text-end"><a href="../incoming-stocks/?name=' . $incoming_category_id . '&&type=incoming">' . $incoming_qty . '</td>
                                     </tr>';
                                 }
                             } else {
