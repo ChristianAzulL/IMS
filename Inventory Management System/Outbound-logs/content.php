@@ -53,7 +53,7 @@ $outbound_res = $conn->query($outbound_sql);
             <th class="text-900 sort text-end" data-sort="outbound_status">Order #</th>
             <th class="text-900 sort text-end" data-sort="outbound_status">Order Line ID</th>
             <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
-            <th class="text-900 sort" data-sort="date">Date Received</th>
+            <th class="text-900 sort" data-sort="date">Date</th>
             <th class="text-900 sort" data-sort="receiver">Client</th>
           </tr>
       </thead>
