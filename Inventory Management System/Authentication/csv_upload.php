@@ -1,59 +1,67 @@
 <?php
-$requiredHeaders = [
-    'Order Number', 'Order Line ID', 'Warehouse', 'Client', 'Fulfillment Status'
-];
-
 function normalize($str) {
     return strtoupper(trim($str));
 }
 
+$rows = [];
+$error = '';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    if ($_FILES['file']['error'] !== UPLOAD_ERR_OK) {
-        echo 'File upload error.';
-        exit;
-    }
-
-    $fileTmpPath = $_FILES['file']['tmp_name'];
-    $handle = fopen($fileTmpPath, 'r');
-    if (!$handle) {
-        echo 'Unable to read uploaded file.';
-        exit;
-    }
-
-    $headers = fgetcsv($handle);
-    if (!$headers) {
-        echo 'Empty or unreadable file.';
-        fclose($handle);
-        exit;
-    }
-
-    $normalizedHeaders = array_map('normalize', $headers);
-    $normalizedRequired = array_map('normalize', $requiredHeaders);
-
-    if ($normalizedHeaders !== $normalizedRequired) {
-        echo '<strong>Invalid CSV headers.</strong><br>Expected headers:<br><pre>' . implode(",", $requiredHeaders) . '</pre>';
-        fclose($handle);
-        exit;
-    }
-
-    echo '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">';
-    echo '<thead><tr>';
-    foreach ($headers as $header) {
-        echo '<th>' . htmlspecialchars($header) . '</th>';
-    }
-    echo '</tr></thead><tbody>';
-
-    while (($row = fgetcsv($handle)) !== false) {
-        echo '<tr>';
-        foreach ($row as $cell) {
-            echo '<td>' . htmlspecialchars($cell) . '</td>';
+    if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['file']['tmp_name'];
+        if (($handle = fopen($fileTmpPath, 'r')) !== false) {
+            $headers = fgetcsv($handle);
+            if ($headers) {
+                while (($row = fgetcsv($handle)) !== false) {
+                    $rows[] = array_map('normalize', $row);
+                }
+            } else {
+                $error = 'CSV file is empty or unreadable.';
+            }
+            fclose($handle);
+        } else {
+            $error = 'Could not open uploaded file.';
         }
-        echo '</tr>';
+    } else {
+        $error = 'File upload error.';
     }
-
-    echo '</tbody></table>';
-    fclose($handle);
 } else {
-    echo 'No file received.';
+    $error = 'No file uploaded.';
 }
 ?>
+
+<?php if ($error): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+<?php elseif (!empty($rows)): ?>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>ORDER NUMBER</th>
+                    <th>ORDER LINE ID</th>
+                    <th>WAREHOUSE</th>
+                    <th>CLIENT</th>
+                    <th>FULFILLMENT STATUS</th>
+                    <th class="text-end">AMOUNT PAID</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($rows as $row): ?>
+                    <?php
+                        $status = $row[4]; // Fulfillment Status
+                        $class = '';
+                        if ($status === 'PAID') $class = 'table-success';
+                    ?>
+                    <tr class="<?= $class ?>">
+                        <td><?= $row[0] ?></td>
+                        <td><?= $row[1] ?></td>
+                        <td><?= $row[2] ?></td>
+                        <td><?= $row[3] ?></td>
+                        <td><?= $row[4] ?></td>
+                        <td class="text-end"><?= $row[5] ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>

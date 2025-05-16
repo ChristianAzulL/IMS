@@ -51,6 +51,7 @@ if (isset($_GET['notnot'])) {
 <link href="../vendors/swiper/swiper-bundle.min.css" rel="stylesheet" />
 <script src="../vendors/echarts/echarts.min.js"></script>
 <script src="../vendors/jquery/jquery.min.js"></script>
+<script src="../vendors/sortablejs/Sortable.min.js"></script>
 <script src="../vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
