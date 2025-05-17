@@ -17,7 +17,7 @@
           LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
           LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
           LEFT JOIN product p ON p.hashed_id = s.product_id
-          WHERE oc.status = 0 
+          WHERE oc.status IN (0, 6) 
             AND p.category = '$category_id' 
             AND (s.batch_code IS NOT NULL AND s.batch_code != '-')
             AND ol.date_sent >= DATE_FORMAT(NOW(), '%Y-%m-01')
@@ -31,7 +31,7 @@
           LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
           LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
           LEFT JOIN product p ON p.hashed_id = s.product_id
-          WHERE oc.status = 0 
+          WHERE oc.status IN (0, 6) 
             AND p.category = '$category_id' 
             AND (s.batch_code IS NOT NULL AND s.batch_code != '-')
             AND ol.date_sent >= DATE_FORMAT(NOW(), '%Y-%m-01')
@@ -86,7 +86,7 @@
               <tbody>
                 <?php foreach($top_10_fast as $row): ?>
                   <tr>
-                    <td><a href="../Category-Product/?type=fast&&cat=<?php echo htmlspecialchars($row['category_name']); ?>"><?php echo htmlspecialchars($row['category_name']); ?></a></td>
+                    <td><a href="../Category-Product/?type=fast&&cat=<?php echo htmlspecialchars($row['category_name']); ?>&&wh=<?php echo $dashboard_wh;?>"><?php echo htmlspecialchars($row['category_name']); ?></a></td>
                     <td class="text-end"><?php echo number_format($row['outbounded']); ?></td>
                   </tr>
                 <?php endforeach; ?>

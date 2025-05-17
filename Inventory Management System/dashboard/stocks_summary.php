@@ -1,5 +1,5 @@
 <?php 
-$dashboard_supplier_query = "SELECT * FROM supplier";
+$dashboard_supplier_query = "SELECT * FROM supplier LIMIT 2";
 $dashboard_supplier_res = $conn->query($dashboard_supplier_query);
 
 $stock_summary = [];
@@ -86,7 +86,7 @@ if($dashboard_supplier_res->num_rows>0){
                 // Add stock row to summary
                 $stock_summary[] = '<tr>
                     <td>' . $supplier_name . '</td>
-                    <td><a href="#">' . $category_name . '</a></td>
+                    <td><a href="../Stock-Summary/?supplier=' . $supplier_id . '&&category=' . $category_id . '">' . $category_name . '</a></td>
                     <td>' . $total_qty . '</td>
                     <td>' . number_format($total_capital, 2) . '</td> <!-- Currency Format --> 
                 </tr>';
@@ -113,7 +113,7 @@ if(count($stock_summary) == 0) {
 
 <div class="card">
     <div class="card-header">
-        <h6>Stock Summary as of <?php echo $date_today;?></h6>
+        <h6><a href="../Stock-Summary/">Stock Summary</a> as of <?php echo $date_today;?></h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">

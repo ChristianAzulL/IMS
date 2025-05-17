@@ -169,13 +169,12 @@
 </div>
 
 <script>
+    let currentPage = 1;
+    let limit = 9;
+
     $(document).ready(function () {
         let targetId, targetPId, warehouseID, offset = 0;
-
         let barcodeSearch = '';
-
-       
-
 
         $(document).on("click", "[data-bs-toggle='modal']", function () {
             targetId = $(this).attr("target-id");
@@ -220,16 +219,15 @@
 
         function loadMoreData() {
             $("#load-more-btn").prop("disabled", true).text("Loading...");
-
             $.ajax({
                 url: "modal-display-1.php",
                 type: "GET",
-                data: { 
-                    target_id: targetId, 
-                    targetPId: targetPId, 
-                    warehouseID: warehouseID, 
-                    offset: offset, 
-                    search: barcodeSearch // new!
+                data: {
+                    target_id: targetId,
+                    targetPId: targetPId,
+                    warehouseID: warehouseID,
+                    offset: offset,
+                    search: barcodeSearch
                 },
                 dataType: "json",
                 success: function (response) {
@@ -245,7 +243,6 @@
                     $("#load-more-btn").text("Error! Try Again").prop("disabled", false);
                 }
             });
-
         }
 
         $(document).on('input', '#barcode-search', function () {
@@ -255,12 +252,7 @@
             loadMoreData();
         });
 
-        // GLightbox init
         let lightbox = GLightbox({ selector: '[data-glightbox]' });
-
-        // Pagination and data loading
-        let currentPage = 1;
-        let limit = 9;
 
         function formatDate(dateString) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -358,7 +350,6 @@
                         `);
                     });
 
-                    // Re-initialize GLightbox after content is added
                     GLightbox({ selector: '[data-glightbox]' });
                 }
 
@@ -374,32 +365,30 @@
             pagination.empty();
 
             if (currentPage > 1) {
-                pagination.append(`<button class="btn btn-sm btn-secondary me-1" onclick="changePage(${currentPage - 1})">Previous</button>`);
+                pagination.append(`<button class="pagination-btn btn btn-sm btn-secondary me-1" data-page="${currentPage - 1}">Previous</button>`);
             }
 
             for (let i = Math.max(1, currentPage - 1); i <= Math.min(totalPages, currentPage + 1); i++) {
-                pagination.append(`<button class="btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} me-1" onclick="changePage(${i})">${i}</button>`);
+                pagination.append(`<button class="pagination-btn btn btn-sm ${i === currentPage ? 'btn-primary' : 'btn-outline-primary'} me-1" data-page="${i}">${i}</button>`);
             }
 
             if (currentPage < totalPages) {
-                pagination.append(`<button class="btn btn-sm btn-secondary" onclick="changePage(${currentPage + 1})">Next</button>`);
+                pagination.append(`<button class="pagination-btn btn btn-sm btn-secondary" data-page="${currentPage + 1}">Next</button>`);
             }
         }
 
-        function changePage(page) {
-            currentPage = page;
+        $(document).on('click', '.pagination-btn', function () {
+            currentPage = parseInt($(this).data('page'));
             loadData();
-        }
+        });
 
         $('#searchInput, #warehouse').on('input change', function () {
             currentPage = 1;
             loadData();
         });
 
-        // Initial load
         loadData();
 
-        // Collapse button: load item details via AJAX
         $(document).on('click', '.btn[data-bs-toggle="collapse"]', function () {
             const itemId = $(this).data('bs-target').replace('#item', '');
             const targetDiv = $(this).data('bs-target');
@@ -415,3 +404,4 @@
         });
     });
 </script>
+

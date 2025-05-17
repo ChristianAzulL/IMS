@@ -16,7 +16,7 @@
               <tbody>
                 <?php foreach($top_10_slow as $row): ?>
                   <tr>
-                    <td><a href="../Category-Product/?type=slow&&cat=<?php echo htmlspecialchars($row['category_name']); ?>"><?php echo htmlspecialchars($row['category_name']); ?></a></td>
+                    <td><a href="../Category-Product/?type=slow&&cat=<?php echo htmlspecialchars($row['category_name']); ?>&&wh=<?php echo $dashboard_wh;?>"><?php echo htmlspecialchars($row['category_name']); ?></a></td>
                     <td class="text-end"><?php echo number_format($row['outbounded']); ?></td>
                   </tr>
                 <?php endforeach; ?>

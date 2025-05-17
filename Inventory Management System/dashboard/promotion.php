@@ -25,6 +25,7 @@ if (!empty($_GET['wh'])) {
             AND s.warehouse = '$warehouse_dashboard_id'
         GROUP BY p.description
         ORDER BY total_outbound ASC
+        LIMIT 10
     ";
 
 } else {
@@ -57,6 +58,7 @@ if (!empty($_GET['wh'])) {
             AND ol.date_sent < DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH)
         GROUP BY p.description
         ORDER BY total_outbound ASC
+        LIMIT 10
     ";
 }
 
@@ -87,7 +89,7 @@ if(count($promotion_data) == 0){
 
 <div class="card">
     <div class="card-header">
-        <h6>For Promotion <?php echo $date_today;?></h6>
+        <h6><a href="../Promotions/">For Promotion</a> <?php echo $date_today;?></h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">

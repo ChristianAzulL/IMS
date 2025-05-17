@@ -54,6 +54,7 @@ $revdrop_product_query = "
         COUNT(DISTINCT CASE WHEN ol.date_sent BETWEEN DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 1 MONTH), '%Y-%m-01') 
         AND LAST_DAY(DATE_SUB(NOW(), INTERVAL 1 MONTH)) THEN oc.unique_barcode END)
         ) DESC
+    LIMIT 10
 ";
 
 
@@ -105,7 +106,7 @@ if (count($revdrop_data) == 0) {
 
 <div class="card">
     <div class="card-header">
-        <h6>Revenue Dropping <?php echo $date_today; ?></h6>
+        <h6><a href="../Revenue Dropping/">Revenue Dropping</a> <?php echo $date_today; ?></h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
