@@ -97,7 +97,7 @@
                 document.getElementById("module_total_delivery_failed").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=tdf&&wh=<?php echo $dashboard_wh;?>">${module_data.total_delivery_failed}</a>`;
                 document.getElementById("module_local").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=local&&wh=<?php echo $dashboard_wh;?>">${module_data.local}</a>`;
                 document.getElementById("module_import").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import&&wh=<?php echo $dashboard_wh;?>">${module_data.import}</a>`;
-                document.getElementById("module_total_defective").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import&&wh=<?php echo $dashboard_wh;?>">${module_data.total_defective}</a>`;
+                document.getElementById("module_total_defective").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=both&wh=<?php echo $dashboard_wh;?>">${module_data.total_defective}</a>`;
             })
             .catch(module_error => {
                 console.error("Error fetching data:", module_error);

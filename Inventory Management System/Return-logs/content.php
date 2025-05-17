@@ -1,8 +1,49 @@
+<?php
+if(isset($_GET['date'])){
+    $get_date = $_GET['date'];
+    $get_type = $_GET['type'];
+    $get_warehouse_id = $_GET['wh'];
+
+
+    switch ($get_type) {
+        case 'sf':
+            $type = "Seller Fault Delivery Failed";
+            break;
+
+        case 'cf':
+            $type = "Client Fault Delivery Failed";
+            break;
+        
+        case 'tdf':
+            $type = "All Delivery Failed";
+            break;
+        case 'local':
+            $type = "Local Defective items";
+            break;
+        case 'import':
+            $type = "Import Defective items";
+            break;
+        case 'both':
+            $type = "All Defective";
+            break;
+        default:
+            $type = "";
+            break;
+    }
+}
+?>
 <div class="card">
     <div class="card-body overflow-hidden">
         <div class="row">
             <div class="col-12 mb-4">
                 <h2><b>Return Logs <?php if(isset($_GET['date'])){ echo $_GET['date'];}?></b></h2>
+                <?php
+                if(isset($type)){ 
+                ?>
+                <p class="text-muted"><?php echo $type;?></p>
+                <?php
+                }
+                ?>
             </div>
         </div>
         <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn", "batch","warehouse","staff", "fault_reason", "fault"],"page":5,"pagination":true}'>
@@ -94,9 +135,7 @@
 
 
                         if(isset($_GET['date']) && isset($_GET['type']) && isset($_GET['wh'])){
-                           $get_date = $_GET['date'];
-                           $get_type = $_GET['type'];
-                           $get_warehouse_id = $_GET['wh'];
+                          
                            if(strpos($get_date, "to")!==false){
                             // Split the date range
                             list($start, $end) = explode(" to ", $get_date);
@@ -115,9 +154,74 @@
                             $end_date = date("Y-m-d H:i:s", strtotime($single_date . " 23:59:59"));
 
                             $additional_date_query = "AND r.date BETWEEN '$start_date' AND '$end_date'";
-                           }
 
+                            
+                           }
                            
+                           if(!empty($get_warehouse_id)){
+                                $warehouse_query = "r.warehouse = '$get_warehouse_id'";
+                            } else {
+                                $warehouse_query = "r.warehouse IN ($imploded_warehouse_ids)";
+                            }
+                            
+
+
+                           switch ($get_type) {
+                                case 'sf':
+                                    $type_additional_query = "AND r.fault = 'SELLER FAULT' AND r.fault_type = 'DELIVERY FAILED'";
+                                    break;
+
+                                case 'cf':
+                                    $type_additional_query = "AND r.fault = 'CLIENT FAULT' AND r.fault_type = 'DELIVERY FAILED'";
+                                    break;
+                                
+                                case 'tdf':
+                                    $type_additional_query = "AND r.fault_type = 'DELIVERY FAILED'";
+                                    break;
+                                case 'local':
+                                    $type_additional_query = "AND sup.local_international = 'Local' AND r.fault_type = 'DEFECTIVE'";
+                                    break;
+                                case 'import':
+                                    $type_additional_query = "AND sup.local_internation = 'International' AND r.fault_type = 'DEFECTIVE'";
+                                    break;
+                                case 'both':
+                                    $type_additional_query = "AND r.fault_type = 'DEFECTIVE'";
+                                    break;
+                                default:
+                                    $type_additional_query = "";
+                                    break;
+                            }
+
+                            $sql = "SELECT 
+                                r.unique_barcode,
+                                r.amount,
+                                r.date,
+                                r.id AS return_id,
+                                r.fault,
+                                r.fault_type,
+                                s.outbound_id,
+                                p.description,
+                                b.brand_name,
+                                c.category_name,
+                                w.warehouse_name,
+                                u.user_fname,
+                                u.user_lname,
+                                u.pfp, 
+                                s.batch_code
+                            FROM `returns` r 
+                            LEFT JOIN stocks s ON s.unique_barcode = r.unique_barcode
+                            LEFT JOIN product p ON p.hashed_id = s.product_id
+                            LEFT JOIN brand b ON b.hashed_id = p.brand
+                            LEFT JOIN category c ON c.hashed_id = p.category
+                            LEFT JOIN users u ON u.hashed_id = r.user_id
+                            LEFT JOIN warehouse w ON w.hashed_id = r.warehouse
+                            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                            WHERE $warehouse_query
+                            $type_additional_query
+                            $additional_date_query
+                            ORDER BY r.id DESC";
+
+
                         } else {
                             $sql = "SELECT 
                                 r.unique_barcode,
