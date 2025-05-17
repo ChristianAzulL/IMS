@@ -173,7 +173,7 @@ $outbound_res = $conn->query($outbound_sql);
                     </div>
                 </div>
                 <div class="table-responsive scrollbar">
-                    <table class="table table-bordered table-striped fs-10 mb-0">
+                    <table class="table table-bordered table-striped fs-11 mb-0">
                         <thead class="bg-200">
                             <tr>
                                 <th></th>

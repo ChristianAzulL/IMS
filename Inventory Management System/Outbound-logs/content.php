@@ -75,8 +75,8 @@ if(isset($get_date) && isset($get_type)){
 $outbound_res = $conn->query($outbound_sql);
 ?>
 <div class="card">
-  <div class="card-header">
-    <h2>Outbound Logs <?php if(isset($get_date)){ echo $get_date;}?></h2>
+  <div class="card-header bg-primary bg-gradient">
+    <h2 class="text-white">Outbound Logs <?php if(isset($get_date)){ echo $get_date;}?></h2>
   </div>
     <div class="card-body overflow-hidden py-6 px-0">
         <div class="row justify-content-between gx-3 gy-0 px-3">
