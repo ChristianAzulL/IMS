@@ -2,7 +2,7 @@
     <div class="card-body overflow-hidden">
         <div class="row">
             <div class="col-12 mb-4">
-                <h2><b>Return Logs</b></h2>
+                <h2><b>Return Logs <?php if(isset($_GET['date'])){ echo $_GET['date'];}?></b></h2>
             </div>
         </div>
         <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn", "batch","warehouse","staff", "fault_reason", "fault"],"page":5,"pagination":true}'>
@@ -82,6 +82,7 @@
                     <tbody class="list">
                         <?php 
                         $number = 1;
+
                         // Quote each ID in the array
                         $quoted_warehouse_ids = array_map(function ($id) {
                             return "'" . trim($id) . "'";
@@ -89,31 +90,62 @@
                 
                         // Create a comma-separated string of quoted IDs
                         $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
-                        $sql = "SELECT 
-                                        r.unique_barcode,
-                                        r.amount,
-                                        r.date,
-                                        r.id AS return_id,
-                                        r.fault,
-                                        r.fault_type,
-                                        s.outbound_id,
-                                        p.description,
-                                        b.brand_name,
-                                        c.category_name,
-                                        w.warehouse_name,
-                                        u.user_fname,
-                                        u.user_lname,
-                                        u.pfp, 
-                                        s.batch_code
-                                    FROM `returns` r 
-                                    LEFT JOIN stocks s ON s.unique_barcode = r.unique_barcode
-                                    LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    LEFT JOIN category c ON c.hashed_id = p.category
-                                    LEFT JOIN users u ON u.hashed_id = r.user_id
-                                    LEFT JOIN warehouse w ON w.hashed_id = r.warehouse
-                                    WHERE r.warehouse IN ($imploded_warehouse_ids)
-                                    ORDER BY r.id DESC";
+
+
+
+                        if(isset($_GET['date']) && isset($_GET['type']) && isset($_GET['wh'])){
+                           $get_date = $_GET['date'];
+                           $get_type = $_GET['type'];
+                           $get_warehouse_id = $_GET['wh'];
+                           if(strpos($get_date, "to")!==false){
+                            // Split the date range
+                            list($start, $end) = explode(" to ", $get_date);
+
+                            // Convert to datetime format
+                            $start_date = date("Y-m-d H:i:s", strtotime(trim($start) . " 00:00:01"));
+                            $end_date = date("Y-m-d H:i:s", strtotime(trim($end) . " 23:59:59"));
+
+                            $additional_date_query = "AND r.date BETWEEN '$start_date' AND '$end_date'";
+                           } else {
+                            // Single date format like "May 17, 2025"
+                            $single_date = trim($get_date);
+
+                            // Convert to start and end of that day
+                            $start_date = date("Y-m-d H:i:s", strtotime($single_date . " 00:00:00"));
+                            $end_date = date("Y-m-d H:i:s", strtotime($single_date . " 23:59:59"));
+
+                            $additional_date_query = "AND r.date BETWEEN '$start_date' AND '$end_date'";
+                           }
+
+                           
+                        } else {
+                            $sql = "SELECT 
+                                r.unique_barcode,
+                                r.amount,
+                                r.date,
+                                r.id AS return_id,
+                                r.fault,
+                                r.fault_type,
+                                s.outbound_id,
+                                p.description,
+                                b.brand_name,
+                                c.category_name,
+                                w.warehouse_name,
+                                u.user_fname,
+                                u.user_lname,
+                                u.pfp, 
+                                s.batch_code
+                            FROM `returns` r 
+                            LEFT JOIN stocks s ON s.unique_barcode = r.unique_barcode
+                            LEFT JOIN product p ON p.hashed_id = s.product_id
+                            LEFT JOIN brand b ON b.hashed_id = p.brand
+                            LEFT JOIN category c ON c.hashed_id = p.category
+                            LEFT JOIN users u ON u.hashed_id = r.user_id
+                            LEFT JOIN warehouse w ON w.hashed_id = r.warehouse
+                            WHERE r.warehouse IN ($imploded_warehouse_ids)
+                            ORDER BY r.id DESC";
+                        }
+                        
                         $result = $conn->query($sql);
                         if($result->num_rows>0){
                             while($row=$result->fetch_assoc()){

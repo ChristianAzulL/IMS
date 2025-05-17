@@ -92,12 +92,12 @@
             .then(response => response.json())
             .then(module_data => {
                 document.getElementById("module_date_label").innerText = module_data.date_selected;
-                document.getElementById("module_seller_fault").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=sf">${module_data.seller_fault}</a>`;
-                document.getElementById("module_client_fault").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=cf">${module_data.client_fault}</a>`;
-                document.getElementById("module_total_delivery_failed").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=tdf">${module_data.total_delivery_failed}</a>`;
-                document.getElementById("module_local").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=local">${module_data.local}</a>`;
-                document.getElementById("module_import").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import">${module_data.import}</a>`;
-                document.getElementById("module_total_defective").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import">${module_data.total_defective}</a>`;
+                document.getElementById("module_seller_fault").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=sf&&wh=<?php echo $dashboard_wh;?>">${module_data.seller_fault}</a>`;
+                document.getElementById("module_client_fault").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=cf&&wh=<?php echo $dashboard_wh;?>">${module_data.client_fault}</a>`;
+                document.getElementById("module_total_delivery_failed").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=tdf&&wh=<?php echo $dashboard_wh;?>">${module_data.total_delivery_failed}</a>`;
+                document.getElementById("module_local").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=local&&wh=<?php echo $dashboard_wh;?>">${module_data.local}</a>`;
+                document.getElementById("module_import").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import&&wh=<?php echo $dashboard_wh;?>">${module_data.import}</a>`;
+                document.getElementById("module_total_defective").innerHTML = `<a href="../Return-logs/?date=${module_data.date_selected}&type=import&&wh=<?php echo $dashboard_wh;?>">${module_data.total_defective}</a>`;
             })
             .catch(module_error => {
                 console.error("Error fetching data:", module_error);
