@@ -4,6 +4,14 @@ if (isset($_SESSION['outbound_id'])) {
     unset($_SESSION['outbound_id']);
 }
 
+if (isset($_GET['date_range'], $_GET['type'], $_GET['wh'])) {
+    // Sanitize and validate input
+    $get_date = filter_input(INPUT_GET, 'date_range', FILTER_SANITIZE_STRING);
+    $get_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+    $get_warehouse_id = filter_input(INPUT_GET, 'wh', FILTER_SANITIZE_STRING);
+}
+
+
 // Get total count for pagination
 $count_sql = "SELECT COUNT(*) as total FROM outbound_logs";
 $count_res = $conn->query($count_sql);
@@ -19,15 +27,57 @@ $quoted_warehouse_ids = array_map(function ($id) {
 
 // Create a comma-separated string of quoted IDs
 $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
-$outbound_sql = "SELECT ol.*, u.user_fname, u.user_lname, w.warehouse_name, ol.status, ol.order_line_id, ol.order_num
-                 FROM outbound_logs ol
-                 LEFT JOIN users u ON u.hashed_id = ol.user_id
-                 LEFT JOIN warehouse w ON w.hashed_id = ol.warehouse
-                 WHERE ol.warehouse IN ($imploded_warehouse_ids)
-                 ORDER BY ol.id DESC";
+
+if(isset($get_date) && isset($get_type)){
+  if(strpos($get_date, "to")!==false){
+  // Split the date range
+  list($start, $end) = explode(" to ", $get_date);
+
+  // Convert to datetime format
+  $start_date = date("Y-m-d H:i:s", strtotime(trim($start) . " 00:00:01"));
+  $end_date = date("Y-m-d H:i:s", strtotime(trim($end) . " 23:59:59"));
+
+  $additional_date_query = "AND ol.date_sent BETWEEN '$start_date' AND '$end_date'";
+  } else {
+  // Single date format like "May 17, 2025"
+  $single_date = trim($get_date);
+
+  // Convert to start and end of that day
+  $start_date = date("Y-m-d H:i:s", strtotime($single_date . " 00:00:00"));
+  $end_date = date("Y-m-d H:i:s", strtotime($single_date . " 23:59:59"));
+
+  $additional_date_query = "AND ol.date_sent BETWEEN '$start_date' AND '$end_date'";
+  }
+  
+  if(!empty($get_warehouse_id)){
+      $warehouse_query = "ol.warehouse = '$get_warehouse_id'";
+  } else {
+      $warehouse_query = "ol.warehouse IN ($imploded_warehouse_ids)";
+  }
+
+  $outbound_sql = "SELECT ol.*, u.user_fname, u.user_lname, w.warehouse_name, ol.status, ol.order_line_id, ol.order_num
+  FROM outbound_logs ol
+  LEFT JOIN users u ON u.hashed_id = ol.user_id
+  LEFT JOIN warehouse w ON w.hashed_id = ol.warehouse
+  WHERE $warehouse_query
+  $additional_date_query
+  ORDER BY ol.id DESC";
+
+} else {
+  $outbound_sql = "SELECT ol.*, u.user_fname, u.user_lname, w.warehouse_name, ol.status, ol.order_line_id, ol.order_num
+  FROM outbound_logs ol
+  LEFT JOIN users u ON u.hashed_id = ol.user_id
+  LEFT JOIN warehouse w ON w.hashed_id = ol.warehouse
+  WHERE ol.warehouse IN ($imploded_warehouse_ids)
+  ORDER BY ol.id DESC";
+}
+
 $outbound_res = $conn->query($outbound_sql);
 ?>
 <div class="card">
+  <div class="card-header">
+    <h2>Outbound Logs <?php if(isset($get_date)){ echo $get_date;}?></h2>
+  </div>
     <div class="card-body overflow-hidden py-6 px-0">
         <div class="row justify-content-between gx-3 gy-0 px-3">
         <div id="tableExample3" data-list='{"valueNames":["outbound_no","outbound_status","warehouse","date","receiver"],"page":5,"pagination":true}'>

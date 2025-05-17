@@ -1,8 +1,9 @@
 <?php
 if(isset($_GET['date'])){
-    $get_date = $_GET['date'];
-    $get_type = $_GET['type'];
-    $get_warehouse_id = $_GET['wh'];
+    // Sanitize and validate input
+    $get_date = filter_input(INPUT_GET, 'date', FILTER_SANITIZE_STRING);
+    $get_type = filter_input(INPUT_GET, 'type', FILTER_SANITIZE_STRING);
+    $get_warehouse_id = filter_input(INPUT_GET, 'wh', FILTER_SANITIZE_STRING);
 
 
     switch ($get_type) {

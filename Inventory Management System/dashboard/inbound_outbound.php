@@ -89,14 +89,14 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(response => response.json())
         .then(data => {
             document.getElementById("dateLabel").innerText = data.date;
-            document.getElementById("outboundQty").innerHTML = `<a href="../Outbound-logs/?date_range=${data.date}&&type=outboundQty">${numberFormat(data.outbound_qty)}</a>`;
-            document.getElementById("inboundQty").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=inboundQty">${numberFormat(data.inbound_qty)}</a>`;
-            document.getElementById("outboundSales").innerHTML = `<a href="../Outbound-logs/?date_range=${data.date}&&type=outboundSales">${currencyFormat(data.outbound_sales)}</a>`;
-            document.getElementById("inboundCost").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=inboundCost">${currencyFormat(data.inbound_cost)}</a>`;
-            document.getElementById("local_qty").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=localQty">${numberFormat(data.local_inbound_qty)}</a>`;
-            document.getElementById("import_qty").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=importQty">${numberFormat(data.import_inbound_qty)}</a>`;
-            document.getElementById("local_cost").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=localCost">${currencyFormat(data.local_inbound_amount)}</a>`;
-            document.getElementById("import_cost").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=importCost">${currencyFormat(data.import_inbound_amount)}</a>`;
+            document.getElementById("outboundQty").innerHTML = `<a href="../Outbound-logs/?date_range=${data.date}&&type=outboundQty&&wh=<?php echo $dashboard_wh;?>">${numberFormat(data.outbound_qty)}</a>`;
+            document.getElementById("inboundQty").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=inboundQty&&wh=<?php echo $dashboard_wh;?>">${numberFormat(data.inbound_qty)}</a>`;
+            document.getElementById("outboundSales").innerHTML = `<a href="../Outbound-logs_costing/?date_range=${data.date}&&type=outboundSales&&wh=<?php echo $dashboard_wh;?>">${currencyFormat(data.outbound_sales)}</a>`;
+            document.getElementById("inboundCost").innerHTML = `<a href="../Inbound-logs_costing/?date_range=${data.date}&&type=inboundCost&&wh=<?php echo $dashboard_wh;?>">${currencyFormat(data.inbound_cost)}</a>`;
+            document.getElementById("local_qty").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=localQty&&wh=<?php echo $dashboard_wh;?>">${numberFormat(data.local_inbound_qty)}</a>`;
+            document.getElementById("import_qty").innerHTML = `<a href="../Inbound-logs/?date_range=${data.date}&&type=importQty&&wh=<?php echo $dashboard_wh;?>">${numberFormat(data.import_inbound_qty)}</a>`;
+            document.getElementById("local_cost").innerHTML = `<a href="../Inbound-logs_costing/?date_range=${data.date}&&type=localCost&&wh=<?php echo $dashboard_wh;?>">${currencyFormat(data.local_inbound_amount)}</a>`;
+            document.getElementById("import_cost").innerHTML = `<a href="../Inbound-logs_costing/?date_range=${data.date}&&type=importCost&&wh=<?php echo $dashboard_wh;?>">${currencyFormat(data.import_inbound_amount)}</a>`;
         })
         .catch(error => {
             console.error("Error fetching data:", error);

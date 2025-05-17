@@ -43,7 +43,7 @@ if (isset($_POST['date_between'])) {
         SELECT SUM(oc.sold_price) AS total_outbound_sales, COUNT(oc.unique_barcode) AS outbound_qty
         FROM outbound_content oc
         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-        WHERE ol.warehouse $where_warehouse AND oc.status = 0 AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
+        WHERE ol.warehouse $where_warehouse AND oc.status IN (0, 6) AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
     ";
 
     $inbound_query = "
@@ -88,7 +88,7 @@ if (isset($_POST['date_between'])) {
         SELECT SUM(oc.sold_price) AS total_outbound_sales, COUNT(oc.unique_barcode) AS outbound_qty
         FROM outbound_content oc
         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-        WHERE ol.warehouse $where_warehouse AND oc.status = 0 AND DATE(ol.date_sent) = '$today_mysql'
+        WHERE ol.warehouse $where_warehouse AND oc.status IN (0, 6) AND DATE(ol.date_sent) = '$today_mysql'
     ";
 
     $inbound_query = "
