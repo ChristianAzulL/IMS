@@ -99,9 +99,6 @@ if ($revdrop_product_res->num_rows > 0) {
     }
 }
 
-if (count($revdrop_data) == 0) {
-    $revdrop_data[] = '<tr><td colspan="13" class="text-center">No data available</td></tr>';
-}
 ?>
 
 <div class="card">

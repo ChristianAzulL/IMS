@@ -85,7 +85,7 @@ if($dashboard_supplier_res->num_rows>0){
 
                 // Add stock row to summary
                 $stock_summary[] = '<tr>
-                    <td>' . $supplier_name . '</td>
+                    <td><a href="../Stock-Summary/?supplier=' . $supplier_id . '&&supplier_name=' . $supplier_name . '&&category=&&category_name=&&supplier_type=' . $supplier_type . '">' . $supplier_name . '</a></td>
                     <td><a href="../Stock-Summary/?supplier=' . $supplier_id . '&&supplier_name=' . $supplier_name . '&&category=' . $category_id . '&&category_name=' . $category_name . '&&supplier_type=' . $supplier_type . '">' . $category_name . '</a></td>
                     <td>' . $total_qty . '</td>
                     <td>' . number_format($total_capital, 2) . '</td> <!-- Currency Format --> 
