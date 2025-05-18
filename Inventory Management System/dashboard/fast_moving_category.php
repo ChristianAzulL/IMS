@@ -19,7 +19,6 @@
           LEFT JOIN product p ON p.hashed_id = s.product_id
           WHERE oc.status IN (0, 6) 
             AND p.category = '$category_id' 
-            AND (s.batch_code IS NOT NULL AND s.batch_code != '-')
             AND ol.date_sent >= DATE_FORMAT(NOW(), '%Y-%m-01')
             AND ol.date_sent < DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH)
             AND ol.warehouse IN ($imploded_warehouse_ids)
@@ -33,7 +32,6 @@
           LEFT JOIN product p ON p.hashed_id = s.product_id
           WHERE oc.status IN (0, 6) 
             AND p.category = '$category_id' 
-            AND (s.batch_code IS NOT NULL AND s.batch_code != '-')
             AND ol.date_sent >= DATE_FORMAT(NOW(), '%Y-%m-01')
             AND ol.date_sent < DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH)
             AND ol.warehouse = '$dashboard_wh'
