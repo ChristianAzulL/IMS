@@ -12,7 +12,7 @@
       $outbounded = 0;
       if(empty($dashboard_wh)){
         $outbound_check_sql = "
-          SELECT COUNT(oc.unique_barcode) AS total_outbound
+          SELECT COUNT(DISTINCT oc.unique_barcode) AS total_outbound
           FROM outbound_content oc
           LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
           LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
@@ -22,10 +22,11 @@
             AND ol.date_sent >= DATE_FORMAT(NOW(), '%Y-%m-01')
             AND ol.date_sent < DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH)
             AND ol.warehouse IN ($imploded_warehouse_ids)
+          GROUP BY p.category
         ";
       } else {
         $outbound_check_sql = "
-          SELECT COUNT(oc.unique_barcode) AS total_outbound
+          SELECT COUNT(DISTINCT oc.unique_barcode) AS total_outbound
           FROM outbound_content oc
           LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
           LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
@@ -35,6 +36,7 @@
             AND ol.date_sent >= DATE_FORMAT(NOW(), '%Y-%m-01')
             AND ol.date_sent < DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL 1 MONTH)
             AND ol.warehouse = '$dashboard_wh'
+          GROUP BY p.category
         ";
       }
 
