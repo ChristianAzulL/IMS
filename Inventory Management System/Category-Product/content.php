@@ -78,7 +78,7 @@ if (isset($_GET['type']) && isset($_GET['cat'])) {
 
     $outbound_check_sql = "
         SELECT 
-            COUNT(oc.unique_barcode) AS total_outbound,
+            COUNT(DISTINCT oc.unique_barcode) AS total_outbound,
             SUM(CASE WHEN s.item_status IN (0, 2, 3) THEN 1 ELSE 0 END) AS total_available_qty,
             p.product_img,
             p.description,
