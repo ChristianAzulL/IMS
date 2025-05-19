@@ -2,6 +2,47 @@
 include "../config/database.php";
 include "../config/on_session.php";
 
+// Create csv_auditing table if it doesn't exist
+$conn->query("
+    CREATE TABLE IF NOT EXISTS csv_auditing (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        status TINYINT NOT NULL CHECK (status IN (1, 2)),
+        filename VARCHAR(255),
+        csv_file LONGBLOB NOT NULL,
+        user_id VARCHAR(100),
+        date DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+");
+
+// Save uploaded CSV file to csv_auditing if upload is valid
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+    $filename = $_FILES['file']['name'];
+    $fileTmpPath = $_FILES['file']['tmp_name'];
+    $fileContents = file_get_contents($fileTmpPath);
+
+    // Default values
+    $status = 1;
+
+    // Attempt to extract warehouse from the first data row
+    if (($handle = fopen($fileTmpPath, 'r')) !== false) {
+        $headers = fgetcsv($handle);
+        $firstDataRow = fgetcsv($handle);
+        if ($firstDataRow && isset($firstDataRow[2])) {
+            $warehouse = strtoupper(trim($firstDataRow[2])); // assuming 3rd column is warehouse
+        }
+        fclose($handle);
+    }
+
+    // Prepare and insert into csv_auditing
+    $stmt = $conn->prepare("INSERT INTO csv_auditing (status, filename, csv_file, user_id, date) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("issss", $status, $filename, $fileContents, $user_id, $currentDateTime);
+    $stmt->execute();
+    $csv_id = $conn->insert_id;
+    $stmt->close();
+}
+
+
+
 // Utility function to normalize strings
 function normalize(string $str): string {
     return strtoupper(trim($str));
@@ -96,19 +137,19 @@ if (empty($error) && !empty($rows)) {
 
             if ($CUSTOMER === $CLIENT && $WAREHOUSE === $WAREHOUSE_NAME) {
                 // Eligibility logic based on status codes and fulfillment
-                if ($statusCode === 6 && in_array($fulfillment, ['PAID', 'UNPAID', 'PENDING'])) {
+                if ($statusCode == 6 && in_array($fulfillment, ['PAID', 'UNPAID', 'PENDING'])) {
                     $eligible = true;
-                } elseif ($statusCode === 0 && in_array($fulfillment, ['RETURN', 'REFUND'])) {
+                } elseif ($statusCode == 0 && in_array($fulfillment, ['RETURN', 'REFUND'])) {
                     $EXPECTED_OR_MESSAGE = "Already Paid. Returns or refunds must be processed through the Return Module in IMS. Proof of return is required.";
-                } elseif ($statusCode === 1 && in_array($fulfillment, ['RETURN', 'REFUND'])) {
+                } elseif ($statusCode == 1 && in_array($fulfillment, ['RETURN', 'REFUND'])) {
                     $EXPECTED_OR_MESSAGE = "Some items on this order were already returned. Please use the Return Module in IMS to process returns/refunds with proof.";
-                } elseif ($statusCode === 2) {
+                } elseif ($statusCode == 2) {
                     $EXPECTED_OR_MESSAGE = "All items on this order were already returned/refunded. No further action required.";
                 } elseif (in_array($statusCode, [3])) {
                     $EXPECTED_OR_MESSAGE = "Void request in progress. This order is not eligible for payment check. Please search for another outbound.";
                 } elseif (in_array($statusCode, [4, 5])) {
                     $EXPECTED_OR_MESSAGE = "This order was voided and is not eligible for payment check. Please search for another matching outbound.";
-                } elseif ($statusCode === 0 && $fulfillment === 'PAID') {
+                } elseif ($statusCode == 0 && $fulfillment === 'PAID') {
                     $EXPECTED_OR_MESSAGE = "This order has already been paid, so it cannot be paid again.";
                 }
 
@@ -124,16 +165,16 @@ if (empty($error) && !empty($rows)) {
                     'FULFILLMENTSTATUS' => $FULFILLMENTSTATUS,
                     'AMOUNTPAID'        => $AMOUNTPAID,
                     'EXPECTED_PAYMENT'  => $EXPECTED_OR_MESSAGE,
-                    'class'             => $eligible ? 'table-success' : 'table-warning'
+                    'class'             => $eligible ? 'table-secondary' : 'table-warning'
                 ];
 
                 if ($statusCode === 0 && $fulfillment === 'PAID') {
                     $nonSortableRows[] = $rowData;
-                } elseif($statusCode === 6 && in_array($fulfillment, ['PAID'])){
+                } elseif($statusCode == 6 && $fulfillment === 'PAID'){
                     $paidRows[] = $rowData;
                 } else {
                     $sortableRows[] = $rowData;
-                }
+                } 
 
                 $summary['matched']++;
             } else {
@@ -197,7 +238,7 @@ if (empty($error) && !empty($rows)) {
 <!-- HTML OUTPUT SECTION -->
 <?php if ($error): ?>
     <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-<?php elseif (!empty($sortableRows) || !empty($nonSortableRows)): ?>
+<?php elseif (!empty($sortableRows) || !empty($nonSortableRows) || !empty($paidRows)): ?>
     <div class="alert alert-info">
         Total: <?= count($sortableRows) + count($nonSortableRows) ?> rows |
         Matched: <?= $summary['matched'] ?> |
@@ -214,6 +255,7 @@ if (empty($error) && !empty($rows)) {
                     <table class="table table-bordered table-hover table-sm">
                         <thead class="table-dark">
                             <tr>
+                                <th></th>
                                 <th class="fs-11">ORDER NUMBER</th>
                                 <th class="fs-11">ORDER LINE ID</th>
                                 <th class="fs-11">WAREHOUSE</th>
@@ -226,6 +268,17 @@ if (empty($error) && !empty($rows)) {
                         <tbody>
                             <?php foreach ($nonSortableRows as $res): ?>
                                 <tr class="<?= $res['class'] ?>">
+                                    <td>
+                                        <button class="btn btn-primary fs-11 view-details-btn" type="button" data-bs-toggle="modal" target-id="<?= $res['ORDERNUMBER'] ?>" data-bs-target="#staticBackdrop">View Details</button>
+                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required >
+                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required>
+                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required>
+                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required>
+                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required>
+                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>">
+                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>">
+                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>">
+                                    </td>
                                     <td class="fs-11"><?= $res['ORDERNUMBER'] ?></td>
                                     <td class="fs-11"><?= $res['ORDERLINEID'] ?></td>
                                     <td class="fs-11"><?= $res['WAREHOUSE'] ?></td>
@@ -249,10 +302,12 @@ if (empty($error) && !empty($rows)) {
         <div class="col-lg-6">
             <div class="border bg-white rounded-2 p-3 mb-3">
                 <h6 class="text-muted">Only paid orders will automatically update the fulfillment status in the outbound logs, while unpaid and pending orders will be saved in this module. You can view them in the "Pending and Unmatched Records" tab. Returns and refunds must be processed through the Return Module in IMS.</h6>
+                <form id="financeForm" action="../config/save-finance-auditing.php" method="post" enctype="multipart/form-data">
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover table-sm">
                         <thead class="table-dark">
                             <tr>
+                                <th></th>
                                 <th class="fs-11">ORDER NUMBER</th>
                                 <th class="fs-11">ORDER LINE ID</th>
                                 <th class="fs-11">WAREHOUSE</th>
@@ -265,6 +320,17 @@ if (empty($error) && !empty($rows)) {
                         <tbody>
                             <?php foreach ($paidRows as $res): ?>
                                 <tr class="<?= $res['class'] ?>">
+                                    <td>
+                                        <button class="btn btn-primary fs-11 view-details-btn" type="button" data-bs-toggle="modal" target-id="<?= $res['ORDERNUMBER'] ?>" data-bs-target="#staticBackdrop">View Details</button>
+                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required >
+                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required>
+                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required>
+                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required>
+                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required>
+                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>">
+                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>">
+                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>">
+                                    </td>
                                     <td class="fs-11"><?= $res['ORDERNUMBER'] ?></td>
                                     <td class="fs-11"><?= $res['ORDERLINEID'] ?></td>
                                     <td class="fs-11"><?= $res['WAREHOUSE'] ?></td>
@@ -278,6 +344,17 @@ if (empty($error) && !empty($rows)) {
                         <tbody data-sortable="data-sortable" style="min-height: 100px;">
                             <?php foreach ($sortableRows as $res): ?>
                                 <tr class="<?= $res['class'] ?>">
+                                    <td class="fs-11">
+                                        <button class="btn btn-primary fs-11 view-details-btn" type="button" data-bs-toggle="modal" target-id="<?= $res['ORDERNUMBER'] ?>" data-bs-target="#staticBackdrop">View Details</button>
+                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required >
+                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required>
+                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required>
+                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required>
+                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required>
+                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>">
+                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>">
+                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>">
+                                    </td>
                                     <td class="fs-11"><?= $res['ORDERNUMBER'] ?></td>
                                     <td class="fs-11"><?= $res['ORDERLINEID'] ?></td>
                                     <td class="fs-11"><?= $res['WAREHOUSE'] ?></td>
@@ -290,6 +367,12 @@ if (empty($error) && !empty($rows)) {
                         </tbody>
                     </table>
                 </div>
+                <div class="row">
+                    <div class="col-12 text-end">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </div>
+                </div>
+                </form>
             </div>
         </div>
     </div>

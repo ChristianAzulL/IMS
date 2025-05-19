@@ -137,7 +137,7 @@ $(document).ready(function () {
 
 
 
-<script>
+<!-- <script>
     // Disable right-click
     document.addEventListener('contextmenu', function(e) {
         e.preventDefault();
@@ -151,4 +151,4 @@ $(document).ready(function () {
             e.preventDefault();
         }
     });
-</script>
+</script> -->
