@@ -103,7 +103,7 @@ if ($revdrop_product_res->num_rows > 0) {
 
 <div class="card">
     <div class="card-header">
-        <h6><a href="../Revenue Dropping/">Revenue Dropping</a> <?php echo $date_today; ?></h6>
+        <h6><a href="../Revenue Dropping/?wh=<?php echo $dashboard_wh;?>">Revenue Dropping</a> <?php echo $date_today; ?></h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
