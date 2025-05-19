@@ -78,12 +78,23 @@ if ($result && $result->num_rows > 0) {
         $category_name = $row['category_name'];
         $incoming_stocks = $row['incoming_stocks'];
         $stocks = $row['stocks'] ?? 0;
-        $po_status = $row['status'];
         $incoming_warehouse_name = $row['warehouse_name'];
         $warehouse_identifier = $row['warehouse_identifier'];
         $supplier_name = $row['supplier_name'];
         $date_order = $row['date_order'];
         $staff_fullname = $row['user_fname'] . " " . $row['user_lname'];
+
+        if($row['status'] == 0){
+            $status = '<span class="badge badge rounded-pill badge-subtle-warning">Drafted  <div class="spinner-border" role="status" style="height:10px; width: 10px;"><span class="visually-hidden">Loading...</span></div></span>';
+        } elseif($row['status'] == 1){
+            $status = '<span class="badge badge rounded-pill badge-subtle-info">Sent to Supplier<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+        } elseif($row['status'] == 2) {
+            $status = '<span class="badge badge rounded-pill badge-subtle-secondary">Confirmed by Supplier<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+        } elseif($row['status'] == 3){
+            $status = '<span class="badge badge rounded-pill badge-subtle-primary">In Transit/ Shipped<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+        } else {
+            $status = '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
+        }
 
         $stocks_query = "
             SELECT 
@@ -107,7 +118,7 @@ if ($result && $result->num_rows > 0) {
             <td>' . $description . '</td>
             <td>' . $brand_name . '</td>
             <td>' . $category_name . '</td>
-            <td>' . $po_status . '</td>
+            <td>' . $status . '</td>
             <td>' . $incoming_warehouse_name . '</td>
             <td>' . $supplier_name . '</td>
             <td>' . $date_order . '</td>
