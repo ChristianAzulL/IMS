@@ -111,7 +111,7 @@ if ($promotion_product_res && $promotion_product_res->num_rows > 0) {
 
 <div class="card">
     <div class="card-header">
-        <h6><a href="../Promotions/">For Promotion</a> <?php echo htmlspecialchars($date_today ?? '', ENT_QUOTES, 'UTF-8'); ?></h6>
+        <h6><a href="../Promotions/?wh=<?php echo $dashboard_wh;?>">For Promotion</a> <?php echo htmlspecialchars($date_today ?? '', ENT_QUOTES, 'UTF-8'); ?></h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
