@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include "../config/database.php";
 include "../config/on_session.php";
 
@@ -133,7 +129,7 @@ if (empty($error) && !empty($rows)) {
 
                 if ($statusCode === 0 && $fulfillment === 'PAID') {
                     $nonSortableRows[] = $rowData;
-                } elseif($statusCode === 6 && in_array($fulfillment, ['PAID', 'UNPAID', 'PENDING'])){
+                } elseif($statusCode === 6 && in_array($fulfillment, ['PAID'])){
                     $paidRows[] = $rowData;
                 } else {
                     $sortableRows[] = $rowData;
