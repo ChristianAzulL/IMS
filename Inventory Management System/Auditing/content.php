@@ -35,8 +35,8 @@
           </div>
         </div>
       </div>
-      <div class="tab-pane fade" id="tab-pending" role="tabpanel" aria-labelledby="pending-tab">
-        <div class="card">
+      <div class="tab-pane fade p-0" id="tab-pending" role="tabpanel" aria-labelledby="pending-tab">
+        <div class="card m-0">
           <div class="card-header bg-info">
               <h2>Pending and Unmatched Records</h2>
           </div>
@@ -79,7 +79,36 @@
         </div>
       </div>
       <div class="tab-pane fade" id="tab-history" role="tabpanel" aria-labelledby="history-tab">
-        <div id="history-section"></div>
+        <div class="card">
+          <div class="card-header bg-warning">
+            <h2>CSV Files</h2>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-6">
+                <input type="text" id="historySearchInput" class="form-control mb-2" placeholder="Search by filename...">
+              </div>
+              <div class="col-xxl-12">
+                <div class="table-responsive">
+                  <table class="table table-bordered table-sm">
+                    <thead>
+                      <tr>
+                        <th>Filename</th>
+                        <th>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                      <!-- history rows go here -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-xxl-12 text-center">
+                <button id="loadMoreHistoryBtn" class="btn btn-secondary">Load More</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -350,3 +379,74 @@ document.getElementById('searchInput').addEventListener('input', () => {
 });
 </script>
 
+<script>
+let historyOffset = 0;
+let historySearch = '';
+let historyTypingTimer;
+const historyTypingDelay = 300;
+const historyLimit = 20;
+
+function loadMoreHistoryData(reset = false) {
+  if (reset) {
+    historyOffset = 0;
+    document.getElementById('history-table-body').innerHTML = '';
+    document.getElementById('loadMoreHistoryBtn').disabled = false;
+    document.getElementById('loadMoreHistoryBtn').innerText = 'Load More';
+  }
+
+  fetch(`history.php?offset=${historyOffset}&search=${encodeURIComponent(historySearch)}&limit=${historyLimit}`)
+    .then(response => response.json())
+    .then(rows => {
+      const tbody = document.getElementById('history-table-body');
+
+      if (rows.length === 0 && historyOffset === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" class="text-center">No records found</td></tr>';
+        document.getElementById('loadMoreHistoryBtn').style.display = 'none';
+        return;
+      }
+
+      if (rows.length === 0) {
+        document.getElementById('loadMoreHistoryBtn').disabled = true;
+        document.getElementById('loadMoreHistoryBtn').innerText = 'No More Records';
+        return;
+      }
+
+      rows.forEach(rowHtml => {
+        const temp = document.createElement('tbody');
+        temp.innerHTML = rowHtml;
+        tbody.appendChild(temp.firstElementChild);
+      });
+
+      historyOffset += historyLimit;
+      document.getElementById('loadMoreHistoryBtn').style.display = 'inline-block';
+    })
+    .catch(err => console.error('Error loading history:', err));
+}
+
+// Load initial 20
+loadMoreHistoryData();
+
+// "Load More" button
+document.getElementById('loadMoreHistoryBtn').addEventListener('click', () => {
+  loadMoreHistoryData(false);
+});
+
+// Live search
+document.getElementById('historySearchInput').addEventListener('input', () => {
+  clearTimeout(historyTypingTimer);
+  historyTypingTimer = setTimeout(() => {
+    historySearch = document.getElementById('historySearchInput').value.trim();
+    loadMoreHistoryData(true);
+  }, historyTypingDelay);
+});
+</script>
+<?php if (isset($_GET['csv']) && $_GET['csv'] === 'success'): ?>
+<script>
+  window.addEventListener('DOMContentLoaded', function() {
+    var tab = document.getElementById('pending-tab');
+    if (tab) {
+      tab.click();
+    }
+  });
+</script>
+<?php endif; ?>
