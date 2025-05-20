@@ -24,8 +24,56 @@
                         <div class="col-lg-12 mb-3">
                             <label for="">Dashboard</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="dashboard_outbound" />
-                                <label class="form-check-label" for="flexSwitchCheckDefault">View Outbound on Dashboard</label>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="revenue_summary" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Revenue Tracker</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="outbound_safety_available" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View outbound & Inventory Summary</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="fast_moving_product" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Fast Moving Product</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="inbound_outbound" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Inbound & Outbound Summary</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="fast_slow_category" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Fast and Slow Moving Categories</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_summary" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Stock Summary</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="revenue_drop" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Revenue Dropping</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="return_summary" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Return Summary</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="weekly_sales" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Weekly Sales</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="monthly_display_sales" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Monthly Sales</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="incoming_stocks" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Incoming Stocks</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="promotion" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Items for Promotion</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="under_safety" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">View Under Safety Items</label>
                             </div>
                             <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="dashboard_inventory" />

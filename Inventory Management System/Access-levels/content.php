@@ -69,7 +69,7 @@ if (empty($_SESSION['csrf_token'])) {
                                 <td class="age"><small><?php echo $publish_by;?></small></td>
                                 <td class="py-1 px-0">
                                     <?php 
-                                    if($position_name !== "Administrator"){
+                                    if($position_name !== "Superadmin"){
                                     ?>
                                     <button class="btn btn-transparent py-0" type="button"  data-bs-toggle="modal" data-bs-target="#edit-modal_<?php echo $row['id'];?>"><small><span class="far fa-edit" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit" ></span></small></button>
                                     <a href="../config/delete.php?from=access_level&id=<?php echo $row['id'];?>" class="btn btn-transparent text-danger ms-1 custom-clicked" ><span class="far fa-trash-alt"></span></a>
