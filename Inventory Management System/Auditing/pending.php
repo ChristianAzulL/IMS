@@ -17,9 +17,12 @@ $sql = "SELECT
             u.user_fname, 
             u.user_lname
         FROM finance_audit fa
-        LEFT JOIN users u ON u.hashed_id = fa.user_id";
+        LEFT JOIN users u ON u.hashed_id = fa.user_id
+        WHERE fa.status != 'PAID' ";
 if ($search !== '') {
-    $sql .= " WHERE fa.order_number LIKE '%$search%' 
+    $sql .= "AND
+                ( 
+                fa.order_number LIKE '%$search%' 
                 OR fa.order_line_id LIKE '%$search%'
                 OR fa.client LIKE '%$search%'
                 OR fa.warehouse LIKE '%$search%'
@@ -27,7 +30,7 @@ if ($search !== '') {
                 OR u.user_lname LIKE '%$search%'
                 OR CONCAT(u.user_fname, ' ', u.user_lname) LIKE '%$search%'
                 OR fa.status LIKE '%$search%'
-                OR fa.expected_amount LIKE '%$search%'";
+                OR fa.expected_amount LIKE '%$search%')";
 
 }
 $sql .= " ORDER BY fa.date DESC LIMIT $limit OFFSET $offset";
