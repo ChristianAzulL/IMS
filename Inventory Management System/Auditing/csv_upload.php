@@ -270,14 +270,14 @@ if (empty($error) && !empty($rows)) {
                                 <tr class="<?= $res['class'] ?>">
                                     <td>
                                         <button class="btn btn-primary fs-11 view-details-btn" type="button" data-bs-toggle="modal" target-id="<?= $res['ORDERNUMBER'] ?>" data-bs-target="#staticBackdrop">View Details</button>
-                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required >
-                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required>
-                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required>
-                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required>
-                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required>
-                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>">
-                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>">
-                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>">
+                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required  hidden>
+                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required hidden>
+                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required hidden>
+                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required hidden>
+                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required hidden>
+                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>" hidden>
+                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>" hidden>
+                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>" hidden>
                                     </td>
                                     <td class="fs-11"><?= $res['ORDERNUMBER'] ?></td>
                                     <td class="fs-11"><?= $res['ORDERLINEID'] ?></td>
@@ -322,14 +322,14 @@ if (empty($error) && !empty($rows)) {
                                 <tr class="<?= $res['class'] ?>">
                                     <td>
                                         <button class="btn btn-primary fs-11 view-details-btn" type="button" data-bs-toggle="modal" target-id="<?= $res['ORDERNUMBER'] ?>" data-bs-target="#staticBackdrop">View Details</button>
-                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required >
-                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required>
-                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required>
-                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required>
-                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required>
-                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>">
-                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>">
-                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>">
+                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required  hidden>
+                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required hidden>
+                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required hidden>
+                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required hidden>
+                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required hidden>
+                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>" hidden>
+                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>" hidden>
+                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>" hidden>
                                     </td>
                                     <td class="fs-11"><?= $res['ORDERNUMBER'] ?></td>
                                     <td class="fs-11"><?= $res['ORDERLINEID'] ?></td>
@@ -346,14 +346,14 @@ if (empty($error) && !empty($rows)) {
                                 <tr class="<?= $res['class'] ?>">
                                     <td class="fs-11">
                                         <button class="btn btn-primary fs-11 view-details-btn" type="button" data-bs-toggle="modal" target-id="<?= $res['ORDERNUMBER'] ?>" data-bs-target="#staticBackdrop">View Details</button>
-                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required >
-                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required>
-                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required>
-                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required>
-                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required>
-                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>">
-                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>">
-                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>">
+                                        <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required  hidden>
+                                        <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required hidden>
+                                        <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required hidden>
+                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required hidden>
+                                        <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required hidden>
+                                        <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>" hidden>
+                                        <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>" hidden>
+                                        <input type="text" name="csv_id[]" value="<?php echo $csv_id; ?>" hidden>
                                     </td>
                                     <td class="fs-11"><?= $res['ORDERNUMBER'] ?></td>
                                     <td class="fs-11"><?= $res['ORDERLINEID'] ?></td>

@@ -3,7 +3,9 @@ include "../config/database.php";
 include "../config/on_session.php";
 header('Content-Type: application/json');
 
-// Create finance_audit table if it doesn't exist
+$currentDateTime = date('Y-m-d H:i:s');
+
+// Create finance_audit table if not exists
 $conn->query("
     CREATE TABLE IF NOT EXISTS finance_audit (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -12,115 +14,132 @@ $conn->query("
         order_line_id VARCHAR(50),
         warehouse VARCHAR(50),
         client VARCHAR(50),
-        paid_amount decimal(10,2),
-        expected_amount decimal(10,2),
+        paid_amount DECIMAL(10,2),
+        expected_amount VARCHAR(100),
         user_id VARCHAR(100),
         date DATETIME DEFAULT CURRENT_TIMESTAMP
     )
 ");
 
+function log_stock_timeline($conn, $barcode, $action, $user_id, $date) {
+    $stmt = $conn->prepare("
+        INSERT INTO stock_timeline (unique_barcode, title, action, user_id, date) 
+        VALUES (?, 'Outbound', ?, ?, ?)
+    ");
+    $stmt->bind_param("ssss", $barcode, $action, $user_id, $date);
+    $stmt->execute();
+}
+
+function log_outbound_paid($conn, $outbound_id, $user_id, $date) {
+    $log_action = "Outbound #$outbound_id has been successfully paid via finance auditing.";
+    $stmt = $conn->prepare("
+        INSERT INTO logs (title, action, user_id, date) 
+        VALUES ('OUTBOUND', ?, ?, ?)
+    ");
+    $stmt->bind_param("sss", $log_action, $user_id, $date);
+    $stmt->execute();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    foreach($_POST['order_num'] as $i => $orderNum){
-        // Capture POST data
-        $order_num     = $_POST['order_num'][$i] ?? null;
+    foreach ($_POST['order_num'] as $i => $order_num) {
         $order_line    = $_POST['order_line'][$i] ?? null;
         $warehouse     = $_POST['warehouse'][$i] ?? null;
         $client        = $_POST['client'][$i] ?? null;
         $status        = $_POST['status'][$i] ?? null;
-        $paid_amount   = $_POST['paid_amount'][$i] ?? null;
-        $expect_amount = $_POST['expect_amount'][$i] ?? null;
+        $paid_amount   = $_POST['paid_amount'][$i] ?? 0;
+        $expect_amount = $_POST['expect_amount'][$i] ?? 0;
         $csv_id        = $_POST['csv_id'][$i] ?? null;
 
-        // Insert finance audit record
-        $insert_data = "
-            INSERT INTO finance_audit
-                SET status = '$status',
-                order_number = '$order_num',
-                order_line_id = '$order_line',
-                warehouse = '$warehouse',
-                client = '$client',
-                paid_amount = '$paid_amount',
-                expected_amount = '$expect_amount',
-                user_id = '$user_id',
-                date = '$currentDateTime'
-        ";
+        // Check previous record
+        $stmt = $conn->prepare("
+            SELECT * FROM finance_audit 
+            WHERE order_number = ? AND order_line_id = ? AND warehouse = ? AND client = ?
+            ORDER BY id DESC LIMIT 1
+        ");
+        $stmt->bind_param("ssss", $order_num, $order_line, $warehouse, $client);
+        $stmt->execute();
+        $res = $stmt->get_result();
 
-        if ($conn->query($insert_data) === TRUE) {
-            // Update CSV auditing status
-            $update_csv = "UPDATE csv_auditing SET status = 2 WHERE id = '$csv_id'";
-            if ($conn->query($update_csv) === TRUE) {
-                // Get hashed_id from outbound_logs
-                $query_outbounds = "
-                    SELECT hashed_id FROM outbound_logs 
-                    WHERE order_num = '$order_num' 
-                    AND order_line_id = '$order_line' 
-                    AND customer_fullname = '$client' 
-                    LIMIT 1
-                ";
-                $query_outbounds_result = $conn->query($query_outbounds);
+        if ($res->num_rows > 0) {
+            $row = $res->fetch_assoc();
+            $audit_status = $row['status'];
 
-                if ($query_outbounds_result->num_rows > 0) {
-                    $row = $query_outbounds_result->fetch_assoc();
-                    $outbound_id = $row['hashed_id'];
+            // Update audit record
+            $update = $conn->prepare("
+                UPDATE finance_audit 
+                SET status = ?, paid_amount = ?, expected_amount = ?, user_id = ?, date = ? 
+                WHERE order_number = ? AND order_line_id = ? AND warehouse = ? AND client = ?
+            ");
+            $update->bind_param("sdsssssss", $status, $paid_amount, $expect_amount, $user_id, $currentDateTime, $order_num, $order_line, $warehouse, $client);
+            $update->execute();
 
-                    if ($status === "PAID") {
-                        // Update outbound_logs and outbound_content
-                        $update_outbound_log = "
-                            UPDATE outbound_logs 
-                            SET status = 0 
-                            WHERE order_num = '$order_num' 
-                            AND order_line_id = '$order_line' 
-                            AND customer_fullname = '$client'
-                        ";
-                        if ($conn->query($update_outbound_log) === TRUE) {
-                            $update_outbound_items = "
-                                UPDATE outbound_content 
-                                SET status = 0 
-                                WHERE hashed_id = '$outbound_id'
-                            ";
-                            if ($conn->query($update_outbound_items) === TRUE) {
-                                // Fetch barcodes from outbound_content
-                                $query_outbound_contents = "
-                                    SELECT unique_barcode 
-                                    FROM outbound_content 
-                                    WHERE hashed_id = '$outbound_id'
-                                ";
-                                $res_outbound_contents = $conn->query($query_outbound_contents);
-                                if ($res_outbound_contents->num_rows > 0) {
-                                    while ($row = $res_outbound_contents->fetch_assoc()) {
-                                        $unique_barcode = $row['unique_barcode'];
+        } else {
+            // Insert new audit record
+            $insert = $conn->prepare("
+                INSERT INTO finance_audit 
+                (status, order_number, order_line_id, warehouse, client, paid_amount, expected_amount, user_id, date)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
+            $insert->bind_param("sssssssss", $status, $order_num, $order_line, $warehouse, $client, $paid_amount, $expect_amount, $user_id, $currentDateTime);
+            $insert->execute();
+        }
 
-                                        // Insert into stock_timeline
-                                        $action = "Paid via finance auditing. The staff who processed it is " . $user_fullname;
-                                        $insert_to_item_history = "
-                                            INSERT INTO stock_timeline (unique_barcode, title, action, user_id, date) 
-                                            VALUES (?, 'Outbound', ?, ?, ?)
-                                        ";
-                                        $stmt = $conn->prepare($insert_to_item_history);
-                                        $stmt->bind_param("ssss", $unique_barcode, $action, $user_id, $currentDateTime);
-                                        $stmt->execute();
+        // Fetch outbound hashed_id
+        $stmt = $conn->prepare("
+            SELECT hashed_id FROM outbound_logs 
+            WHERE order_num = ? AND order_line_id = ? AND customer_fullname = ? LIMIT 1
+        ");
+        $stmt->bind_param("sss", $order_num, $order_line, $client);
+        $stmt->execute();
+        $res_outbound = $stmt->get_result();
 
-                                        // Insert log
-                                        $log_action = 'Outbound #' . $outbound_id . ' has been successfully paid via finance auditing.';
-                                        $insert_logs = "
-                                            INSERT INTO logs (title, action, user_id, date) 
-                                            VALUES ('OUTBOUND', ?, ?, ?)
-                                        ";
-                                        $stmt = $conn->prepare($insert_logs);
-                                        $stmt->bind_param("sss", $log_action, $user_id, $currentDateTime);
-                                        $stmt->execute();
-                                    }
-                                }
-                            }
-                        }
-                    }
+        if ($res_outbound->num_rows > 0) {
+            $row_outbound = $res_outbound->fetch_assoc();
+            $outbound_id = $row_outbound['hashed_id'];
+
+            if ($status === "PAID") {
+                // Update outbound statuses
+                $stmt1 = $conn->prepare("UPDATE outbound_logs SET status = 0 WHERE hashed_id = ?");
+                $stmt2 = $conn->prepare("UPDATE outbound_content SET status = 0 WHERE hashed_id = ?");
+                $stmt1->bind_param("s", $outbound_id);
+                $stmt2->bind_param("s", $outbound_id);
+                $stmt1->execute();
+                $stmt2->execute();
+
+                // Log each barcode
+                $result = $conn->query("SELECT unique_barcode FROM outbound_content WHERE hashed_id = '$outbound_id'");
+                while ($r = $result->fetch_assoc()) {
+                    $action = "Paid via finance auditing. The staff who processed it is $user_fullname";
+                    log_stock_timeline($conn, $r['unique_barcode'], $action, $user_id, $currentDateTime);
+                }
+                log_outbound_paid($conn, $outbound_id, $user_id, $currentDateTime);
+
+            } elseif (in_array($status, ['UNPAID', 'PENDING'])) {
+                // Get a barcode for logging
+                $result = $conn->query("
+                    SELECT oc.unique_barcode 
+                    FROM outbound_content oc 
+                    JOIN outbound_logs ol ON oc.hashed_id = ol.hashed_id 
+                    WHERE ol.order_num = '$order_num' AND ol.order_line_id = '$order_line' LIMIT 1
+                ");
+                if ($row = $result->fetch_assoc()) {
+                    $action_text = $status === 'UNPAID' 
+                        ? "Updated the status to unpaid via finance auditing"
+                        : "Checked the status to see if it remained the same via finance auditing";
+                    $action = "$action_text. The staff who processed it is $user_fullname";
+                    log_stock_timeline($conn, $row['unique_barcode'], $action, $user_id, $currentDateTime);
                 }
             }
-            echo json_encode(['success' => true, 'message' => 'Records saved successfully.']);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Insert failed: ' . $conn->error]);
         }
+
+        // Update CSV auditing status
+        $stmt = $conn->prepare("UPDATE csv_auditing SET status = 2 WHERE id = ?");
+        $stmt->bind_param("i", $csv_id);
+        $stmt->execute();
     }
+
+    echo json_encode(['success' => true, 'message' => 'Records processed successfully.']);
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
 }
+?>

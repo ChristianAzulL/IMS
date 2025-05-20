@@ -334,6 +334,14 @@ if (isset($_GET['id'])) {
         }
     ?>
     <?php
+    } else {
+    ?>
+    <div class="row">
+        <div class="col-xxl-12 text-center py-6">
+            <h2>Do not exist on the IMS.</h2>
+        </div>
+    </div>
+    <?php
     }
 } else {
     echo "You are not authorized here!";

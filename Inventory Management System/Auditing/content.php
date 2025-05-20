@@ -35,8 +35,52 @@
           </div>
         </div>
       </div>
-      <div class="tab-pane fade" id="tab-pending" role="tabpanel" aria-labelledby="pending-tab"></div>
-      <div class="tab-pane fade" id="tab-history" role="tabpanel" aria-labelledby="history-tab"></div>
+      <div class="tab-pane fade" id="tab-pending" role="tabpanel" aria-labelledby="pending-tab">
+        <div class="card">
+          <div class="card-header bg-info">
+              <h2>Pending and Unmatched Records</h2>
+          </div>
+          <div class="card-body">
+              <div class="row">
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                    </div>
+                  </div>
+
+                  <div class="col-xxl-12">
+                      <div class="table-responsive">
+                          <table class="table table-sm">
+                              <thead class="table-dark">
+                                <tr>
+                                    <th class="fs-11"></th>
+                                    <th class="fs-11 text-end">Order No.</th>
+                                    <th class="fs-11 text-end">Order Line ID</th>
+                                    <th class="fs-11">Client</th>
+                                    <th class="fs-11">Warehouse</th>
+                                    <th class="fs-11">Staff</th>
+                                    <th class="fs-11">Date</th>
+                                    <th class="fs-11">Status</th>
+                                    <th class="fs-11 text-end">Expected Amount</th>
+                                </tr>
+                              </thead>
+
+                              <tbody id="audit-table-body">
+                                  <!-- Data will be loaded here -->
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  <div class="col-xxl-12 text-end">
+                    <button id="loadMoreBtn" class="btn btn-secondary">Load More</button>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="tab-history" role="tabpanel" aria-labelledby="history-tab">
+        <div id="history-section"></div>
+      </div>
     </div>
   </div>
 
@@ -246,6 +290,63 @@ function bindFormSubmitConfirmation() {
   });
 }
 </script>
+<script>
+let offset = 0;
+let currentSearch = '';
+let typingTimer;
+const typingDelay = 300; // milliseconds
 
+function loadMoreAuditData(reset = false) {
+    if (reset) {
+        offset = 0;
+        document.getElementById('audit-table-body').innerHTML = '';
+        document.getElementById('loadMoreBtn').disabled = false;
+        document.getElementById('loadMoreBtn').innerText = 'Load More';
+    }
 
+    fetch(`pending.php?offset=${offset}&search=${encodeURIComponent(currentSearch)}`)
+        .then(response => response.json())
+        .then(rows => {
+            if (rows.length === 0 && offset === 0) {
+                document.getElementById('audit-table-body').innerHTML = '<tr><td colspan="8" class="text-center">No records found</td></tr>';
+                document.getElementById('loadMoreBtn').style.display = 'none';
+                return;
+            }
+
+            if (rows.length === 0) {
+                document.getElementById('loadMoreBtn').disabled = true;
+                document.getElementById('loadMoreBtn').innerText = 'No More Records';
+                return;
+            }
+
+            const tbody = document.getElementById('audit-table-body');
+            rows.forEach(rowHtml => {
+                const temp = document.createElement('tbody');
+                temp.innerHTML = rowHtml;
+                tbody.appendChild(temp.firstElementChild);
+            });
+
+            offset += 20;
+            document.getElementById('loadMoreBtn').style.display = 'inline-block';
+        })
+        .catch(err => console.error('Error loading data:', err));
+}
+
+// Initial data load
+loadMoreAuditData();
+
+// Load more on button click
+document.getElementById('loadMoreBtn').addEventListener('click', () => {
+    loadMoreAuditData(false);
+});
+
+// Live search: run on typing (with debounce)
+document.getElementById('searchInput').addEventListener('input', () => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+        currentSearch = document.getElementById('searchInput').value.trim();
+        loadMoreAuditData(true);
+    }, typingDelay);
+});
+</script>
 
