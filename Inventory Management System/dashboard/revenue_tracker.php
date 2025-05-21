@@ -1,3 +1,9 @@
+<div class="col-12 text-center my-3" id="rev_spinner" style="display: none;">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+
 <div class="col-8">
     <h6 class="mb-0 mt-2 d-flex align-items-center" id="rev_labelDate">${date}</h6>
 </div>
@@ -52,6 +58,8 @@
     </div>
 </div>
 
+
+
 <script>
     function rev_numberFormat(num) {
         return num.toLocaleString();
@@ -65,6 +73,9 @@
         const rev_dateInput = document.getElementById("rev_dateGross");
 
         function rev_fetchData(rev_dateGross = null) {
+            const spinner = document.getElementById("rev_spinner");
+            spinner.style.display = "block"; // Show spinner
+
             let rev_bodyData = rev_dateGross ? "rev_dateGross=" + encodeURIComponent(rev_dateGross) : "";
 
             fetch("revenue_backend.php?wh=<?php echo $dashboard_wh;?>", {
@@ -83,8 +94,12 @@
             })
             .catch(rev_error => {
                 console.error("Error fetching data:", rev_error);
+            })
+            .finally(() => {
+                spinner.style.display = "none"; // Hide spinner
             });
         }
+
 
         // Fetch today's data immediately when page loads
         rev_fetchData();

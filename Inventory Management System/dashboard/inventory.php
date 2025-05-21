@@ -67,6 +67,13 @@
         </div>
         </div>
     </div>
+
+    <div id="loadingSpinner2" class="text-center my-4" style="display: none;">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <div id="listBody">
     
     </div>
@@ -214,21 +221,23 @@
         return date.toLocaleDateString('en-US', options);
     }
 
+
     function loadData() {
         const search = $('#searchInput').val();
-        const warehouse = $('#warehouse').val(); // Get selected warehouse
+        const warehouse = $('#warehouse').val(); 
         const offset = (currentPage - 1) * limit;
 
-        $.getJSON('../config/getStockListData.php', { limit, offset, search, warehouse }, function (response) {
-            if (response.error) {
-                console.error(response.error);
-                return;
-            }
+        // SHOW the spinner before the request starts
+        $('#loadingSpinner2').show();
 
+        $.getJSON('../config/getStockListData.php', { limit, offset, search, warehouse }, function (response) {
             const listBody = $('#listBody');
             listBody.empty();
 
-            if (response.data.length === 0) {
+            if (response.error) {
+                console.error(response.error);
+                listBody.append('<div class="text-danger text-center py-5">Error loading data.</div>');
+            } else if (response.data.length === 0) {
                 listBody.append('<div class="text-center py-5">No results found.</div>');
             } else {
                 response.data.forEach((item) => {
@@ -310,9 +319,16 @@
             $('#totalItems').text(response.total);
             $('#matchedItems').text(response.data.length);
             updatePagination(response.total);
+
+        }).fail(function () {
+            $('#listBody').html('<div class="text-danger text-center py-5">Failed to load data.</div>');
+        }).always(function () {
+            // HIDE the spinner after load completes (success or fail)
+            $('#loadingSpinner2').hide();
         });
     }
 
+    
     function updatePagination(total) {
         const totalPages = Math.ceil(total / limit);
         const pagination = $('#pagination');
