@@ -1,10 +1,12 @@
 <div class="card h-lg-100 overflow-hidden">
   <div class="card-body p-0">
-    <div id="dashboard-spinner" class="text-center my-3" style="display: none;">
-        <div class="spinner-border" role="status">
+    <div id="dashboard-wh-preview">
+        <!-- Preview content will load here -->
+        <div id="dashboard-wh-preview-spinner" class="spinner-border spinner-border-sm text-primary" role="status" style="display: none;">
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
+
     <div id="dashboard-wh-preview"></div>
   </div>
 

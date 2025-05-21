@@ -177,16 +177,16 @@ if ($hour >= 5 && $hour < 12) {
 $(document).ready(function() {
     function loadWarehousePreview(warehouse) {
         if (warehouse) {
-            // Show the spinner
-            $('#dashboard-spinner').show();
+            // Show inline spinner
+            $('#dashboard-wh-preview-spinner').show();
 
             $.get('dashboard-wh-preview.php', { warehouse: warehouse }, function(data) {
                 $('#dashboard-wh-preview').html(data);
             }).fail(function() {
-                $('#dashboard-wh-preview').html('Failed to load preview.');
+                $('#dashboard-wh-preview').html('<div class="text-danger">Failed to load preview.</div>');
             }).always(function() {
-                // Hide the spinner when done (success or fail)
-                $('#dashboard-spinner').hide();
+                // Hide spinner after content has loaded or failed
+                $('#dashboard-wh-preview-spinner').hide();
             });
         }
     }

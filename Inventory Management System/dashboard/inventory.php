@@ -357,26 +357,31 @@
         loadData();
     });
 
-    $(document).ready(function () {
-        loadData();
+   $(document).ready(function () {
+        // Show spinner immediately
+        $('#loadingSpinner2').show();
+
+        // Delay loading the data by 2 seconds
+        setTimeout(function () {
+            loadData();
+        }, 2000);
 
         // Event delegation for dynamically created buttons
         $(document).on('click', '.btn[data-bs-toggle="collapse"]', function () {
-            const itemId = $(this).data('bs-target').replace('#item', ''); // Extract the item ID
-            const targetDiv = $(this).data('bs-target'); // Target collapse div ID
-            const warehouse = $(this).data('wh'); // Get the warehouse value from the button
+            const itemId = $(this).data('bs-target').replace('#item', '');
+            const targetDiv = $(this).data('bs-target');
+            const warehouse = $(this).data('wh');
 
-            // Check if the content has already been loaded
             if ($(targetDiv).is(':empty')) {
-                // Fetch item details and pass both itemId and warehouse (wh) parameters
                 $.get(`../Inventory-stock/item_details.php?id=${itemId}&wh=${warehouse}`, function (response) {
-                    $(targetDiv).html(response); // Load the response into the collapse div
+                    $(targetDiv).html(response);
                 }).fail(function () {
                     $(targetDiv).html('<div class="text-danger p-3">Failed to load item details.</div>');
                 });
             }
         });
     });
+
 
     
 

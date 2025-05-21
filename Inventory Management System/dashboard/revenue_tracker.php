@@ -1,9 +1,3 @@
-<div class="col-12 text-center my-3" id="rev_spinner" style="display: none;">
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-    </div>
-</div>
-
 <div class="col-8">
     <h6 class="mb-0 mt-2 d-flex align-items-center" id="rev_labelDate">${date}</h6>
 </div>
@@ -21,7 +15,13 @@
         <div class="card-body d-flex flex-column justify-content-end">
             <div class="row">
                 <div class="col">
-                    <p class="font-sans-serif lh-1 mb-1 fs-7" id="rev_totalSales">₱</p>
+                    <!-- Total Sales -->
+                    <p class="font-sans-serif lh-1 mb-1 fs-7">
+                        <span id="rev_totalSales">₱</span>
+                        <span id="spinner_totalSales" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                    </p>    
                 </div>
             </div>
         </div>
@@ -36,7 +36,13 @@
         <div class="card-body d-flex flex-column justify-content-end">
             <div class="row">
                 <div class="col">
-                    <p class="font-sans-serif lh-1 mb-1 fs-7" id="rev_goodSold">₱</p>
+                    <!-- Cost of Goods Sold -->
+                    <p class="font-sans-serif lh-1 mb-1 fs-7">
+                        <span id="rev_goodSold">₱</span>
+                        <span id="spinner_goodSold" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -51,7 +57,13 @@
         <div class="card-body d-flex flex-column justify-content-end">
             <div class="row">
                 <div class="col">
-                    <p class="font-sans-serif lh-1 mb-1 fs-7" id="rev_netIncome">₱</p>
+                    <!-- Net Income -->
+                    <p class="font-sans-serif lh-1 mb-1 fs-7">
+                        <span id="rev_netIncome">₱</span>
+                        <span id="spinner_netIncome" class="spinner-border spinner-border-sm ms-2" role="status" style="display: none;">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
@@ -69,12 +81,18 @@
         return "₱ " + num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    function showSpinners(show = true) {
+        const display = show ? "inline-block" : "none";
+        document.getElementById("spinner_totalSales").style.display = display;
+        document.getElementById("spinner_goodSold").style.display = display;
+        document.getElementById("spinner_netIncome").style.display = display;
+    }
+
+    window.onload = function() {
         const rev_dateInput = document.getElementById("rev_dateGross");
 
         function rev_fetchData(rev_dateGross = null) {
-            const spinner = document.getElementById("rev_spinner");
-            spinner.style.display = "block"; // Show spinner
+            showSpinners(true); // Show spinners
 
             let rev_bodyData = rev_dateGross ? "rev_dateGross=" + encodeURIComponent(rev_dateGross) : "";
 
@@ -87,26 +105,23 @@
             })
             .then(response => response.json())
             .then(rev_data => {
-                document.getElementById("rev_labelDate").innerText = rev_data.date_selected;
-                document.getElementById("rev_totalSales").innerText = rev_numberFormat(rev_data.total_sales);
-                document.getElementById("rev_goodSold").innerText = rev_numberFormat(rev_data.good_sold);
-                document.getElementById("rev_netIncome").innerText = rev_currencyFormat(rev_data.net_income);
+                document.getElementById("rev_labelDate").innerText = rev_data.date_selected || "No date";
+                document.getElementById("rev_totalSales").innerText = rev_currencyFormat(rev_data.total_sales || 0);
+                document.getElementById("rev_goodSold").innerText = rev_currencyFormat(rev_data.good_sold || 0);
+                document.getElementById("rev_netIncome").innerText = rev_currencyFormat(rev_data.net_income || 0);
             })
             .catch(rev_error => {
                 console.error("Error fetching data:", rev_error);
             })
             .finally(() => {
-                spinner.style.display = "none"; // Hide spinner
+                showSpinners(false); // Hide spinners after fetch
             });
         }
 
+        rev_fetchData(); // Initial load
 
-        // Fetch today's data immediately when page loads
-        rev_fetchData();
-
-        // Then listen if user selects a date range
         rev_dateInput.addEventListener("change", function() {
-            rev_fetchData(this.value);
+            rev_fetchData(this.value); // Reload on date change
         });
-    });
+    };
 </script>
