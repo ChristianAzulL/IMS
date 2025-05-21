@@ -135,7 +135,7 @@ if(isset($_GET['supplier']) && isset($_GET['supplier_name']) && isset($_GET['cat
                     </tr>';
 
                 }
-                $rows[] = '<tr>
+                $rows[] = '<tr class="table-info">
                     <td>Total for ' . $supplier_name . '</td>
                     <td></td>
                     <td></td>
@@ -161,7 +161,7 @@ if(isset($_GET['supplier']) && isset($_GET['supplier_name']) && isset($_GET['cat
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table mb-0 data-table fs-10" data-datatables='{"paging":false,"scrollY":"300px","scrollCollapse":true}'>
+                    <table class="table mb-0 data-table fs-11 table-sm" >
                         <thead class="bg-dark">
                             <th></th>
                             <th>Description</th>
