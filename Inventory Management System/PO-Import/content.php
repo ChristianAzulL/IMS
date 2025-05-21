@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-5">
+    <div class="col-12">
         <div class="card">
             <div class="card-body overflow-hidden">
                 <h5 class="mb-3">Add Product:</h5>
@@ -17,7 +17,7 @@
         </div>
     </div>
     
-    <div class="col-7">
+    <div class="col-12">
         <div class="card">
             <div class="row p-3">
                 <div class="col-md-12">
@@ -28,24 +28,24 @@
                 <div class="card-body overflow-hidden">
                     <div id="tableExample" data-list='{"valueNames":["name","email","age"],"page":5,"pagination":true}'>
                         <div class="table-responsive scrollbar">
-                            <table class="table table-bordered table-striped fs-10 mb-0">
-                                <thead class="table-info">
+                            <table class="table table-bordered table-striped fs-10 mb-0 table-sm">
+                                <thead class="table-info fs-11">
                                     <tr>
-                                        <th class="text-900 sort" data-sort="name">Description</th>
-                                        <th class="text-900 sort" data-sort="email">Brand</th>
-                                        <th class="text-900 sort" data-sort="age">Category</th>
-                                        <th class="text-900 sort" data-sort="age">Parent Barcode</th>
-                                        <th class="text-900 sort" data-sort="age">Quantity Ordered</th>
-                                        <th class="text-900 sort" data-sort="age">Quantity Received</th>
-                                        <th class="text-900 sort" id="unit_amount" data-sort="age">Unit Price</th>
-                                        <th class="text-900 sort" id="subtotal_th" data-sort="age">Subtotal</th>
+                                        <th class="text-900 fs-11 sort" data-sort="name">Description</th>
+                                        <th class="text-900 fs-11 sort" data-sort="email">Brand</th>
+                                        <th class="text-900 fs-11 sort" data-sort="age">Category</th>
+                                        <th class="text-900 fs-11 sort" data-sort="age">Parent Barcode</th>
+                                        <th class="text-900 fs-11 sort" data-sort="age">Quantity Ordered</th>
+                                        <th class="text-900 fs-11 sort" data-sort="age">Quantity Received</th>
+                                        <th class="text-900 fs-11 sort" id="unit_amount" data-sort="age">Unit Price</th>
+                                        <th class="text-900 fs-11 sort" id="subtotal_th" data-sort="age">Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody class="scrollbar overflow-auto" style="max-height: 500px;" id="preview"></tbody>
                                 <tfoot>
                                     <tr>
-                                        <td class="text-end" colspan="7"><b><i>Total:</i></b></td>
-                                        <td class="text-end sticky-bottom"><b><i id="total_amount"></i></b></td>
+                                        <td class="text-end fs-11" colspan="7"><b><i>Total:</i></b></td>
+                                        <td class="text-end fs-11 sticky-bottom"><b><i id="total_amount"></i></b></td>
                                     </tr>
                                 </tfoot>
                             </table>

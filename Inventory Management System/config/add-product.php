@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Function to generate a unique 9-digit number
     function generateUniqueBarcode($conn) {
         do {
-            $barcode = "LPO " . str_pad(rand(0, 9999999), 7, '0', STR_PAD_LEFT);
+            $barcode = str_pad(rand(0, 9999999), 7, '0', STR_PAD_LEFT);
             $query = "SELECT COUNT(*) FROM product WHERE parent_barcode = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param("s", $barcode);

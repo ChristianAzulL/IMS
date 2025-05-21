@@ -38,7 +38,7 @@ if($row = $po_result->fetch_assoc()){
 $_SESSION['inbound_warehouse'] = $inbound_warehouse;
 
 
-$update_po = "UPDATE purchased_order SET `status` = 4, date_received = '$currentDateTime' WHERE id = '$po_id'";
+$update_po = "UPDATE purchased_order SET date_received = '$currentDateTime' WHERE id = '$po_id'";
 if ($conn->query($update_po) === TRUE) {
     $insert_inbound = "INSERT INTO inbound_logs 
                        (po_id, supplier, date_received, user_id, warehouse, unique_key) 
@@ -94,11 +94,8 @@ if ($conn->query($update_po) === TRUE) {
                                     ('INBOUND', 'PO-$po_id has been successfully inbounded to $inbound_warehouse_name. Created inbound reference no.: $inbound_id', '$currentDateTime', '$user_id')";
 
                             if ($conn->query($logs) === TRUE) {
-                                $update_po = "UPDATE purchased_order SET `status` = 1, date_received = '$currentDateTime' WHERE id = '$po_id'";
-                                if($conn->query($update_po) === TRUE ){
-                                    $response = ["status" => "success", "message" => "Inbound items saved successfully!"];
-                                    unset($_SESSION['inbound_po_id'], $_SESSION['inbound_received_date'], $_SESSION['po_list'], $_SESSION['success']);
-                                }
+                                $response = ["status" => "success", "message" => "Inbound items saved successfully!"];
+                                unset($_SESSION['inbound_po_id'], $_SESSION['inbound_received_date'], $_SESSION['po_list'], $_SESSION['success']);
                             }
                         }
                     }
