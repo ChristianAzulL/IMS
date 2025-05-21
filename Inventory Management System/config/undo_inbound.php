@@ -9,6 +9,29 @@ if (isset($_POST['target_id'])) {
     $unique_key = $_POST['target_id'];
     $reason = $_POST['reason_staff'];
 
+    // Prepare the query to prevent SQL injection
+    $stmt_check_outbound = $conn->prepare("
+        SELECT oc.unique_barcode 
+        FROM outbound_content oc 
+        LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode 
+        WHERE s.unique_key = ? 
+        LIMIT 1
+    ");
+
+    $stmt_check_outbound->bind_param("s", $unique_key);
+    $stmt_check_outbound->execute();
+    $res_check_outbound = $stmt_check_outbound->get_result();
+
+    if ($res_check_outbound->num_rows > 0) {
+        echo json_encode(['success' => false, 'message' => 'One or more items in the inbound stock may have already been outbounded. Please void it first.']);
+        $stmt_check_outbound->close();
+        $conn->close();
+        exit();
+    }
+
+    $stmt_check_outbound->close();
+
+
     // Update inbound_logs
     $stmt1 = $conn->prepare("UPDATE inbound_logs SET `status` = 1, staff_reason = ?, date_request_void = ? WHERE unique_key = ?");
     $stmt1->bind_param("sss", $reason, $currentDateTime, $unique_key);
