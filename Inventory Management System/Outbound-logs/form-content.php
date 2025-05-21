@@ -58,7 +58,6 @@ if (isset($_GET['id'])) {
                     if($outbound_status == 6 && $user_id === $outbound_user_id){
                     ?>
                         <button class="btn btn-primary fs-11 me-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo $outbound_id;?>" aria-expanded="false" aria-controls="collapse<?php echo $outbound_id;?>"><span class="fas fa-trash-alt"></span> Void</button>
-                        <button class="btn btn-success fs-11 me-1 paid_btn" type="button" data-targetid="<?php echo $outbound_id;?>"><span class="far fa-check-circle"></span> Paid</button>
                     
                     <?php 
                     }
