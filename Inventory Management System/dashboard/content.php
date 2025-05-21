@@ -96,13 +96,6 @@ if ($hour >= 5 && $hour < 12) {
             </div>
             <?php 
             }
-            if($user_position_name === "Superadmin" || strpos($access, "revenue_drop")!==false){
-            ?>
-            <div class="col-lg-12">
-                <?php include "revenue_dropping.php"; ?>
-            </div>
-            <?php 
-            }
             ?>
         </div>
     </div>
@@ -157,6 +150,13 @@ if ($hour >= 5 && $hour < 12) {
             }
             if($user_position_name === "Superadmin" || strpos($access, "under_safety")!==false){
                 include "under_safety.php"; 
+            }
+            if($user_position_name === "Superadmin" || strpos($access, "revenue_drop")!==false){
+            ?>
+            <div class="col-lg-12">
+                <?php include "revenue_dropping.php"; ?>
+            </div>
+            <?php 
             }
             ?>
         </div>

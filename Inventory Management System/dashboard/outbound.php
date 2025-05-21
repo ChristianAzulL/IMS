@@ -1,4 +1,4 @@
-<div id="outbound-008-container">
+<div class="text-center bg-white" id="outbound-008-container">
     <div id="outbound-008-spinner" class="spinner-border spinner-border-sm text-primary" role="status">
         <span class="visually-hidden">Loading...</span>
     </div>
