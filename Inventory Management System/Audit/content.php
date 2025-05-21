@@ -59,7 +59,7 @@
             <div class="col">
                 <div class="row gx-0 border-bottom pb-x1">
                     <div class="col">
-                        <h6 class="text-800 mb-1"><?php echo $log_title; ?></h6>
+                        <h6 class="text-800 mb-1"><?php echo $doer; ?></h6>
                         <p class="fs-10 text-600 mb-0"><?php echo $log_action; ?></p>
                     </div>
                     <div class="col-auto">
