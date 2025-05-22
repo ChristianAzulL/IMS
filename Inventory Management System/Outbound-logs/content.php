@@ -80,7 +80,7 @@ $outbound_res = $conn->query($outbound_sql);
   </div>
     <div class="card-body overflow-hidden py-6 px-0">
         <div class="row justify-content-between gx-3 gy-0 px-3">
-        <div id="tableExample3" data-list='{"valueNames":["outbound_no","outbound_status","warehouse","date","receiver"],"page":5,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["outbound_no","outbound_status","warehouse","date","receiver","outbounder"],"page":5,"pagination":true}'>
   <div class="row justify-content-end g-0">
   <div class="col-sm-auto"><select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
         <option selected="" value="">Select warehouse</option>
@@ -100,11 +100,12 @@ $outbound_res = $conn->query($outbound_sql);
       <tr>
             <th class="text-900 sort" data-sort="outbound_no">Outbound no.</th>
             <th class="text-900 sort" data-sort="outbound_status">Fulfillment Status</th>
-            <th class="text-900 sort text-end" data-sort="outbound_status">Order #</th>
-            <th class="text-900 sort text-end" data-sort="outbound_status">Order Line ID</th>
+            <th class="text-900 sort text-end" data-sort="order_no">Order #</th>
+            <th class="text-900 sort text-end" data-sort="order_line">Order Line ID</th>
             <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
             <th class="text-900 sort" data-sort="date">Date</th>
             <th class="text-900 sort" data-sort="receiver">Client</th>
+            <th class="text-900 sort" data-sort="outbounder">Staff</th>
           </tr>
       </thead>
       <tbody class="list">
@@ -115,6 +116,7 @@ $outbound_res = $conn->query($outbound_sql);
             $outbound_receiver = $row['customer_fullname'];
             $order_no = $row['order_num'];
             $order_line = $row['order_line_id'];
+            $outbounder = $row['user_fname'] . " " . $row['user_lname'];
             if ($row['status'] == 0) {
               $outbound_status = '<span class="badge rounded-pill badge-subtle-success">Paid</span>';
             } elseif ($row['status'] == 1) {
@@ -138,11 +140,12 @@ $outbound_res = $conn->query($outbound_sql);
               </a>
             </td>
             <td class="outbound_status"><?php echo $outbound_status; ?></td>
-            <td class="outbound_status text-end"><?php echo $order_no; ?></td>
-            <td class="outbound_status text-end"><?php echo $order_line; ?></td>
+            <td class="order_no text-end"><?php echo $order_no; ?></td>
+            <td class="order_line text-end"><?php echo $order_line; ?></td>
             <td class="warehouse"><?php echo $outbound_warehouse; ?></td>
             <td class="date"><?php echo $outbound_date; ?></td>
             <td class="receiver"><?php echo $outbound_receiver; ?></td>
+            <td class="outbounder"><?php echo $outbounder;?></td>
           </tr>
           <?php } ?>
       </tbody>
