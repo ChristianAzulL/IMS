@@ -1,29 +1,47 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
-
-if(strpos($access, "logistics")!==false || $user_position_name === "Administrator"){
-} else {
-  header("Location: ../500/");
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+// Guard clause for access control
+if (strpos($access, "logistics") === false && $user_position_name !== "Administrator") {
+    header("Location: ../500/");
+    exit;
 }
 
-// Check if 'outbound_id' is set in the session
 if (!isset($_SESSION['outbound_id'])) {
-    // Query to get the last outbound log's hashed_id
+    // Query the last outbound log's hashed_id
     $check_lastoutbound = "SELECT hashed_id FROM outbound_logs ORDER BY hashed_id DESC LIMIT 1";
-    $result = $conn->query($check_lastoutbound); // Execute the query
+    $result = $conn->query($check_lastoutbound);
 
-    if ($result->num_rows > 0) {
+    if ($result && $result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        // Increment the last hashed_id and ensure it is 16 digits with leading zeros
-        $outbound_id = str_pad((int)$row['hashed_id'] + 1, 16, '0', STR_PAD_LEFT);
-        $_SESSION['outbound_id'] = $outbound_id; // Store the new outbound_id in session
+        $numeric_id = (int)$row['hashed_id'] + 1;
     } else {
-        // If there are no records, set the outbound_id to the first possible value
-        $outbound_id = str_pad(1, 16, '0', STR_PAD_LEFT);
-        $_SESSION['outbound_id'] = $outbound_id; // Store the first outbound_id in session
+        $numeric_id = 1;
     }
+
+    // Loop until a unique JSON filename is found
+    while (true) {
+        $outbound_id = str_pad($numeric_id, 16, '0', STR_PAD_LEFT);
+        $filename = $outbound_id . ".json"; // Adjust path as needed
+
+        if (!file_exists($filename)) {
+            // File doesn't exist, create an empty file
+            touch($filename);
+            break;
+        }
+
+        // File exists, try next
+        $numeric_id++;
+    }
+
+    // Save the final outbound_id in session
+    $_SESSION['outbound_id'] = $outbound_id;
 }
+
+
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
