@@ -138,8 +138,8 @@ $inbound_res = $conn->query($inbound_sql);
 ?>
 
 <div class="card">
-    <div class="card-header">
-      <h2>Inbound Logs <?php if(isset($get_date)){ echo $get_date;}?></h2>
+    <div class="card-header bg-warning">
+      <h2 class="text-white">Inbound Logs <?php if(isset($get_date)){ echo $get_date;}?></h2>
       <?php if(isset($type)){ echo $type;}?>
     </div>
     <div class="card-body overflow-hidden py-6 px-0">

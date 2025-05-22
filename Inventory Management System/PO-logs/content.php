@@ -10,6 +10,9 @@
 </div>
 </div> -->
 <div class="card">
+  <div class="card-header bg-warning">
+    <h2 class="text-white">Purchased Order Logs</h2>
+  </div>
   <div class="card-body overflow-hidden py-6 px-0">
 <div id="tableExample4" data-list='{"valueNames":["name","supplier","country","email","payment", "warehouse"]}'>
   <div class="row justify-content-end justify-content-end gx-3 gy-0 px-3">
