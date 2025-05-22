@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $orderLineID = $_POST['order_line_id'] ?? '';
     $processedBy = $_POST['processed_by'] ?? '';
     $barcodes = $_POST['barcode'] ?? [];
+    $payment_method = $_POST['payment_method'];
     $sellingPrices = $_POST['selling'] ?? [];
 
     if (!$customerName || !$platform || !$courier || !$orderNo || !$orderLineID) {
@@ -47,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Insert order details
-        $orderSql = "INSERT INTO outbound_logs (date_sent, warehouse, user_id, customer_fullname, courier, platform, order_num, order_line_id, hashed_id, status) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 6)";
+        $orderSql = "INSERT INTO outbound_logs (date_sent, warehouse, user_id, customer_fullname, courier, platform, order_num, order_line_id, hashed_id, status, payment_method) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 6, ?)";
         $stmt = $conn->prepare($orderSql);
-        $stmt->bind_param("sssssssss", $currentDateTime, $warehouse, $user_id, $customerName, $courier, $platform, $orderNo, $orderLineID, $outbound_id);
+        $stmt->bind_param("ssssssssss", $currentDateTime, $warehouse, $user_id, $customerName, $courier, $platform, $orderNo, $orderLineID, $outbound_id, $payment_method);
         if (!$stmt->execute()) {
             throw new Exception("Failed to insert order: " . $stmt->error);
         }

@@ -99,9 +99,23 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
                             <div class="row">
 
                                 <!-- Customer Name -->
-                                <div class="col-8 mb-3">
+                                <div class="col-4 mb-3">
                                     <label for="">Customer Name</label>
                                     <input class="form-control" name="customer_name" type="text" required>
+                                </div>
+
+                                <div class="col-4 mb-3">
+                                    <label for="Payment Method">Payment Method</label>
+                                    <select name="payment_method" class="form-select">
+                                        <option value="" selected>Select Payment Method</option>
+                                        <option value="Not Available">Not Available</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Gcash">Gcash</option>
+                                        <option value="Credit/ Debit Card">Credit/ Debit Card</option>
+                                        <option value="BDO">BDO</option>
+                                        <option value="Eastwest">Eastwest</option>
+                                        <option value="BPI">BPI</option>
+                                    </select>
                                 </div>
 
                                 <!-- Platform -->

@@ -1,9 +1,7 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+  
 // Guard clause for access control
 if (strpos($access, "logistics") === false && $user_position_name !== "Administrator") {
     header("Location: ../500/");
@@ -28,8 +26,8 @@ if (!isset($_SESSION['outbound_id'])) {
         $filename = $outbound_id . ".json"; // Adjust path as needed
 
         if (!file_exists($filename)) {
-            // File doesn't exist, create an empty file
-            touch($filename);
+            // File doesn't exist, create it with empty JSON array
+            file_put_contents($filename, json_encode([]));
             break;
         }
 
