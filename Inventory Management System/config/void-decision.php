@@ -43,6 +43,14 @@ if (isset($_POST['outbound_id']) && isset($_POST['response']) && isset($_POST['t
                     echo 'Failed to update stocks.';
                     exit;
                 }
+
+                $stmt_oc = $conn->prepare("UPDATE outbound_content SET status = 4 WHERE unique_barcode = ?");
+                $stmt_oc->bind_param("s", $outbound_unique_barcode);
+
+                if(!$stmt_oc->execute()) {
+                    echo 'Failed update outbound content.';
+                    exit;   
+                }
             }
         }
 
