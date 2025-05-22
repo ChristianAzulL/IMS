@@ -20,6 +20,7 @@ if (isset($_POST['target_id'], $_POST['response'], $_POST['to_userid'])) {
         FROM outbound_content oc 
         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode 
         WHERE s.unique_key = ? 
+        AND oc.status !=4
         LIMIT 1
     ");
     $stmt_check_outbound->bind_param("s", $unique_key);
