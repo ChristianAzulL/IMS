@@ -4,9 +4,12 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
 ?>
 
 <div class="card">
+    <div class="card-header bg-warning">
+        <h2 class="text-white">Confirmation of Orders</h2>
+        <p class="text-white">please confirm your orders then select your supplier.</p>
+    </div>
     <div class="card-body overflow-hidden py-6 px-2">
         <form action="../config/create_po.php" method="POST">
-        <h5>SELECT SUPPLIER AND QUANTITY</h5>
         <div class="card shadow-none">
             <div class="card-body p-0 pb-3" data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"]}'>
                 <div class="d-flex align-items-center justify-content-end my-3">
@@ -41,23 +44,23 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
                 </div>
 
                 <div class="table-responsive scrollbar">
-                    <table class="table mb-0">
+                    <table class="table mb-0 table-sm">
                         <thead class="bg-200">
                             <tr>
                                 <th width="50"></th>
-                                <th class="text-black dark__text-white align-middle sort" data-sort="desc">Description</th>
-                                <th class="text-black dark__text-white align-middle sort" data-sort="desc">Parent Barcode</th>
-                                <th class="text-black dark__text-white align-middle sort" data-sort="barcode">Brand</th>
-                                <th class="text-black dark__text-white align-middle sort" data-sort="cat">Category</th>
-                                <th class="text-black dark__text-white align-middle sort" style="min-width: 250px;" hidden>Supplier</th>
-                                <th class="text-black dark__text-white align-middle sort" style="min-width: 150px;">Order Quantity</th>
-                                <th class="text-black dark__text-white align-middle white-space-nowrap pe-3 sort" data-sort="qty">Quantity</th>
-                                <th class="text-black dark__text-white align-middle text-end pe-3 sort" data-sort="trans_dd">Transactions(dd)</th>
-                                <th class="text-black dark__text-white align-middle text-end pe-3 sort" data-sort="trans_mm">Transactions(mm)</th>
-                                <th class="text-black dark__text-white align-middle text-end pe-3 sort" data-sort="trans_yy">Transactions(yy)</th>
+                                <th class="text-black fs-11 dark__text-white align-middle sort" data-sort="desc">Description</th>
+                                <th class="text-black fs-11 dark__text-white align-middle sort" data-sort="desc">Parent Barcode</th>
+                                <th class="text-black fs-11 dark__text-white align-middle sort" data-sort="barcode">Brand</th>
+                                <th class="text-black fs-11 dark__text-white align-middle sort" data-sort="cat">Category</th>
+                                <th class="text-black fs-11 dark__text-white align-middle sort" style="min-width: 250px;" hidden>Supplier</th>
+                                <th class="text-black fs-11 dark__text-white align-middle sort" style="min-width: 150px;">Order Quantity</th>
+                                <th class="text-black fs-11 dark__text-white align-middle white-space-nowrap pe-3 sort" data-sort="qty">Quantity</th>
+                                <th class="text-black fs-11 dark__text-white align-middle text-end pe-3 sort" data-sort="trans_dd">Transactions(dd)</th>
+                                <th class="text-black fs-11 dark__text-white align-middle text-end pe-3 sort" data-sort="trans_mm">Transactions(mm)</th>
+                                <th class="text-black fs-11 dark__text-white align-middle text-end pe-3 sort" data-sort="trans_yy">Transactions(yy)</th>
                             </tr>
                         </thead>
-                        <tbody id="bulk-select-body" class="list">
+                        <tbody id="bulk-select-body" class="list" data-sortable="data-sortable">
                             <?php 
                             // Check if the form is submitted
                             if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -81,15 +84,15 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
 
                                         ?>
                                         
-                                        <tr>
+                                        <tr class="sortable-item">
                                             <td>
                                                 <img class="img img-fluid m-0" src="../../assets/img/<?php echo basename($product_img); ?>" alt="">
                                             </td>
-                                            <th class="align-middle desc"><?php echo $product_des; ?></th>
-                                            <th class="align-middle barcode"><?php echo $product_pbarcode; ?></th>
-                                            <td class="align-middle brand"><?php echo $product_brand; ?></td>
-                                            <td class="align-middle cat"><?php echo $product_category; ?></td>
-                                            <td class="align-middle cat" hidden>
+                                            <th class="align-middle fs-11 desc"><?php echo $product_des; ?></th>
+                                            <th class="align-middle fs-11 barcode"><?php echo $product_pbarcode; ?></th>
+                                            <td class="align-middle fs-11 brand"><?php echo $product_brand; ?></td>
+                                            <td class="align-middle fs-11 cat"><?php echo $product_category; ?></td>
+                                            <td class="align-middle fs-11 cat" hidden>
                                                 <input type="text" name="product_id[]" value="<?php echo $product_id;?>" readonly hidden>
                                                 <input type="text" name="parent_barcode[]" value="<?php echo $product_pbarcode;?>" readonly hidden>
                                                 <input type="text" name="product_desc[]" value="<?php echo $product_des;?>" readonly hidden>
@@ -97,13 +100,13 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
                                                 <input type="text" name="category[]" value="<?php echo $product_category;?>" readonly hidden>
                                                 
                                             </td>
-                                            <td class="align-middle cat table-primary">
-                                                <input type="number" name="order_qty[]" class="form-control bg-danger" min="0" placeholder="Order Qty">
+                                            <td class="align-middle fs-11 cat table-primary">
+                                                <input type="number" name="order_qty[]" class="form-control bg-danger fs-11" min="0" placeholder="Order Qty">
                                             </td>
-                                            <td class="align-middle white-space-nowrap text-end pe-3 qty"><?php echo $current_stock; ?></td>
-                                            <td class="align-middle text-end pe-3 trans_dd"><?php echo $current_total_transaction_daily; ?></td>
-                                            <td class="align-middle text-end pe-3 trans_mm"><?php echo $current_total_transaction_monthly; ?></td>
-                                            <td class="align-middle text-end pe-3 trans_yy"><?php echo $current_total_transaction_yearly; ?></td>
+                                            <td class="align-middle fs-11 white-space-nowrap text-end pe-3 qty"><?php echo $current_stock; ?></td>
+                                            <td class="align-middle fs-11 text-end pe-3 trans_dd"><?php echo $current_total_transaction_daily; ?></td>
+                                            <td class="align-middle fs-11 text-end pe-3 trans_mm"><?php echo $current_total_transaction_monthly; ?></td>
+                                            <td class="align-middle fs-11 text-end pe-3 trans_yy"><?php echo $current_total_transaction_yearly; ?></td>
                                         </tr>
                                         <?php 
                                     }

@@ -4,8 +4,10 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
 ?>
 
 <div class="card">
+    <div class="card-header bg-warning">
+      <h2 class="text-white">SELECT PRODUCTS TO ORDER</h2>
+    </div>
     <div class="card-body overflow-hidden py-6 px-2">
-      <h5>SELECT PRODUCTS</h5>
     <div class="card shadow-none">
   <div id="tableExample" class="card-body p-0 pb-3"  data-list='{"valueNames":["desc","barcode","brand","cat","qty","trans"],"page":5,"pagination":true}'>
   <div class="row justify-content-end g-0">
