@@ -80,7 +80,7 @@ $outbound_res = $conn->query($outbound_sql);
   </div>
     <div class="card-body overflow-hidden py-6 px-0">
         <div class="row justify-content-between gx-3 gy-0 px-3">
-        <div id="tableExample3" data-list='{"valueNames":["outbound_no","outbound_status","warehouse","date","receiver","outbounder"],"page":5,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["outbound_no","outbound_status","warehouse","date","receiver","outbounder","order_no","order_line"],"page":5,"pagination":true}'>
   <div class="row justify-content-end g-0">
   <div class="col-sm-auto"><select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
         <option selected="" value="">Select warehouse</option>
