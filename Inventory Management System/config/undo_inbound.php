@@ -11,11 +11,10 @@ if (isset($_POST['target_id'])) {
 
     // Prepare the query to prevent SQL injection
     $stmt_check_outbound = $conn->prepare("
-        SELECT oc.unique_barcode 
-        FROM outbound_content oc 
-        LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode 
-        WHERE s.unique_key = ? 
-        AND oc.status !=4
+        SELECT unique_barcode
+        FROM stocks 
+        WHERE unique_key = ? 
+        AND item_status !=0
         LIMIT 1
     ");
 

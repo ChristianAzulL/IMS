@@ -16,11 +16,10 @@ if (isset($_POST['target_id'], $_POST['response'], $_POST['to_userid'])) {
 
     // Check if any outbound_content exists for this unique_key (prevent deleting inbound stock already outbounded)
     $stmt_check_outbound = $conn->prepare("
-        SELECT oc.unique_barcode 
-        FROM outbound_content oc 
-        LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode 
-        WHERE s.unique_key = ? 
-        AND oc.status !=4
+        SELECT unique_barcode
+        FROM stocks 
+        WHERE unique_key = ? 
+        AND item_status !=0
         LIMIT 1
     ");
     $stmt_check_outbound->bind_param("s", $unique_key);
