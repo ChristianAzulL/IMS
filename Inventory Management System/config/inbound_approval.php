@@ -60,6 +60,25 @@ if (isset($_POST['target_id'], $_POST['response'], $_POST['to_userid'])) {
                 $unique_barcode = $row['unique_barcode'];
                 $stmt_delete_timeline->bind_param("s", $unique_barcode);
                 $stmt_delete_timeline->execute();
+
+                //delete outbounds 
+                $stmt_outbounds = $conn->prepare("SELECT ol.hashed_id AS outbound_id FROM outbound_logs ol LEFT JOIN outbound_content oc ON oc.hashed_id = ol.hashed_id WHERE oc.unique_barcode = ?");
+                $stmt_outbounds->bind_param("s", $unique_barcode);
+                $stmt_outbounds->execute();
+                $result_outbounds = $stmt_outbounds->get_result();
+
+                if($result_outbounds->num_rows > 0){
+                    $row = $result_outbounds->fetch_assoc();
+                    $outbound_id = $row['outbound_id'];
+
+                    $stmt_delete_outbound_log = $conn->prepare("DELETE FROM outbound_logs WHERE hashed_id = ?");
+                    $stmt_delete_outbound_log->bind_param("s", $outbound_id);
+                    $stmt_delete_outbound_log->execute();
+                }
+                
+                $stmt_delete_outbound_content = $conn->prepare("DELETE FROM outbound_content WHERE unique_barcode = ? AND status = 4");
+                $stmt_delete_outbound_content->bind_param("s", $unique_barcode);
+                $stmt_delete_outbound_content->execute();
             }
             $stmt_delete_timeline->close();
         }
