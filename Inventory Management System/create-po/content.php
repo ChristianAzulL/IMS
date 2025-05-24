@@ -63,7 +63,24 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
           if($product_list_res->num_rows > 0) {
             while($row = $product_list_res->fetch_assoc()) {
               $product_id = $row['hashed_id'];
-              $product_img = $row['product_img'] ?? 'def_img.png';
+              if (empty($row['product_img']) || !isset($row['product_img'])) {
+                  $product_img = '../../assets/img/def_img.png';
+              } else {
+                  $imageArray = @unserialize($row['product_img']); // or json_decode(..., true)
+
+                  if (is_array($imageArray) && count($imageArray) > 0) {
+                      $firstImageBinary = base64_decode($imageArray[0]);
+
+                      // Detect MIME type
+                      $finfo = new finfo(FILEINFO_MIME_TYPE);
+                      $mimeType = $finfo->buffer($firstImageBinary);
+
+                      // Encode for output
+                      $product_img = 'data:' . $mimeType . ';base64,' . $imageArray[0];
+                  } else {
+                      $product_img = '../../assets/img/def_img.png';
+                  }
+              }
               $product_category = $row['category_name'];
               $product_brand = $row['brand_name'];
               $product_des = $row['description'];
@@ -141,7 +158,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
               </div>
             </td>
             <td>
-              <img class="img img-fluid m-0" src="../../assets/img/<?php echo basename($product_img); ?>" alt="" >
+              <img class="img img-fluid m-0" src="<?php echo $product_img; ?>" alt="" >
             </td>
             <th class="align-middle desc"><?php echo $product_des; ?></th>
             <th class="align-middle barcode"><?php echo $product_pbarcode; ?></th>

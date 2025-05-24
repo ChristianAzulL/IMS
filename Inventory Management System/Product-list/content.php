@@ -90,11 +90,26 @@
               if($product_list_res->num_rows > 0) {
                 while($row = $product_list_res->fetch_assoc()) {
                   $product_id = $row['id'];
-                  if(empty($row['product_img']) || !isset($row['product_img'])){
-                    $product_img = 'def_img.png';
+                  if (empty($row['product_img']) || !isset($row['product_img'])) {
+                      $product_img = '../../assets/img/def_img.png';
                   } else {
-                    $product_img = $row['product_img'];
+                      $imageArray = @unserialize($row['product_img']); // or json_decode(..., true)
+
+                      if (is_array($imageArray) && count($imageArray) > 0) {
+                          $firstImageBinary = base64_decode($imageArray[0]);
+
+                          // Detect MIME type
+                          $finfo = new finfo(FILEINFO_MIME_TYPE);
+                          $mimeType = $finfo->buffer($firstImageBinary);
+
+                          // Encode for output
+                          $product_img = 'data:' . $mimeType . ';base64,' . $imageArray[0];
+                      } else {
+                          $product_img = '../../assets/img/def_img.png';
+                      }
                   }
+
+
                   
                   $product_category = $row['category_name'];
                   $product_brand = $row['brand_name'];
@@ -106,7 +121,7 @@
               ?>
                 <tr>
                   <td class="p-0 m-0" style="height:10px;">
-                    <img class="img img-fluid m-0" src="../../assets/img/<?php echo $product_img; ?>" alt="" height="10">
+                    <img class="img img-fluid m-0" src="<?php echo $product_img; ?>" alt="" height="10">
                   </td>
                   <td class="desc"><small><?php echo $product_des; ?></small></td>
                   <td class="cat"><small><?php echo $product_category; ?></small></td>
@@ -159,7 +174,7 @@
           </div>
           <div class="col-lg-5 mb-3">
             <label for="">Upload Product Image</label>
-            <input type="file" class="form-control" name="product_image" id="">
+            <input type="file" class="form-control" name="product_image[]" id="product_image" accept="image/*" multiple>
           </div>
           <div class="col-lg-3 mb-3">
             <label for="">Category</label>
