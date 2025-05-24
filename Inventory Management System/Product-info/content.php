@@ -34,10 +34,23 @@ $product_query = "SELECT
 $result = $conn->query($product_query);
     if($result->num_rows>0){
         $row = $result->fetch_assoc();
-        if(!empty($row['product_img']) && isset($row['product_img'])){
-            $product_image = basename($row['product_img']);    
+        if (empty($row['product_img']) || !isset($row['product_img'])) {
+            $product_img = '../../assets/img/def_img.png';
         } else {
-            $product_image = "def_img.png";
+            $imageArray = @unserialize($row['product_img']); // or json_decode(..., true)
+
+            if (is_array($imageArray) && count($imageArray) > 0) {
+                $firstImageBinary = base64_decode($imageArray[0]);
+
+                // Detect MIME type
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $mimeType = $finfo->buffer($firstImageBinary);
+
+                // Encode for output
+                $product_img = 'data:' . $mimeType . ';base64,' . $imageArray[0];
+            } else {
+                $product_img = '../../assets/img/def_img.png';
+            }
         }
         $product_description = $row['description'];
         $product_brand = $row['brand_name'];
@@ -128,9 +141,9 @@ $result = $conn->query($product_query);
                         <!-- Product Image -->
                         <div class="col-md-4 col-lg-3">
                             <div class="hoverbox h-md-100">
-                                <a class="text-decoration-none" href="../../assets/img/<?php echo $product_image;?>" data-gallery="attachment-bg">
+                                <a class="text-decoration-none" href="<?php echo $product_img;?>" data-gallery="attachment-bg">
                                     <img class="h-100 w-100 object-fit-cover" 
-                                    src="../../assets/img/<?php echo $product_image;?>" 
+                                    src="<?php echo $product_img;?>" 
                                     alt="No Image" />
                                 </a>
                             </div>

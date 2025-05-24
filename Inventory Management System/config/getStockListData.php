@@ -57,6 +57,31 @@ try {
 
     foreach ($data as &$item) {
         $item['id'] = hash_hmac('sha256', $item['id'], $secretKey);
+
+        // Process product_img to return first image as data URI
+        $first_image = '../../assets/img/def_img.png';  // fallback
+
+        if (!empty($item['product_img'])) {
+            // Try unserialize, fallback to json_decode if needed
+            $images = @unserialize($item['product_img']);
+            if ($images === false) {
+                $images = json_decode($item['product_img'], true);
+            }
+            
+            if (is_array($images) && count($images) > 0) {
+                $first_base64 = $images[0];
+                $binary = base64_decode($first_base64);
+
+                if ($binary !== false) {
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mime = $finfo->buffer($binary) ?: 'image/jpeg';
+
+                    $first_image = 'data:' . $mime . ';base64,' . $first_base64;
+                }
+            }
+        }
+
+        $item['product_img'] = $first_image;
     }
 
     $countQuery = "

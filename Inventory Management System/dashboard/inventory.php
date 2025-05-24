@@ -250,7 +250,7 @@
                                         <div class="hoverbox h-md-100">
                                             <a class="text-decoration-none" href="#" data-gallery="attachment-bg">
                                                 <img class="h-100 w-100 object-fit-cover" 
-                                                src="../../assets/img/${item.product_img || 'def_img.png'}" 
+                                                src="${item.product_img || '../../assets/img/def_img.png'}" 
                                                 alt="${item.product_name || 'No Image'}" />
                                             </a>
                                         </div>
