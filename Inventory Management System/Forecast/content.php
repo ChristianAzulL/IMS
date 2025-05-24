@@ -121,7 +121,6 @@ $product_query = "
     SELECT 
         p.hashed_id AS product_id, 
         p.description, 
-        p.product_img, 
         p.parent_barcode, 
         b.brand_name, 
         c.category_name, 
@@ -155,12 +154,11 @@ if ($product_res->num_rows > 0) {
 ?>
 
 <div class="card">
-    <div class="card-heading pt-3 ps-3"><h3>Forecast for <?php echo $start_date . " to " . $end_date; ?></h3></div>
+    <div class="card-heading pt-3 ps-3" style="background-color: purple;"><h3 class="text-white">Forecast for <?php echo $start_date . " to " . $end_date; ?></h3></div>
     <div class="card-body">
     <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
-    <thead class="table-dark">
+    <thead class="table-secondary">
         <tr>
-            <th></th>
             <th>Description</th>
             <th>Category</th>
             <th>Brand</th>
@@ -187,7 +185,6 @@ if ($product_res->num_rows > 0) {
     while ($row = $product_res->fetch_assoc()) {
         $product_id = $row['product_id'];
         $description = $row['description'];
-        $product_img = $row['product_img'] ?? 'def_img.png';
         $parent_barcode = $row['parent_barcode'];
         $brand_name = $row['brand_name'];
         $category_name = $row['category_name'];
@@ -256,7 +253,6 @@ if ($product_res->num_rows > 0) {
         $needs_reorder = ($total_future_stock < $reorder_point) ? 'Yes' : 'No';
 
         echo "<tr>
-            <td><img class='img' src='../../assets/img/{$product_img}' style='height: 30px;' alt=''></td>
             <td>{$description}</td>
             <td>{$category_name}</td>
             <td>{$brand_name}</td>

@@ -152,8 +152,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $unique_barcode = $barcode;
 
             // Insert the new stock record into the database
-            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`, `unique_key`, `barcode_extension`) 
-                    VALUES ('$unique_barcode', '$hashed_product_id', '$newparent_barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key', '$sequence')";
+            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`, `unique_key`, `barcode_extension`, `safety`) 
+                    VALUES ('$unique_barcode', '$hashed_product_id', '$newparent_barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key', '$sequence','$safety')";
             
             if ($conn->query($sql) === TRUE) {
                 $stock_id = $conn->insert_id;

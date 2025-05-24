@@ -56,8 +56,7 @@ $outbound_sql = "SELECT
                       sup.local_international AS supplier_type, 
                       p.description, 
                       b.brand_name, 
-                      c.category_name, 
-                      p.product_img
+                      c.category_name
                 FROM outbound_content oc
                 LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                 LEFT JOIN users u ON u.hashed_id = ol.user_id
@@ -120,8 +119,7 @@ if (isset($get_date) && isset($get_type)) {
                       sup.local_international AS supplier_type, 
                       p.description, 
                       b.brand_name, 
-                      c.category_name, 
-                      p.product_img
+                      c.category_name
                     FROM outbound_content oc
                     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                     LEFT JOIN users u ON u.hashed_id = ol.user_id
@@ -176,7 +174,6 @@ $outbound_res = $conn->query($outbound_sql);
                     <table class="table table-bordered table-striped fs-11 mb-0">
                         <thead class="bg-200">
                             <tr>
-                                <th></th>
                                 <th>Description</th>
                                 <th>Brand</th>
                                 <th>Category</th>
@@ -208,7 +205,6 @@ $outbound_res = $conn->query($outbound_sql);
                                 $outbound_product = htmlspecialchars($row['description']);
                                 $outbound_brand = htmlspecialchars($row['brand_name']);
                                 $outbound_category = htmlspecialchars($row['category_name']);
-                                $outbound_img = !empty($row['product_img']) ? htmlspecialchars($row['product_img']) : 'def_img.png';
                                 $outbount_unit_cost = isset($row['capital']) ? (float)$row['capital'] : 0.00;
                                 $outbound_sold_amount = isset($row['sold_price']) ? (float)$row['sold_price'] : 0.00;
 
@@ -242,7 +238,6 @@ $outbound_res = $conn->query($outbound_sql);
                                 }
                             ?>
                                 <tr>
-                                    <td class="px-0"><img src="../../assets/img/<?php echo htmlspecialchars(basename($outbound_img)); ?>" height="50" alt=""></td>
                                     <td><?php echo $outbound_product; ?></td>
                                     <td><?php echo $outbound_brand; ?></td>
                                     <td><?php echo $outbound_category; ?></td>

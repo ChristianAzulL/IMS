@@ -12,7 +12,6 @@ if (!empty($_GET['wh'])) {
     $stmt = $conn->prepare("
         SELECT 
             p.description,
-            p.product_img,
             b.brand_name,
             c.category_name,
             COUNT(oc.unique_barcode) AS total_outbound
@@ -62,7 +61,6 @@ if (!empty($_GET['wh'])) {
     $query = "
         SELECT 
             p.description,
-            p.product_img,
             b.brand_name,
             c.category_name,
             COUNT(oc.unique_barcode) AS total_outbound
@@ -92,14 +90,12 @@ if (!empty($_GET['wh'])) {
 if ($promotion_product_res && $promotion_product_res->num_rows > 0) {
     while ($row = $promotion_product_res->fetch_assoc()) {
         $promotion_item = htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8');
-        $promotion_item_img = !empty($row['product_img']) ? basename($row['product_img']) : 'def_img.png';
         $promotion_brand = htmlspecialchars($row['brand_name'], ENT_QUOTES, 'UTF-8');
         $promotion_category = htmlspecialchars($row['category_name'], ENT_QUOTES, 'UTF-8');
         $promotion_total_outbound = number_format((int)$row['total_outbound']);
 
         $promotion_data[] = '
             <tr>
-                <td><img class="img" src="../../assets/img/' . htmlspecialchars($promotion_item_img, ENT_QUOTES, 'UTF-8') . '" style="height: 30px; width: 30px;" alt=""></td>
                 <td>' . $promotion_item . '</td>
                 <td>' . $promotion_brand . '</td>
                 <td>' . $promotion_category . '</td>
@@ -118,7 +114,6 @@ if ($promotion_product_res && $promotion_product_res->num_rows > 0) {
             <table class="table mb-0 data-table fs-10" data-datatables='{"paging":false,"scrollY":"300px","scrollCollapse":true}'>
                 <thead class="bg-warning">
                     <tr>
-                        <th></th>
                         <th>Description</th>
                         <th>Brand</th>
                         <th>Category</th>

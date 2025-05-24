@@ -34,24 +34,33 @@ $product_query = "SELECT
 $result = $conn->query($product_query);
     if($result->num_rows>0){
         $row = $result->fetch_assoc();
+        
         if (empty($row['product_img']) || !isset($row['product_img'])) {
             $product_img = '../../assets/img/def_img.png';
         } else {
-            $imageArray = @unserialize($row['product_img']); // or json_decode(..., true)
+            $imageArray = @unserialize($row['product_img']); // or json_decode($row['product_img'], true)
 
             if (is_array($imageArray) && count($imageArray) > 0) {
-                $firstImageBinary = base64_decode($imageArray[0]);
+                // Instead of just one image, generate multiple <img> tags:
+                $product_img_html = '';
+                foreach ($imageArray as $base64Img) {
+                    $imgBinary = base64_decode($base64Img);
 
-                // Detect MIME type
-                $finfo = new finfo(FILEINFO_MIME_TYPE);
-                $mimeType = $finfo->buffer($firstImageBinary);
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mimeType = $finfo->buffer($imgBinary);
 
-                // Encode for output
-                $product_img = 'data:' . $mimeType . ';base64,' . $imageArray[0];
+                    $product_img_html .= '
+                    <div class="swiper-slide h-100 text-center bg-dark">
+                        <img class="rounded-1 object-fit-cover" 
+                        src="data:' . htmlspecialchars($mimeType) . ';base64,' . htmlspecialchars($base64Img) . '" 
+                        alt="" height="300" />
+                    </div>';
+                }
             } else {
-                $product_img = '../../assets/img/def_img.png';
+                $product_img_html = '<div class="swiper-slide h-100"><img class="rounded-1 object-fit-cover" src="../../assets/img/def_img.png" alt="Default Image"></div>';
             }
         }
+
         $product_description = $row['description'];
         $product_brand = $row['brand_name'];
         $product_category = $row['category_name'];
@@ -135,247 +144,222 @@ $result = $conn->query($product_query);
                     <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#change-location-modal">Change item location</button>
                 </div>
             </div>
-            <article class="card mb-3 overflow-hidden">
-                <div class="card-body p-0">
-                    <div class="row g-0">
-                        <!-- Product Image -->
-                        <div class="col-md-4 col-lg-3">
-                            <div class="hoverbox h-md-100">
-                                <a class="text-decoration-none" href="<?php echo $product_img;?>" data-gallery="attachment-bg">
-                                    <img class="h-100 w-100 object-fit-cover" 
-                                    src="<?php echo $product_img;?>" 
-                                    alt="No Image" />
-                                </a>
-                            </div>
-                        </div>
-                        <!-- Product Details -->
-                        <div class="col-md-8 col-lg-9 p-x1">
-                            <div class="row g-0 h-100">
-                                <!-- Description -->
-                                <div class="col-lg-8 col-xxl-9 d-flex flex-column pe-x1">
-                                    <div class="d-flex gap-2 flex-wrap mb-3">
-                                        <span class="badge rounded-pill badge-subtle-success">
-                                            <span class="fas fa-object-group me-1"></span>
-                                            <span><?php echo $product_category;?></span>
-                                        </span>
-                                        <span class="badge rounded-pill badge-subtle-info">
-                                            <span class="fas fa-warehouse me-1"></span>
-                                            <span><?php echo $warehouse_name;?></span>
-                                        </span>
-                                    </div>
-                                    <h5 class="fs-9"><a href="#"><?php echo $product_brand;?></a></h5>
-                                    <h4 class="mt-3 mt-sm-0 fs-9 fs-lg-8">
-                                        <a class="text-900" href="#"><?php echo $product_description;?></a>
-                                    </h4>
-                                    <div class="flex-1 d-flex align-items-end fw-semi-bold fs-10">
-                                        <span class="me-1 text-900"><?php echo $delivery_date;?></span>
-                                        <span class="me-2 text-secondary">| Delivery Date</span>
-                                        <span class="me-2 text-secondary">| Added by: <?php echo $added_by;?></span>
-                                    </div>
+
+            <div class="card shadow-sm border-0 rounded-lg mg-3">
+                <div class="card-body p-4">
+                    <div class="row">
+                    
+                        <!-- Left Column: Product Image Slider -->
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <div class="product-slider" id="galleryTop">
+                            <div class="swiper theme-slider border rounded" data-swiper='{"autoplay":true,"spaceBetween":5,"loop":true,"loopedSlides":5,"slideToClickedSlide":true}'>
+                                <div class="swiper-wrapper h-100">
+                                <?php echo $product_img_html; ?>
                                 </div>
-                                
+                                <div class="swiper-nav">
+                                <div class="swiper-button-next swiper-button-white"></div>
+                                <div class="swiper-button-prev swiper-button-white"></div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Product Details -->
+                        <div class="col-lg-6">
+                            <!-- Product Title & Category -->
+                            <div class="mb-3">
+                            <h3 class="fw-bold"><?php echo $product_description; ?></h3>
+                            <p class="text-muted small mb-1"><?php echo $product_category; ?></p>
+                            </div>
+
+                            <!-- Brand and Basic Info -->
+                            <div class="mb-4">
+                            <h5 class="text-primary"><?php echo $product_brand; ?></h5>
+                            <table class="table table-sm">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Delivery Date</th>
+                                    <th>Added By</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><?php echo $delivery_date; ?></td>
+                                    <td><?php echo $added_by; ?></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+
+                            <!-- Pricing & Capital Info -->
+                            <div class="mb-4">
+                            <h6 class="fw-semibold">Price Summary</h6>
+                            <table class="table table-sm">
+                                <?php if (!empty($row['outbound_id'])): ?>
+                                <thead class="table-light">
+                                    <tr>
+                                    <th class="text-warning">Capital</th>
+                                    <th class="text-success">Sold For</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                    <td class="text-warning"><?php echo $capital; ?></td>
+                                    <td class="text-success"><?php echo $sold_amount; ?></td>
+                                    </tr>
+                                </tbody>
+                                <?php else: ?>
+                                <thead class="table-light">
+                                    <tr><th class="text-warning">Capital</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td class="text-warning">₱<?php echo $capital; ?></td></tr>
+                                </tbody>
+                                <?php endif; ?>
+                            </table>
+                            </div>
+
+                        
+
+                        </div>
+                        <div class="col-12">
+                            <!-- Additional Product Metadata -->
+                            <div class="border rounded p-3 bg-light">
+                            <h6 class="mb-3">Product Details</h6>
+                            <table class="table table-sm mb-0">
+                                <tr>
+                                <th>Supplier:</th>
+                                <td><?php echo $supplier_name . " " . $local_international; ?></td>
+                                </tr>
+                                <tr>
+                                <th>Location:</th>
+                                <td><?php echo $item_location; ?></td>
+                                </tr>
+                                <tr>
+                                <th>Batch:</th>
+                                <td><?php echo $batch_code; ?></td>
+                                </tr>
+                                <tr>
+                                <th>Barcode:</th>
+                                <td><?php echo $unique_barcode; ?></td>
+                                </tr>
+                            </table>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <!-- Quantity -->
-                    <div class="col-lg-12 col-xxl-3 mt-4 mt-lg-0">
-                        <div class="h-100 rounded border-lg border-1 d-flex flex-lg-column justify-content-between p-lg-3">
-                            <div class="mb-lg-4 mt-auto mt-lg-0">
-                                <table class="table table-sm mb-3">
-                                    <?php 
-                                    $outbount_id = $row['outbound_id'];
-                                    if(!empty($outbount_id)){
-                                    ?>
-                                    <thead>
-                                        <tr>
-                                            <th class="mb-1 lh-1 text-warning align-end">Capital</th>
-                                            <th class="mb-1 lh-1 text-success align-end">Sold for</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="mb-1 lh-1 fs-7 text-warning align-end"><?php echo $capital;?></td>
-                                            <td class="mb-1 lh-1 fs-7 text-success align-end"><?php echo $sold_amount;?></td>
-                                        </tr>
-                                    </tbody>
-                                    <?php
-                                    } else {
-                                    ?>
-                                    <thead>
-                                        <tr>
-                                            <th class="mb-1 lh-1 fs-7 text-warning align-end">Capital</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="mb-1 lh-1 fs-7 text-warning align-end"><?php echo $capital;?></td>
-                                        </tr>
-                                    </tbody>
-                                    <?php
-                                    }
-                                    ?>
-                                </table>
-                                
-                            </div>
-                            <div class="mt-3 d-flex flex-lg-column gap-2">
-                                <table class="table table-sm">
-                                    <tr>
-                                        <th>Supplier:</th>
-                                        <td><?php echo $supplier_name . " " . $local_international;?> </td>
-                                    </tr>
-                                    <tr>
-                                        <th>Location</th>
-                                        <td><?php echo $item_location;?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Batch</th>
-                                        <td><?php echo $batch_code;?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Barcode</th>
-                                        <td><?php echo $unique_barcode;?></td>
-                                    </tr>
-                                </table>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-
-            <div class="row">
-                <div class="col-lg-12 d-flex justify-content-center align-items-center">
-                    <ul class="nav nav-pills" id="pill-myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="pill-home-tab" data-bs-toggle="tab" href="#pill-tab-home" role="tab" aria-controls="pill-tab-home" aria-selected="true">Stock Chart <span class="far fa-chart-bar"></span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="pill-profile-tab" data-bs-toggle="tab" href="#pill-tab-profile" role="tab" aria-controls="pill-tab-profile" aria-selected="false">Product History <span class="fas fa-calendar-day"></span></a>
-                        </li>
-                    </ul>
                 </div>
             </div>
 
+
+        
+
+
             
-            <div class="tab-content border p-3 mt-3" id="pill-myTabContent">
-                <div class="tab-pane fade show active" id="pill-tab-home" role="tabpanel" aria-labelledby="home-tab">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div id="SpecificItemChart" style="height: 300px;"></div> <!-- Chart Container -->
-                                </div>
-                            </div>
+
+            
+            <div class="card mt-3">
+                <div class="card-body px-sm-4 px-md-1 px-lg-1 px-xxl-8">
+                    <div class="row my-3">
+                        <div class="col-lg-12 text-center">
+                            <h3>Product History</h3>
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="pill-tab-profile" role="tabpanel" aria-labelledby="profile-tab">
-                    <div class="card-body px-sm-4 px-md-1 px-lg-1 px-xxl-8">
-                        <div class="row my-3">
-                            <div class="col-lg-12 text-center">
-                                <h3>Product History</h3>
+                    <div class="timeline-vertical">
+                        <div class="timeline-item timeline-item-start">
+                            <div class="timeline-icon icon-item icon-item-lg text-primary border-300">
+                                <span class="fs-8 fas fa-mobile"></span>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 timeline-item-time">
+                                    <div>
+                                        <p class="fs-10 mb-0 fw-semi-bold"><?php echo $delivery_date2;?></p>
+                                        <!-- <p class="fs-11 text-600">24 September</p> -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="timeline-item-content">
+                                        <div class="timeline-item-card">
+                                            <h5 class="mb-2">Inbound</h5>
+                                            <p class="fs-10 mb-0">Item has been successfully inbounded.</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="timeline-vertical">
-                            <div class="timeline-item timeline-item-start">
-                                <div class="timeline-icon icon-item icon-item-lg text-primary border-300">
-                                    <span class="fs-8 fas fa-mobile"></span>
+                        <?php 
+                        $first = false;
+                        $timeline_query = "SELECT 
+                                                u.user_fname, 
+                                                u.user_lname, 
+                                                st.title, 
+                                                st.action, 
+                                                st.date
+                                            FROM stock_timeline st
+                                            LEFT JOIN users u ON u.hashed_id = st.user_id
+                                            WHERE st.unique_barcode = '$unique_barcode'
+                                            ORDER BY st.date ASC";
+                        $result = $conn->query($timeline_query);
+                        if($result->num_rows>0){
+                            while($row=$result->fetch_assoc()){
+                                $did_by = $row['user_fname'] . " " . $row['user_lname'];
+                                $title = $row['title'];
+                                $action = $row['action'];
+                                $action_date = $row['date'];
+                                if($first === true){
+                                ?>
+                                <div class="timeline-item timeline-item-start">
+                                    <div class="timeline-icon icon-item icon-item-lg text-primary border-300">
+                                        <span class="fs-8 fas fa-mobile"></span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6 timeline-item-time">
+                                            <div>
+                                                <p class="fs-10 mb-0 fw-semi-bold"><?php echo $action_date;?></p>
+                                                <!-- <p class="fs-11 text-600">24 September</p> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="timeline-item-content">
+                                                <div class="timeline-item-card">
+                                                    <h5 class="mb-2"><?php echo $title;?></h5>
+                                                    <p class="fs-10 mb-0"><?php echo $action;?></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-6 timeline-item-time">
-                                        <div>
-                                            <p class="fs-10 mb-0 fw-semi-bold"><?php echo $delivery_date2;?></p>
-                                            <!-- <p class="fs-11 text-600">24 September</p> -->
-                                        </div>
+                                <?php
+                                $first = false;
+                                } else {
+                                ?>
+                                <div class="timeline-item timeline-item-end">
+                                    <div class="timeline-icon icon-item icon-item-lg text-primary border-300">
+                                        <span class="fs-8 fas fa-fire"></span>
                                     </div>
-                                    <div class="col-lg-6">
-                                        <div class="timeline-item-content">
-                                            <div class="timeline-item-card">
-                                                <h5 class="mb-2">Inbound</h5>
-                                                <p class="fs-10 mb-0">Item has been successfully inbounded.</p>
+                                    <div class="row">
+                                        <div class="col-lg-6 timeline-item-time">
+                                            <div>
+                                                <p class="fs-10 mb-0 fw-semi-bold"><?php echo $action_date;?></p>
+                                                <!-- <p class="fs-11 text-600">03 April</p> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="timeline-item-content">
+                                                <div class="timeline-item-card">
+                                                    <h5 class="mb-2"><?php echo $title;?></h5>
+                                                    <p class="fs-10 mb-0"><?php echo $action;?></p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <?php 
-                            $first = false;
-                            $timeline_query = "SELECT 
-                                                    u.user_fname, 
-                                                    u.user_lname, 
-                                                    st.title, 
-                                                    st.action, 
-                                                    st.date
-                                                FROM stock_timeline st
-                                                LEFT JOIN users u ON u.hashed_id = st.user_id
-                                                WHERE st.unique_barcode = '$unique_barcode'
-                                                ORDER BY st.date ASC";
-                            $result = $conn->query($timeline_query);
-                            if($result->num_rows>0){
-                                while($row=$result->fetch_assoc()){
-                                    $did_by = $row['user_fname'] . " " . $row['user_lname'];
-                                    $title = $row['title'];
-                                    $action = $row['action'];
-                                    $action_date = $row['date'];
-                                    if($first === true){
-                                    ?>
-                                    <div class="timeline-item timeline-item-start">
-                                        <div class="timeline-icon icon-item icon-item-lg text-primary border-300">
-                                            <span class="fs-8 fas fa-mobile"></span>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-6 timeline-item-time">
-                                                <div>
-                                                    <p class="fs-10 mb-0 fw-semi-bold"><?php echo $action_date;?></p>
-                                                    <!-- <p class="fs-11 text-600">24 September</p> -->
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="timeline-item-content">
-                                                    <div class="timeline-item-card">
-                                                        <h5 class="mb-2"><?php echo $title;?></h5>
-                                                        <p class="fs-10 mb-0"><?php echo $action;?></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    $first = false;
-                                    } else {
-                                    ?>
-                                    <div class="timeline-item timeline-item-end">
-                                        <div class="timeline-icon icon-item icon-item-lg text-primary border-300">
-                                            <span class="fs-8 fas fa-fire"></span>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-6 timeline-item-time">
-                                                <div>
-                                                    <p class="fs-10 mb-0 fw-semi-bold"><?php echo $action_date;?></p>
-                                                    <!-- <p class="fs-11 text-600">03 April</p> -->
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <div class="timeline-item-content">
-                                                    <div class="timeline-item-card">
-                                                        <h5 class="mb-2"><?php echo $title;?></h5>
-                                                        <p class="fs-10 mb-0"><?php echo $action;?></p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    $first = true;
-                                    }
-                                    
+                                <?php
+                                $first = true;
                                 }
+                                
                             }
-                            ?>
-                        </div>
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

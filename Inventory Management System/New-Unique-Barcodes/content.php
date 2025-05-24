@@ -2,12 +2,15 @@
 $unique_key = $_SESSION['unique_key'];
 
 ?>
-<div class="row mb-3">
-    <div class="col-12 text-end">
-        <a class="btn btn-primary btn-sm mt-3" href="../set-item-locations/"><span class="fas fa-home me-2"></span>Set item locations.</a>
-    </div>
-</div>
 <div class="card mb-1">
+    <div class="card-header bg-warning">
+        <h2 class="text-white">Download Barcode/s</h2>
+        <div class="row mb-3">
+            <div class="col-12 text-end">
+                <a class="btn btn-primary btn-sm mt-3" href="../set-item-locations/"><span class="fas fa-home me-2"></span>Set item locations.</a>
+            </div>
+        </div>
+    </div>
     <div class="card-body overflow-hidden">
         <div class="row">
             <div class="col-lg-12">

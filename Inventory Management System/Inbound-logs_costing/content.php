@@ -118,8 +118,7 @@ if(isset($get_date) && isset($get_type)){
                     s.capital, 
                     p.description, 
                     b.brand_name, 
-                    c.category_name,
-                    p.product_img
+                    c.category_name
                   FROM stocks s
                   LEFT JOIN inbound_logs il ON il.unique_key = s.unique_key
                   LEFT JOIN users u ON u.hashed_id = il.user_id
@@ -146,8 +145,7 @@ if(isset($get_date) && isset($get_type)){
                     s.capital, 
                     p.description, 
                     b.brand_name, 
-                    c.category_name,
-                    p.product_img
+                    c.category_name
                   FROM stocks s
                   LEFT JOIN inbound_logs il ON il.unique_key = s.unique_key
                   LEFT JOIN users u ON u.hashed_id = il.user_id
@@ -209,7 +207,6 @@ $inbound_res = $conn->query($inbound_sql);
                     <table class="table table-bordered table-striped fs-11 mb-0">
                         <thead class="bg-200">
                             <tr>
-                                <th class="px-0"></th>
                                 <th>Description</th>
                                 <th>Brand</th>
                                 <th>Category</th>
@@ -225,9 +222,6 @@ $inbound_res = $conn->query($inbound_sql);
                         <tbody class="list" id="table-body">
                             <?php while ($row = $inbound_res->fetch_assoc()) { ?>
                                 <tr>
-                                    <td class="px-0 py-0">
-                                      <img src="../../assets/img/<?php echo isset($row['product_img']) ? basename($row['product_img']) : 'def_img.png'; ?>" height="50" alt=""> 
-                                    </td>
                                     <td><?php echo $row['description'];?></td>
                                     <td><?php echo $row['brand_name'];?></td>
                                     <td><?php echo $row['category_name'];?></td>
