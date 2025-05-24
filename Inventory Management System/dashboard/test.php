@@ -14,57 +14,103 @@ $inbound_outbound_data = [];
 
 if (isset($_POST['date_between'])) {
     $date_between = $_POST['date_between']; // example: 01/04/25 to 30/04/25
-    list($start_date, $end_date) = explode(' to ', $date_between);
+    if(strpos($date_between, "to")!==false){
+        list($start_date, $end_date) = explode(' to ', $date_between);
+        // Convert to MySQL format Y-m-d
+        $start_date_mysql = DateTime::createFromFormat('d/m/y', $start_date)->format('Y-m-d') . " 00:00:00";
+        $end_date_mysql = DateTime::createFromFormat('d/m/y', $end_date)->format('Y-m-d') . " 11:59:59";
 
-    // Convert to MySQL format Y-m-d
-    $start_date_mysql = DateTime::createFromFormat('d/m/y', $start_date)->format('Y-m-d') . " 00:00:00";
-    $end_date_mysql = DateTime::createFromFormat('d/m/y', $end_date)->format('Y-m-d') . " 11:59:59";
+        // Format for display
+        $start_date_display = DateTime::createFromFormat('d/m/y', $start_date)->format('M j, Y');
+        $end_date_display = DateTime::createFromFormat('d/m/y', $end_date)->format('M j, Y');
+        $date_label = "$start_date_display to $end_date_display";
 
-    // Format for display
-    $start_date_display = DateTime::createFromFormat('d/m/y', $start_date)->format('M j, Y');
-    $end_date_display = DateTime::createFromFormat('d/m/y', $end_date)->format('M j, Y');
-    $date_label = "$start_date_display to $end_date_display";
+        if (!empty($_GET['wh'])) {
+            $warehouse_dashboard_id = mysqli_real_escape_string($conn, $_GET['wh']);
+            
+            $where_warehouse = " = '$warehouse_dashboard_id'";
+        } else {
+            $warehouse_list = explode(',', $_SESSION['warehouse_ids']);
+            $warehouse_list = array_map(function($warehouse) use ($conn) {
+                return "'" . mysqli_real_escape_string($conn, $warehouse) . "'";
+            }, $warehouse_list);
+            $warehouse_dashboard_id = implode(",", $warehouse_list);
 
-    if (!empty($_GET['wh'])) {
-        $warehouse_dashboard_id = mysqli_real_escape_string($conn, $_GET['wh']);
-        
-        $where_warehouse = " = '$warehouse_dashboard_id'";
+            $where_warehouse = " IN ($warehouse_dashboard_id)";
+        }
+
+        $outbound_query = "
+            SELECT SUM(oc.sold_price) AS total_outbound_sales, COUNT(oc.unique_barcode) AS outbound_qty
+            FROM outbound_content oc
+            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+            WHERE ol.warehouse $where_warehouse AND oc.status IN (0, 6) AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
+        ";
+
+        $inbound_query = "
+            SELECT SUM(capital) AS total_unit_cost, COUNT(unique_barcode) AS inbound_qty
+            FROM stocks
+            WHERE warehouse $where_warehouse AND DATE(date) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
+        ";
+
+        $local_query = "
+            SELECT SUM(s.capital) AS local_unit_cost, COUNT(s.unique_barcode) AS local_qty
+            FROM stocks s
+            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+            WHERE sup.local_international = 'Local' AND s.warehouse $where_warehouse AND DATE(s.date) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
+        ";
+
+        $import_query = "
+            SELECT SUM(s.capital) AS import_unit_cost, COUNT(s.unique_barcode) AS import_qty
+            FROM stocks s
+            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+            WHERE sup.local_international = 'International' AND s.warehouse $where_warehouse AND DATE(s.date) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
+        ";
     } else {
-        $warehouse_list = explode(',', $_SESSION['warehouse_ids']);
-        $warehouse_list = array_map(function($warehouse) use ($conn) {
-            return "'" . mysqli_real_escape_string($conn, $warehouse) . "'";
-        }, $warehouse_list);
-        $warehouse_dashboard_id = implode(",", $warehouse_list);
+        $today_mysql = DateTime::createFromFormat('d/m/y', $date_between)->format('Y-m-d');
+        $date_display = DateTime::createFromFormat('d/m/y', $date_between)->format('M j, Y');
+        $date_label = $date_display;
+        if (!empty($_GET['wh'])) {
+            $warehouse_dashboard_id = mysqli_real_escape_string($conn, $_GET['wh']);
+            
+            $where_warehouse = " = '$warehouse_dashboard_id'";
+        } else {
+            $warehouse_list = explode(',', $_SESSION['warehouse_ids']);
+            $warehouse_list = array_map(function($warehouse) use ($conn) {
+                return "'" . mysqli_real_escape_string($conn, $warehouse) . "'";
+            }, $warehouse_list);
+            $warehouse_dashboard_id = implode(",", $warehouse_list);
 
-        $where_warehouse = " IN ($warehouse_dashboard_id)";
+            $where_warehouse = " IN ($warehouse_dashboard_id)";
+        }
+
+        $outbound_query = "
+            SELECT SUM(oc.sold_price) AS total_outbound_sales, COUNT(oc.unique_barcode) AS outbound_qty
+            FROM outbound_content oc
+            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+            WHERE ol.warehouse $where_warehouse AND oc.status IN (0, 6) AND DATE(ol.date_sent) = '$today_mysql'
+        ";
+
+        $inbound_query = "
+            SELECT SUM(capital) AS total_unit_cost, COUNT(unique_barcode) AS inbound_qty
+            FROM stocks
+            WHERE warehouse $where_warehouse AND DATE(date) = '$today_mysql'
+        ";
+
+        $local_query = "
+            SELECT SUM(s.capital) AS local_unit_cost, COUNT(s.unique_barcode) AS local_qty
+            FROM stocks s
+            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+            WHERE sup.local_international = 'Local' AND s.warehouse $where_warehouse AND DATE(s.date) = '$today_mysql'
+        ";
+
+        $import_query = "
+            SELECT SUM(s.capital) AS import_unit_cost, COUNT(s.unique_barcode) AS import_qty
+            FROM stocks s
+            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+            WHERE sup.local_international = 'International' AND s.warehouse $where_warehouse AND DATE(s.date) = '$today_mysql'
+        ";
     }
-
-    $outbound_query = "
-        SELECT SUM(oc.sold_price) AS total_outbound_sales, COUNT(oc.unique_barcode) AS outbound_qty
-        FROM outbound_content oc
-        LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-        WHERE ol.warehouse $where_warehouse AND oc.status IN (0, 6) AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
-    ";
-
-    $inbound_query = "
-        SELECT SUM(capital) AS total_unit_cost, COUNT(unique_barcode) AS inbound_qty
-        FROM stocks
-        WHERE warehouse $where_warehouse AND DATE(date) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
-    ";
-
-    $local_query = "
-        SELECT SUM(s.capital) AS local_unit_cost, COUNT(s.unique_barcode) AS local_qty
-        FROM stocks s
-        LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-        WHERE sup.local_international = 'Local' AND s.warehouse $where_warehouse AND DATE(s.date) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
-    ";
-
-    $import_query = "
-        SELECT SUM(s.capital) AS import_unit_cost, COUNT(s.unique_barcode) AS import_qty
-        FROM stocks s
-        LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-        WHERE sup.local_international = 'International' AND s.warehouse $where_warehouse AND DATE(s.date) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
-    ";
+    
 } else {
     // Today's date
     $today_mysql = date('Y-m-d');
