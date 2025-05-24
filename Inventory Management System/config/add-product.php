@@ -4,15 +4,12 @@ include('database.php');
 include('on_session.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Retrieve and sanitize the form inputs
     $productDescription = $_POST['product_description'] ?? '';
     $category = $_POST['category'] ?? '';
     $brand = $_POST['brand'] ?? '';
     $parentBarcode = $_POST['parent_barcode'] ?? '';
     $safety = $_POST['safety'];
-    $image = $_FILES['product_image'] ?? 'def_img.png';
 
-    // Function to generate a unique 9-digit number
     function generateUniqueBarcode($conn) {
         do {
             $barcode = str_pad(rand(0, 9999999), 7, '0', STR_PAD_LEFT);
@@ -23,43 +20,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_result($count);
             $stmt->fetch();
             $stmt->close();
-        } while ($count > 0); // Keep generating if barcode exists
-
+        } while ($count > 0);
         return $barcode;
     }
 
-    // Generate a new barcode if parentBarcode is empty, null, or not set
     if (empty($parentBarcode)) {
         $parentBarcode = generateUniqueBarcode($conn);
     }
 
-    // Initialize the file path for the product image
-    $imagePath = '../../assets/img/';
+    // Process multiple image uploads
+    $productImages = $_FILES['product_image'] ?? null;
+    $imageBlobs = [];
 
-    // Check if an image was uploaded
-    if ($image && $image['error'] === 0) {
-        $imageName = basename($image['name']);
-        $targetDir = "../../assets/img/"; // Ensure this directory exists and has write permissions
-        $targetFilePath = $targetDir . $imageName;
+    if ($productImages && is_array($productImages['tmp_name'])) {
+        $totalImages = count($productImages['tmp_name']);
 
-        // Move the uploaded file to the target directory
-        if (move_uploaded_file($image['tmp_name'], $targetFilePath)) {
-            $imagePath = $targetFilePath;
-        } else {
-            die("Error: Could not upload image.");
+        if ($totalImages > 10) {
+            header("Location: ../Product-list/?success=false&err=max_img");
+            exit;
         }
-    } else {
-        $imagePath = "def_img.png";
+
+        for ($i = 0; $i < $totalImages; $i++) {
+            if ($productImages['error'][$i] === UPLOAD_ERR_OK) {
+                $tmpName = $productImages['tmp_name'][$i];
+                $imageData = file_get_contents($tmpName);
+                $imageBlobs[] = base64_encode($imageData); // Store as base64 for safe serialization
+            }
+        }
     }
+
+    // Convert array of base64-encoded images to a single string for BLOB storage
+    $finalBlobData = serialize($imageBlobs); // Or json_encode($imageBlobs)
+
+    $currentDateTime = date('Y-m-d H:i:s'); // Add this if not already defined
 
     // Prepare the SQL statement to insert product data
     $sql = "INSERT INTO product (`description`, category, brand, parent_barcode, product_img, `date`, `user_id`, `safety`) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssi", $productDescription, $category, $brand, $parentBarcode, $imagePath, $currentDateTime, $user_id, $safety);
 
-    // Execute the query and check for success
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssssi", $productDescription, $category, $brand, $parentBarcode, $finalBlobData, $currentDateTime, $user_id, $safety);
+
     if ($stmt->execute()) {
         $product_id = $stmt->insert_id;
         $hashed_product_id = hash('sha256', $product_id);
@@ -72,7 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: ../Product-list/?success=false&err=$error_message");
     }
 
-    // Close the statement and connection
     $stmt->close();
     $conn->close();
 }
