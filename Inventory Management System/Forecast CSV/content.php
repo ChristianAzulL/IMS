@@ -75,7 +75,7 @@ if (!isset($_SESSION['lead_time_local']) && !isset($_SESSION['lead_time_import']
                     echo "<h3>Forecast Table</h3>";
                     echo '<table class="table mb-0 data-table fs-10" data-datatables="data-datatables">';
                     echo "
-                        <thead class='table-dark'>
+                        <thead class='table-secondary'>
                             <tr>
                                 <th class='fs-11 w-100'>Description</th>
                                 <th class='fs-11'>LT(Local)</th>
