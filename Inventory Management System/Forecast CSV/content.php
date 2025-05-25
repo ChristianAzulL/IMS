@@ -247,7 +247,7 @@ if (!isset($_SESSION['lead_time_local']) && !isset($_SESSION['lead_time_import']
                         $suggested_import = max(0, ($expected_needed + $safety) - $total_stocks);
 
                         $row_class = ($total_stocks < ($expected_needed + $safety)) 
-                            ? 'table-warning' : '';
+                            ? 'bg-secondary-subtle' : '';
 
                         $desc_display = $description;
                         if ($matched === false) {
