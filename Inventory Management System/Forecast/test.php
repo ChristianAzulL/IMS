@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                 }, array_slice($data, 1, 12));
                 $grand_total = strtoupper(trim($data[13] ?? ''));
 
-                if ($category === "CATEGORY" || $grand_total === "GRAND TOTAL") continue;
+                if ($grand_total === "GRAND TOTAL") continue;
 
                 if (!isset($_SESSION['category_forecast'])) {
                     $_SESSION['category_forecast'] = $category;
