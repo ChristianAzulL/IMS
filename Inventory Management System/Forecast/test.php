@@ -1,86 +1,115 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
+$currentDateTime = (new DateTime('now', $timezone))->format('Y-m-d H:i:s');
+
+// Get average lead time if not already in session
+if (!isset($_SESSION['lead_time_local']) && !isset($_SESSION['lead_time_import'])) {
+    $import_query = "
+        SELECT IFNULL(AVG(TIMESTAMPDIFF(DAY, po.date_order, po.date_received)), 0) AS avg_import_days
+        FROM purchased_order po
+        LEFT JOIN supplier s ON s.hashed_id = po.supplier
+        WHERE s.local_international = 'International' AND po.date_received IS NOT NULL
+    ";
+    $local_query = "
+        SELECT IFNULL(AVG(TIMESTAMPDIFF(DAY, po.date_order, po.date_received)), 0) AS avg_local_days
+        FROM purchased_order po
+        LEFT JOIN supplier s ON s.hashed_id = po.supplier
+        WHERE s.local_international = 'Local' AND po.date_received IS NOT NULL
+    ";
+
+    $lead_times = ['international' => 0, 'local' => 0];
+    $res_import = $conn->query($import_query);
+    if ($res_import && $res_import->num_rows > 0) {
+        $lead_times['international'] = round($res_import->fetch_assoc()['avg_import_days']);
+    }
+    $res_local = $conn->query($local_query);
+    if ($res_local && $res_local->num_rows > 0) {
+        $lead_times['local'] = round($res_local->fetch_assoc()['avg_local_days']);
+    }
+
+    $_SESSION['lead_time_import'] = $lead_times['international'];
+    $_SESSION['lead_time_local'] = $lead_times['local'];
+}
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple CSV Reader</title>
+    <title>Forecast Table</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="container py-4">
     <h2>Upload CSV File</h2>
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" class="mb-4">
         <input type="file" name="csv_file" accept=".csv" required>
-        <button type="submit">Upload and Display</button>
+        <button class="btn btn-primary" type="submit">Upload and Display</button>
     </form>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
     $tmpName = $_FILES["csv_file"]["tmp_name"];
     $fileType = mime_content_type($tmpName);
+    $lead_time_import = $_SESSION['lead_time_import'];
+    $lead_time_local = $_SESSION['lead_time_local'];
 
-    // Check if it's a CSV file
     if ($fileType === "text/plain" || $fileType === "text/csv" || pathinfo($_FILES["csv_file"]["name"], PATHINFO_EXTENSION) === "csv") {
         if (($handle = fopen($tmpName, "r")) !== false) {
 
-            echo "<h3>CSV Data:</h3>";
-            echo "<table border='1' cellpadding='5' cellspacing='0'>";
+            // Display formula explanations
+            echo "
+                <div class='alert alert-info'>
+                    <strong>Formulas Used:</strong><br>
+                    <ul>
+                        <li><b>Expected Needed</b> = Sum of monthly sales for # of months based on lead time (Local or Import)</li>
+                        <li><b>Suggested Order</b> = (Expected Needed + Safety Stock) - (Available Stocks + Incoming Stocks)</li>
+                        <li>Lead time is based on historical average delivery time of local and imported suppliers.</li>
+                        <li><b>Highlighted Rows</b> mean stock is below required + safety level.</li>
+                        <li><b><span class='badge bg-danger'>Not Matched</span></b> = Product not found in database (by description & category).</li>
+                    </ul>
+                </div>
+            ";
 
-            $rowNumber = 0;
+            echo "<h3>Forecast Table</h3>";
+            echo "<table class='table table-bordered table-hover'>";
+            echo "
+                <thead class='table-dark'>
+                    <tr>
+                        <th>Description</th>
+                        <th>LT(Local)</th>
+                        <th>LT(Import)</th>
+                        <th>Stocks</th>
+                        <th>Safety</th>
+                        <th>Qty Sold (3 Months)</th>
+                        <th>Expected Needed (Local)</th>
+                        <th>Expected Needed (Import)</th>
+                        <th>Total Stocks</th>
+                        <th>Suggested Order (Local)</th>
+                        <th>Suggested Order (Import)</th>
+                    </tr>
+                </thead>
+            ";
 
             while (($data = fgetcsv($handle)) !== false) {
-                // Skip if more than 14 columns
-                if (count($data) > 14) {
-                    echo "<p style='color: red;'>Error: Only 14 columns allowed. Row skipped.</p>";
+                if (count($data) > 14) continue;
+
+                $category = strtoupper(trim($data[0])) ?? '';
+                $monthly_sales = array_map(function ($v) {
+                    return is_numeric($v) ? (int)$v : 0;
+                }, array_slice($data, 1, 12));
+                $grand_total = strtoupper(trim($data[13] ?? ''));
+
+                if ($category === "CATEGORY" || $grand_total === "GRAND TOTAL") continue;
+
+                if (!isset($_SESSION['category_forecast'])) {
+                    $_SESSION['category_forecast'] = $category;
                     continue;
                 }
 
-                // Assign variables
-                $category     = strtoupper($data[0]) ?? '';
-                $january      = strtoupper($data[1]) ?? 0;
-                $february     = strtoupper($data[2]) ?? 0;
-                $march        = strtoupper($data[3]) ?? 0;
-                $april        = strtoupper($data[4]) ?? 0;
-                $may          = strtoupper($data[5]) ?? 0;
-                $june         = strtoupper($data[6]) ?? 0;
-                $july         = strtoupper($data[7]) ?? 0;
-                $august       = strtoupper($data[8]) ?? 0;
-                $september    = strtoupper($data[9]) ?? 0;
-                $october      = strtoupper($data[10]) ?? 0;
-                $november     = strtoupper($data[11]) ?? 0;
-                $december     = strtoupper($data[12]) ?? 0;
-                $grand_total  = strtoupper($data[13]) ?? 0;
-                if (
-                    $january === "JANUARY" &&
-                    $february === "FEBRUARY" &&
-                    $march === "MARCH" &&
-                    $april === "APRIL" &&
-                    $may === "MAY" &&
-                    $june === "JUNE" &&
-                    $july === "JULY" &&
-                    $august === "AUGUST" &&
-                    $september === "SEPTEMBER" &&
-                    $october === "OCTOBER" &&
-                    $november === "NOVEMBER" &&
-                    $december === "DECEMBER" &&
-                    $grand_total === "GRAND TOTAL"
-                ) {
-                    if(!isset($_SESSION['category_forecast'])){
-                        $_SESSION['category_forecast'] = $category;
-                    } else {
-                        if($_SESSION['category_forecast'] !== $category){
-                            $_SESSION['category_forecast'] = $category;
-                        }
-                    }
-
-                    echo "<tr>
-                        <td>$category</td><td>$january</td><td>$february</td><td>$march</td><td>$april</td><td>$may</td><td>$june</td>
-                        <td>$july</td><td>$august</td><td>$september</td><td>$october</td><td>$november</td><td>$december</td><td>$grand_total</td>
-                    </tr>";
-                } else {
                 $category_name = $_SESSION['category_forecast'];
                 $description = $category;
+
                 $product_search = "
                     SELECT 
                         p.hashed_id AS product_id
@@ -92,60 +121,111 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                 ";
 
                 $search_result = $conn->query($product_search);
-                if($search_result->num_rows>0){
-                    $row=$search_result->fetch_assoc();
+                $product_id = "";
+                $qty_sold_past_3_moths = 0;
+                $matched = false;
+
+                if ($search_result && $search_result->num_rows > 0) {
+                    $row = $search_result->fetch_assoc();
                     $product_id = $row['product_id'];
-                } else {
-                    $product_id = "";
+                    $matched = true;
                 }
 
+
+                $outbounds = "
+                    SELECT 
+                        COUNT(oc.unique_barcode) AS outbounded_qty
+                    FROM product p
+                    LEFT JOIN category c ON c.hashed_id = p.category
+                    LEFT JOIN stocks s ON s.product_id = p.hashed_id
+                    LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                    LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                    WHERE s.product_id = '$product_id'
+                    AND ol.date_sent BETWEEN DATE_SUB(NOW(), INTERVAL 3 MONTH) AND NOW()
+                    LIMIT 1
+                ";
                 if(!empty($product_id)){
-                    $stock_query = "SELECT COUNT(unique_barcode) AS qty, `safety` FROM stocks WHERE product_id = '$product_id' AND s.item_status = 0";
-                    $stock_result = $conn->query($stock_query);
-                    if($stock_result->num_rows>0){
-                        $row=$stock_result->fetch_assoc();
-                        $available_stocks = $row['qty'];
-                        $safety = $row['safety'];
+                    $outbounds_resut = $conn->query($outbounds);
+                    if($outbounds_resut && $outbounds_resut->num_rows>0){
+                        $qty_sold_past_3_moths = (int)$row['outbounded_qty'];
                     }
-                } else {
-                    $available_stocks = 0;
-                    $safety = 0;
                 }
 
-                echo "<tr>
-                    <td>$description</td>
-                    <td>$january</td>
-                    <td>$february</td>
-                    <td>$march</td>
-                    <td>$april</td>
-                    <td>$may</td>
-                    <td>$june</td>
-                    <td>$july</td>
-                    <td>$august</td>
-                    <td>$september</td>
-                    <td>$october</td>
-                    <td>$november</td>
-                    <td>$december</td>
-                    <td>$grand_total</td>
+                $available_stocks = 0;
+                $safety = 0;
+                $incoming_stocks = 0;
+
+                if (!empty($product_id)) {
+                    $stock_query = "
+                        SELECT COUNT(s.unique_barcode) AS qty, p.safety
+                        FROM stocks s
+                        LEFT JOIN product p ON p.hashed_id = s.product_id
+                        WHERE s.product_id = '$product_id' AND s.item_status = 0
+                    ";
+                    $stock_result = $conn->query($stock_query);
+                    if ($stock_result && $stock_result->num_rows > 0) {
+                        $row = $stock_result->fetch_assoc();
+                        $available_stocks = (int)$row['qty'];
+                        $safety = (int)$row['safety'];
+                    }
+
+                    $po_query = "
+                        SELECT SUM(CASE WHEN po.status NOT IN (0, 4) THEN poc.qty ELSE 0 END) AS incoming_stocks
+                        FROM purchased_order_content poc 
+                        LEFT JOIN purchased_order po ON po.id = poc.po_id
+                        WHERE oc.product_id = '$product_id'
+                        GROUP BY poc.product_id
+                    ";
+                    $po_result = $conn->query($po_query);
+                    if ($po_result && $po_result->num_rows > 0) {
+                        $row = $po_result->fetch_assoc();
+                        $incoming_stocks = (int)$row['incoming_stocks'];
+                    }
+                }
+
+                $months_needed_local = ceil($lead_time_local / 30);
+                $months_needed_import = ceil($lead_time_import / 30);
+
+                $expected_needed_local = array_sum(array_slice($monthly_sales, 0, $months_needed_local));
+                $expected_needed_import = array_sum(array_slice($monthly_sales, 0, $months_needed_import));
+
+                $total_stocks = $available_stocks + $incoming_stocks;
+                $suggested_local = max(0, ($expected_needed_local + $safety) - $total_stocks);
+                $suggested_import = max(0, ($expected_needed_import + $safety) - $total_stocks);
+
+                $row_class = ($total_stocks < ($expected_needed_local + $safety) || $total_stocks < ($expected_needed_import + $safety)) 
+                    ? 'table-warning' : '';
+
+                $desc_display = $description;
+                if ($matched === false) {
+                    $desc_display .= " <span class='badge bg-danger'>Not Matched</span>";
+                }
+
+                echo "<tr class='$row_class'>
+                    <td>$desc_display</td>
+                    <td>$lead_time_local</td>
+                    <td>$lead_time_import</td>
                     <td>$available_stocks</td>
                     <td>$safety</td>
+                    <td>$qty_sold_past_3_moths</td>
+                    <td>$expected_needed_local</td>
+                    <td>$expected_needed_import</td>
+                    <td>$total_stocks</td>
+                    <td>$suggested_local</td>
+                    <td>$suggested_import</td>
+                    <td>$category_name</td>
                 </tr>";
-                }
-
-
-                $rowNumber++;
             }
 
             echo "</table>";
             fclose($handle);
         } else {
-            echo "<p>Could not open the file.</p>";
+            echo "<p class='text-danger'>Could not open the file.</p>";
         }
     } else {
-        echo "<p style='color: red;'>Invalid file type. Please upload a CSV file.</p>";
+        echo "<p class='text-danger'>Invalid file type. Please upload a CSV file.</p>";
     }
 }
 ?>
-
 </body>
 </html>
