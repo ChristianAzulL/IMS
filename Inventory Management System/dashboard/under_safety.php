@@ -4,7 +4,6 @@ if(empty($dashboard_wh)){
     SELECT 
         COUNT(s.unique_barcode) AS available_qty,
         s.safety,
-        p.product_img,
         p.description,
         b.brand_name,
         c.category_name,
@@ -23,7 +22,6 @@ if(empty($dashboard_wh)){
         b.brand_name, 
         c.category_name,
         s.safety,
-        p.product_img,
         w.warehouse_name
     HAVING COUNT(s.unique_barcode) < s.safety
     ";
@@ -32,7 +30,6 @@ if(empty($dashboard_wh)){
     SELECT 
         COUNT(s.unique_barcode) AS available_qty,
         s.safety,
-        p.product_img,
         p.description,
         b.brand_name,
         c.category_name,
@@ -51,7 +48,6 @@ if(empty($dashboard_wh)){
         b.brand_name, 
         c.category_name,
         s.safety,
-        p.product_img,
         s.warehouse
     HAVING COUNT(s.unique_barcode) < s.safety
     ";
@@ -71,7 +67,6 @@ if ($under_safety_res->num_rows > 0) {
             <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>DESCRIPTION</th>
                         <th>BRAND</th>
                         <th>CATEGORY</th>
@@ -90,12 +85,8 @@ if ($under_safety_res->num_rows > 0) {
                         $warehouse_name  = $row['warehouse_name'];
                         $available_qty   = $row['available_qty'];
                         $safety          = $row['safety'];
-                        $product_img     = $row['product_img'] ?? 'def_img.png';
                     ?>
                     <tr>
-                        <td>
-                            <img src="../../assets/img/<?php echo basename($product_img); ?>" alt="Product Image" height="30">
-                        </td>
                         <td><?php echo $description; ?></td>
                         <td><?php echo $brand_name; ?></td>
                         <td><?php echo $category_name; ?></td>
