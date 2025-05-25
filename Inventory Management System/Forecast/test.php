@@ -228,6 +228,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                 $desc_display = $description;
                 if ($matched === false) {
                     $desc_display .= " <span class='badge bg-danger'>Not Matched</span>";
+                } else {
+                    $desc_display .= " <span class='badge bg-success'>Matched</span>";
                 }
 
                 echo "<tr class='$row_class'>
