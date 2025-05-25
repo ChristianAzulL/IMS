@@ -116,7 +116,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                     FROM product p
                     LEFT JOIN category c ON c.hashed_id = p.category
                     WHERE UPPER(p.description) = UPPER('$description')
-                    AND UPPER(c.category_name) = UPPER('$category_name')
                     LIMIT 1
                 ";
 
