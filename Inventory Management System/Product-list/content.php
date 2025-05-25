@@ -7,60 +7,11 @@
     <button class="btn btn-primary py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#create-modal">Create</button>
   </div>
 
-  <div class="col-lg-12 py-3">
-    <div class="row justify-content-end gx-3 gy-0 px-3">
-      <div class="col-sm-auto">
-        <select class="form-select form-select-sm mb-3" data-list-filter="cat">
-          <option selected="No Data" value="">Select category</option>
-          <?php 
-          $category_selection = "SELECT * FROM category ORDER BY category_name ASC";
-          $category_result = $conn->query($category_selection);
-          if($category_result->num_rows > 0) {
-            while($row = $category_result->fetch_assoc()) {
-              echo '<option value="' . $row['category_name'] . '">' . $row['category_name'] . '</option>';
-            }
-          } else {
-            echo '<option value="">No category found</option>';
-          }
-          ?>
-        </select>
-      </div>
-
-      <div class="col-sm-auto">
-        <select class="form-select form-select-sm mb-3" data-list-filter="brand">
-          <option selected="No Data" value="">Select brand</option>
-          <?php 
-          $brand_selection = "SELECT * FROM brand ORDER BY brand_name ASC";
-          $brand_result = $conn->query($brand_selection);
-          if($brand_result->num_rows > 0) {
-            while($row = $brand_result->fetch_assoc()) {
-              echo '<option value="' . $row['brand_name'] . '">' . $row['brand_name'] . '</option>';
-            }
-          } else {
-            echo '<option value="">No brand found</option>';
-          }
-          ?>
-        </select>
-      </div>
-
-      <div class="col-auto col-sm-5 mb-3">
-        <form>
-          <div class="input-group">
-            <input class="form-control form-control-sm shadow-none search" type="search" placeholder="Search..." aria-label="search" />
-            <div class="input-group-text bg-transparent">
-              <span class="fa fa-search fs-10 text-600"></span>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
   <div class="col-lg-12">
     <div class="card">
       <div class="card-body overflow-hidden">
         <div class="table-responsive">
-          <table class="table table-sm table-striped fs-10 mb-0 overflow-hidden">
+          <table class="table mb-0 data-table fs-11" data-datatables="data-datatables">
             <thead class="bg-200">
               <tr>
                 <th style="width: 10px;"></th>
@@ -120,8 +71,8 @@
                   $table_safety = $row['safety'];
               ?>
                 <tr>
-                  <td class="p-0 m-0" style="height:10px;">
-                    <img class="img img-fluid m-0" src="<?php echo $product_img; ?>" alt="" height="10">
+                  <td class="p-0 m-0">
+                    <img class="img img-fluid m-0" src="<?php echo $product_img; ?>" alt="" style="heigh:10px;">
                   </td>
                   <td class="desc"><small><?php echo $product_des; ?></small></td>
                   <td class="cat"><small><?php echo $product_category; ?></small></td>

@@ -881,6 +881,11 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Forecast</span></div>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Forecast CSV/">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Upload CSV </span></div>
+              </a>
+            </li>
           </ul>
         </li>
         <?php
