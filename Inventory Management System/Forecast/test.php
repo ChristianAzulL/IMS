@@ -95,10 +95,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                 if (count($data) > 14) continue;
 
                 $category = strtoupper(trim($data[0])) ?? '';
-                $monthly_sales = array_map(function ($v) {
-                    return is_numeric($v) ? (int)$v : 0;
-                }, array_slice($data, 1, 12));
+
+                // Updated: Assign each month individually
+                $january = isset($data[1]) && is_numeric($data[1]) ? (int)$data[1] : 0;
+                $february = isset($data[2]) && is_numeric($data[2]) ? (int)$data[2] : 0;
+                $march = isset($data[3]) && is_numeric($data[3]) ? (int)$data[3] : 0;
+                $april = isset($data[4]) && is_numeric($data[4]) ? (int)$data[4] : 0;
+                $may = isset($data[5]) && is_numeric($data[5]) ? (int)$data[5] : 0;
+                $june = isset($data[6]) && is_numeric($data[6]) ? (int)$data[6] : 0;
+                $july = isset($data[7]) && is_numeric($data[7]) ? (int)$data[7] : 0;
+                $august = isset($data[8]) && is_numeric($data[8]) ? (int)$data[8] : 0;
+                $september = isset($data[9]) && is_numeric($data[9]) ? (int)$data[9] : 0;
+                $october = isset($data[10]) && is_numeric($data[10]) ? (int)$data[10] : 0;
+                $november = isset($data[11]) && is_numeric($data[11]) ? (int)$data[11] : 0;
+                $december = isset($data[12]) && is_numeric($data[12]) ? (int)$data[12] : 0;
+
+                $monthly_sales = [
+                    $january, $february, $march, $april, $may, $june,
+                    $july, $august, $september, $october, $november, $december
+                ];
+
                 $grand_total = strtoupper(trim($data[13] ?? ''));
+
 
                 if ($category === "CATEGORY" || $grand_total === "GRAND TOTAL") continue;
 
