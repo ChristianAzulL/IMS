@@ -148,30 +148,9 @@ $outbound_res = $conn->query($outbound_sql);
     <div class="card-body overflow-hidden py-6 px-0">
         <div class="row justify-content-between gx-3 gy-0 px-3">
             <div id="tableExample3" data-list='{"valueNames":["outbound_no","outbound_status","warehouse","date","receiver"],"page":10,"pagination":true}'>
-                <div class="row justify-content-end g-0">
-                    <?php 
-                    if(empty($get_warehouse_id)){
-                    ?>
-                    <div class="col-sm-auto">
-                        <select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
-                            <option selected="" value="">Select warehouse</option>
-                            <?php echo implode("\n", $warehouse_options); ?>
-                        </select>
-                    </div>
-                    <?php 
-                    }
-                    ?>
-                    <div class="col-auto col-sm-5 mb-3 ms-1">
-                        <form>
-                            <div class="input-group">
-                                <input class="form-control form-control-sm shadow-none search" type="search" placeholder="Search..." aria-label="search" />
-                                <div class="input-group-text bg-transparent"><span class="fa fa-search fs-10 text-600"></span></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+                
                 <div class="table-responsive scrollbar">
-                    <table class="table table-bordered table-striped fs-11 mb-0">
+                    <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
                         <thead class="bg-200">
                             <tr>
                                 <th>Description</th>
