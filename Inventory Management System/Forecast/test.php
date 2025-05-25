@@ -97,18 +97,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                 $category = strtoupper(trim($data[0])) ?? '';
 
                 // Updated: Assign each month individually
-                $january = isset($data[1]) && is_numeric($data[1]) ? (int)$data[1] : 0;
-                $february = isset($data[2]) && is_numeric($data[2]) ? (int)$data[2] : 0;
-                $march = isset($data[3]) && is_numeric($data[3]) ? (int)$data[3] : 0;
-                $april = isset($data[4]) && is_numeric($data[4]) ? (int)$data[4] : 0;
-                $may = isset($data[5]) && is_numeric($data[5]) ? (int)$data[5] : 0;
-                $june = isset($data[6]) && is_numeric($data[6]) ? (int)$data[6] : 0;
-                $july = isset($data[7]) && is_numeric($data[7]) ? (int)$data[7] : 0;
-                $august = isset($data[8]) && is_numeric($data[8]) ? (int)$data[8] : 0;
-                $september = isset($data[9]) && is_numeric($data[9]) ? (int)$data[9] : 0;
-                $october = isset($data[10]) && is_numeric($data[10]) ? (int)$data[10] : 0;
-                $november = isset($data[11]) && is_numeric($data[11]) ? (int)$data[11] : 0;
-                $december = isset($data[12]) && is_numeric($data[12]) ? (int)$data[12] : 0;
+                $january      = !empty($data[1])  ? strtoupper($data[1])  : 0;
+                $february     = !empty($data[2])  ? strtoupper($data[2])  : 0;
+                $march        = !empty($data[3])  ? strtoupper($data[3])  : 0;
+                $april        = !empty($data[4])  ? strtoupper($data[4])  : 0;
+                $may          = !empty($data[5])  ? strtoupper($data[5])  : 0;
+                $june         = !empty($data[6])  ? strtoupper($data[6])  : 0;
+                $july         = !empty($data[7])  ? strtoupper($data[7])  : 0;
+                $august       = !empty($data[8])  ? strtoupper($data[8])  : 0;
+                $september    = !empty($data[9])  ? strtoupper($data[9])  : 0;
+                $october      = !empty($data[10]) ? strtoupper($data[10]) : 0;
+                $november     = !empty($data[11]) ? strtoupper($data[11]) : 0;
+                $december     = !empty($data[12]) ? strtoupper($data[12]) : 0;
 
                 $monthly_sales = [
                     $january, $february, $march, $april, $may, $june,
@@ -117,13 +117,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
 
                 $grand_total = strtoupper(trim($data[13] ?? ''));
 
+                if($january === "JANUARY"){
 
-                if ($category === "CATEGORY" || $grand_total === "GRAND TOTAL") continue;
-
-                if (!isset($_SESSION['category_forecast'])) {
-                    $_SESSION['category_forecast'] = $category;
-                    continue;
+                    if(isset($_SESSION['category_forecast'])){
+                        if($category !== $_SESSION['category_forecast']){
+                            $_SESSION['category_forecast'] = $category;
+                        }
+                    } else {
+                        $_SESSION['category_forecast'] = $category;
+                    }
                 }
+
+
+                // if ($category === "CATEGORY" || $grand_total === "GRAND TOTAL") continue;
+
+                // if (!isset($_SESSION['category_forecast'])) {
+                //     $_SESSION['category_forecast'] = $category;
+                //     continue;
+                // }
 
                 $category_name = $_SESSION['category_forecast'];
                 $description = $category;
@@ -149,7 +160,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                     $matched = true;
                 }
 
-
                 $outbounds = "
                     SELECT 
                         COUNT(oc.unique_barcode) AS outbounded_qty
@@ -164,7 +174,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                 ";
                 if(!empty($product_id)){
                     $outbounds_resut = $conn->query($outbounds);
-                    if($outbounds_resut && $outbounds_resut->num_rows>0){
+                    if($outbounds_resut->num_rows>0){
+                        $row=$outbounds_resut->fetch_assoc();
                         $qty_sold_past_3_moths = (int)$row['outbounded_qty'];
                     }
                 }
@@ -191,7 +202,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["csv_file"])) {
                         SELECT SUM(CASE WHEN po.status NOT IN (0, 4) THEN poc.qty ELSE 0 END) AS incoming_stocks
                         FROM purchased_order_content poc 
                         LEFT JOIN purchased_order po ON po.id = poc.po_id
-                        WHERE oc.product_id = '$product_id'
+                        WHERE poc.product_id = '$product_id'
                         GROUP BY poc.product_id
                     ";
                     $po_result = $conn->query($po_query);
