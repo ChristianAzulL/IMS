@@ -188,7 +188,8 @@ if (isset($_GET['id'])) {
                                     p.description, 
                                     s.parent_barcode, 
                                     b.brand_name, 
-                                    c.category_name
+                                    c.category_name,
+                                    p.hashed_id AS product_id
                                 FROM 
                                     stock_transfer_content stc
                                 LEFT JOIN 
@@ -213,6 +214,15 @@ if (isset($_GET['id'])) {
                                     $parent_barcode = $row['parent_barcode'];
                                     $brand_name = $row['brand_name'];
                                     $category_name = $row['category_name'];
+                                    $product_id = $row['product_id'];
+                                    $qty = 0;
+                                    $quantity_query = "SELECT COUNT(stc.unique_barcode) AS qty FROM product p LEFT JOIN stocks s on s.product_id = p.hashed_id LEFT JOIN stock_transfer_content stc ON stc.unique_barcode = s.unique_barcode WHERE p.hashed_id = '$product_id' AND stc.st_id = '$getid'";
+                                    $quantity_res = $conn->query($quantity_query);
+                                    if($quantity_res->num_rows>0){
+                                        $row=$quantity_res->fetch_assoc();
+                                        $qty = $row['qty'];
+                                    }
+                                    
                                     ?>
                                     <tr class="border-bottom border-200">
                                         <td>
@@ -222,7 +232,7 @@ if (isset($_GET['id'])) {
                                             <h6 class="mb-1 fw-semi-bold">
                                                 <a class="text-1100 stretched-link" href="#!"><?php echo $product_description;?></a>
                                             </h6>
-                                            <p class="fw-semi-bold mb-0 text-500">Brand: <?php echo $brand_name;?> | Category: <?php echo $category_name;?></p>
+                                            <p class="fw-semi-bold mb-0 text-500">Brand: <?php echo $brand_name;?> | Category: <?php echo $category_name;?> | qty: <?php echo $qty;?></p>
                                             </div>
                                         </div>
                                         </td>

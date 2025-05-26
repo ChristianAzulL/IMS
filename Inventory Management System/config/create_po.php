@@ -1,7 +1,7 @@
 <?php
 include "database.php";
 include "on_session.php";
-
+$order_Date = $_SESSION['po_order_date'];
 $warehouse_selected = $_SESSION['selected_warehouse_id'];
 
 $success = 0;
@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $supplier = $_POST['supplier'];
         // Display the count
 
-        $insert_po = "INSERT INTO purchased_order SET warehouse = '$warehouse_selected', supplier = '$supplier', `status` = 0, date_order = '$currentDateTime', user_id = '$user_id'";
+        $insert_po = "INSERT INTO purchased_order SET warehouse = '$warehouse_selected', supplier = '$supplier', `status` = 0, date_order = '$order_Date', user_id = '$user_id'";
         if($conn->query($insert_po) === TRUE){
             $po_id = $conn->insert_id;
             foreach ($_POST['product_id'] as $selectedProductId) {

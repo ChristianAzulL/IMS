@@ -93,7 +93,13 @@
             }
         ?>
         <tr class="btn-reveal-trigger">
-          <th class="align-middle white-space-nowrap name"><a href="#" type="button" data-bs-toggle="modal" data-bs-target="#pdfModal<?php echo $po_id;?>">PO-<?php echo $po_id;?></a></th>
+          <th class="align-middle white-space-nowrap name">
+            <a href="update-session.php?blue=<?php echo $po_id;?>" class="btn fs-11 mx-0"><span class="far fa-edit mx-0"></span></a>
+            <a href="#" class="view-po" data-bs-toggle="modal" data-bs-target="#view-pdf-modal" target-id="<?php echo $po_id;?>">
+              PO-<?php echo $po_id;?>
+            </a>
+
+          </th>
           <td class="align-middle white-space-nowrap warehouse" ><span class="badge bg-warning"><?php echo $from_warehouse;?></span></td>
           <td class="align-middle white-space-nowrap supplier"><?php echo $po_supplier;?></td>
           <td class="align-middle white-space-nowrap country"><?php echo $date_created;?></td>
@@ -111,51 +117,29 @@
 </div>
 </div>
 
-
-<?php 
-$modal_po_query = "SELECT * FROM purchased_order WHERE warehouse IN ($imploded_warehouse_ids)";
-$modal_po_res = $conn->query($modal_po_query);
-while($row = $modal_po_res->fetch_assoc()){
-    $modal_po_id = $row['id'];
-    $modal_pdf_blob = $row['pdf'];
-
-    // Encode the binary PDF data as Base64
-    $base64_pdf = base64_encode($modal_pdf_blob);
-    $pdf_data_url = "data:application/pdf;base64,$base64_pdf";
-?>
-<div class="modal fade" id="pdfModal<?php echo $modal_po_id;?>" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+<div class="modal fade" id="view-pdf-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content position-relative">
       <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
         <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-0">
-        <!-- Embed the PDF using an iframe -->
-        <iframe id="pdfViewer<?php echo $modal_po_id;?>" src="<?php echo $pdf_data_url; ?>" width="100%" height="600px"></iframe>
+      <div class="modal-body p-5">
+        <div class="row">
+          <div class="col-12 text-center">
+            <img src="../../assets/img/logo/LPO Logo.png" class="img" height="50" alt="">
+          </div>
+          <div class="col-12 text-center mb-0">
+            <h2 class="mb-0">Purchased Order</h2>
+          </div>
+        </div>
+        <div id="view-modal"></div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" id="modal-buttons">
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-        <?php 
-        if($row['status'] == 0){
-          $status = '<a href="../config/receive-po.php?status=1&&po=' . $modal_po_id . '" class="btn btn-info requires-confirmation" type="button">Sent to supplier</a>';
-        } elseif($row['status'] == 1){
-          $status = '<a href="../config/receive-po.php?status=2&&po=' . $modal_po_id . '" class="btn btn-secondary requires-confirmation" type="button">Confirmed by supplier</a>';
-        } elseif($row['status'] == 2) {
-          $status = '<a href="../config/receive-po.php?status=3&&po=' . $modal_po_id . '" class="btn btn-primary requires-confirmation" type="button">In Transit/ Shipped</a>';
-        } elseif($row['status'] == 3){
-          $status = '<a href="../config/receive-po.php?status=4&&po=' . $modal_po_id . '" class="btn btn-success requires-confirmation" type="button">Received</a>';
-        } else {
-          $status = '';
-        }
-        echo $status;
-        ?>
       </div>
     </div>
   </div>
 </div>
-<?php 
-}
-?>
 
 
 
@@ -216,6 +200,20 @@ while($row = $modal_po_res->fetch_assoc()){
 <!-- Include SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+$(document).on('click', '.view-po', function(e) {
+  e.preventDefault();
+  
+  var targetId = $(this).attr('target-id');
+
+  // Optional: Show a loading spinner or message
+  $('#view-modal').html('<div class="text-center p-4"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+  // Load the PDF content into the modal
+  $('#view-modal').load('pdf.php?target-id=' + targetId);
+});
+</script>
+
+<script>
   document.addEventListener('DOMContentLoaded', function () {
     const submitBtn = document.getElementById('btn-submit-modal');
     const warehouseSelect = document.getElementById('warehouse');
@@ -239,16 +237,13 @@ while($row = $modal_po_res->fetch_assoc()){
 </script>
 
 <script>
-// Wait for the page to load
 document.addEventListener('DOMContentLoaded', function() {
-    // Get all anchor tags with class 'requires-confirmation'
-    const links = document.querySelectorAll('.requires-confirmation');
+    document.addEventListener('click', function(event) {
+        const link = event.target.closest('a.requires-confirmation');
 
-    links.forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            event.preventDefault(); // Stop the default link click
-
-            const href = this.getAttribute('href'); // Get the link
+        if (link) {
+            event.preventDefault();
+            const href = link.getAttribute('href');
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -260,10 +255,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText: 'Yes, proceed!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = href; // Redirect if confirmed
+                    window.location.href = href;
                 }
             });
-        });
+        }
     });
 });
 </script>
+
