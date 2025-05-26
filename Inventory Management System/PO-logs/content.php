@@ -171,31 +171,40 @@ while($row = $modal_po_res->fetch_assoc()){
         <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
           <h4 class="mb-1" id="modalExampleDemoLabel">Select Warehouse </h4>
         </div>
-        <div class="p-4 pb-0">
-          <label for="">Warehouse</label>
-          <select name="warehouse" id="warehouse" class="form-select">
-            <option value=""></option>
-            <?php 
-            // Loop through each ID and display differently for the first item
-            foreach ($user_warehouse_ids as $id) {
-              // Trim any extra whitespace
-              $id = trim($id);
-              $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
-              $warehouse_info_result = $conn->query($warehouse_info_query);
-              if($warehouse_info_result->num_rows>0){
-                  // Check if it's the first item
-                  $row=$warehouse_info_result->fetch_assoc();
-                  $tab_warehouse_name = $row['warehouse_name'];
-                  echo '<option value="' . $id . '">' . $tab_warehouse_name . '</option>';
-              }
-            }
-            ?>
-          </select>
+        <div class="p-4 pb-0 mb-3">
+          <div class="row">
+            <div class="col-12">
+              <label for="">Warehouse</label>
+              <select name="warehouse" id="warehouse" class="form-select">
+                <option value=""></option>
+                <?php 
+                // Loop through each ID and display differently for the first item
+                foreach ($user_warehouse_ids as $id) {
+                  // Trim any extra whitespace
+                  $id = trim($id);
+                  $warehouse_info_query = "SELECT * FROM warehouse WHERE hashed_id = '$id'";
+                  $warehouse_info_result = $conn->query($warehouse_info_query);
+                  if($warehouse_info_result->num_rows>0){
+                      // Check if it's the first item
+                      $row=$warehouse_info_result->fetch_assoc();
+                      $tab_warehouse_name = $row['warehouse_name'];
+                      echo '<option value="' . $id . '">' . $tab_warehouse_name . '</option>';
+                  }
+                }
+                ?>
+              </select>
+            </div>
+            <div class="col-12 mb-3">
+              <label class="form-label" for="datepicker">Date Ordered</label>
+              <input class="form-control datetimepicker" name="date_order" type="text" placeholder="dd/mm/yy" data-options='{"disableMobile":true}' required/>
+            </div>
+          </div>
+          
         </div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-primary" type="submit">Next </button>
+        <button class="btn btn-primary" id="btn-submit-modal" type="submit">Next </button>
       </div>
     </div>
   </div>
@@ -206,6 +215,28 @@ while($row = $modal_po_res->fetch_assoc()){
 
 <!-- Include SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const submitBtn = document.getElementById('btn-submit-modal');
+    const warehouseSelect = document.getElementById('warehouse');
+    const dateInput = document.querySelector('input[name="date_order"]');
+
+    // Hide submit button initially
+    submitBtn.style.display = 'none';
+
+    function toggleSubmitButton() {
+      const warehouseFilled = warehouseSelect.value.trim() !== '';
+      const dateFilled = dateInput.value.trim() !== '';
+      submitBtn.style.display = (warehouseFilled && dateFilled) ? 'inline-block' : 'none';
+    }
+
+    warehouseSelect.addEventListener('change', toggleSubmitButton);
+    dateInput.addEventListener('input', toggleSubmitButton);
+
+    // If using a date picker like flatpickr, wait for its change
+    dateInput.addEventListener('change', toggleSubmitButton);
+  });
+</script>
 
 <script>
 // Wait for the page to load

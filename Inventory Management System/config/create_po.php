@@ -49,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // echo "<br>" . $success;
 if($success == $product_count){
     $conn->close();
+    unset($_SESSION['po_list']);
     header("Location: ../PO-pending/?success=true&elcoco=$po_id");
     exit;
 } else {

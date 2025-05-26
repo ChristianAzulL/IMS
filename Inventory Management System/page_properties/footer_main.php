@@ -135,7 +135,7 @@ $(document).ready(function () {
 });
 </script>
 
-
+<!-- 
 
 <script>
     // Disable right-click
@@ -151,4 +151,4 @@ $(document).ready(function () {
             e.preventDefault();
         }
     });
-</script>
+</script> -->

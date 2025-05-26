@@ -9,13 +9,27 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
         <p class="text-white">Please confirm your orders then select your supplier.</p>
     </div>
     <div class="card-body overflow-hidden py-6 px-2">
+        <form id="import" method="POST">
+            <div class="row px-3">
+                <div class="col-9">
+                    <div class="mb-3">
+                        <input type="text" id="search_item" class="form-control" placeholder="Search Item name">
+                    </div>
+                    <div class="scrollbar overflow-auto mb-3" style="max-height: 250px;">
+                        <div id="showhere"></div>
+                    </div>
+                </div>
+                <div class="col-3 text-start">
+                    <button class="btn btn-primary" type="submit" id="btnSubmitImport">Add</button>
+                </div>
+            </div>
+            
+            
+        </form>
         <form action="../config/create_po.php" method="POST">
             <div class="card shadow-none">
                 <div class="card-body p-0 pb-3" data-list='{"valueNames":["desc","barcode","brand","cat","qty"]}'>
                     <div class="d-flex align-items-center justify-content-end my-3">
-                        <div id="undo-container" class="mb-3 d-none col-auto me-1">
-                            <button id="undo-btn" class="btn btn-warning btn-sm" type="button">Undo Remove</button>
-                        </div>
 
                         <div class="col-auto text-end mb-3 me-1">
                             <select class="form-select" name="supplier" required>
@@ -37,7 +51,7 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
                         </div>
                         <div class="col-auto text-end mb-3 me-1">
                             <div id="bulk-select-replace-element">
-                                <button class="btn btn-falcon-success btn-sm" type="submit">
+                                <button class="btn btn-falcon-success btn-sm" type="submit" id="submit-po-btn">
                                     <span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span>
                                     <span class="ms-1">Submit</span>
                                 </button>
@@ -60,98 +74,183 @@ $selected_warehouse_name = $_SESSION['selected_warehouse_name'];
                                     <th class="text-black fs-11 dark__text-white align-middle white-space-nowrap pe-3 sort" data-sort="qty">Quantity</th>
                                 </tr>
                             </thead>
-                            <tbody id="bulk-select-body" class="list" data-sortable="data-sortable">
-                                <?php 
-                                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                    if (isset($_POST['product_id']) && is_array($_POST['product_id'])) {
-                                        foreach ($_POST['product_id'] as $product_key => $selectedProductId) {
-                                            $product_id = $_POST['product_id'][$product_key];
-                                            $product_des = $_POST['product_desc'][$product_key];
-                                            $product_pbarcode = $_POST['parent_barcode'][$product_key];
-                                            $product_brand = $_POST['brand'][$product_key];
-                                            $product_category = $_POST['category'][$product_key];
-                                            $current_stock = $_POST['qty'][$product_key];
-                                            ?>
-                                            <tr class="sortable-item">
-                                                <td>
-                                                    <button class="btn btn-transparent fs-11 py-0 px-2 delete-btn" target-id="<?php echo $product_id;?>" type="button"><span class="fas fa-window-close"></span></button>
-                                                </td>
-                                                <th class="align-middle fs-11 desc"><?php echo $product_des; ?></th>
-                                                <th class="align-middle fs-11 barcode"><?php echo $product_pbarcode; ?></th>
-                                                <td class="align-middle fs-11 brand"><?php echo $product_brand; ?></td>
-                                                <td class="align-middle fs-11 cat"><?php echo $product_category; ?></td>
-                                                <td class="align-middle fs-11 cat" hidden>
-                                                    <input type="text" name="product_id[]" value="<?php echo $product_id;?>" hidden>
-                                                    <input type="text" name="parent_barcode[]" value="<?php echo $product_pbarcode;?>" hidden>
-                                                    <input type="text" name="product_desc[]" value="<?php echo $product_des;?>" hidden>
-                                                    <input type="text" name="brand[]" value="<?php echo $product_brand;?>" hidden>
-                                                    <input type="text" name="category[]" value="<?php echo $product_category;?>" hidden>
-                                                </td>
-                                                <td class="align-middle fs-11 cat table-primary">
-                                                    <input type="number" name="order_qty[]" class="form-control bg-danger fs-11 text-white" min="0" placeholder="Order Qty">
-                                                </td>
-                                                <td class="align-middle fs-11 white-space-nowrap text-end pe-3 qty"><?php echo $current_stock; ?></td>
-                                            </tr>
-                                            <?php 
-                                        }
-                                    }
-                                }
-                                ?>
+                            <tbody class="list" data-sortable="data-sortable" id="preview">
+                               
                             </tbody>
                         </table>
                     </div>
+
+                    <div class="d-flex justify-content-center align-items-center py-6" style="height: 100px;">
+                        <div class="form-check">
+                            <input class="form-check-input" id="flexCheckChecked" type="checkbox" value="" required />
+                            <label class="form-check-label text-danger" for="flexCheckChecked">
+                            I reviewed and checked the data before I submitted it.
+                            </label>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </form>
     </div>
 </div>
 <script>
-    let lastDeletedRow = null;
-    let lastDeletedIndex = null;
+$(document).ready(function() {
+    $(document).on("change", "#flexCheckChecked", function () {
+        checkFormCompletion();
+    });
 
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const tbody = row.parentNode;
+    
+    function loadPreview() {
+        $("#preview").load("preview.php", function () {
+        });
+    }
+    loadPreview();
 
-            // Store for undo
-            lastDeletedRow = row.cloneNode(true);
-            lastDeletedIndex = [...tbody.children].indexOf(row);
+    $("#search_item").on("keyup", function() {
+        let query = $(this).val();
+        if (query.length > 1) {
+            $.ajax({
+                url: "search.php",
+                method: "POST",
+                data: { query: query },
+                dataType: "json",
+                success: function(response) {
+                    let output = "<ul class='list-group'>";
+                    if (response.length > 0) {
+                        response.forEach(function(item) {
+                            output += `
+                                <li class="list-group-item d-flex align-items-center">
+                                    <input class="form-check-input me-2 item-checkbox" name="parent_barcode[]" type="checkbox" value="${item.parent_barcode}" id="chk_${item.parent_barcode}">
+                                    <label for="chk_${item.parent_barcode}" class="flex-grow-1">
+                                        <strong>${item.description}</strong> - ${item.brand_name} - ${item.category_name}
+                                    </label>
+                                    <span class="badge bg-primary">${item.parent_barcode}</span>
+                                </li>`;
+                        });
+                    } else {
+                        output += "<li class='list-group-item text-muted'>No results found</li>";
+                    }
+                    output += "</ul>";
+                    $("#showhere").html(output);
+                }
+            });
+        } else {
+            $("#showhere").html("");
+        }
+    });
 
-            // Remove the row
-            row.remove();
+    $("#import").on("submit", function(event) {
+        event.preventDefault();
+        let selectedBarcodes = $(".item-checkbox:checked").map(function() {
+            return this.value;
+        }).get();
+        
+        if (selectedBarcodes.length === 0) {
+            Swal.fire("Warning", "Please select at least one product.", "warning");
+            return;
+        }
 
-            // Show undo button
-            document.getElementById('undo-container').classList.remove('d-none');
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to submit the selected products?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, submit!",
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "import.php",
+                    type: "POST",
+                    data: { parent_barcodes: selectedBarcodes },
+                    dataType: "json",
+                    success: function(response) {
+                        let toastMessage = $("#toastMessage");
+                        if (response.status === "success") {
+                            toastMessage.removeClass("bg-danger").addClass("bg-success");
+                            loadPreview();
+                        } else {
+                            toastMessage.removeClass("bg-success").addClass("bg-danger");
+                        }
+                        $("#toastBody").text(response.message);
+                        new bootstrap.Toast(toastMessage[0]).show();
+                        $("#import")[0].reset();
+                        $("#showhere").html("");
+                    },
+                    error: function() {
+                        $("#toastMessage").removeClass("bg-success").addClass("bg-danger");
+                        $("#toastBody").text("Something went wrong. Please try again.");
+                        new bootstrap.Toast(document.getElementById("toastMessage")).show();
+                    }
+                });
+            }
         });
     });
 
-    document.getElementById('undo-btn').addEventListener('click', function() {
-        if (lastDeletedRow !== null) {
-            const tbody = document.querySelector('#bulk-select-body');
+    function checkFormCompletion() {
+        let allFilled = true;
 
-            // Re-insert the row at its original index
-            if (lastDeletedIndex >= tbody.children.length) {
-                tbody.appendChild(lastDeletedRow);
-            } else {
-                tbody.insertBefore(lastDeletedRow, tbody.children[lastDeletedIndex]);
+        // Check if supplier is selected
+        const supplierSelected = $("select[name='supplier']").val() !== "";
+        if (!supplierSelected) allFilled = false;
+
+        // Check if all order_qty[] fields have values > 0
+        $("#preview tr").each(function () {
+            const qty = $(this).find("input[name='order_qty[]']").val();
+            if (!qty || parseInt(qty) <= 0) {
+                allFilled = false;
+                return false; // break loop
             }
+        });
 
-            // Re-bind delete button inside the restored row
-            lastDeletedRow.querySelector('.delete-btn').addEventListener('click', function() {
-                const row = this.closest('tr');
-                lastDeletedRow = row.cloneNode(true);
-                lastDeletedIndex = [...tbody.children].indexOf(row);
-                row.remove();
-                document.getElementById('undo-container').classList.remove('d-none');
-            });
+        // ✅ Check if the confirmation checkbox is ticked
+        const isChecked = $("#flexCheckChecked").is(":checked");
+        if (!isChecked) allFilled = false;
 
-            // Reset undo state
-            lastDeletedRow = null;
-            lastDeletedIndex = null;
-
-            // Hide the undo container
-            document.getElementById('undo-container').classList.add('d-none');
+        // Show or hide submit button
+        if (allFilled) {
+            $("#submit-po-btn").removeClass("d-none");
+        } else {
+            $("#submit-po-btn").addClass("d-none");
         }
+    }
+
+
+    // Re-check form on changes
+    $(document).on("input change", "input[name='order_qty[]'], select[name='supplier']", function () {
+        checkFormCompletion();
     });
+
+    // Also check after preview reload
+    function loadPreview() {
+        $("#preview").load("preview.php", function () {
+            checkFormCompletion(); // run after new rows are loaded
+        });
+    }
+
+
+    $(document).on("click", ".delete-btn", function () {
+        const id = $(this).attr("target-id");
+
+        $.ajax({
+            url: "remove_item.php",
+            method: "POST",
+            data: { id: id },
+            dataType: "json",
+            success: function (response) {
+                if (response.status === "success") {
+                    // Reload the preview list
+                    $("#preview").load("preview.php");
+                } else {
+                    Swal.fire("Error", response.message, "error");
+                }
+            },
+            error: function () {
+                Swal.fire("Error", "Failed to communicate with server.", "error");
+            }
+        });
+    });
+
+});
 </script>
