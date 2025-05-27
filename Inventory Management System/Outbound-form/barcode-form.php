@@ -10,7 +10,8 @@
             <button class="btn btn-info" id="btn-submit" type="submit">Submit</button>
         </div>
         <div class="col-2">
-            <a href="local_config.php?change_warehouse=true" class="btn btn-warning">Change Warehouse</a>
+            <a href="local_config.php?change_warehouse=true" class="btn btn-warning fs-11 mb-3">Change Warehouse</a>
+            <button class="btn btn-light fs-11" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">View Summary</button>
         </div>
     </div>
 </form>

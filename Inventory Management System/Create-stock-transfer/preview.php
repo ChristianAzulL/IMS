@@ -32,6 +32,7 @@ foreach ($existingData as $item) {
 // If no items were found or grouped, show a message and exit
 if (empty($groupedData)) {
 ?>
+<div class="table-responsive scrollbar">
 <table class="table table-bordered bordered-table table-sm table-stripe">
         <thead class="table-info">
             <tr>
@@ -48,6 +49,8 @@ if (empty($groupedData)) {
                 </tr>
         </tbody>
     </table>
+</div>
+
 <?php
     exit;
 }
@@ -55,17 +58,7 @@ if (empty($groupedData)) {
 
 
 <?php if (!empty($groupedData)): ?>
-    <table class="table table-sm table-striped fs-10 mb-0 overflow-hidden">
-        <thead class="table-info">
-            <tr>
-                <th></th>
-                <th>Barcode</th>
-                <th>Description</th>
-                <th>Brand</th>
-                <th>Category</th>
-            </tr>
-        </thead>
-        <tbody>
+    
             <?php foreach ($existingData as $item): ?>
                 <tr>
                     <td>
@@ -77,7 +70,5 @@ if (empty($groupedData)) {
                     <td><?php echo htmlspecialchars($item['category_name'] ?? 'N/A'); ?></td>
                 </tr>
             <?php endforeach; ?>
-        </tbody>
-    </table>
 <?php else: ?>
 <?php endif; ?>

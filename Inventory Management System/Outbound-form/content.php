@@ -60,8 +60,8 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
         <div class="col-lg-12">
             <div class="card">
                 <!-- Card Header -->
-                <div class="card-header">
-                    Transaction
+                <div class="card-header bg-info">
+                    <h2 class="text-white">Outbound Form</h2>
                     <div class="my-3" id="barcode-form"></div>
                 </div>
                 <form action="../config/outbound.php" id="myform2" method="post">
@@ -82,7 +82,6 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
                                     }
                                     ?>
                                     <th>Selling Price(₱)</th>
-                                    <th>Keyword</th>
                                     <th>Batch Number</th>
                                     <th>Brand Name</th>
                                     <th>Category Name</th>
@@ -199,6 +198,27 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content position-relative">
+            <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+                <h4 class="mb-1" id="modalExampleDemoLabel">Summary </h4>
+                </div>
+                <div class="p-4 pb-0">
+                    <div id="summary"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
     <!-- Add this in the <head> or before </body> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -212,6 +232,8 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
             // Load table content
             loadContent();
 
+            loadSummary();
+
             // Function to load the barcode form
             function loadBarcodeForm() {
                 $('#barcode-form').load('barcode-form.php', function () {
@@ -219,6 +241,18 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
                 });
             }
 
+            function loadSummary() {
+                $.ajax({
+                    url: 'summary.php?view=<?php echo $_SESSION['outbound_id'];?>',
+                    method: 'GET',
+                    success: function(response) {
+                        $('#summary').html(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading summary:', error);
+                    }
+                });
+            }
             // Function to load table content
             function loadContent() {
                 $.ajax({
@@ -289,6 +323,7 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
 
                             // Reload table content
                             loadContent();
+                            loadSummary();
                         } else {
                             Swal.fire({
                                 icon: 'error',
@@ -333,6 +368,7 @@ if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
                             // Reload data
                             loadBarcodeForm();
                             loadContent();
+                            loadSummary();
                         }
                     },
                     error: function () {

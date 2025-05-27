@@ -53,8 +53,11 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
     <div class="col-lg-12 mb-4">
       <h3><b>TRANSFER STOCKS</b></h3>
     </div>
-    <div class="col-lg-12 mb-3">
+    <div class="col-lg-6 mb-3">
       <a href="return.php" id="return-btn" class="btn btn-primary"><span class="far fa-arrow-alt-circle-left"></span> Change stock transfer warehouse</a>
+    </div>
+    <div class="col-lg-6 mb-3 text-end">
+        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">View Summary</button>
     </div>
     <div class="col-lg-5">
         <div class="card">
@@ -110,7 +113,27 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
             </div>
           </div>
         </div>
-        <div class="pt-3" id="preview" style="height: 300px;"></div>
+        <div class="card my-3">
+            <div class="card-body" style="height: 300px; overflow-y: auto;">
+                <div class="table-responsive scrollbar">
+                    <table class="table table-sm table-striped fs-10 mb-0 overflow-auto">
+                        <thead class="table-info">
+                            <tr>
+                                <th></th>
+                                <th>Barcode</th>
+                                <th>Description</th>
+                                <th>Brand</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="preview">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
         <div class="card">
           <div class="card-body" style="height: 100px;">
             <div class="row">
@@ -137,6 +160,29 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
     </div>
 </div>
 
+
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+    <div class="modal-content position-relative">
+      <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="rounded-top-3 py-3 ps-4 pe-6 bg-body-tertiary">
+          <h4 class="mb-1" id="modalExampleDemoLabel">Summary of Transfer </h4>
+        </div>
+        <div class="p-4 pb-0">
+          <div id="summary"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function(){
@@ -146,6 +192,21 @@ $(document).ready(function(){
 
     // Load preview.php content into #preview
     $("#preview").load("preview.php");
+
+    loadSummary();
+
+    function loadSummary() {
+        $.ajax({
+            url: 'summary.php',
+            method: 'GET',
+            success: function(response) {
+                $('#summary').html(response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading summary:', error);
+            }
+        });
+    }
 
     // Check check_data.php every 3 seconds
     setInterval(checkData, 3000);
@@ -237,6 +298,7 @@ $(document).ready(function(){
             if(response.trim() === "1"){
                 console.log(response);
                 $("#preview").load("preview.php"); // Load preview.php when condition met
+                loadSummary();
             } else {
                 console.log(response);
             }
@@ -253,6 +315,7 @@ $(document).ready(function(){
             data: { barcode: barcode },
             success: function(response) {
                 $("#preview").load("preview.php"); // Reload session table after deletion
+                loadSummary();
             },
             error: function() {
                 Swal.fire({
