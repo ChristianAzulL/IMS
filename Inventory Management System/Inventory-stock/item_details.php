@@ -3,7 +3,7 @@
         <thead>
             <tr class="table-dark">
                 <th  scope="col">Batch Code</th>
-                <th  scope="col">Qty Delivered</th>
+                <th  scope="col">Qty Available</th>
                 <th  scope="col">Supplier</th>
                 <th  scope="col">Import</th>
                 <th  scope="col">Imbounded by</th>
@@ -24,7 +24,7 @@
                     SELECT 
                         s.batch_code,
                         s.product_id,
-                        COUNT(s.unique_barcode) AS available_quantity,
+                        COUNT(CASE WHEN s.item_status = 0 THEN s.unique_barcode END) AS available_quantity,
                         sup.supplier_name,
                         COALESCE(sup.local_international, 'Not set yet') AS import_status,
                         CONCAT(u.user_fname, ' ', u.user_lname) AS added_by,

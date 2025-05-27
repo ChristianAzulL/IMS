@@ -94,7 +94,14 @@
         ?>
         <tr class="btn-reveal-trigger">
           <th class="align-middle white-space-nowrap name">
+            <?php 
+            if($row['status'] == 0){
+            ?>
             <a href="update-session.php?blue=<?php echo $po_id;?>" class="btn fs-11 mx-0"><span class="far fa-edit mx-0"></span></a>
+            <?php
+            }
+            ?>
+            
             <a href="#" class="view-po" data-bs-toggle="modal" data-bs-target="#view-pdf-modal" target-id="<?php echo $po_id;?>">
               PO-<?php echo $po_id;?>
             </a>

@@ -1,18 +1,17 @@
 <?php
 require '../config/database.php';
 require '../config/on_session.php';
-header('Content-Type: application/json'); // Ensure response is JSON
+header('Content-Type: application/json');
 
-$response = ["status" => "error", "message" => "Something went wrong!"]; // Default error response
+$response = ["status" => "error", "message" => "Something went wrong!"];
 
-// Function to generate a unique 12-digit number
 function generateUniqueKey($conn) {
     do {
-        $uniqueKey = random_int(100000000000, 999999999999); // Generate 12-digit number
+        $uniqueKey = random_int(100000000000, 999999999999);
         $query = "SELECT COUNT(*) as count FROM inbound_logs WHERE unique_key = '$uniqueKey'";
         $result = $conn->query($query);
         $row = $result->fetch_assoc();
-    } while ($row['count'] > 0); // Repeat if the number already exists
+    } while ($row['count'] > 0);
 
     return $uniqueKey;
 }
@@ -21,10 +20,9 @@ $unique_key = generateUniqueKey($conn);
 $_SESSION['unique_key'] = $unique_key;
 
 $currentDateTime = $_SESSION['inbound_received_date'] ?? date('Y-m-d H:i:s');
-
-
 $po_id = $_SESSION['inbound_po_id'];
 $batch_code = "PObatch-" . $po_id;
+
 $po_query = "SELECT po.warehouse, po.supplier, w.warehouse_name 
              FROM purchased_order po 
              LEFT JOIN warehouse w ON w.hashed_id = po.warehouse 
@@ -37,19 +35,44 @@ if($row = $po_result->fetch_assoc()){
 }
 $_SESSION['inbound_warehouse'] = $inbound_warehouse;
 
+$user_id = $_SESSION['user_id'] ?? null;
+if (!$user_id) {
+    echo json_encode(["status" => "error", "message" => "User not authenticated."]);
+    exit;
+}
 
-$update_po = "UPDATE purchased_order SET date_received = '$currentDateTime' WHERE id = '$po_id'";
-if ($conn->query($update_po) === TRUE) {
-    $insert_inbound = "INSERT INTO inbound_logs 
-                       (po_id, supplier, date_received, user_id, warehouse, unique_key) 
-                       VALUES ('$po_id', '$supplier', '$currentDateTime', '$user_id', '$inbound_warehouse', '$unique_key')";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $allQtys = $_POST['qty'] ?? [];
 
-    if ($conn->query($insert_inbound) === TRUE) {
-        $inbound_id = $conn->insert_id;
+    // Check if all quantities are zero
+    $hasNonZero = false;
+    foreach ($allQtys as $qty) {
+        if ((int)$qty > 0) {
+            $hasNonZero = true;
+            break;
+        }
+    }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$hasNonZero) {
+        echo json_encode(["status" => "error", "message" => "All product quantities are zero. Nothing was received."]);
+        exit;
+    }
+
+    $update_po = "UPDATE purchased_order SET date_received = '$currentDateTime' WHERE id = '$po_id'";
+    if ($conn->query($update_po) === TRUE) {
+        $insert_inbound = "INSERT INTO inbound_logs 
+                           (po_id, supplier, date_received, user_id, warehouse, unique_key) 
+                           VALUES ('$po_id', '$supplier', '$currentDateTime', '$user_id', '$inbound_warehouse', '$unique_key')";
+
+        if ($conn->query($insert_inbound) === TRUE) {
+            $inbound_id = $conn->insert_id;
+
             foreach ($_POST['barcode'] as $index => $barcode) {
-                $qty_received = $_POST['qty'][$index];
+                $qty_received = (int)$_POST['qty'][$index];
+                if ($qty_received <= 0) {
+                    continue; // Skip items with zero quantity
+                }
+
                 $unit_price = (float)$_POST['unit_amount'][$index];
                 $subtotal = $qty_received * $unit_price;
 
@@ -57,7 +80,7 @@ if ($conn->query($update_po) === TRUE) {
                 $product_res = $conn->query($product_query);
                 $row = $product_res->fetch_assoc();
                 $product_id = $row['hashed_id'];
-                
+
                 $stock_query = "SELECT barcode_extension 
                                 FROM stocks 
                                 WHERE parent_barcode='$barcode' AND product_id = '$product_id' 
@@ -66,10 +89,11 @@ if ($conn->query($update_po) === TRUE) {
 
                 if ($stock_res->num_rows > 0) {
                     $row = $stock_res->fetch_assoc();
-                    $chan = $row['barcode_extension'];
+                    $chan = (int)$row['barcode_extension'];
                 } else {
-                    $chan = 1;
+                    $chan = 0;
                 }
+
                 for($i = 1; $i <= $qty_received; $i++){
                     $extension = $chan + $i;
                     $unique_barcode = $barcode . "-" . $extension;
@@ -107,5 +131,6 @@ if ($conn->query($update_po) === TRUE) {
         }
     }
 }
+
 echo json_encode($response);
 exit;

@@ -1,6 +1,10 @@
 <?php
-$unique_key = $_SESSION['unique_key'];
+$unique_key = $_SESSION['unique_key'] ?? null;
 
+if (!$unique_key) {
+    echo "<div class='alert alert-danger'>Session expired or invalid. Please try again.</div>";
+    exit;
+}
 ?>
 <div class="card mb-1">
     <div class="card-header bg-warning">
@@ -30,15 +34,13 @@ $unique_key = $_SESSION['unique_key'];
                                         p.description,
                                         p.parent_barcode,
                                         b.brand_name,
-                                        c.category_name,
-                                        COUNT(s.parent_barcode) AS item_qty
-                                    FROM stocks s
-                                    LEFT JOIN product p ON p.hashed_id = s.product_id
+                                        c.category_name
+                                    FROM product p
+                                    LEFT JOIN stocks s ON s.product_id = p.hashed_id
                                     LEFT JOIN brand b ON b.hashed_id = p.brand
                                     LEFT JOIN category c ON c.hashed_id = p.category
                                     WHERE s.unique_key = '$unique_key'
-                                    GROUP BY s.parent_barcode
-                                    ORDER BY s.barcode_extension DESC
+                                    GROUP BY p.parent_barcode
                             ";
 
                             $result = $conn->query($query);
@@ -50,27 +52,34 @@ $unique_key = $_SESSION['unique_key'];
                                     $brandName = $row['brand_name'];
                                     $categoryName = $row['category_name'];
                                     $description = $row['description'] . " / " . $brandName . " / " . $categoryName;
-                                    $totalCount = $row['item_qty'];
+                                   
 
-
-
-                                    $sequence_query = "SELECT barcode_extension FROM stocks WHERE unique_key = '$unique_key' AND parent_barcode = '$parentBarcode' ORDER BY barcode_extension LIMIT 1";
-                                    $sequence_result = $conn->query($sequence_query);
-                                    if($sequence_result->num_rows>0){
-                                        $row=$sequence_result->fetch_assoc();
+                                    $start_query = "SELECT COUNT(parent_barcode) AS item_qty, barcode_extension FROM stocks WHERE unique_key = '$unique_key' AND parent_barcode = '$parentBarcode' ORDER BY barcode_extension DESC LIMIT 1";
+                                    $start_res = $conn->query($start_query);
+                                    if($start_res->num_rows>0){
+                                        $row=$start_res->fetch_assoc();
+                                        $totalCount = $row['item_qty'];
                                         $barcode_extension = $row['barcode_extension'];
+                                    } else {
+                                        $totalCount = 0;
+                                        $barcode_extension = 0;
                                     }
+
+
                                     $batch_size = 100;
                                     $max = $barcode_extension + $totalCount -1;
-                                    for($start=$barcode_extension; $start < $max; $start += $batch_size){
+                                    for($start=$barcode_extension; $start <= $max; $start += $batch_size){
                                         $end = min($batch_size + $start -1, $max);
                                         echo "<tr>
                                                 <td><a href='../config/generate-uniquebarcodes.php?success=0&barcode={$parentBarcode}&start={$start}&end={$end}'><span class='fas fa-download'></span> {$description}</a></td>
                                                 <td>{$start}-{$end}</td>
                                                 <td>{$parentBarcode}</td>
-                                                </tr>";
+                                            </tr>";
                                     }
+                                    
                                 }
+                            } else {
+                                echo "<tr><td colspan='3'>tabnasda</td></tr>";
                             }
                             ?>
                         </tbody>
