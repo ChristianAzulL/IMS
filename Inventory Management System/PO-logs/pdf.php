@@ -125,7 +125,7 @@ if(isset($target_id) && !empty($target_id)){
         </div>
         <div class="row mt-5">
             <div class="col-12 text-end">
-                <?php echo $button_anchor;?>
+                <?php if($supplier_type !== "Local"){ echo $button_anchor; }?>
             </div>
         </div>
         <?php

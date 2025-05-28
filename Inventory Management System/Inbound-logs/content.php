@@ -4,6 +4,9 @@ if (isset($_SESSION['inbound_id'])) {
     unset($_SESSION['inbound_id']);
 }
 
+if(isset($_SESSION['po_list'])){
+  unset($_SESSION['po_list']);
+}
 
 if (isset($_GET['date_range'], $_GET['type'], $_GET['wh'])) {
     // Sanitize and validate input
@@ -348,7 +351,7 @@ $inbound_res = $conn->query($inbound_sql);
                   // Ensure that $imploded_warehouse_ids is safely included in the query to avoid SQL injection
                   if (isset($imploded_warehouse_ids) && !empty($imploded_warehouse_ids)) {
                     // Assuming $imploded_warehouse_ids is a comma-separated string of integers
-                    $po_query = "SELECT id FROM purchased_order WHERE warehouse IN ($imploded_warehouse_ids) AND `status` = 4 AND date_received IS NULL ORDER BY id DESC";
+                    $po_query = "SELECT po.id, sup.local_international AS supplier_type FROM purchased_order po LEFT JOIN supplier sup ON sup.hashed_id = po.supplier WHERE po.warehouse IN ($imploded_warehouse_ids) AND (po.status = 4 AND sup.local_international = 'International' OR po.status = 0 AND sup.local_international = 'Local') AND po.date_received IS NULL ORDER BY po.id DESC";
                     
                     // Execute the query
                     $res = $conn->query($po_query);

@@ -1,3 +1,9 @@
+<?php 
+if(isset($_SESSION['po_list'])){
+  unset($_SESSION['po_list']);
+}
+
+?>
 <!-- <div class="card">
 <div class="card-body overflow-hidden p-lg-6">
     <div class="row align-items-center">
@@ -65,7 +71,7 @@
         $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
         // Create the unique query to fetch orders for the specified warehouses
         $purchased_order_query = "
-        SELECT po.*, u.user_fname, u.user_lname, s.supplier_name, wh.warehouse_name
+        SELECT po.*, u.user_fname, u.user_lname, s.supplier_name, wh.warehouse_name, s.local_international AS supplier_type
         FROM purchased_order po
         LEFT JOIN users u ON u.hashed_id = po.user_id
         LEFT JOIN supplier s ON s.hashed_id = po.supplier
@@ -80,6 +86,7 @@
             $date_created = $row['date_order'];
             $by = $row['user_fname'] . " " . $row['user_lname'];
             $from_warehouse = $row['warehouse_name'];
+            $supplier_type = !empty($row['supplier_type']) ? $row['supplier_type'] : '';
             if($row['status'] == 0){
               $status = '<span class="badge badge rounded-pill badge-subtle-warning">Drafted  <div class="spinner-border" role="status" style="height:10px; width: 10px;"><span class="visually-hidden">Loading...</span></div></span>';
             } elseif($row['status'] == 1){
