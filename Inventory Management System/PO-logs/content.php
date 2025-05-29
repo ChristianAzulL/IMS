@@ -120,7 +120,7 @@ if(isset($_SESSION['po_list'])){
           <td class="align-middle white-space-nowrap supplier"><?php echo $po_supplier;?></td>
           <td class="align-middle white-space-nowrap country"><?php echo $date_created;?></td>
           <td class="align-middle white-space-nowrap email"><?php echo $by;?></td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php if($supplier_type !== "Local"){echo $status;}?></td>
+          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php if($supplier_type !== "Local"){echo $status;} else { echo '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';}?></td>
         </tr>
         <?php 
           }
