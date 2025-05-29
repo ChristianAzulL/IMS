@@ -102,10 +102,12 @@ if(isset($_SESSION['po_list'])){
         <tr class="btn-reveal-trigger">
           <th class="align-middle white-space-nowrap name">
             <?php 
+            if($supplier_type !== "Local"){
             if($row['status'] == 0){
             ?>
             <a href="update-session.php?blue=<?php echo $po_id;?>" class="btn fs-11 mx-0"><span class="far fa-edit mx-0"></span></a>
             <?php
+            }
             }
             ?>
             
@@ -118,7 +120,7 @@ if(isset($_SESSION['po_list'])){
           <td class="align-middle white-space-nowrap supplier"><?php echo $po_supplier;?></td>
           <td class="align-middle white-space-nowrap country"><?php echo $date_created;?></td>
           <td class="align-middle white-space-nowrap email"><?php echo $by;?></td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php echo $status;?></td>
+          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php if($supplier_type !== "Local"){echo $status;}?></td>
         </tr>
         <?php 
           }
