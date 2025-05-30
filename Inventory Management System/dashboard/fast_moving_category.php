@@ -16,8 +16,6 @@
     </div>
 </div>
 
-<div id="fast-cat"></div>
-
 <script>
 $(document).ready(function () {
     $('#load-now-btn').click(function () {
@@ -25,14 +23,10 @@ $(document).ready(function () {
         $('#load-now-btn').hide();
         $('#loading-btn').show();
 
-        // Load content
-        $('#fast-cat').load('fast-cat.php?wh=<?php echo htmlspecialchars($dashboard_wh, ENT_QUOTES, 'UTF-8'); ?>', function (response, status, xhr) {
-            // Hide both buttons permanently
-            $('#loading-btn').hide();
-            $('#load-now-btn').hide(); // In case still visible for any reason
-
+        // Load entire card
+        $('#fast-cat-container').load('fast-cat.php?wh=<?php echo htmlspecialchars($dashboard_wh, ENT_QUOTES, 'UTF-8'); ?>', function (response, status, xhr) {
             if (status === "error") {
-                $('#fast-cat').html("<p>Error loading content. Please try again later.</p>");
+                $('#fast-cat-container').html("<div class='card-body text-center'><p>Error loading content. Please try again later.</p></div>");
                 console.error("Error:", xhr.status, xhr.statusText);
             }
         });

@@ -92,19 +92,19 @@ if(!isset($_SESSION['warehouse_for_return'])){
               </div>
               <div class="col-md-6">
                 <label class="fs-11" for="">Proof</label>
-                <input type="file" class="form-control" name="image_proof" id="imageInput" accept="image/*" required>
+                <input type="file" class="form-control" name="image_proof" id="imageInput" accept="image/*">
               </div>
               <div class="col-md-6">
                 <label class="fs-11" for="">Front Picture</label>
-                <input type="file" class="form-control" name="image_front" id="imageInput" accept="image/*" required>
+                <input type="file" class="form-control" name="image_front" id="imageInput" accept="image/*">
               </div>
               <div class="col-md-6">
                 <label class="fs-11" for="">Back Picture</label>
-                <input type="file" class="form-control" name="image_back" id="imageInput" accept="image/*" required>
+                <input type="file" class="form-control" name="image_back" id="imageInput" accept="image/*">
               </div>
               <div class="col-md-6">
                 <label class="fs-11" for="">Warranty</label>
-                <input type="file" class="form-control" name="image_warranty" id="imageInput" accept="image/*" required>
+                <input type="file" class="form-control" name="image_warranty" id="imageInput" accept="image/*">
               </div>
             </div>
           </div>
