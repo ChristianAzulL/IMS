@@ -1,5 +1,8 @@
 <?php 
 if(!isset($_SESSION['warehouse_for_return'])){
+    if(isset($_SESSION['return_supplier'])){
+        unset($_SESSION['return_supplier']);
+    }
 ?>
     <button class="btn btn-primary d-none" id="tobetriggered" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Launch demo modal</button>
     <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -47,7 +50,7 @@ if(!isset($_SESSION['warehouse_for_return'])){
 ?>
 <div class="row">
     <div class="col-lg-12 mb-4">
-      <h3><b>TRANSFER STOCKS</b></h3>
+      <h3><b>RETURN ITEMS TO SUPPLIER</b></h3>
     </div>
     <div class="col-lg-12 mb-3">
       <a href="return.php" id="return-btn" class="btn btn-primary"><span class="far fa-arrow-alt-circle-left"></span> Change returnee warehouse</a>

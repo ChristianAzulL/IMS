@@ -126,6 +126,7 @@ if(isset($target_id) && !empty($target_id)){
         <div class="row mt-5">
             <div class="col-12 text-end">
                 <?php if($supplier_type !== "Local"){ echo $button_anchor; }?>
+                <a href="../config/generate-po-pdf.php?target-id=<?php echo $target_id;?>" class="btn btn-warning">Save as PDF</a>
             </div>
         </div>
         <?php
