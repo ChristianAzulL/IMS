@@ -20,35 +20,15 @@ if(isset($_SESSION['po_list'])){
     <h2 class="text-white">Purchased Order Logs</h2>
   </div>
   <div class="card-body overflow-hidden py-6 px-0">
-<div id="tableExample4" data-list='{"valueNames":["name","supplier","country","email","payment", "warehouse"]}'>
+<div>
   <div class="row justify-content-end justify-content-end gx-3 gy-0 px-3">
     <div class="col-auto mb-3">
       <!-- <button class="btn btn-primary py-0 me-auto">Create</button> -->
       <button class="btn btn-primary py-0 me-auto" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Create</button>
     </div>
-    <!-- <div class="col-sm-auto"><select class="form-select form-select-sm mb-3" data-list-filter="country">
-        <option selected="" value="">Select country</option>
-        <option value="usa">USA</option>
-        <option value="canada">Canada</option>
-        <option value="uk">UK</option>
-      </select></div> -->
-    <div class="col-sm-auto"><select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
-        <option selected="" value="">All Warehouse</option>
-        <?php echo implode("\n", $warehouse_options); ?>
-        <!-- <option value="Pending">Pending</option>
-        <option value="Success">Received</option>
-        <option value="Blocked">Sent to Supplier</option> -->
-      </select></div>
-    <div class="col-auto col-sm-5 mb-3">
-      <form>
-        <div class="input-group"><input class="form-control form-control-sm shadow-none search" type="search" placeholder="Search..." aria-label="search" />
-          <div class="input-group-text bg-transparent"><span class="fa fa-search fs-10 text-600"></span></div>
-        </div>
-      </form>
-    </div>
   </div>
   <div class="table-responsive scrollbar">
-    <table class="table table-sm table-striped fs-10 mb-0 overflow-hidden">
+    <table class="table mb-0 table-sm data-table fs-10" data-datatables="data-datatables">
       <thead class="bg-200">
         <tr>
           <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="name">P.O no.</th>
