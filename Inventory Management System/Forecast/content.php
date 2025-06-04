@@ -30,6 +30,16 @@
 </form>
 
 <?php
+// If user submitted new filter, unset old forecast sessions first
+if (isset($_SESSION['forecast_start_date'])) {
+    unset($_SESSION['forecast_data']);
+    unset($_SESSION['forecast_start_date']);
+    unset($_SESSION['forecast_end_date']);
+    unset($_SESSION['lead_time_local']);
+    unset($_SESSION['lead_time_import']);
+    unset($_SESSION['forecast_selected_warehouse']);
+}
+
 function convertToMySQLDate($dateStr) {
     $parts = explode('/', trim($dateStr));
     if (count($parts) === 3) {
@@ -53,6 +63,22 @@ if (isset($_GET['date_range'])) {
     }
 }
 
+if(!isset($_SESSION['forecast_start_date']) && !isset($_SESSION['forecast_end_date']) && !isset($_SESSION['forecast_selected_warehouse'])){
+    $_SESSION['forecast_start_date'] = $start_date;
+    $_SESSION['forecast_end_date'] = $end_date;
+    $_SESSION['forecast_selected_warehouse'] = $selected_warehouse;
+}
+
+
+if(isset($_SESSION['forecast_selected_warehouse']) && !empty($_SESSION['forecast_selected_warehouse'])){
+?>
+    <div class="text-end">
+    <?php
+    echo '<a href="url.php" class="btn btn-warning">export</a>';
+    ?>
+    </div>
+<?php
+}
 if (empty($selected_warehouse)) {
     echo "<div class='alert alert-warning'>Please select a warehouse to generate forecast.</div>";
     return;
@@ -151,6 +177,11 @@ if ($product_res->num_rows > 0) {
         Local Suppliers: {$lead_times['local']} days<br>
         International Suppliers: {$lead_times['international']} days
     </div>";
+
+    if(!isset($_SESSION['lead_time_local']) && !isset($_SESSION['lead_time_import'])){
+        $_SESSION['lead_time_local'] = $lead_times['local'];
+        $_SESSION['lead_time_import'] = $lead_times['international'];
+    }
 ?>
 
 <div class="card">
@@ -252,6 +283,32 @@ if ($product_res->num_rows > 0) {
         $reorder_quantity = $stock_shortfall + max(0, ($moving_avg * $lead_time) - $total_future_stock);
         $needs_reorder = ($total_future_stock < $reorder_point) ? 'Yes' : 'No';
 
+        if (!isset($_SESSION['forecast_data'])) {
+            $_SESSION['forecast_data'] = [];
+        }
+
+        $_SESSION['forecast_data'][] = [
+            'description' => $description,
+            'category' => $category_name,
+            'brand' => $brand_name,
+            'parent_barcode' => $parent_barcode,
+            'supplier' => $supplier_name,
+            'supplier_origin' => $supplier_origin,
+            'lead_time' => $lead_time,
+            'safety' => $safety,
+            'warehouse' => $warehouse_name,
+            'stocks' => $available_qty,
+            'avg_daily_sales' => number_format($moving_avg, 2),
+            'incoming_stocks' => $incoming_stocks,
+            'forecast_30_days' => $forecast_30_days,
+            'est_stockout_days' => $days_to_stockout,
+            'reorder_point_local' => $reorder_point_local,
+            'reorder_point_intl' => $reorder_point_intl,
+            'needs_reorder' => $needs_reorder,
+            'reorder_quantity' => $reorder_quantity
+        ];
+
+
         echo "<tr>
             <td>{$description}</td>
             <td>{$category_name}</td>
@@ -278,4 +335,7 @@ if ($product_res->num_rows > 0) {
 } else {
     echo "<div class='alert alert-warning'>No product data found for the selected criteria.</div>";
 }
+
+
+
 ?>

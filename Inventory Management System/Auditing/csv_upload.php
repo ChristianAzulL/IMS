@@ -115,7 +115,10 @@ if (empty($error) && !empty($rows)) {
 
     foreach ($rows as $row) {
         [$ORDERNUMBER, $ORDERLINEID, $WAREHOUSE, $CLIENT, $FULFILLMENTSTATUS, $AMOUNTPAID] = $row;
-        
+        // Remove extra spaces
+        $CLIENT = trim(preg_replace('/\s+/', ' ', $CLIENT));
+
+
         $stmt->bind_param("ss", $ORDERNUMBER, $ORDERLINEID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -123,7 +126,7 @@ if (empty($error) && !empty($rows)) {
         if ($result && $result->num_rows > 0) {
             $data = $result->fetch_assoc();
 
-            $CUSTOMER = $data['CUSTOMER'];
+            $CUSTOMER = trim(preg_replace('/\s+/', ' ', $data['CUSTOMER']));
             $OUTBOUND_STATUS = $data['STATUS'];
             $EXPECTED_PAYMENT = $data['TOTAL_SALES_EACH_OUTBOUND'];
             $WAREHOUSE_NAME = $data['WAREHOUSE_NAME'];
@@ -273,7 +276,7 @@ if (empty($error) && !empty($rows)) {
                                         <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required  hidden>
                                         <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required hidden>
                                         <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required hidden>
-                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required hidden>
+                                        <input type="text" name="client[]" value="<?php echo trim(preg_replace('/\s+/', ' ', $res['CLIENT'])); ?>" required hidden>
                                         <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required hidden>
                                         <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>" hidden>
                                         <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>" hidden>
@@ -282,7 +285,7 @@ if (empty($error) && !empty($rows)) {
                                     <td class="fs-11"><?= $res['ORDERNUMBER'] ?></td>
                                     <td class="fs-11"><?= $res['ORDERLINEID'] ?></td>
                                     <td class="fs-11"><?= $res['WAREHOUSE'] ?></td>
-                                    <td class="fs-11"><?= $res['CLIENT'] ?></td>
+                                    <td class="fs-11"><?= trim(preg_replace('/\s+/', ' ', $res['CLIENT'])) ?></td>
                                     <td class="fs-11"><?= $res['FULFILLMENTSTATUS'] ?></td>
                                     <td class="text-end fs-11"><small><?= $res['AMOUNTPAID'] ?></small></td>
                                     <td class="text-end fs-11"><small><?= $res['EXPECTED_PAYMENT'] ?></small></td>
@@ -325,7 +328,7 @@ if (empty($error) && !empty($rows)) {
                                         <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required  hidden>
                                         <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required hidden>
                                         <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required hidden>
-                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required hidden>
+                                        <input type="text" name="client[]" value="<?php echo trim(preg_replace('/\s+/', ' ', $res['CLIENT'])); ?>" required hidden>
                                         <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required hidden>
                                         <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>" hidden>
                                         <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>" hidden>
@@ -349,7 +352,7 @@ if (empty($error) && !empty($rows)) {
                                         <input type="text" name="order_num[]" value="<?php echo $res['ORDERNUMBER']; ?>" required  hidden>
                                         <input type="text" name="order_line[]" value="<?php echo $res['ORDERLINEID'];?>" required hidden>
                                         <input type="text" name="warehouse[]" value="<?php echo $res['WAREHOUSE']; ?>" required hidden>
-                                        <input type="text" name="client[]" value="<?php echo $res['CLIENT']; ?>" required hidden>
+                                        <input type="text" name="client[]" value="<?php echo trim(preg_replace('/\s+/', ' ', $res['CLIENT'])); ?>" required hidden>
                                         <input type="text" name="status[]" value="<?php echo $res['FULFILLMENTSTATUS']; ?>" required hidden>
                                         <input type="text" name="paid_amount[]" value="<?php echo $res['AMOUNTPAID']; ?>" hidden>
                                         <input type="text" name="expect_amount[]" value="<?php echo $res['EXPECTED_PAYMENT']; ?>" hidden>
