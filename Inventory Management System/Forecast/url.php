@@ -1,6 +1,16 @@
-<?php
+<?php 
+error_reporting(E_ALL);
+ini_set('max_execution_time', 300);
+ini_set('memory_limit', '4G');
+ini_set('display_errors', 1); 
+
 include "../config/database.php";
 include "../config/on_session.php";
+require_once '../../vendor/autoload.php'; // mPDF
+
+use Picqer\Barcode\BarcodeGeneratorPNG;
+
+$html = [];
 
 if (isset($_SESSION['forecast_data']) && !empty($_SESSION['forecast_data'])) {
     $forecast_data = $_SESSION['forecast_data'];
@@ -10,8 +20,11 @@ if (isset($_SESSION['forecast_data']) && !empty($_SESSION['forecast_data'])) {
     $lead_time_import = $_SESSION['lead_time_import'];
     $prepared_by = $user_fullname;
 
-    // Inline CSS styles
-    echo '
+    // Inline CSS and HTML wrapper
+    $html[] = '
+    <!DOCTYPE html>
+    <html>
+    <head>
     <style>
         .forecast-table {
             width: 100%;
@@ -55,10 +68,11 @@ if (isset($_SESSION['forecast_data']) && !empty($_SESSION['forecast_data'])) {
         .bg-success {
             background-color: #28a745;
         }
-    </style>';
+    </style>
+    </head>
+    <body>';
 
-    // Report Header
-    echo '
+    $html[] = '
     <div class="card">
         <div class="forecast-header">
             <h3>Forecasted Data Report</h3>
@@ -94,12 +108,11 @@ if (isset($_SESSION['forecast_data']) && !empty($_SESSION['forecast_data'])) {
                 </thead>
                 <tbody>';
 
-    // Table rows
     foreach ($forecast_data as $row) {
-        $row_class = $row['needs_reorder'] == 'Yes' ? 'reorder-row' : '';
-        $badge_class = $row['needs_reorder'] == 'Yes' ? 'bg-danger' : 'bg-success';
+        $row_class = $row['needs_reorder'] === 'Yes' ? 'reorder-row' : '';
+        $badge_class = $row['needs_reorder'] === 'Yes' ? 'bg-danger' : 'bg-success';
 
-        echo "<tr class='{$row_class}'>
+        $html[] =  "<tr class='{$row_class}'>
             <td>{$row['description']}</td>
             <td>{$row['category']}</td>
             <td>{$row['brand']}</td>
@@ -121,8 +134,25 @@ if (isset($_SESSION['forecast_data']) && !empty($_SESSION['forecast_data'])) {
         </tr>";
     }
 
-    echo '</tbody></table></div></div>';
+    $html[] = '</tbody></table></div></div></body></html>';
+
 } else {
-    echo "<div style='padding: 10px; background-color: #ffeeba; color: #856404; border: 1px solid #ffeeba;'>No forecast data in session.</div>";
+    $html[] = "<div style='padding: 10px; background-color: #ffeeba; color: #856404; border: 1px solid #ffeeba;'>No forecast data in session.</div>";
 }
+
+$mpdf = new \Mpdf\Mpdf([
+    'format' => [297, 210], // A4 Landscape
+    'margin_left' => 0,
+    'margin_right' => 0,
+    'margin_top' => 0,
+    'margin_bottom' => 0,
+]);
+
+$mpdf->WriteHTML(implode('', $html));
+$fileName = 'forecast.pdf';
+
+header('Content-Type: application/pdf');
+header('Content-Disposition: attachment; filename="' . $fileName . '"');
+$mpdf->Output($fileName, 'D');
+exit;
 ?>

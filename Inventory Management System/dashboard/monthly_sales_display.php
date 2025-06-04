@@ -28,8 +28,8 @@
                 $dashboard_employees_res = $conn->query($dashboard_employees);
                 if ($dashboard_employees_res) {
                     $row = $dashboard_employees_res->fetch_assoc();
-                    $users_qty= number_format($row['users_qty_active']);
-                    $users_qty_disabled = number_format($row['users_qty_disabled']);
+                    $users_qty= $row['users_qty_active'];
+                    $users_qty_disabled = $row['users_qty_disabled'];
                 }
 
                 if ($users_qty != 0) {
@@ -66,8 +66,8 @@
                 $customers_res = $conn->query($customers_query);
                 if ($customers_res->num_rows > 0) {
                     $row = $customers_res->fetch_assoc();
-                    $customer_qty = number_format($row['customer_qty']);
-                    $customer_qty_prev = number_format($row['customer_qty_prev']);
+                    $customer_qty = $row['customer_qty'];
+                    $customer_qty_prev = $row['customer_qty_prev'];
                 } else {
                     $customer_qty = 0;
                     $customer_qty_prev = 0;

@@ -150,6 +150,9 @@ if (isset($_GET['id'])) {
                 </tr>
             </table>
         </div>
+        <div class="text-end my-3">
+            <a href="url.php?id=<?php echo $unique_key;?>" class="btn btn-warning">Export</a>
+        </div>
     </div>
     <?php
 }

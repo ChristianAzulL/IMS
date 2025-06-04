@@ -195,11 +195,11 @@
                                         LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                         WHERE
-                                        oc.status = 0
+                                        oc.status IN (0, 6)
                                         AND s.item_status NOT IN (4, 8)
                                         AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                         AND ol.warehouse IN ($user_warehouse_id)
-                                        AND ol.status = 0
+                                        AND ol.status IN (0, 6)
                                         $additional_query
                                         GROUP BY sup.supplier_name
                                         ";
@@ -217,11 +217,11 @@
                                         LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                         WHERE
-                                        oc.status = 0
+                                        oc.status IN (0, 6)
                                         AND s.item_status NOT IN (4, 8)
                                         AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                         AND ol.warehouse IN ($user_warehouse_id)
-                                        AND ol.status = 0
+                                        AND ol.status IN (0, 6)
                                         AND sup.local_international = 'Local'
                                         $additional_query
                                         GROUP BY sup.supplier_name
@@ -240,11 +240,11 @@
                                         LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                         WHERE
-                                        oc.status = 0
+                                        oc.status IN (0, 6)
                                         AND s.item_status NOT IN (4, 8)
                                         AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                         AND ol.warehouse IN ($user_warehouse_id)
-                                        AND ol.status = 0
+                                        AND ol.status IN (0, 6)
                                         AND sup.local_international = 'International'
                                         $additional_query
                                         GROUP BY sup.supplier_name
@@ -289,11 +289,11 @@
                                                 LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                                 LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                                 WHERE
-                                                oc.status = 0
+                                                oc.status IN (0, 6)
                                                 AND s.item_status NOT IN (4, 8)
                                                 AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                 AND ol.warehouse = '$warehouse_transaction'
-                                                AND ol.status = 0
+                                                AND ol.status IN (0, 6)
                                                 AND s.supplier = '$sup_supplierHeadId'
                                                 GROUP BY c.category_name
                                                 ";
@@ -312,11 +312,11 @@
                                                 LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                                 LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                                 WHERE
-                                                oc.status = 0
+                                                oc.status IN (0, 6)
                                                 AND s.item_status NOT IN (4, 8)
                                                 AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                 AND ol.warehouse = '$warehouse_transaction'
-                                                AND ol.status = 0
+                                                AND ol.status IN (0, 6)
                                                 AND sup.local_international = 'Local'
                                                 AND s.supplier = '$sup_supplierHeadId'
                                                 GROUP BY c.category_name
@@ -336,11 +336,11 @@
                                                 LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                                 LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                                 WHERE
-                                                oc.status = 0
+                                                oc.status IN (0, 6)
                                                 AND s.item_status NOT IN (4, 8)
                                                 AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                 AND ol.warehouse = '$warehouse_transaction'
-                                                AND ol.status = 0
+                                                AND ol.status IN (0, 6)
                                                 AND sup.local_international = 'International'
                                                 AND s.supplier = '$sup_supplierHeadId'
                                                 GROUP BY c.category_name
@@ -417,11 +417,11 @@
                                                                 LEFT JOIN product p ON p.hashed_id = s.product_id
                                                                 LEFT JOIN brand b ON b.hashed_id = p.brand
                                                                 WHERE p.category = '$category_id'
-                                                                AND oc.status = 0
+                                                                AND oc.status IN (0, 6)
                                                                 AND s.item_status NOT IN (4, 8)
                                                                 AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                                 AND ol.warehouse = '$warehouse_transaction'
-                                                                AND ol.status = 0
+                                                                AND ol.status IN (0, 6)
                                                                 AND s.supplier = '$sup_supplierHeadId'
                                                                 ";
                                                             } elseif($supplier_post_local_internation === "Local"){
@@ -446,11 +446,11 @@
                                                                 LEFT JOIN product p ON p.hashed_id = s.product_id
                                                                 LEFT JOIN brand b ON b.hashed_id = p.brand
                                                                 WHERE p.category = '$category_id'
-                                                                AND oc.status = 0
+                                                                AND oc.status IN (0, 6)
                                                                 AND s.item_status NOT IN (4, 8)
                                                                 AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                                 AND ol.warehouse = '$warehouse_transaction'
-                                                                AND ol.status = 0
+                                                                AND ol.status IN (0, 6)
                                                                 AND sup.local_international = 'Local'
                                                                 AND s.supplier = '$sup_supplierHeadId'
                                                                 ";
@@ -476,11 +476,11 @@
                                                                 LEFT JOIN product p ON p.hashed_id = s.product_id
                                                                 LEFT JOIN brand b ON b.hashed_id = p.brand
                                                                 WHERE p.category = '$category_id'
-                                                                AND oc.status = 0
+                                                                AND oc.status IN (0, 6)
                                                                 AND s.item_status NOT IN (4, 8)
                                                                 AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                                 AND ol.warehouse = '$warehouse_transaction'
-                                                                AND ol.status = 0
+                                                                AND ol.status IN (0, 6)
                                                                 AND sup.local_international = 'International'
                                                                 AND s.supplier = '$sup_supplierHeadId'
                                                                 ";
@@ -580,11 +580,11 @@
                                                             LEFT JOIN product p ON p.hashed_id = s.product_id
                                                             LEFT JOIN brand b ON b.hashed_id = p.brand
                                                             WHERE p.category = '$category_id'
-                                                            AND oc.status = 0
+                                                            AND oc.status IN (0, 6)
                                                             AND s.item_status NOT IN (4, 8)
                                                             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                             AND ol.warehouse = '$warehouse_transaction'
-                                                            AND ol.status = 0
+                                                            AND ol.status IN (0, 6)
                                                             AND s.supplier = '$sup_supplierHeadId'
                                                             ";
                                                         } elseif($supplier_post_local_internation === "Local"){
@@ -609,11 +609,11 @@
                                                             LEFT JOIN product p ON p.hashed_id = s.product_id
                                                             LEFT JOIN brand b ON b.hashed_id = p.brand
                                                             WHERE p.category = '$category_id'
-                                                            AND oc.status = 0
+                                                            AND oc.status IN (0, 6)
                                                             AND s.item_status NOT IN (4, 8)
                                                             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                             AND ol.warehouse = '$warehouse_transaction'
-                                                            AND ol.status = 0
+                                                            AND ol.status IN (0, 6)
                                                             AND sup.local_international = 'Local'
                                                             AND s.supplier = '$sup_supplierHeadId'
                                                             ";
@@ -639,11 +639,11 @@
                                                             LEFT JOIN product p ON p.hashed_id = s.product_id
                                                             LEFT JOIN brand b ON b.hashed_id = p.brand
                                                             WHERE p.category = '$category_id'
-                                                            AND oc.status = 0
+                                                            AND oc.status IN (0, 6)
                                                             AND s.item_status NOT IN (4, 8)
                                                             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
                                                             AND ol.warehouse = '$warehouse_transaction'
-                                                            AND ol.status = 0
+                                                            AND ol.status IN (0, 6)
                                                             AND sup.local_international = 'International'
                                                             AND s.supplier = '$sup_supplierHeadId'
                                                             ";
@@ -845,11 +845,11 @@
                                     LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                     WHERE
-                                    oc.status = 0
+                                    oc.status IN (0, 6)
                                     AND s.item_status NOT IN (4, 8)
                                     AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                     AND ol.warehouse IN ($user_warehouse_id)
-                                    AND ol.status = 0
+                                    AND ol.status IN (0, 6)
                                     GROUP BY sup.supplier_name
                                     ";
                                     $supplier_res = $conn->query($supplier_query);
@@ -889,11 +889,11 @@
                                             LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
                                             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
                                             WHERE
-                                            oc.status = 0
+                                            oc.status IN (0, 6)
                                             AND s.item_status NOT IN (4, 8)
                                             AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                             AND ol.warehouse IN ($user_warehouse_id)
-                                            AND ol.status = 0
+                                            AND ol.status IN (0, 6)
                                             AND s.supplier = '$sup_supplierHeadId'
                                             GROUP BY c.category_name
                                             ";
@@ -963,12 +963,12 @@
                                                     LEFT JOIN product p ON p.hashed_id = s.product_id
                                                     LEFT JOIN brand b ON b.hashed_id = p.brand
                                                     WHERE p.category = '$category_id'
-                                                    AND oc.status = 0
+                                                    AND oc.status IN (0, 6)
                                                     AND s.item_status NOT IN (4, 8)
                                                     AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
                                                     AND ol.warehouse IN ($user_warehouse_id)
                                                     AND s.supplier = '$sup_supplierHeadId'
-                                                    AND ol.status = 0
+                                                    AND ol.status IN (0, 6)
                                                     ";
                                                     $item_res = $conn->query($item_query);
                                                     if($item_res->num_rows>0){

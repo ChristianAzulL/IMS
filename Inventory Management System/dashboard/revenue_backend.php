@@ -38,7 +38,7 @@ if (isset($_POST['rev_dateGross'])) {
         FROM outbound_content oc
         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id   
         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-        WHERE ol.warehouse = '$warehouse_dashboard_id' AND oc.status = 0 AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
+        WHERE ol.warehouse = '$warehouse_dashboard_id' AND oc.status IN (0, 6) AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
         ";
     } else {
         // Convert into quoted format
@@ -58,7 +58,7 @@ if (isset($_POST['rev_dateGross'])) {
         FROM outbound_content oc
         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id   
         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-        WHERE ol.warehouse IN ($warehouse_dashboard_id) AND oc.status = 0 AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
+        WHERE ol.warehouse IN ($warehouse_dashboard_id) AND oc.status IN (0, 6) AND DATE(ol.date_sent) BETWEEN '$start_date_mysql' AND '$end_date_mysql'
         ";
     }
     
@@ -104,7 +104,7 @@ if (isset($_POST['rev_dateGross'])) {
         FROM outbound_content oc
         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id   
         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-        WHERE ol.warehouse = '$warehouse_dashboard_id' AND oc.status = 0 AND DATE(ol.date_sent) BETWEEN '$start_date' AND '$today_mysql'
+        WHERE ol.warehouse = '$warehouse_dashboard_id' AND oc.status IN (0, 6) AND DATE(ol.date_sent) BETWEEN '$start_date' AND '$today_mysql'
         ";
     } else {
         // Convert into quoted format
@@ -124,7 +124,7 @@ if (isset($_POST['rev_dateGross'])) {
         FROM outbound_content oc
         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id   
         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-        WHERE ol.warehouse IN ($warehouse_dashboard_id) AND oc.status = 0 AND DATE(ol.date_sent) BETWEEN '$start_date' AND '$today_mysql'
+        WHERE ol.warehouse IN ($warehouse_dashboard_id) AND oc.status IN (0, 6) AND DATE(ol.date_sent) BETWEEN '$start_date' AND '$today_mysql'
         ";
     }
 

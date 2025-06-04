@@ -10,7 +10,7 @@ require_once '../../vendor/autoload.php'; // mPDF
 
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
-header('Content-Type: image/png');
+// header('Content-Type: image/png');
 
 // Sanitize GET inputs
 $from = htmlspecialchars($_GET['from'] ?? '');
@@ -135,11 +135,11 @@ if ($from && $to) {
         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
         LEFT JOIN product p ON p.hashed_id = s.product_id
         WHERE
-        oc.status = 0
+        oc.status IN (0, 6)
         AND s.item_status NOT IN (4, 8)
         AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
         $supplier_warehouse_additional
-        AND ol.status = 0
+        AND ol.status IN (0, 6)
         $additional_supplier_query
         GROUP BY sup.supplier_name
     ";
@@ -182,11 +182,11 @@ if ($from && $to) {
             LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
             WHERE
-            oc.status = 0
+            oc.status IN (0, 6)
             AND s.item_status NOT IN (4, 8)
             AND DATE(ol.date_sent) BETWEEN '$from' AND '$to'
             AND s.supplier = '$sup_supplierHeadId'
-            AND ol.status = 0
+            AND ol.status IN (0, 6)
             $category_additional_query
             GROUP BY c.category_name
             ";
@@ -259,11 +259,11 @@ if ($from && $to) {
                     LEFT JOIN brand b ON b.hashed_id = p.brand
                     WHERE 
                     p.category = '$category_id'
-                    AND oc.status = 0
+                    AND oc.status IN (0, 6)
                     AND s.item_status NOT IN (4, 8)
                     AND DATE(ol.date_sent) BETWEEN '$from' AND '$to'
                     AND s.supplier = '$sup_supplierHeadId'
-                    AND ol.status = 0
+                    AND ol.status IN (0, 6)
                     $item_additional_query
                     ";
                     $item_res = $conn->query($item_query);
@@ -422,7 +422,7 @@ if ($from && $to) {
     </body>
     </html>";
 
-
+    ini_set("pcre.backtrack_limit", "10000000"); // 10 million
     // echo $html;
     $mpdf = new \Mpdf\Mpdf([
         'format' => [297, 210],
