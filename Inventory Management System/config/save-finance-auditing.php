@@ -86,49 +86,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Fetch outbound hashed_id
         $stmt = $conn->prepare("
-            SELECT hashed_id FROM outbound_logs 
-            WHERE order_num = ? AND order_line_id = ? AND customer_fullname = ? LIMIT 1
+            SELECT hashed_id, UPPER(customer_fullname) AS customer_fullname FROM outbound_logs 
+            WHERE order_num = ? AND order_line_id = ? LIMIT 1
         ");
-        $stmt->bind_param("sss", $order_num, $order_line, $client);
+        $stmt->bind_param("ss", $order_num, $order_line);
         $stmt->execute();
         $res_outbound = $stmt->get_result();
 
         if ($res_outbound->num_rows > 0) {
             $row_outbound = $res_outbound->fetch_assoc();
             $outbound_id = $row_outbound['hashed_id'];
+            $customer_fullname = trim(preg_replace('/\s+/', ' ', $row_outbound['customer_fullname']));
 
-            if ($status === "PAID") {
-                // Update outbound statuses
-                $stmt1 = $conn->prepare("UPDATE outbound_logs SET status = 0 WHERE hashed_id = ?");
-                $stmt2 = $conn->prepare("UPDATE outbound_content SET status = 0 WHERE hashed_id = ?");
-                $stmt1->bind_param("s", $outbound_id);
-                $stmt2->bind_param("s", $outbound_id);
-                $stmt1->execute();
-                $stmt2->execute();
+            if($client === $customer_fullname){
+                if ($status === "PAID") {
+                    // Update outbound statuses
+                    $stmt1 = $conn->prepare("UPDATE outbound_logs SET status = 0 WHERE hashed_id = ?");
+                    $stmt2 = $conn->prepare("UPDATE outbound_content SET status = 0 WHERE hashed_id = ?");
+                    $stmt1->bind_param("s", $outbound_id);
+                    $stmt2->bind_param("s", $outbound_id);
+                    $stmt1->execute();
+                    $stmt2->execute();
 
-                // Log each barcode
-                $result = $conn->query("SELECT unique_barcode FROM outbound_content WHERE hashed_id = '$outbound_id'");
-                while ($r = $result->fetch_assoc()) {
-                    $action = "Paid via finance auditing. The staff who processed it is $user_fullname";
-                    log_stock_timeline($conn, $r['unique_barcode'], $action, $user_id, $currentDateTime);
+                    // Log each barcode
+                    $result = $conn->query("SELECT unique_barcode FROM outbound_content WHERE hashed_id = '$outbound_id'");
+                    while ($r = $result->fetch_assoc()) {
+                        $action = "Paid via finance auditing. The staff who processed it is $user_fullname";
+                        log_stock_timeline($conn, $r['unique_barcode'], $action, $user_id, $currentDateTime);
+                    }
+                    log_outbound_paid($conn, $outbound_id, $user_id, $currentDateTime);
+
+                } elseif (in_array($status, ['UNPAID', 'PENDING'])) {
+                    // Get a barcode for logging
+                    $result = $conn->query("
+                        SELECT oc.unique_barcode 
+                        FROM outbound_content oc 
+                        JOIN outbound_logs ol ON oc.hashed_id = ol.hashed_id 
+                        WHERE ol.order_num = '$order_num' AND ol.order_line_id = '$order_line' LIMIT 1
+                    ");
+                    if ($row = $result->fetch_assoc()) {
+                        $action_text = $status === 'UNPAID' 
+                            ? "Updated the status to unpaid via finance auditing"
+                            : "Checked the status to see if it remained the same via finance auditing";
+                        $action = "$action_text. The staff who processed it is $user_fullname";
+                        log_stock_timeline($conn, $row['unique_barcode'], $action, $user_id, $currentDateTime);
+                    }
                 }
-                log_outbound_paid($conn, $outbound_id, $user_id, $currentDateTime);
-
-            } elseif (in_array($status, ['UNPAID', 'PENDING'])) {
-                // Get a barcode for logging
-                $result = $conn->query("
-                    SELECT oc.unique_barcode 
-                    FROM outbound_content oc 
-                    JOIN outbound_logs ol ON oc.hashed_id = ol.hashed_id 
-                    WHERE ol.order_num = '$order_num' AND ol.order_line_id = '$order_line' LIMIT 1
-                ");
-                if ($row = $result->fetch_assoc()) {
-                    $action_text = $status === 'UNPAID' 
-                        ? "Updated the status to unpaid via finance auditing"
-                        : "Checked the status to see if it remained the same via finance auditing";
-                    $action = "$action_text. The staff who processed it is $user_fullname";
-                    log_stock_timeline($conn, $row['unique_barcode'], $action, $user_id, $currentDateTime);
-                }
+             
             }
         }
 
