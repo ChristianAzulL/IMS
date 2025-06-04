@@ -27,7 +27,7 @@ if (isset($_POST['barcode'])) {
               LEFT JOIN product p ON p.hashed_id = s.product_id
               LEFT JOIN brand b ON b.hashed_id = p.brand
               LEFT JOIN category c ON c.hashed_id = p.category
-              WHERE oc.unique_barcode = '$barcode' AND oc.status = 0";
+              WHERE oc.unique_barcode = '$barcode' AND oc.status IN (0, 6)";
     
     $res = $conn->query($query);
     if ($res->num_rows > 0) {
