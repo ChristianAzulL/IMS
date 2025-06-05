@@ -90,15 +90,17 @@ if (isset($_SESSION['Stock_id'])) {
                 };
 
                 if($row['status']==="pending"){
-                  $tr_type = "table-danger";
+                  $tr_type = "bg-danger";
+                  $td = "text-white";
                 } else {
                   $tr_type = "";
+                  $td = "";
                 }
             ?>
             <tr class="btn-reveal-trigger <?php echo $tr_type;?>">
               <td>
                 <button 
-                  class="btn btn-transparent view-button" 
+                  class="btn btn-transparent <?php echo $td;?> view-button" 
                   type="button" 
                   data-bs-toggle="modal" 
                   data-bs-target="#tr" 
@@ -106,18 +108,18 @@ if (isset($_SESSION['Stock_id'])) {
                   <span class="fas fa-eye"></span>
                 </button>
               </td>
-              <td class="align-middle white-space-nowrap batch">
+              <td class="align-middle <?php echo $td;?> white-space-nowrap batch">
                   <?php echo $truncatedText; ?>
               </td>
               <td class="align-middle white-space-nowrap text-center status"><?php echo $status_badge; ?></td>
-              <td class="align-middle white-space-nowrap from_wh"><?php echo $row['from_warehouse_name']; ?></td>
-              <td class="align-middle white-space-nowrap from_name"><?php echo $row['from_fullname']; ?></td>
-              <td class="align-middle white-space-nowrap date_out"><?php echo $row['date_out']; ?></td>
-              <td class="align-middle white-space-nowrap remarks_sender"><?php echo $row['remarks_sender']; ?></td>
-              <td class="align-middle white-space-nowrap to_wh"><?php echo $row['to_warehouse_name']; ?></td>
-              <td class="align-middle white-space-nowrap date_rec"><?php echo $row['date_received']; ?></td>
-              <td class="align-middle white-space-nowrap receiver_name"><?php echo $row['receiver_fullname']; ?></td>
-              <td class="align-middle white-space-nowrap remarks_rec"><?php echo $row['remarks_receiver']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap from_wh"><?php echo $row['from_warehouse_name']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap from_name"><?php echo $row['from_fullname']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap date_out"><?php echo $row['date_out']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap remarks_sender"><?php echo $row['remarks_sender']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap to_wh"><?php echo $row['to_warehouse_name']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap date_rec"><?php echo $row['date_received']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap receiver_name"><?php echo $row['receiver_fullname']; ?></td>
+              <td class="align-middle <?php echo $td;?> white-space-nowrap remarks_rec"><?php echo $row['remarks_receiver']; ?></td>
             </tr>
             <?php 
               }

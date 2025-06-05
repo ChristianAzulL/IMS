@@ -85,7 +85,7 @@ if (isset($_GET['id'])) {
         $receiverName = '<b class="text-danger">Will be automatically filled out by the receiving user.</b>';
         if(!empty($toWarehouse)){
             if(strpos($warehouses, $toWarehouse)!==false){
-                $receiverName = '<input type="text" name="receiver_userid" class="form-control" value="' . $user_id . '" hidden><input type="text" class="form-control" value="' . $user_fullname . '"><input type="text" name="receiver_warehouse" value="' . $toWarehouse . '" hidden>' ;    
+                $receiverName = '<input type="text" name="receiver_userid" class="form-control" value="' . $user_id . '" hidden><input type="text" class="form-control" value="' . $user_fullname . '" readonly><input type="text" name="receiver_warehouse" value="' . $toWarehouse . '" hidden>' ;    
             } else {
                 $receiverName = '<b class="text-danger">Will be automatically filled out by the receiving user.</b>';
             }
@@ -108,7 +108,7 @@ if (isset($_GET['id'])) {
 
         if(empty($dateReceived)){
             $dateReceived =  '<b class="text-danger">Will be automatically filled out by the system once received by the receiving user.</b>';
-            if($fromUserId === $user_id || strpos($warehouses, $toWarehouse)===false){
+            if($fromUserId === $user_id && strpos($warehouses, $toWarehouse)===false){
                 $submitBTN =    '<div class="text-center mt-3">
                                     <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Either you dont have access on this warehouse or you are the same user that sent this." disabled>Access denied or same sender.</button>
                                 </div>';
