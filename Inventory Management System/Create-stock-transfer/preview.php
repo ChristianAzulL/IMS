@@ -45,7 +45,10 @@ if (empty($groupedData)) {
         </thead>
         <tbody>
                 <tr>
-                    <td class="text-center p-6 fs-3" colspan="5"><b>NO BARCODE WERE SCANNED YET!</b></td>
+                    <td class="text-center p-6 fs-3" colspan="5">
+                        <b>NO BARCODE WERE SCANNED YET!</b>
+                        <input type="text" name="panggulo" required hidden>
+                    </td>
                 </tr>
         </tbody>
     </table>

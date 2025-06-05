@@ -380,7 +380,7 @@
                                                                 <td class="fs-11"><b></b></td>
                                                                 <td class="fs-11"><b></b></td>
                                                                 <td class="fs-11"><b>ORDER #</b></td>
-                                                                <td class="fs-11"><b>OUTBOUND #</b></td>
+                                                                <td class="fs-11"><b>ORDER LINE ID</b></td>
                                                                 <td class="fs-11"><b>CUSTOMER</b></td>
                                                                 <td class="fs-11"><b>OUTBOUND DATE</b></td>
                                                                 <td class="fs-11"><b>SUPPLIER</b></td>
@@ -400,6 +400,7 @@
                                                                 SELECT
                                                                     oc.unique_barcode,
                                                                     oc.sold_price,
+                                                                    ol.order_line_id,
                                                                     ol.order_num,
                                                                     oc.hashed_id AS outbound_num,
                                                                     ol.customer_fullname,
@@ -429,6 +430,7 @@
                                                                 SELECT
                                                                     oc.unique_barcode,
                                                                     oc.sold_price,
+                                                                    ol.order_line_id,
                                                                     ol.order_num,
                                                                     oc.hashed_id AS outbound_num,
                                                                     ol.customer_fullname,
@@ -459,6 +461,7 @@
                                                                 SELECT
                                                                     oc.unique_barcode,
                                                                     oc.sold_price,
+                                                                    ol.order_line_id,
                                                                     ol.order_num,
                                                                     oc.hashed_id AS outbound_num,
                                                                     ol.customer_fullname,
@@ -492,6 +495,7 @@
                                                                 while($row=$item_res->fetch_assoc()){
                                                                     $unique_barcode = $row['unique_barcode'];
                                                                     $sold_price = $row['sold_price'];
+                                                                    $order_line_id = $row['order_line_id'];
                                                                     $order_num = $row['order_num'];
                                                                     $outbound_num = $row['outbound_num'];
                                                                     $customer_fullname = $row['customer_fullname'];
@@ -509,7 +513,7 @@
                                                                         <td class="fs-11"></td>
                                                                         <td class="fs-11"><b></b></td>
                                                                         <td class="fs-11">' . $order_num . '</td>
-                                                                        <td class="fs-11">' . $outbound_num . '</td>
+                                                                        <td class="fs-11">' . $order_line_id . '</td>
                                                                         <td class="fs-11">' . $customer_fullname . '</td>
                                                                         <td class="fs-11">' . $date_sent . '</td>
                                                                         <td class="fs-11">' . $supplier_name . '</td>
@@ -543,7 +547,7 @@
                                                             <td class="fs-11"><b></b></td>
                                                             <td class="fs-11"><b></b></td>
                                                             <td class="fs-11"><b>ORDER #</b></td>
-                                                            <td class="fs-11"><b>OUTBOUND #</b></td>
+                                                            <td class="fs-11"><b>ORDER LINE ID</b></td>
                                                             <td class="fs-11"><b>CUSTOMER</b></td>
                                                             <td class="fs-11"><b>OUTBOUND DATE</b></td>
                                                             <td class="fs-11"><b>SUPPLIER</b></td>
@@ -563,6 +567,7 @@
                                                             SELECT
                                                                 oc.unique_barcode,
                                                                 oc.sold_price,
+                                                                ol.order_line_id,
                                                                 ol.order_num,
                                                                 oc.hashed_id AS outbound_num,
                                                                 ol.customer_fullname,
@@ -592,6 +597,7 @@
                                                             SELECT
                                                                 oc.unique_barcode,
                                                                 oc.sold_price,
+                                                                ol.order_line_id,
                                                                 ol.order_num,
                                                                 oc.hashed_id AS outbound_num,
                                                                 ol.customer_fullname,
@@ -622,6 +628,7 @@
                                                             SELECT
                                                                 oc.unique_barcode,
                                                                 oc.sold_price,
+                                                                ol.order_line_id,
                                                                 ol.order_num,
                                                                 oc.hashed_id AS outbound_num,
                                                                 ol.customer_fullname,
@@ -654,6 +661,7 @@
                                                                 while($row=$item_res->fetch_assoc()){
                                                                     $unique_barcode = $row['unique_barcode'];
                                                                     $sold_price = $row['sold_price'];
+                                                                    $order_line_id = $row['order_line_id'];
                                                                     $order_num = $row['order_num'];
                                                                     $outbound_num = $row['outbound_num'];
                                                                     $customer_fullname = $row['customer_fullname'];
@@ -671,7 +679,7 @@
                                                                         <td class="fs-11"></td>
                                                                         <td class="fs-11"></td>
                                                                         <td class="fs-11">' . $order_num . '</td>
-                                                                        <td class="fs-11">' . $outbound_num . '</td>
+                                                                        <td class="fs-11">' . $order_line_id . '</td>
                                                                         <td class="fs-11">' . $customer_fullname . '</td>
                                                                         <td class="fs-11">' . $date_sent . '</td>
                                                                         <td class="fs-11">' . $supplier_name . '</td>
@@ -928,7 +936,7 @@
                                                         <td class="fs-11"><b></b></td>
                                                         <td class="fs-11"><b></b></td>
                                                         <td class="fs-11"><b>ORDER #</b></td>
-                                                        <td class="fs-11"><b>OUTBOUND #</b></td>
+                                                        <td class="fs-11"><b>ORDER LINE ID</b></td>
                                                         <td class="fs-11"><b>CUSTOMER</b></td>
                                                         <td class="fs-11"><b>OUTBOUND DATE</b></td>
                                                         <td class="fs-11"><b>SUPPLIER</b></td>
@@ -946,6 +954,7 @@
                                                     SELECT
                                                         oc.unique_barcode,
                                                         oc.sold_price,
+                                                        ol.order_line_id,
                                                         ol.order_num,
                                                         oc.hashed_id AS outbound_num,
                                                         ol.customer_fullname,
@@ -975,6 +984,7 @@
                                                         while($row=$item_res->fetch_assoc()){
                                                             $unique_barcode = $row['unique_barcode'];
                                                             $sold_price = $row['sold_price'];
+                                                            $order_line_id = $row['order_line_id'];
                                                             $order_num = $row['order_num'];
                                                             $outbound_num = $row['outbound_num'];
                                                             $customer_fullname = $row['customer_fullname'];
@@ -992,7 +1002,7 @@
                                                                 <td class="fs-11"></td>
                                                                 <td class="fs-11"></td>
                                                                 <td class="fs-11">' . $order_num . '</td>
-                                                                <td class="fs-11">' . $outbound_num . '</td>
+                                                                <td class="fs-11">' . $order_line_id . '</td>
                                                                 <td class="fs-11">' . $customer_fullname . '</td>
                                                                 <td class="fs-11">' . $date_sent . '</td>
                                                                 <td class="fs-11">' . $supplier_name . '</td>

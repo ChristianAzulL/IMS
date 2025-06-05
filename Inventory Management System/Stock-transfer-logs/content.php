@@ -6,37 +6,17 @@ if (isset($_SESSION['Stock_id'])) {
 ?>
 
 <div class="card">
+  <div class="card-header bg-success">
+    <h2 class="text-dark">Stock Transfer Logs</h2>
+  </div>
   <div class="card-body overflow-hidden py-6 px-0">
     <div id="tableExample4" data-list='{"valueNames":["Stock_no","batch","status","from_wh","from_name","date_sent","remarks_sender","to_wh","date_rec","receiver_name","remarks_rec"]}'>
-      <div class="row">
-        <div class="col-12 ps-5 mb-3">
-          <h4>Stock LOGS</h4>
-        </div>
-      </div>
-      <!-- Buttons and Filter Section -->
-      <div class="row justify-content-end gx-3 gy-0 px-3">
-        <div class="col-sm-auto">
-          <select class="form-select form-select-sm mb-3" data-list-filter="warehouse">
-            <option selected="" value="">Select Warehouse</option>
-            <?php echo implode("\n", $warehouse_options); ?>
-          </select>
-        </div>
-
-        <div class="col-auto col-sm-5 mb-3">
-          <form>
-            <div class="input-group">
-              <input class="form-control form-control-sm shadow-none search" type="search" placeholder="Search..." aria-label="search" />
-              <div class="input-group-text bg-transparent">
-                <span class="fa fa-search fs-10 text-600"></span>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+     
+      
 
       <!-- Table Section -->
-      <div class="table-responsive scrollbar">
-        <table class="table table-sm table-striped table-hover fs-10 mb-0 overflow-hidden">
+      <div class="table-responsive scrollbar px-1">
+        <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
           <thead class="bg-200">
             <tr>
               <th></th>
@@ -58,7 +38,6 @@ if (isset($_SESSION['Stock_id'])) {
             $quoted_warehouse_ids = array_map(fn($id) => "'" . trim($id) . "'", $user_warehouse_ids);
             $imploded_warehouse_ids = implode(",", $quoted_warehouse_ids);
 
-            // SQL Query to fetch Stock logs with joins for related data
             $Stock_sql = "
               SELECT 
                 st.*, 
@@ -68,6 +47,7 @@ if (isset($_SESSION['Stock_id'])) {
                 CONCAT(ru.user_fname, ' ', ru.user_lname) AS receiver_fullname
               FROM 
                 stock_transfer st
+              INNER JOIN stock_transfer_content stc ON stc.st_id = st.id
               LEFT JOIN warehouse fw ON st.from_warehouse = fw.hashed_id
               LEFT JOIN warehouse tw ON st.to_warehouse = tw.hashed_id
               LEFT JOIN users fu ON st.from_userid = fu.hashed_id
@@ -75,7 +55,9 @@ if (isset($_SESSION['Stock_id'])) {
               WHERE 
                 st.from_warehouse IN ($imploded_warehouse_ids) 
                 OR st.to_warehouse IN ($imploded_warehouse_ids)
+              GROUP BY st.id
               ORDER BY st.id DESC";
+
 
             $Stock_res = $conn->query($Stock_sql);
 
