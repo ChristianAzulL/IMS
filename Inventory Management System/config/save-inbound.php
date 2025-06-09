@@ -17,7 +17,14 @@ function generateUniqueKey($conn) {
 }
 
 $unique_key = generateUniqueKey($conn);
+
+if(!isset($_SESSION['inbound_po_id']) || empty($_SESSION['inbound_po_id'])){
+    echo json_encode(["status" => "error", "message" => "You just inbounded from a different tab with a different Purchase Order. This creates conflicts in the system. Inbound only one tab at a time to avoid errors."]);
+    exit;
+}
+
 $_SESSION['unique_key'] = $unique_key;
+
 
 $currentDateTime = $_SESSION['inbound_received_date'] ?? date('Y-m-d H:i:s');
 $po_id = $_SESSION['inbound_po_id'];
@@ -33,7 +40,9 @@ if($row = $po_result->fetch_assoc()){
     $inbound_warehouse_name = $row['warehouse_name'];
     $supplier = $row['supplier'];
 }
+
 $_SESSION['inbound_warehouse'] = $inbound_warehouse;
+
 
 $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) {

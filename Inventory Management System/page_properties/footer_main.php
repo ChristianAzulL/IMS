@@ -135,7 +135,7 @@ $(document).ready(function () {
 });
 </script>
 
-<!-- 
+
 
 <script>
     // Disable right-click
@@ -143,12 +143,14 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
-    // Disable common developer tool shortcuts
+    // Disable common developer tool shortcuts, including F12 and variants
     document.addEventListener('keydown', function(e) {
+        // Note: Fn+F12 typically triggers the same event as F12
         if (e.key === 'F12' || 
             (e.ctrlKey && e.shiftKey && ['I', 'C', 'J', 'U'].includes(e.key)) || 
             (e.ctrlKey && e.key === 'U')) {
             e.preventDefault();
         }
     });
-</script> -->
+</script>
+

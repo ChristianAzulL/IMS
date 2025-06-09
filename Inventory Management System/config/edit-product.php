@@ -98,36 +98,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
             $log->close();
         }
 
-        if (isset($_FILES['profile-pic']) && $_FILES['profile-pic']['error'] === UPLOAD_ERR_OK) {
-            $file_tmp = $_FILES['profile-pic']['tmp_name'];
-            $file_name = $_FILES['profile-pic']['name'];
-            $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-            $unique_name = uniqid() . '.' . $file_ext;
-            $upload_dir = '../../assets/img/';
-            $target_path = $upload_dir . $unique_name;
+        if (isset($_FILES['product_image']) && is_array($_FILES['product_image']['tmp_name'])) {
+            $productImages = $_FILES['product_image'];
+            $imageBlobs = [];
+            $totalImages = count($productImages['tmp_name']);
 
-            if (!file_exists($target_path)) {
-                if (move_uploaded_file($file_tmp, $target_path)) {
-                    if ($product['product_img'] !== $unique_name) {
-                        $stmt = $conn->prepare("UPDATE product SET product_img = ? WHERE hashed_id = ?");
-                        $stmt->bind_param("ss", $unique_name, $product_id);
-                        $stmt->execute();
-                        $stmt->close();
+            if ($totalImages > 10) {
+                throw new Exception("Maximum of 10 images allowed.");
+            }
 
-                        // Log the action
-                        $log = $conn->prepare("INSERT INTO logs (title, action, date, user_id) VALUES (?, ?, ?, ?)");
-                        $desc = "Updated image of product ID $product_id from '{$product['product_img']}' to '$unique_name'";
-                        $log->bind_param("ssss", $title, $desc, $currentDateTime, $user_id);
-                        $log->execute();
-                        $log->close();
-                    }
-                } else {
-                    throw new Exception("Failed to upload the image.");
+            for ($i = 0; $i < $totalImages; $i++) {
+                if ($productImages['error'][$i] === UPLOAD_ERR_OK) {
+                    $tmpName = $productImages['tmp_name'][$i];
+                    $imageData = file_get_contents($tmpName);
+                    $imageBlobs[] = base64_encode($imageData);
                 }
-            } else {
-                throw new Exception("Image with this name already exists.");
+            }
+
+            if (!empty($imageBlobs)) {
+                $finalBlobData = serialize($imageBlobs);
+
+                // Only update if different from existing
+                if ($product['product_img'] !== $finalBlobData) {
+                    $stmt = $conn->prepare("UPDATE product SET product_img = ? WHERE id = ?");
+                    $stmt->bind_param("si", $finalBlobData, $product_id);
+                    $stmt->execute();
+                    $stmt->close();
+
+                    // Log the image update
+                    $log = $conn->prepare("INSERT INTO logs (title, action, date, user_id) VALUES (?, ?, ?, ?)");
+                    $desc = "Updated images of product ID $product_id.";
+                    $log->bind_param("ssss", $title, $desc, $currentDateTime, $user_id);
+                    $log->execute();
+                    $log->close();
+                }
             }
         }
+
 
         $conn->commit();
         echo json_encode([

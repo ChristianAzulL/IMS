@@ -619,3 +619,21 @@ $(document).on("submit", "#approve_form", function(e) {
 
 
 </script>
+
+
+<?php
+if (isset($_GET['error']) && $_GET['error'] === "error") {
+    echo "
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warehouse Field Empty',
+                text: 'Please fill in the warehouse field and try again.',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+    ";
+}
+?>

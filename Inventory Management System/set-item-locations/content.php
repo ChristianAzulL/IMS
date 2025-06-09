@@ -25,13 +25,12 @@ if(isset($_SESSION['inbound_warehouse'])){
                     </div>
 
                     <div class="table-responsive">
-                        <table class="table bordered-table">
+                        <table class="table bordered-table table-sm">
                             <thead class="table-info">
                                 <tr>
                                     <th style="min-width: 75px;"></th>
                                     <th style="min-width: 300px;">Product Description</th>
                                     <th style="min-width: 200px;">Keyword</th>
-                                    <th style="min-width: 130px;">Qty</th>
                                     <th style="min-width: 150px;">Price</th>
                                     <th style="min-width: 200px;">Supplier</th>
                                     <th style="min-width: 200px;">Barcode</th>
@@ -40,7 +39,6 @@ if(isset($_SESSION['inbound_warehouse'])){
                                     <th style="min-width: 200px;">Category</th>
                                     <th style="min-width: 200px;">Safety</th>
                                     <th style="min-width: 300px;">Item Location</th>
-                                    <th style="min-width: 400px;">Quantity to be placed on the location</th>
                                     
                                 </tr>
                             </thead>

@@ -17,11 +17,11 @@
         </div>
     </div>
     
-    <div class="col-12">
+    <div class="col-12 mt-3">
         <div class="card">
             <div class="row p-3">
                 <div class="col-md-12">
-                    <h4>Inbounded Items:</h4>
+                    <h4>Inbounded Items from PO#<?php echo $_SESSION['inbound_po_id'];?>:</h4>
                 </div>
             </div>
             <form action="../config/save-inbound.php" id="save-inbound" method="POST">
