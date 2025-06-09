@@ -108,7 +108,7 @@ if (empty($error) && !empty($rows)) {
         FROM outbound_logs ol
         LEFT JOIN outbound_content oc ON oc.hashed_id = ol.hashed_id
         LEFT JOIN warehouse w ON w.hashed_id = ol.warehouse
-        WHERE ol.order_num = ? AND ol.order_line_id = ?
+        WHERE ol.order_num = ? AND ol.order_line_id = ? AND ol.status IN (0, 6)
         GROUP BY ol.customer_fullname, ol.status, w.hashed_id, w.warehouse_name
         LIMIT 1
     ");

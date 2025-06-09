@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         SELECT oc.unique_barcode 
                         FROM outbound_content oc 
                         JOIN outbound_logs ol ON oc.hashed_id = ol.hashed_id 
-                        WHERE ol.order_num = '$order_num' AND ol.order_line_id = '$order_line' LIMIT 1
+                        WHERE ol.order_num = '$order_num' AND ol.order_line_id = '$order_line' AND ol.status IN (0, 6) LIMIT 1
                     ");
                     if ($row = $result->fetch_assoc()) {
                         $action_text = $status === 'UNPAID' 
