@@ -1,0 +1,26 @@
+[
+    {
+        "barcode": "44969315-3",
+        "product_description": "Laptop Battery Dell YFDF9",
+        "batch_num": "PObatch-87",
+        "brand_name": "Dell",
+        "category_name": "Laptop Battery",
+        "capital": "1600.00"
+    },
+    {
+        "barcode": "0085323-3",
+        "product_description": "Laptop Battery Asus B31N1732",
+        "batch_num": "PObatch-96",
+        "brand_name": "Asus",
+        "category_name": "Laptop Battery",
+        "capital": "1600.00"
+    },
+    {
+        "barcode": "16800859-23",
+        "product_description": "Laptop Keyboard Acer SF314-51",
+        "batch_num": "ST133",
+        "brand_name": "Acer",
+        "category_name": "Laptop Keyboard",
+        "capital": "168.46"
+    }
+]
