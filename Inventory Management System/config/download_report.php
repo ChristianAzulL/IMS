@@ -94,7 +94,7 @@ if ($category_res && $category_res->num_rows > 0) {
             continue;
         }
 
-        $rows[] = [$c_category_name, '', '', '', number_format($category_capital, 2), number_format($category_qty)];
+        $rows[] = [$c_category_name, '', '', '', number_format($category_capital, 2), number_format($category_qty), ''];
 
         $supplier_query = "
             SELECT 
@@ -127,7 +127,7 @@ if ($category_res && $category_res->num_rows > 0) {
                 continue;
             }
 
-            $rows[] = ['', $supplier['supplier_name'], '', '', number_format($supplier['total_supplier_capital'], 2), number_format($supplier['supplier_qty'])];
+            $rows[] = ['', $supplier['supplier_name'], '', '', number_format($supplier['total_supplier_capital'], 2), number_format($supplier['supplier_qty']), ''];
 
             $product_details_query = "
                 SELECT 
@@ -135,10 +135,14 @@ if ($category_res && $category_res->num_rows > 0) {
                     p.parent_barcode,
                     b.brand_name,
                     SUM(st.capital) AS total_capital,
-                    COUNT(*) AS product_qty
+                    COUNT(*) AS product_qty,
+                    il.location_name,
+                    w.warehouse_name
                 FROM stocks st
                 JOIN product p ON p.hashed_id = st.product_id
                 JOIN brand b ON b.hashed_id = p.brand
+                LEFT JOIN item_location il ON il.id = st.item_location
+                LEFT JOIN warehouse w ON w.hashed_id = st.warehouse
                 WHERE st.supplier = ?
                     AND p.category = ?
                     AND st.item_status = 0";
@@ -146,7 +150,7 @@ if ($category_res && $category_res->num_rows > 0) {
             $product_details_query .= isWarehouseSelected($selected_wh, $api_warehouse_id)
                 ? " AND st.warehouse = ?"
                 : " AND st.warehouse IN ($imploded_warehouse_ids)";
-            $product_details_query .= " GROUP BY p.hashed_id, b.hashed_id";
+            $product_details_query .= " GROUP BY p.hashed_id, b.hashed_id, st.item_location, st.warehouse";
 
             $product_details_stmt = $conn->prepare($product_details_query);
             isWarehouseSelected($selected_wh, $api_warehouse_id)
@@ -167,7 +171,8 @@ if ($category_res && $category_res->num_rows > 0) {
                     $product['description'] . ' ' . $product['brand_name'], 
                     $product['parent_barcode'], 
                     number_format($product['total_capital'], 2), 
-                    number_format($product['product_qty'])
+                    number_format($product['product_qty']),
+                    !empty($product['location_name']) ? $product['location_name'] . " - " . $product['warehouse_name'] : 'For SKU - ' . $product['warehouse_name'] 
                 ];
             }
         }
@@ -175,7 +180,7 @@ if ($category_res && $category_res->num_rows > 0) {
 }
 
 // Grand total row
-$rows[] = ['Grand Total', '', '', '', number_format($grand_total_capital, 2), number_format($grand_total_qty)];
+$rows[] = ['Grand Total', '', '', '', number_format($grand_total_capital, 2), number_format($grand_total_qty), ''];
 
 // Output as CSV
 header('Content-Type: text/csv');
@@ -183,7 +188,7 @@ header('Content-Disposition: attachment; filename="inventory_report_' . date('Y_
 $output = fopen('php://output', 'w');
 
 // CSV headers
-fputcsv($output, ['Category', 'Supplier', 'Item', 'Parent Barcode', 'Total Unit Cost', 'Quantity']);
+fputcsv($output, ['Category', 'Supplier', 'Item', 'Parent Barcode', 'Total Unit Cost', 'Quantity', 'Item Location']);
 
 foreach ($rows as $row) {
     fputcsv($output, $row);
