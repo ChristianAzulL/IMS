@@ -8,24 +8,28 @@ $po_id = $_SESSION['inbound_po_id'];
 $received_date = $_SESSION['inbound_received_date'];
 $warehouse_inbound = $_SESSION['inbound_warehouse'];
 
-$po_query = "SELECT warehouse_name 
-             FROM warehouse 
-             WHERE hashed_id='$warehouse_inbound' LIMIT 1";
-$po_result = $conn->query($po_query);
-if($row = $po_result->fetch_assoc()){
-$inbound_warehouse = $warehouse_inbound;
-$inbound_warehouse_name = $row['warehouse_name'];
+$sql = "SELECT warehouse_name FROM warehouse WHERE hashed_id = ? LIMIT 1";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $warehouse_inbound);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($row = $result->fetch_assoc()) {
+    $inbound_warehouse = $warehouse_inbound;
+    $inbound_warehouse_name = $row['warehouse_name'];
 }
-$insert_inbound = "INSERT INTO inbound_logs SET po_id = '$po_id', date_received = '$received_date', user_id = '$user_id', warehouse = '$warehouse_inbound', unique_key = '$unique_key'";
-if($conn->query($insert_inbound)===true){
+
+$sql = "INSERT INTO inbound_logs SET po_id = ?, date_received = ?, user_id = ?, warehouse = ?, unique_key = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sssss", $po_id, $received_date, $user_id, $warehouse_inbound, $unique_key);
+if ($stmt->execute()) {
     $inbound_id = $conn->insert_id;
 }
 
-// Initialize a response array
 $response = ['status' => 'error', 'message' => 'No data submitted.'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $csv_unique = $_POST['csv_unique']; // Array of unique row IDs
+    $csv_unique = $_POST['csv_unique'];
     $items = $_POST['item'];
     $keywords = $_POST['keyword'];
     $quantities = $_POST['qty'];
@@ -37,11 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $categories = $_POST['category'];
     $safeties = $_POST['safety'];
 
-    $checkedCount = count($csv_unique); // Count how many checkboxes were checked
+    $checkedCount = count($csv_unique);
     $success = 0;
 
     foreach ($csv_unique as $index) {
-        // Prepare the query for inserting or updating the product
         $item = $items[$index - 1];
         $keyword = $keywords[$index - 1];
         $quantity = $quantities[$index - 1];
@@ -53,140 +56,160 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $category = $categories[$index - 1];
         $safety = $safeties[$index - 1];
 
-        
-            $brand_name = $brand;
-            $sql = "SELECT * FROM brand WHERE brand_name = '$brand_name' LIMIT 1";
-            $result = $conn->query($sql);
-            if ($result->num_rows == 0) {
-                // Insert into brand table if it doesn't exist
-                $sql = "INSERT INTO brand (brand_name, user_id, `date`) VALUES ('$brand_name', '$user_id', '$currentDateTime')";
-                $conn->query($sql);
-                $brand_id = $conn->insert_id;
-                $hashed_brand_id = hash('sha256', $brand_id);
-                $update_brand = "UPDATE brand SET hashed_id = '$hashed_brand_id' WHERE id = '$brand_id'";
-                $conn->query($update_brand);
-            } else {
-                $row = $result->fetch_assoc();
-                $brand_id = $row['hashed_id'];
-                $hashed_brand_id = $brand_id;
-            }
+        // Handle brand
+        $sql = "SELECT * FROM brand WHERE brand_name = ? LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $brand);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-        
-            $category_name = $category;
-            $sql = "SELECT * FROM category WHERE category_name = '$category_name' LIMIT 1";
-            $result = $conn->query($sql);
-            if ($result->num_rows == 0) {
-                // Insert into category table if it doesn't exist
-                $sql = "INSERT INTO category (category_name, user_id, `date`) VALUES ('$category_name', '$user_id', '$currentDateTime')";
-                $conn->query($sql);
-                $category_id = $conn->insert_id;
-                $hashed_category_id = hash('sha256', $category_id);
-                $update_category = "UPDATE category SET hashed_id = '$hashed_category_id' WHERE id ='$category_id'";
-                $conn->query($update_category);
-            } else {
-                $row = $result->fetch_assoc();
-                $category_id = $row['hashed_id'];
-                $hashed_category_id = $category_id;
-            }
+        if ($result->num_rows == 0) {
+            $sql = "INSERT INTO brand (brand_name, user_id, `date`) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sss", $brand, $user_id, $currentDateTime);
+            $stmt->execute();
+            $brand_id = $conn->insert_id;
+            $hashed_brand_id = hash('sha256', $brand_id);
 
-
-      
-            $supplier_name = $supplier;
-            $sql = "SELECT * FROM supplier WHERE supplier_name = '$supplier_name' LIMIT 1";
-            $result = $conn->query($sql);
-            if ($result->num_rows == 0) {
-                // Insert into supplier table if it doesn't exist
-                $sql = "INSERT INTO supplier (supplier_name, `date`, user_id) VALUES ('$supplier_name', '$currentDateTime', '$user_id')";
-                $conn->query($sql);
-                $supplier_id = $conn->insert_id;
-                $hashed_supplier_id = hash('sha256', $supplier_id);
-                $update_supplier = "UPDATE supplier SET hashed_id = '$hashed_supplier_id' WHERE id ='$supplier_id'";
-                $conn->query($update_supplier);
-            } else {
-                $row = $result->fetch_assoc();
-                $supplier_id = $row['hashed_id'];
-                $hashed_supplier_id = $supplier_id;
-            }
-
-            $update_inbound_query = "UPDATE inbound_logs SET supplier = '$hashed_supplier_id' WHERE id = '$inbound_id'";
-            $conn->query($update_inbound_query);
-
-        
-
-        
-            $query = "SELECT * FROM product WHERE `parent_barcode` = '$barcode' LIMIT 1";
-            $result = $conn->query($query);
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                $product_id = $row['id'];
-                $hashed_product_id = $row['hashed_id'];
-                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id', `safety` = '$safety', keyword = '$keyword' WHERE id ='$product_id'";
-                $conn->query($update_product);
-            } else {
-                $sql = "INSERT INTO product (`description`, brand, category, parent_barcode, `date`, user_id) 
-                        VALUES ('$item', '$hashed_brand_id', '$hashed_category_id', '$barcode', '$currentDateTime', '$user_id')";
-                $conn->query($sql);
-                $product_id = $conn->insert_id;
-                $hashed_product_id = hash('sha256', $product_id);
-                $update_product = "UPDATE product SET hashed_id = '$hashed_product_id', `safety` = '$safety', keyword = '$keyword' WHERE id ='$product_id'";
-                $conn->query($update_product);
-            }
-        
-
-        // Generate and store unique barcodes for each quantity
-        $last_unique_suffix = 0; // Initialize to start fresh if no prior barcodes exist
-
-        // Check the last unique barcode and get its suffix
-        $check_unique_barcode = "SELECT barcode_extension 
-                                    FROM stocks 
-                                    WHERE parent_barcode = '$barcode' 
-                                    ORDER BY barcode_extension DESC 
-                                    LIMIT 1;";
-        $check_unique_barcode_res = $conn->query($check_unique_barcode);
-        if ($check_unique_barcode_res->num_rows > 0) {
-            $row = $check_unique_barcode_res->fetch_assoc();
-            $last_unique_barcode = $row['barcode_extension'];
-            $last_unique_suffix = $last_unique_barcode;
+            $sql = "UPDATE brand SET hashed_id = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("si", $hashed_brand_id, $brand_id);
+            $stmt->execute();
+        } else {
+            $row = $result->fetch_assoc();
+            $hashed_brand_id = $row['hashed_id'];
         }
 
-        // Generate new unique barcodes
-        for ($i = 1; $i <= $quantity; $i++) {
-            $new_suffix = $last_unique_suffix + $i; // Increment suffix
-            $unique_barcode = $barcode . '-' . $new_suffix; // Append new suffix
+        // Handle category
+        $sql = "SELECT * FROM category WHERE category_name = ? LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $category);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            // Insert the new stock record into the database
-            $sql = "INSERT INTO stocks (`unique_barcode`, `product_id`, `parent_barcode`, `batch_code`, `capital`, `warehouse`, `supplier`, `date`, `user_id`, `inbound_id`, `unique_key`, `barcode_extension`,`safety`) 
-                    VALUES ('$unique_barcode', '$hashed_product_id', '$barcode', '$batch', '$price', '$warehouse_inbound', '$hashed_supplier_id', '$currentDateTime', '$user_id', '$inbound_id', '$unique_key', '$new_suffix', '$safety')";
-            
-            if ($conn->query($sql) === TRUE) {
+        if ($result->num_rows == 0) {
+            $sql = "INSERT INTO category (category_name, user_id, `date`) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sss", $category, $user_id, $currentDateTime);
+            $stmt->execute();
+            $category_id = $conn->insert_id;
+            $hashed_category_id = hash('sha256', $category_id);
+
+            $sql = "UPDATE category SET hashed_id = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("si", $hashed_category_id, $category_id);
+            $stmt->execute();
+        } else {
+            $row = $result->fetch_assoc();
+            $hashed_category_id = $row['hashed_id'];
+        }
+
+        // Handle supplier
+        $sql = "SELECT * FROM supplier WHERE supplier_name = ? LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $supplier);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 0) {
+            $sql = "INSERT INTO supplier (supplier_name, `date`, user_id) VALUES (?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sss", $supplier, $currentDateTime, $user_id);
+            $stmt->execute();
+            $supplier_id = $conn->insert_id;
+            $hashed_supplier_id = hash('sha256', $supplier_id);
+
+            $sql = "UPDATE supplier SET hashed_id = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("si", $hashed_supplier_id, $supplier_id);
+            $stmt->execute();
+        } else {
+            $row = $result->fetch_assoc();
+            $hashed_supplier_id = $row['hashed_id'];
+        }
+
+        // Update inbound logs
+        $sql = "UPDATE inbound_logs SET supplier = ? WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("si", $hashed_supplier_id, $inbound_id);
+        $stmt->execute();
+
+        // Handle product
+        $sql = "SELECT * FROM product WHERE parent_barcode = ? LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $barcode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $product_id = $row['id'];
+            $hashed_product_id = $row['hashed_id'];
+
+            $sql = "UPDATE product SET hashed_id = ?, safety = ?, keyword = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssi", $hashed_product_id, $safety, $keyword, $product_id);
+            $stmt->execute();
+        } else {
+            $sql = "INSERT INTO product (description, brand, category, parent_barcode, `date`, user_id) VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssss", $item, $hashed_brand_id, $hashed_category_id, $barcode, $currentDateTime, $user_id);
+            $stmt->execute();
+            $product_id = $conn->insert_id;
+            $hashed_product_id = hash('sha256', $product_id);
+
+            $sql = "UPDATE product SET hashed_id = ?, safety = ?, keyword = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssi", $hashed_product_id, $safety, $keyword, $product_id);
+            $stmt->execute();
+        }
+
+        // Barcode generation
+        $sql = "SELECT barcode_extension FROM stocks WHERE parent_barcode = ? ORDER BY barcode_extension DESC LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $barcode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $last_unique_suffix = 0;
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $last_unique_suffix = (int) $row['barcode_extension'];
+        }
+
+        for ($i = 1; $i <= $quantity; $i++) {
+            $new_suffix = $last_unique_suffix + $i;
+            $unique_barcode = $barcode . '-' . $new_suffix;
+
+            $sql = "INSERT INTO stocks (unique_barcode, product_id, parent_barcode, batch_code, capital, warehouse, supplier, `date`, user_id, inbound_id, unique_key, barcode_extension, safety) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssssssssss", $unique_barcode, $hashed_product_id, $barcode, $batch, $price, $warehouse_inbound, $hashed_supplier_id, $currentDateTime, $user_id, $inbound_id, $unique_key, $new_suffix, $safety);
+            if ($stmt->execute()) {
                 $stock_id = $conn->insert_id;
                 $hash_stock = hash('sha256', $stock_id);
-                $update_stock = "UPDATE stocks SET hashed_id = '$hash_stock' WHERE id ='$stock_id'";
-                $conn->query($update_stock);
-                // Increment success count if insertion was successful
+
+                $sql = "UPDATE stocks SET hashed_id = ? WHERE id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("si", $hash_stock, $stock_id);
+                $stmt->execute();
+
+                $sql = "INSERT INTO stock_timeline (unique_barcode, title, `action`, `date`, user_id) VALUES (?, 'INBOUND', ?, ?, ?)";
+                $action_text = "Product was inbounded to $inbound_warehouse_name";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("ssss", $unique_barcode, $action_text, $currentDateTime, $user_id);
+                $stmt->execute();
+
+                $sql = "INSERT INTO logs (title, `action`, `date`, user_id) VALUES ('INBOUND', ?, ?, ?)";
+                $log_text = "Inbound Reference no. $inbound_id has been successfully inbounded to $inbound_warehouse_name.";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("sss", $log_text, $currentDateTime, $user_id);
+                $stmt->execute();
             } else {
                 error_log("Failed to insert stock: " . $conn->error);
             }
-            $stock_timeline = "INSERT INTO stock_timeline 
-                                (unique_barcode, title, `action`, `date`, user_id) 
-                                VALUES 
-                                ('$unique_barcode', 'INBOUND', 'Product was inbounded to $inbound_warehouse_name', '$currentDateTime', '$user_id')";
-
-            if ($conn->query($stock_timeline) === TRUE) {
-                $logs = "INSERT INTO logs 
-                            (title, `action`, `date`, user_id) 
-                            VALUES 
-                            ('INBOUND', 'Inbound Reference no. $inbound_id has been successfully inbounded to $inbound_warehouse_name.', '$currentDateTime', '$user_id')";
-
-                if ($conn->query($logs) === TRUE) {
-                    
-                }
-            }
-        }        
-        $success++; 
+        }
+        $success++;
     }
 
-    // Update the response to success if there are any valid changes
     if ($success > 0) {
         $response = [
             'status' => 'success',
@@ -200,6 +223,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-echo json_encode($response); // Send the structured response
+echo json_encode($response);
 $conn->close();
 ?>

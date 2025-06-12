@@ -63,7 +63,7 @@ if (isset($_SESSION['unique_key'])) {
     </td>
     <td>
         <input type="text" name="unique_barcode[]" value="<?php echo $row['unique_barcode']?>" hidden>
-        <select name="item_location[]" class="form-select" id="">
+        <select name="item_location[]" class="form-select js-choice" id="" size="1" name="organizerSingle" data-options='{"removeItemButton":true,"placeholder":true}'>
             <option value="">Select Item Location</option>
             <option value="na">None</option>
             <?php 

@@ -5,8 +5,7 @@ if(isset($_SESSION['inbound_warehouse'])){
     echo "NOT SET";
 }
 ?>
-<div class="card">
-    <div class="card-body overflow-hidden p-lg-6">
+    <div class="overflow-hidden p-lg-6">
         <div class="row">
             <div class="col-lg-12">
                 <h4>Please set the Item Location</h4>
@@ -51,4 +50,3 @@ if(isset($_SESSION['inbound_warehouse'])){
             </div>
         </div>
     </div>
-</div>
