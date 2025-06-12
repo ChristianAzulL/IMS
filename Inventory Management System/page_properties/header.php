@@ -28,6 +28,18 @@ if (isset($_GET['notnot'])) {
 <link rel="manifest" href="../assets/img/favicons/manifest.json">
 <meta name="msapplication-TileImage" content="../assets/img/favicons/mstile-150x150.png">
 <meta name="theme-color" content="#ffffff">
+
+<script>
+  // Clear all Falcon-related overrides (careful if you're using localStorage for other stuff)
+  Object.keys(localStorage).forEach(key => {
+    if (['theme', 'isNavbarVerticalCollapsed', 'navbarStyle', 'isFluid', 'isRTL'].includes(key)) {
+      localStorage.removeItem(key);
+    }
+  });
+</script>
+
+
+
 <script src="../assets/js/config.js"></script>
 <script src="../vendors/simplebar/simplebar.min.js"></script>
 

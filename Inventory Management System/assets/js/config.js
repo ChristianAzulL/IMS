@@ -4,11 +4,11 @@
 /*                              Config                                        */
 /* -------------------------------------------------------------------------- */
 var CONFIG = {
-  isNavbarVerticalCollapsed: false,
-  theme: 'light',
+  isNavbarVerticalCollapsed: true,
+  theme: 'dark',
   isRTL: false,
-  isFluid: false,
-  navbarStyle: 'transparent',
+  isFluid: true,
+  navbarStyle: 'inverted',
   navbarPosition: 'vertical'
 };
 Object.keys(CONFIG).forEach(function (key) {
