@@ -393,3 +393,49 @@ document.getElementById('submitBTN').addEventListener('click', function(event) {
 });
 
 </script>
+
+<script>
+const LOCK_KEY = 'csv_po_lock';
+const thisTabId = Date.now().toString();
+
+function showBlockedAlert() {
+    Swal.fire({
+    icon: 'warning',
+    title: 'Another Page is Already Open',
+    text: 'Only one of the CSV or PO Import pages can be open at a time.',
+    confirmButtonText: 'Return to Inbound Logs',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false,
+    }).then(() => {
+    // Redirect to your inbound logs page
+    window.location.href = '/IMS/Inventory%20Management%20System/inbound-logs/';
+    });
+}
+
+function checkLock() {
+    const current = localStorage.getItem(LOCK_KEY);
+    if (current && current !== thisTabId) {
+    showBlockedAlert();
+    } else {
+    localStorage.setItem(LOCK_KEY, thisTabId);
+    }
+}
+
+checkLock();
+
+// If another tab sets the lock, show alert
+window.addEventListener('storage', function(event) {
+    if (event.key === LOCK_KEY && event.newValue !== thisTabId) {
+    showBlockedAlert();
+    }
+});
+
+// Clean up on tab close
+window.addEventListener('beforeunload', function() {
+    const current = localStorage.getItem(LOCK_KEY);
+    if (current === thisTabId) {
+    localStorage.removeItem(LOCK_KEY);
+    }
+});
+</script>

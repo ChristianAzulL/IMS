@@ -1,3 +1,62 @@
+<script>
+    const TAB_LIST_KEY = 'outbound_form_tabs';
+    const thisTabId = Date.now().toString();
+
+    function getTabs() {
+      try {
+        return JSON.parse(localStorage.getItem(TAB_LIST_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function updateTabsList(add) {
+      let tabs = getTabs();
+      tabs = tabs.filter(id => id !== thisTabId); // remove self just in case
+
+      if (add) tabs.push(thisTabId);
+
+      localStorage.setItem(TAB_LIST_KEY, JSON.stringify(tabs));
+      return tabs;
+    }
+
+    function showExitAlert() {
+      Swal.fire({
+        icon: 'error',
+        title: 'Multiple Outbound Forms Detected',
+        text: 'Outbound Form cannot be open in multiple tabs. This tab will now close or redirect.',
+        confirmButtonText: 'Return to Outbound Logs',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+      }).then(() => {
+        window.location.href = '/IMS/Inventory%20Management%20System/Outbound-logs/';
+      });
+    }
+
+    function checkTabs() {
+      const tabs = getTabs();
+      if (tabs.length > 1) {
+        showExitAlert();
+      }
+    }
+
+    // Add self to the tab list
+    updateTabsList(true);
+    checkTabs();
+
+    // Listen for tab list changes (another tab opening)
+    window.addEventListener('storage', function(e) {
+      if (e.key === TAB_LIST_KEY) {
+        checkTabs();
+      }
+    });
+
+    // Remove self on unload
+    window.addEventListener('beforeunload', function() {
+      updateTabsList(false);
+    });
+  </script>
 <?php 
 if(!isset($_SESSION['warehouse_outbound']) && strpos($warehouses, ',')!==false){
    

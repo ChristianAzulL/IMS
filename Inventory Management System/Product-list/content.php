@@ -18,6 +18,7 @@
                 <th data-sort="desc"><small>Description</small></th>
                 <th data-sort="cat"><small>Category</small></th>
                 <th data-sort="brand"><small>Brand</small></th>
+                <th data-sort="brand"><small>Product ID</small></th>
                 <th data-sort="barcode"><small>Parent Barcode</small></th>
                 <th data-sort="by"><small>Created by</small></th>
                 <th data-sort="date"><small>Date</small></th>
@@ -41,6 +42,22 @@
               if($product_list_res->num_rows > 0) {
                 while($row = $product_list_res->fetch_assoc()) {
                   $product_id = $row['id'];
+                  $product_pbarcode = $row['parent_barcode'];
+                  $unique_id = $row['unique_id'];
+
+                  // Check if unique_id is invalid
+                  if (empty($unique_id) || $unique_id == '0') {
+                      // Generate a consistent unique_id using hash
+                      $unique_id = substr(sha1($product_pbarcode), 0, 12); // shorten as needed
+
+                      // Update the product record in the database
+                      $updateQuery = "UPDATE product SET unique_id = ? WHERE id = ?";
+                      $stmt = $conn->prepare($updateQuery);
+                      $stmt->bind_param("si", $unique_id, $product_id);
+                      $stmt->execute();
+                      $stmt->close();
+                  }
+
                   if (empty($row['product_img']) || !isset($row['product_img'])) {
                       $product_img = '../../assets/img/def_img.png';
                   } else {
@@ -65,7 +82,6 @@
                   $product_category = $row['category_name'];
                   $product_brand = $row['brand_name'];
                   $product_des = $row['description'];
-                  $product_pbarcode = $row['parent_barcode'];
                   $product_date = $row['date'];
                   $product_publisher = $row['user_fname'] . " " . $row['user_lname'];
                   $table_safety = $row['safety'];
@@ -77,15 +93,16 @@
                   <td class="desc"><small><?php echo $product_des; ?></small></td>
                   <td class="cat"><small><?php echo $product_category; ?></small></td>
                   <td class="brand"><small><?php echo $product_brand; ?></small></td>
+                  <td class="barcode"><code><?php echo $unique_id; ?></code></small></td>
                   <td class="barcode"><small><?php echo $product_pbarcode; ?></small></td>
                   <td class="by"><small><?php echo $product_publisher; ?></small></td>
                   <td class="date"><small><?php echo $product_date; ?></small></td>
                   <td class="safety text-end pe-4"><small><?php echo $table_safety;?></small></td>
                   <td class="d-flex align-items-center">
-                    <button class="btn btn-transparent py-0" type="button" target-id="<?php echo $product_id;?>" data-bs-toggle="modal" data-bs-target="#edit-modal" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit product information">
+                    <button class="btn btn-transparent py-0 fs-11" type="button" target-id="<?php echo $product_id;?>" data-bs-toggle="modal" data-bs-target="#edit-modal" data-bs-toggle="tooltip" data-bs-placement="left" title="Edit product information">
                       <span class="far fa-edit m-0 p-0"></span>
                     </button>
-                    <a href="../config/delete.php?from=product_list&id=<?php echo $product_id;?>" class="btn btn-transparent text-danger ms-1 custom-clicked" ><span class="far fa-trash-alt"></span></a>
+                    <a href="../config/delete.php?from=product_list&id=<?php echo $product_id;?>" class="btn btn-transparent text-danger ms-1 custom-clicked fs-11" ><span class="far fa-trash-alt"></span></a>
                   </td>
                 </tr>
               <?php 
