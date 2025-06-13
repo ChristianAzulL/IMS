@@ -46,17 +46,17 @@
                   $unique_id = $row['unique_id'];
 
                   // Check if unique_id is invalid
-                  if (empty($unique_id) || $unique_id == '0') {
-                      // Generate a consistent unique_id using hash
-                      $unique_id = substr(sha1($product_pbarcode), 0, 12); // shorten as needed
+                  // if (empty($unique_id) || $unique_id == '0') {
+                  //     // Generate a consistent unique_id using hash
+                  //     $unique_id = substr(sha1($product_pbarcode), 0, 12); // shorten as needed
 
-                      // Update the product record in the database
-                      $updateQuery = "UPDATE product SET unique_id = ? WHERE id = ?";
-                      $stmt = $conn->prepare($updateQuery);
-                      $stmt->bind_param("si", $unique_id, $product_id);
-                      $stmt->execute();
-                      $stmt->close();
-                  }
+                  //     // Update the product record in the database
+                  //     $updateQuery = "UPDATE product SET unique_id = ? WHERE id = ?";
+                  //     $stmt = $conn->prepare($updateQuery);
+                  //     $stmt->bind_param("si", $unique_id, $product_id);
+                  //     $stmt->execute();
+                  //     $stmt->close();
+                  // }
 
                   if (empty($row['product_img']) || !isset($row['product_img'])) {
                       $product_img = '../../assets/img/def_img.png';
