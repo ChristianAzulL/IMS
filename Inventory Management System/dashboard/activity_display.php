@@ -2,7 +2,6 @@
 include "../config/database.php";
 include "../config/on_session.php";
 
-
 $staffs = [];
 $sql = "SELECT 
           u.user_fname, 
@@ -28,6 +27,12 @@ if ($result->num_rows > 0) {
     $staff_fullname = $user_fname . " " . $user_lname;
     $staff_position = $row['position_name'] ?? 'Unknown';
     $staff_user_id = $row['user_id'];
+
+    // Skip if the staff user is the same as the currently logged-in user
+    if ($staff_user_id === $user_id) {
+      continue;
+    }
+
     $staff_profile_img = !empty($row['user_pfp']) 
       ? "../../assets/img/" . basename($row['user_pfp']) 
       : "../../assets/img/def_img.png";
@@ -64,31 +69,29 @@ if ($result->num_rows > 0) {
 ?>
 
 <div class="col-12">
-<div class="carousel slide theme-slider text-center" id="controlStyledExample" data-bs-ride="carousel">
-  <div class="carousel-inner rounded">
-    <?php 
-    $chunks = array_chunk($staffs, 6);
-    $first = true;
-    foreach ($chunks as $group) {
-      echo '<div class="carousel-item ' . ($first ? 'active' : '') . '">';
-      $first = false;
-      echo '<div class="d-flex justify-content-center flex-wrap">';
-      foreach ($group as $staff_html) {
-        echo $staff_html;
+  <div class="carousel slide theme-slider text-center" id="controlStyledExample" data-bs-ride="carousel">
+    <div class="carousel-inner rounded">
+      <?php 
+      $chunks = array_chunk($staffs, 6);
+      $first = true;
+      foreach ($chunks as $group) {
+        echo '<div class="carousel-item ' . ($first ? 'active' : '') . '">';
+        $first = false;
+        echo '<div class="d-flex justify-content-center flex-wrap">';
+        foreach ($group as $staff_html) {
+          echo $staff_html;
+        }
+        echo '</div></div>';
       }
-      echo '</div></div>';
-    }
-    ?>
+      ?>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#controlStyledExample" data-bs-slide="prev">
+      <span class="fas fa-chevron-left"></span>
+      <span class="sr-only">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#controlStyledExample" data-bs-slide="next">
+      <span class="fas fa-chevron-right"></span>
+      <span class="sr-only">Next</span>
+    </button>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#controlStyledExample" data-bs-slide="prev">
-    <span class="fas fa-chevron-left"></span>
-    <span class="sr-only">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#controlStyledExample" data-bs-slide="next">
-    <span class="fas fa-chevron-right"></span>
-    <span class="sr-only">Next</span>
-  </button>
 </div>
-</div>
-
-
