@@ -1,7 +1,4 @@
 <?php 
-error_reporting(E_ALL);
-ini_set('max_execution_time', 3000);
-ini_set('display_errors', 1); 
 
 include "../config/database.php";
 include "../config/on_session.php";
@@ -32,7 +29,7 @@ if (!isset($data['active']) || !$data['active']) {
 }
 
 
-$stmt = $conn->prepare("INSERT INTO activity (user_id, warehouse, date) VALUES (?, ?, ?");
+$stmt = $conn->prepare("INSERT INTO activity (user_id, warehouse, date) VALUES (?, ?, ?)");
 $stmt->bind_param("sss", $user_id, $warehouse, $currentDateTime);
 $stmt->execute();
 $stmt->close();
