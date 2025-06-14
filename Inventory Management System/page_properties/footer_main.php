@@ -168,7 +168,7 @@ function sendActivityPing() {
 );
 </script>
 
-
+<!-- 
 <script>
     // Disable right-click
     document.addEventListener('contextmenu', function(e) {
@@ -185,4 +185,4 @@ function sendActivityPing() {
         }
     });
 </script>
-
+ -->
