@@ -1,0 +1,42 @@
+[
+    {
+        "barcode": "98837852-4",
+        "product_description": "AMD Ryzen 5 PRO 4650U w\/ Radeon Graphics 2.10GHz 8GB DDR4 256GB SSD NVME Windows 10 Pro 14",
+        "batch_num": "EXANGLES1",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop",
+        "capital": "11000.00"
+    },
+    {
+        "barcode": "91269331-1",
+        "product_description": "Accessories HDMI to VGA Adapter",
+        "batch_num": "EXANGLES1",
+        "brand_name": "No Brand",
+        "category_name": "Accessories",
+        "capital": "33.90"
+    },
+    {
+        "barcode": "86546486-1",
+        "product_description": "Accessories HDMI to DVI 24+1 Adapter",
+        "batch_num": "EXANGLES1",
+        "brand_name": "No Brand",
+        "category_name": "Accessories",
+        "capital": "25.42"
+    },
+    {
+        "barcode": "56698140-1",
+        "product_description": "Accessories 4 Port USB KVM Switch (KVM41UA)",
+        "batch_num": "EXANGLES1",
+        "brand_name": "No Brand",
+        "category_name": "Accessories",
+        "capital": "1.00"
+    },
+    {
+        "barcode": "80043179-1",
+        "product_description": "Accessories Micro HDMI to HDMI",
+        "batch_num": "EXANGLES1",
+        "brand_name": "No Brand",
+        "category_name": "Accessories",
+        "capital": "72.32"
+    }
+]
