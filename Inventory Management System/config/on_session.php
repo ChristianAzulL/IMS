@@ -1,6 +1,12 @@
 <?php
 session_set_cookie_params(0);
 session_start();
+
+// Generate auth_token once per session
+if (!isset($_SESSION['auth_token'])) {
+    $_SESSION['auth_token'] = bin2hex(random_bytes(32)); // 64-character secure token
+}
+
 $user_position_id = $_SESSION['position_id'];
 $user_id = $_SESSION['user_id'];
 $user_fullname = $_SESSION['full_name'];

@@ -134,7 +134,39 @@ $(document).ready(function () {
     setInterval(checkNotifications, 3000); // Check every 3 seconds
 });
 </script>
+<script>
+const authToken = "<?php echo $_SESSION['auth_token']; ?>"; // from PHP session
 
+let lastSentTime = 0;
+const minInterval = 60000; // 60 seconds between logs
+
+function sendActivityPing() {
+    const now = Date.now();
+
+    // Limit how often we send
+    if (now - lastSentTime < minInterval) return;
+
+    lastSentTime = now;
+
+    fetch('../config/log_activity.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken
+        },
+        body: JSON.stringify({ active: true })
+    }).then(res => {
+        if (res.ok) {
+            console.log("Activity ping sent.");
+        }
+    }).catch(err => console.error("Error sending activity:", err));
+}
+
+// Trigger on any user interaction
+['mousemove', 'click', 'keydown', 'scroll'].forEach(event =>
+    window.addEventListener(event, sendActivityPing)
+);
+</script>
 
 
 <script>

@@ -1,4 +1,8 @@
-<?php 
+<?php
+include "../config/database.php";
+include "../config/on_session.php";
+
+
 $staffs = [];
 $sql = "SELECT 
           u.user_fname, 
@@ -59,7 +63,7 @@ if ($result->num_rows > 0) {
 }
 ?>
 
-
+<div class="col-12">
 <div class="carousel slide theme-slider text-center" id="controlStyledExample" data-bs-ride="carousel">
   <div class="carousel-inner rounded">
     <?php 
@@ -84,6 +88,7 @@ if ($result->num_rows > 0) {
     <span class="fas fa-chevron-right"></span>
     <span class="sr-only">Next</span>
   </button>
+</div>
 </div>
 
 

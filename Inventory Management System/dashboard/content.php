@@ -51,13 +51,16 @@ if ($hour >= 5 && $hour < 12) {
         <?php
         if(strpos($access, "revenue_summary")!==false || $user_position_name === "Superadmin"){
         ?>
-        <div class="row g-3">
+        <div class="row g-3 mt-3">
+            
+            <?php include "activities.php";?>
             <?php include "revenue_tracker.php"; ?>
         </div>
         <?php
         }
         ?>
     </div>
+    
     <div class="col-xxl-6 col-xl-12">
         <div class="row g-3">
             <?php 
