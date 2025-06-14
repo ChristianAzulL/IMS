@@ -28,8 +28,8 @@ if (!isset($data['active']) || !$data['active']) {
 }
 
 
-$stmt = $conn->prepare("INSERT INTO activity (user_id, warehouse, date) VALUES (?, ?, NOW())");
-$stmt->bind_param("ss", $user_id, $warehouse);
+$stmt = $conn->prepare("INSERT INTO activity (user_id, warehouse, date) VALUES (?, ?, ?");
+$stmt->bind_param("sss", $user_id, $warehouse, $currentDateTime);
 $stmt->execute();
 $stmt->close();
 $conn->close();
