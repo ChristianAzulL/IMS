@@ -75,9 +75,7 @@ if(isset($_SESSION['po_list'])){
               $status = '<span class="badge badge rounded-pill badge-subtle-secondary">Confirmed by Supplier<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
             } elseif($row['status'] == 3){
               $status = '<span class="badge badge rounded-pill badge-subtle-primary">In Transit/ Shipped<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
-            } elseif($row['status'] == 4 && is_null($row['date_received'])) {
-              $status = '<span class="badge badge rounded-pill badge-subtle-warning">To Receive<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
-            } elseif($row['status'] == 4 && !empty($row['date_received'])) {
+            } else {
               $status = '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';
             }
         ?>
@@ -102,7 +100,7 @@ if(isset($_SESSION['po_list'])){
           <td class="align-middle white-space-nowrap supplier"><?php echo $po_supplier;?></td>
           <td class="align-middle white-space-nowrap country"><?php echo $date_created;?></td>
           <td class="align-middle white-space-nowrap email"><?php echo $by;?></td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php if($supplier_type !== "Local"){echo $status;} elseif(is_null($row['date_received'])){ echo '<span class="badge badge rounded-pill badge-subtle-warning">To Receive<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';} else  { echo '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';}?></td>
+          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php if($supplier_type !== "Local"){echo $status;} else { echo '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';}?></td>
         </tr>
         <?php 
           }
