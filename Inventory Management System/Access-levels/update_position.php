@@ -84,12 +84,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Inbounds</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="po_logs" <?php if(strpos($account_position_access, "po_logs")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="po_logs" <?php if(strpos($account_position_access, "po_logs")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View Purchased Order logs</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="po_logs" <?php if(strpos($account_position_access, "po_logs")!==false){echo 'checked=""';}?> hidden/>
@@ -99,12 +99,12 @@ if($result->num_rows>0){
                             }
                             ?>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_po" <?php if(strpos($account_position_access, "new_po")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_po" <?php if(strpos($account_position_access, "new_po")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Create Purchased Order</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_po" <?php if(strpos($account_position_access, "new_po")!==false){echo 'checked=""';}?> hidden/>
@@ -114,12 +114,12 @@ if($result->num_rows>0){
                             }
                             ?>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="inbound_logs" <?php if(strpos($account_position_access, "inbound_logs")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="inbound_logs" <?php if(strpos($account_position_access, "inbound_logs")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View Inbound logs</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="inbound_logs" <?php if(strpos($account_position_access, "inbound_logs")!==false){echo 'checked=""';}?> hidden/>
@@ -129,12 +129,12 @@ if($result->num_rows>0){
                             }
                             ?>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_inbound" <?php if(strpos($account_position_access, "new_inbound")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_inbound" <?php if(strpos($account_position_access, "new_inbound")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Create and Upload Inbound</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="new_inbound" <?php if(strpos($account_position_access, "new_inbound")!==false){echo 'checked=""';}?> hidden/>
@@ -144,12 +144,12 @@ if($result->num_rows>0){
                             }
                             ?>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Approve Delete</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?> hidden/>
@@ -162,12 +162,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Inventory Management</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock" <?php if(strpos($account_position_access, "stock")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock" <?php if(strpos($account_position_access, "stock")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View stock</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock" <?php if(strpos($account_position_access, "stock")!==false){echo 'checked=""';}?>/>
@@ -180,12 +180,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Logistics</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" <?php if(strpos($account_position_access, "logistics")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" <?php if(strpos($account_position_access, "logistics")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Logistics Access</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="logistics" <?php if(strpos($account_position_access, "logistics")!==false){echo 'checked=""';}?> hidden/>
@@ -195,12 +195,12 @@ if($result->num_rows>0){
                             }
                             ?>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="void" <?php if(strpos($account_position_access, "void")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="void" <?php if(strpos($account_position_access, "void")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Approve Voided Transactions</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="void" <?php if(strpos($account_position_access, "void")!==false){echo 'checked=""';}?> hidden/>
@@ -213,12 +213,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Stock Transfer</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_transfer" <?php if(strpos($account_position_access, "stock_transfer")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_transfer" <?php if(strpos($account_position_access, "stock_transfer")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Stock Transfer</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="stock_transfer" <?php if(strpos($account_position_access, "stock_transfer")!==false){echo 'checked=""';}?> hidden/>
@@ -228,12 +228,12 @@ if($result->num_rows>0){
                             }
                             ?>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="rack_transfer" <?php if(strpos($account_position_access, "rack_transfer")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="rack_transfer" <?php if(strpos($account_position_access, "rack_transfer")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Transfer items from rack to another rack</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="rack_transfer" <?php if(strpos($account_position_access, "rack_transfer")!==false){echo 'checked=""';}?> hidden/>
@@ -246,12 +246,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Product Returns</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returnproduct" <?php if(strpos($account_position_access, "returnproduct")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returnproduct" <?php if(strpos($account_position_access, "returnproduct")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Returned Products</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returnproduct" <?php if(strpos($account_position_access, "returnproduct")!==false){echo 'checked=""';}?> hidden/>
@@ -264,12 +264,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Returns</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returns" <?php if(strpos($account_position_access, "returns")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returns" <?php if(strpos($account_position_access, "returns")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Return to Supplier</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="returns" <?php if(strpos($account_position_access, "returns")!==false){echo 'checked=""';}?> hidden/>
@@ -282,12 +282,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Finance</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="finance" <?php if(strpos($account_position_access, "finance")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="finance" <?php if(strpos($account_position_access, "finance")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Access on finance module</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="finance" <?php if(strpos($account_position_access, "finance")!==false){echo 'checked=""';}?> hidden/>
@@ -300,12 +300,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Forecasting</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="forecasting" <?php if(strpos($account_position_access, "forecasting")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="forecasting" <?php if(strpos($account_position_access, "forecasting")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and create forecast</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="forecasting" <?php if(strpos($account_position_access, "forecasting")!==false){echo 'checked=""';}?> hidden/>
@@ -318,12 +318,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">Users</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="users" <?php if(strpos($account_position_access, "users")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="users" <?php if(strpos($account_position_access, "users")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View  and create user employee accounts</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="users" <?php if(strpos($account_position_access, "users")!==false){echo 'checked=""';}?> hidden/>
@@ -336,12 +336,12 @@ if($result->num_rows>0){
                         <div class="col-lg-12 mb-3">
                             <label for="">administration</label>
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="audit" <?php if(strpos($account_position_access, "audit")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="audit" <?php if(strpos($account_position_access, "audit")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View Audit/ System Logs</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="audit" <?php if(strpos($account_position_access, "audit")!==false){echo 'checked=""';}?> hidden/>
@@ -352,12 +352,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="audit" <?php if(strpos($account_position_access, "reports")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="audit" <?php if(strpos($account_position_access, "reports")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View Reports</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="audit" <?php if(strpos($account_position_access, "reports")!==false){echo 'checked=""';}?> hidden/>
@@ -368,12 +368,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_category" <?php if(strpos($account_position_access, "admin_category")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_category" <?php if(strpos($account_position_access, "admin_category")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Category</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_category" <?php if(strpos($account_position_access, "admin_category")!==false){echo 'checked=""';}?> hidden/>
@@ -384,12 +384,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_brand" <?php if(strpos($account_position_access, "admin_brand")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_brand" <?php if(strpos($account_position_access, "admin_brand")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Brand</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_brand" <?php if(strpos($account_position_access, "admin_brand")!==false){echo 'checked=""';}?> hidden/>
@@ -400,12 +400,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_list" <?php if(strpos($account_position_access, "product_list")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_list" <?php if(strpos($account_position_access, "product_list")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Product on Product List</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_list" <?php if(strpos($account_position_access, "product_list")!==false){echo 'checked=""';}?> hidden/>
@@ -416,12 +416,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_warehouse" <?php if(strpos($account_position_access, "admin_warehouse")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_warehouse" <?php if(strpos($account_position_access, "admin_warehouse")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Warehouse</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_warehouse" <?php if(strpos($account_position_access, "admin_warehouse")!==false){echo 'checked=""';}?> hidden/>
@@ -432,12 +432,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_supplier" <?php if(strpos($account_position_access, "admin_supplier")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_supplier" <?php if(strpos($account_position_access, "admin_supplier")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Supplier</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_supplier" <?php if(strpos($account_position_access, "admin_supplier")!==false){echo 'checked=""';}?> hidden/>
@@ -448,12 +448,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_platform" <?php if(strpos($account_position_access, "admin_platform")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_platform" <?php if(strpos($account_position_access, "admin_platform")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Platforms</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_platform" <?php if(strpos($account_position_access, "admin_platform")!==false){echo 'checked=""';}?> hidden/>
@@ -464,12 +464,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_courier" <?php if(strpos($account_position_access, "admin_courier")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_courier" <?php if(strpos($account_position_access, "admin_courier")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Couriers</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_courier" <?php if(strpos($account_position_access, "admin_courier")!==false){echo 'checked=""';}?> hidden/>
@@ -480,12 +480,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="barcode_reprint" <?php if(strpos($account_position_access, "barcode_reprint")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="barcode_reprint" <?php if(strpos($account_position_access, "barcode_reprint")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Barcode reprint access</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="barcode_reprint" <?php if(strpos($account_position_access, "barcode_reprint")!==false){echo 'checked=""';}?> hidden/>
@@ -496,12 +496,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_accessess" <?php if(strpos($account_position_access, "admin_accessess")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_accessess" <?php if(strpos($account_position_access, "admin_accessess")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Access Levels(Position Create) Access</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="admin_accessess" <?php if(strpos($account_position_access, "admin_accessess")!==false){echo 'checked=""';}?> hidden/>
@@ -512,12 +512,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" <?php if(strpos($account_position_access, "product_destination")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" <?php if(strpos($account_position_access, "product_destination")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View and Create Item Destination</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="product_destination" <?php if(strpos($account_position_access, "product_destination")!==false){echo 'checked=""';}?> hidden/>
@@ -528,12 +528,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_capital" <?php if(strpos($account_position_access, "view_capital")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_capital" <?php if(strpos($account_position_access, "view_capital")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View Unit Cost</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_capital" <?php if(strpos($account_position_access, "view_capital")!==false){echo 'checked=""';}?> hidden/>
@@ -544,12 +544,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_profit" <?php if(strpos($account_position_access, "view_profit")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_profit" <?php if(strpos($account_position_access, "view_profit")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">View Profit</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="view_profit" <?php if(strpos($account_position_access, "view_profit")!==false){echo 'checked=""';}?> hidden/>
@@ -560,12 +560,12 @@ if($result->num_rows>0){
                             ?>
 
                             <div class="form-check form-switch">
-                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?><?php if($position_name === "Administrator"){echo "disabled";}?>/>
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?><?php if($account_position_name === "Administrator"){echo "disabled";}?>/>
                                 <label class="form-check-label" for="flexSwitchCheckDefault">Approve Inbound Delete & Outbound Void</label>
                             </div>
 
                             <?php 
-                            if($position_name === "Administrator"){
+                            if($account_position_name === "Administrator"){
                             ?>
                             <div class="form-check form-switch d-none">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="approve_inbound" <?php if(strpos($account_position_access, "approve_inbound")!==false){echo 'checked=""';}?> hidden/>
