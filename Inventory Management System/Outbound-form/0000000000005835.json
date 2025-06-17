@@ -1,0 +1,42 @@
+[
+    {
+        "barcode": "05104564-1",
+        "product_description": "DELL OPTIPLEX 3050 Intel Pentium PLATINUM",
+        "batch_num": "GENT013",
+        "brand_name": "No Brand",
+        "category_name": "Accessories",
+        "capital": "2800.00"
+    },
+    {
+        "barcode": "32788821-1 ",
+        "product_description": "480 GB SSD HYNIX 480",
+        "batch_num": "GENT011",
+        "brand_name": "HYNIX",
+        "category_name": "Ssd",
+        "capital": "3220.00"
+    },
+    {
+        "barcode": "06332869-62",
+        "product_description": "Laptop Charger HP 3.33A Blue Pin",
+        "batch_num": "GENT019",
+        "brand_name": "HP",
+        "category_name": "Laptop Charger",
+        "capital": "181.03"
+    },
+    {
+        "barcode": "61475702-250",
+        "product_description": "Laptop Charger Lenovo 20V 2.25A Bullet Pin Original",
+        "batch_num": "GENT015",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop Charger",
+        "capital": "302.39"
+    },
+    {
+        "barcode": "99722940-156",
+        "product_description": "Laptop Charger Lenovo 3.25A Bullet Pin",
+        "batch_num": "GENT015",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop Charger",
+        "capital": "172.83"
+    }
+]
