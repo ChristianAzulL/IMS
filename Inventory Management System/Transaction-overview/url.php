@@ -3,6 +3,8 @@ error_reporting(E_ALL);
 ini_set('max_execution_time', 300);
 ini_set('memory_limit', '4G');
 ini_set('display_errors', 1); 
+ini_set('pcre.backtrack_limit', '10000000');
+
 
 include "../config/database.php";
 include "../config/on_session.php";
@@ -21,7 +23,6 @@ $escaped = array_map(fn($cat) => "'" . trim(htmlspecialchars($cat, ENT_QUOTES)) 
 $imploded_category = implode(',', $escaped);
 $warehouse_transaction = htmlspecialchars($_GET['wh'] ?? '');
 
-// echo $warehouse_transaction;
 
 
 $bg_colors = ['bg-100', 'bg-200', 'bg-300', 'bg-400', 'bg-500', 'bg-600', 'table-primary', 'table-info', 'table-dark', 'table-warning', 'table-success'];
@@ -31,20 +32,16 @@ $grand_total_gross = 0;
 $grand_total_net = 0;
 $num = 1;
 
-echo $raw_category;
 
 if(empty($raw_category) && empty($warehouse_transaction)){
     $category_additional_query = "AND ol.warehouse IN ($user_warehouse_id)";
     $item_additional_query = "AND ol.warehouse IN ($user_warehouse_id)";
-    echo "ta";
 } elseif(!empty($raw_category) && !empty($warehouse_transaction)) {
     $category_additional_query = "AND c.hashed_id IN ($raw_category) AND ol.warehouse = '$warehouse_transaction'";
     $item_additional_query = "AND ol.warehouse = '$warehouse_transaction'";
-    echo "tang";
 } elseif(empty($raw_category) && !empty($warehouse_transaction)) {
     $category_additional_query = "AND ol.warehouse = '$warehouse_transaction'";
     $item_additional_query = "AND ol.warehouse = '$warehouse_transaction'";
-    echo "tangina";
 }
 
 if(empty($warehouse_transaction)){
@@ -84,7 +81,6 @@ if ($from && $to) {
     GROUP BY c.category_name
     ";
 
-    echo $category_query;
 
     
     
@@ -334,13 +330,19 @@ if ($from && $to) {
         'margin_bottom' => 0,
     ]);
 
-    $mpdf->WriteHTML($html);
+    // ✅ Split HTML and write in chunks
+    $htmlChunks = str_split($html, 100000); // safe chunk size
+    foreach ($htmlChunks as $chunk) {
+        $mpdf->WriteHTML($chunk);
+    }
+
     $fileName = $from . ' to ' . $to . '.pdf';
 
     header('Content-Type: application/pdf');
     header('Content-Disposition: attachment; filename="' . $fileName . '"');
     $mpdf->Output($fileName, 'D');
     exit;
+
 }
 
 echo json_encode($response);

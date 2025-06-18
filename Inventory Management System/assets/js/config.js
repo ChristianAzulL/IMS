@@ -7,20 +7,28 @@ var CONFIG = {
   isNavbarVerticalCollapsed: false,
   theme: 'light',
   isRTL: false,
-  isFluid: false,
+  isFluid: true,
   navbarStyle: 'transparent',
   navbarPosition: 'vertical'
 };
+
+// Always overwrite localStorage values
 Object.keys(CONFIG).forEach(function (key) {
-  if (localStorage.getItem(key) === null) {
-    localStorage.setItem(key, CONFIG[key]);
-  }
+  localStorage.setItem(key, CONFIG[key]);
 });
+
+// Apply DOM changes based on config
 if (JSON.parse(localStorage.getItem('isNavbarVerticalCollapsed'))) {
   document.documentElement.classList.add('navbar-vertical-collapsed');
 }
+
 if (localStorage.getItem('theme') === 'dark') {
   document.documentElement.setAttribute('data-bs-theme', 'dark');
 } else if (localStorage.getItem('theme') === 'auto') {
-  document.documentElement.setAttribute('data-bs-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute(
+    'data-bs-theme',
+    window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  );
+} else {
+  document.documentElement.setAttribute('data-bs-theme', 'light');
 }

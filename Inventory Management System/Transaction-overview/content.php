@@ -471,7 +471,7 @@
                         <h5>All accessible warehouse</h5>
                     </div>
                     <div class="col-lg-1">
-                    <a href="url.php?from=<?php echo $startDate;?>&to=<?php echo $endDate;?>&category=>&wh=" class="btn btn-primary fs-11"><span class="fas fa-download"></span></a>
+                    <a href="url.php?from=<?php echo $startDate;?>&to=<?php echo $endDate;?>&category=&wh=" class="btn btn-primary fs-11"><span class="fas fa-download"></span></a>
                     </div>
                 </div>
                 <div class="row">

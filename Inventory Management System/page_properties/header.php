@@ -28,6 +28,7 @@ if (isset($_GET['notnot'])) {
 <link rel="manifest" href="../assets/img/favicons/manifest.json">
 <meta name="msapplication-TileImage" content="../assets/img/favicons/mstile-150x150.png">
 <meta name="theme-color" content="#ffffff">
+
 <script src="../assets/js/config.js"></script>
 <script src="../vendors/simplebar/simplebar.min.js"></script>
 
