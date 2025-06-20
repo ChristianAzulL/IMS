@@ -477,11 +477,27 @@
                 <div class="row">
                     <div class="col-lg-12 table-responsive">
                             <!-- <table class="table mb-0 data-table fs-10" data-datatables="data-datatables"> -->
-                            <table class="table mb-0 fs-10">
+                            <table class="table mb-0 data-table fs-10" data-datatables='{
+  "paging": false,
+  "scrollY": "300px",
+  "scrollCollapse": true,
+  "ordering": false
+}'>
+
                                 <thead class="bg-primary">
                                     <tr>
                                         <th class="fs-10 text-white ">#</th>
-                                        <th class="fs-10 text-white " colspan="11">CATEGORY</th>
+                                        <th class="fs-10 text-white ">CATEGORY</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
                                         <th class="fs-10 text-white text-end ">QTY</th>
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL UNIT COST</th>
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL GROSS SALES</th>
@@ -530,7 +546,17 @@
                                             echo '
                                             <tr class="' . $random_bg . '">
                                                 <td class="fs-10">' . $num . '</td>
-                                                <td class="fs-10" colspan="11">'. $category_name .'</td>
+                                                <td class="fs-10">'. $category_name .'</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                                 <td class="fs-10 text-end">'. $outbound_qty .'</td>
                                                 <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
                                                 <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>

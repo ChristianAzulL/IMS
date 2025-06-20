@@ -47,7 +47,7 @@ if(isset($_GET['date'])){
                 ?>
             </div>
         </div>
-        <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn", "batch","warehouse","staff", "fault_reason", "fault"],"page":5,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["description","brand","category","amount","barcode","orn", "batch","warehouse","staff", "client", "fault_reason", "fault"],"page":5,"pagination":true}'>
             
             <!-- Search Bar -->
             <div class="row justify-content-end g-0">
@@ -119,6 +119,7 @@ if(isset($_GET['date'])){
                             <th class="text-900 sort" data-sort="fault_reason">Classification</th>
                             <th class="text-900 sort" data-sort="warehouse">Warehouse</th>
                             <th class="text-900 sort" data-sort="staff" style="width: 250px;">Staff</th>
+                            <th class="text-900 sort" data-sort="client" style="width: 250px;">Client</th>
                         </tr>
                     </thead>
                     <tbody class="list">
@@ -208,9 +209,12 @@ if(isset($_GET['date'])){
                                 u.user_fname,
                                 u.user_lname,
                                 u.pfp, 
-                                s.batch_code
+                                s.batch_code,
+                                ol.customer_fullname
                             FROM `returns` r 
                             LEFT JOIN stocks s ON s.unique_barcode = r.unique_barcode
+                            LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id 
                             LEFT JOIN product p ON p.hashed_id = s.product_id
                             LEFT JOIN brand b ON b.hashed_id = p.brand
                             LEFT JOIN category c ON c.hashed_id = p.category
@@ -239,9 +243,12 @@ if(isset($_GET['date'])){
                                 u.user_fname,
                                 u.user_lname,
                                 u.pfp, 
-                                s.batch_code
+                                s.batch_code,
+                                ol.customer_fullname
                             FROM `returns` r 
                             LEFT JOIN stocks s ON s.unique_barcode = r.unique_barcode
+                            LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id 
                             LEFT JOIN product p ON p.hashed_id = s.product_id
                             LEFT JOIN brand b ON b.hashed_id = p.brand
                             LEFT JOIN category c ON c.hashed_id = p.category
@@ -267,6 +274,7 @@ if(isset($_GET['date'])){
                                 $rwarehouse = $row['warehouse_name'];
                                 $author = $row['user_fname'] . " " . $row['user_lname'];
                                 $batch = $row['batch_code'];
+                                $customer_fullname = $row['customer_fullname'];
                                 if(empty($row['pfp'])){
                                     $author_pfp = "../../assets/img/def_pfp.png" ;
                                 } else {
@@ -288,6 +296,7 @@ if(isset($_GET['date'])){
                             <td class="fault_reason"><?php echo $fault_reason;?></td>
                             <td class="warehouse"><?php echo $rwarehouse;?></td>
                             <td class="staff"><img class="img rounded-circle" src="<?php echo $author_pfp;?>" height="30" alt=""> <?php echo $author;?></td>
+                            <td class="client"><?php echo $customer_fullname;?></td>
                         </tr>
                         
                         <?php
