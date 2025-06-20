@@ -478,11 +478,11 @@
                     <div class="col-lg-12 table-responsive">
                             <!-- <table class="table mb-0 data-table fs-10" data-datatables="data-datatables"> -->
                             <table class="table mb-0 data-table fs-10" data-datatables='{
-  "paging": false,
-  "scrollY": "300px",
-  "scrollCollapse": true,
-  "ordering": false
-}'>
+                                    "paging": false,
+                                    "scrollY": "300px",
+                                    "scrollCollapse": true,
+                                    "ordering": false
+                                    }'>
 
                                 <thead class="bg-primary">
                                     <tr>
