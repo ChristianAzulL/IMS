@@ -75,7 +75,7 @@ if (!empty($batch_code)) {
                 $output .= "
                     <tr>
                         <td>
-                            <a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "' class='text-decoration-none text-dark'>
+                            <a href='../Product-info/?prod=" . htmlspecialchars($row['unique_barcode']) . "' target='_blank' rel='noopener noreferrer' class='text-decoration-none text-dark'>
                                 <small>LPO " . htmlspecialchars($row['unique_barcode']) . "</small>
                             </a>
                         </td>
