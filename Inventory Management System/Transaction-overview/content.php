@@ -8,7 +8,7 @@
     $num = 1;
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Collect inputs safely
-        $startDate = isset($_POST['start_date']) ? $_POST['start_date'] . " 23:59:59" : null;
+        $startDate = isset($_POST['start_date']) ? $_POST['start_date'] . " 00:00:00" : null;
         $endDate = isset($_POST['end_date']) ? $_POST['end_date'] . " 23:59:59" : null;
         $warehouse_transaction = isset($_POST['warehouse']) ? trim($_POST['warehouse']) : '';
         $categories = isset($_POST['category']) ? $_POST['category'] : [];
