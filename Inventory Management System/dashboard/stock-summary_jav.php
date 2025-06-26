@@ -18,7 +18,7 @@ $warehouse_list = array_map(function($warehouse) use ($conn) {
 $imploded_warehouse_ids = implode(",", $warehouse_list);
 
 // Get all suppliers
-$dashboard_supplier_query = "SELECT * FROM supplier";
+$dashboard_supplier_query = "SELECT * FROM supplier LIMIT 2";
 $dashboard_supplier_res = $conn->query($dashboard_supplier_query);
 
 // Get all categories (moved outside supplier loop)

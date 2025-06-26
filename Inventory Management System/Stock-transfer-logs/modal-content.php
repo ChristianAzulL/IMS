@@ -108,7 +108,7 @@ if (isset($_GET['id'])) {
 
         if(empty($dateReceived)){
             $dateReceived =  '<b class="text-danger">Will be automatically filled out by the system once received by the receiving user.</b>';
-            if($fromUserId === $user_id && strpos($warehouses, $toWarehouse)===false){
+            if($fromUserId === $user_id || $fromUserId !== $user_id && strpos($warehouses, $toWarehouse)===false){
                 $submitBTN =    '<div class="text-center mt-3">
                                     <button class="btn btn-primary" type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="Either you dont have access on this warehouse or you are the same user that sent this." disabled>Access denied or same sender.</button>
                                 </div>';

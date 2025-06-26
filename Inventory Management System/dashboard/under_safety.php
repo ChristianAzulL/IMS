@@ -24,6 +24,7 @@ if(empty($dashboard_wh)){
         s.safety,
         w.warehouse_name
     HAVING COUNT(s.unique_barcode) < s.safety
+    LIMIT 10
     ";
 } else {
     $under_safety_query = "
@@ -50,6 +51,7 @@ if(empty($dashboard_wh)){
         s.safety,
         s.warehouse
     HAVING COUNT(s.unique_barcode) < s.safety
+    LIMIT 10
     ";
 }
 
