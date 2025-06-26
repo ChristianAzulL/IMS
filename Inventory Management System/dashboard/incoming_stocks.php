@@ -20,7 +20,7 @@
                             <?php 
                             // Make sure you already have $conn connected before this point
 
-                            $incoming_stocks = "SELECT * FROM category ";
+                            $incoming_stocks = "SELECT * FROM category LIMIT 10";
 
                             $incoming_stocks_res = $conn->query($incoming_stocks);
                             if ($incoming_stocks_res && $incoming_stocks_res->num_rows > 0) {
