@@ -1,4 +1,4 @@
-<div id="activities"></div>
+<!-- <div id="activities"></div>
 
 
 <script>
@@ -18,4 +18,4 @@
 
     // Check every 30 seconds
     setInterval(checkForNewActivity, 30000);
-</script>
+</script> -->
