@@ -134,8 +134,8 @@ $(document).ready(function () {
     setInterval(checkNotifications, 3000); // Check every 3 seconds
 });
 </script>
-<script>
-const authToken = "<?php echo $_SESSION['auth_token']; ?>"; // from PHP session
+<!-- <script>
+const authToken = "<?php //echo $_SESSION['auth_token']; ?>"; // from PHP session
 
 let lastSentTime = 0;
 const minInterval = 60000; // 60 seconds between logs
@@ -166,7 +166,7 @@ function sendActivityPing() {
 ['mousemove', 'click', 'keydown', 'scroll'].forEach(event =>
     window.addEventListener(event, sendActivityPing)
 );
-</script>
+</script> -->
 
 <!-- 
 <script>
