@@ -1,0 +1,34 @@
+[
+    {
+        "barcode": "AC342M-2",
+        "product_description": "Laptop Charger Acer 19V 3.42A Micro Pin",
+        "batch_num": "PObatch-28",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "149.84"
+    },
+    {
+        "barcode": "13694284-435",
+        "product_description": "Laptop Charger Acer 19V 3.42A Micro Pin",
+        "batch_num": "ST348",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "158.01"
+    },
+    {
+        "barcode": "14730099-259",
+        "product_description": "Laptop Charger Acer 19V 3.42A Yellow Pin",
+        "batch_num": "ST355",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "137.80"
+    },
+    {
+        "barcode": "14730099-280",
+        "product_description": "Laptop Charger Acer 19V 3.42A Yellow Pin",
+        "batch_num": "ST355",
+        "brand_name": "Acer",
+        "category_name": "Laptop Charger",
+        "capital": "137.80"
+    }
+]

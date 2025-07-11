@@ -1,0 +1,42 @@
+[
+    {
+        "barcode": "04484840-15",
+        "product_description": "Laptop Battery Lenovo L16L2PB2",
+        "batch_num": "ST303",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop Battery",
+        "capital": "748.92"
+    },
+    {
+        "barcode": "30884241-36",
+        "product_description": "Laptop Keyboard Lenovo 320-14",
+        "batch_num": "ST322",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop Keyboard",
+        "capital": "168.46"
+    },
+    {
+        "barcode": "30884241-33",
+        "product_description": "Laptop Keyboard Lenovo 320-14",
+        "batch_num": "ST322",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop Keyboard",
+        "capital": "168.46"
+    },
+    {
+        "barcode": "24189745-320",
+        "product_description": "Gaming Mat mouse pad",
+        "batch_num": "GENT013",
+        "brand_name": "No Brand",
+        "category_name": "Accessories",
+        "capital": "80.00"
+    },
+    {
+        "barcode": "MousePad-9",
+        "product_description": "Mouse Pad Short",
+        "batch_num": "PObatch-0",
+        "brand_name": "No Brand",
+        "category_name": "Accessories",
+        "capital": "30.00"
+    }
+]

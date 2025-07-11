@@ -1,0 +1,18 @@
+[
+    {
+        "barcode": "T470-1",
+        "product_description": "Laptop Battery Lenovo T470 ",
+        "batch_num": "PObatch-258",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop Battery",
+        "capital": "1200.00"
+    },
+    {
+        "barcode": "01AV421-2",
+        "product_description": "Laptop Battery Lenovo 01AV421 ",
+        "batch_num": "PObatch-256",
+        "brand_name": "Lenovo",
+        "category_name": "Laptop Battery",
+        "capital": "1400.00"
+    }
+]
