@@ -34,7 +34,7 @@ if (isset($_GET['view'])) {
                         <?php 
                         }
                         ?>
-                        <td><input type="number" name="selling[]" min="<?php echo $product['capital'];?>" class="form-control m-0 py-0 selling-input" step="0.01" placeholder="Selling Price" required></td>
+                        <td><input type="number" name="selling[]" min="<?php echo $product['capital'];?>" max="999999" class="form-control m-0 py-0 selling-input" step="0.01" placeholder="Selling Price" required></td>
                         <td><?php echo $product['batch_num']; ?></td>
                         <td><?php echo $product['brand_name'];?></td>
                         <td><?php echo $product['category_name'];?></td>

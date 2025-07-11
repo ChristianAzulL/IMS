@@ -22,14 +22,16 @@ try {
             CONCAT(u.user_fname, ' ', u.user_lname) AS created_by, 
             p.date AS created_date,
             w.warehouse_name AS wh,
-            s.warehouse
+            s.warehouse,
+            s.parent_barcode
         FROM stocks s
         LEFT JOIN product p ON s.product_id = p.hashed_id
         LEFT JOIN brand b ON p.brand = b.hashed_id
         LEFT JOIN category c ON p.category = c.hashed_id
         LEFT JOIN users u ON p.user_id = u.hashed_id
         LEFT JOIN warehouse w ON s.warehouse = w.hashed_id
-        WHERE (p.description LIKE ? 
+        WHERE (s.parent_barcode LIKE ? 
+           OR p.description LIKE ? 
            OR b.brand_name LIKE ? 
            OR c.category_name LIKE ? 
            OR u.user_fname LIKE ? 
@@ -46,9 +48,9 @@ try {
 
     $searchTerm = "%$search%";
     if ($warehouse) {
-        $stmt->bind_param('ssssssii', $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $warehouse, $limit, $offset);
+        $stmt->bind_param('sssssssii', $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $warehouse, $limit, $offset);
     } else {
-        $stmt->bind_param('sssssii', $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $limit, $offset);
+        $stmt->bind_param('ssssssii', $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $limit, $offset);
     }
 
     $stmt->execute();
