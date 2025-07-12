@@ -1,20 +1,33 @@
-<div class="card h-100" id="fast-cat-container">
-    <div class="card-header">
-        <h6>Fast Moving Category</h6>
-    </div>
-    <div class="card-body py-6 text-center">
-        <!-- Load Button -->
-        <button id="load-now-btn" class="btn btn-primary mb-3">
-            Load now
-        </button>
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="true" aria-controls="collapse4">Fast Moving Category</button></h2>
+    <div class="accordion-collapse collapse" id="collapse4" aria-labelledby="heading4" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="accordion-header">
+            <h6>Fast Moving Category</h6>
+        </div>
+        <div id="fast-cat-container">
+            
+            <div class="py-6 text-center">
+                <!-- Load Button -->
+                <button id="load-now-btn" class="btn btn-primary mb-3">
+                    Load now
+                </button>
 
-        <!-- Loading Button (hidden initially) -->
-        <button id="loading-btn" class="btn btn-primary mb-3" type="button" disabled style="display: none;">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            Loading...
-        </button>
+                <!-- Loading Button (hidden initially) -->
+                <button id="loading-btn" class="btn btn-primary mb-3" type="button" disabled style="display: none;">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+            </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
+
+
+
 
 <script>
 $(document).ready(function () {

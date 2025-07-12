@@ -64,11 +64,6 @@ usort($data, function($a, $b) {
 $top_10_fast = array_slice($data, 0, 10);
 ?>
 
-<div class="card h-100">
-  <div class="card-header">
-    <h6 class="mb-0">Top 10 Fast Moving (Category)</h6>
-  </div>
-  <div class="card-body">
     <div class="table-responsive">
       <table class="table table-hover fs-10">
         <thead>
@@ -95,5 +90,3 @@ $top_10_fast = array_slice($data, 0, 10);
         </tbody>
       </table>
     </div>
-  </div>
-</div>

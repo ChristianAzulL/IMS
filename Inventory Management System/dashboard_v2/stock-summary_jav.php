@@ -98,11 +98,14 @@ if($dashboard_supplier_res->num_rows > 0){
 }
 ?>
 
-<div class="card">
-    <div class="card-header">
-        <h6><a href="../Stock-Summary/">Stock Summary</a> as of <?php echo date("Y-m-d"); ?></h6>
-    </div>
-    <div class="card-body">
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="true" aria-controls="collapse4">Stock Summary</button></h2>
+    <div class="accordion-collapse collapse" id="collapse4" aria-labelledby="heading4" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="accordion-header">
+            <h6><a href="../Stock-Summary/">View Stocks</a> as of <?php echo date("Y-m-d"); ?></h6>
+        </div>
         <div class="table-responsive">
             <table class="table mb-0 data-table fs-10" data-datatables='{"paging":false,"scrollY":"500px","scrollCollapse":true}'>
                 <thead class="bg-dark">
@@ -122,5 +125,7 @@ if($dashboard_supplier_res->num_rows > 0){
                 </tbody>
             </table>
         </div>
+      </div>
     </div>
+  </div>
 </div>
