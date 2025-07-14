@@ -98,10 +98,10 @@ if($dashboard_supplier_res->num_rows > 0){
 }
 ?>
 
-<div class="accordion" id="accordionExample">
+<div class="accordion" id="stocksummarycontainer">
   <div class="accordion-item">
-    <h2 class="accordion-header" id="heading4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="true" aria-controls="collapse4">Stock Summary</button></h2>
-    <div class="accordion-collapse collapse" id="collapse4" aria-labelledby="heading4" data-bs-parent="#accordionExample">
+    <h2 class="accordion-header" id="heading4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#stocksummary" aria-expanded="true" aria-controls="stocksummary">Stock Summary</button></h2>
+    <div class="accordion-collapse collapse" id="stocksummary" aria-labelledby="heading4" data-bs-parent="#accordionExample">
       <div class="accordion-body">
         <div class="accordion-header">
             <h6><a href="../Stock-Summary/">View Stocks</a> as of <?php echo date("Y-m-d"); ?></h6>
