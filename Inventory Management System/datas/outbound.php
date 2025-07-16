@@ -2,83 +2,96 @@
 include "../config/database.php";
 
 // Second query: Using prepared statements and handling result
-$query = "
-    SELECT p.description, b.brand_name, c.category_name, s.parent_barcode, 
-            oc.quantity_before, oc.quantity_after, COUNT(s.parent_barcode) AS quantity, 
-            s.capital, oc.sold_price
-    FROM outbound_content oc
-    LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-    LEFT JOIN product p ON p.hashed_id = s.product_id
-    LEFT JOIN brand b ON b.hashed_id = p.brand
-    LEFT JOIN category c ON c.hashed_id = p.category";
-    
-$stmt2 = $conn->prepare($query);
-$stmt2->bind_param("s", $outbound_id);
-$stmt2->execute();
-$res = $stmt2->get_result();
+$query = "SELECT 
+            p.description, 
+            b.brand_name, 
+            c.category_name, 
+            p.parent_barcode, 
+            s.unique_barcode, 
+            oc.quantity_before, 
+            oc.quantity_after, 
+            oc.status AS outbound_status, 
+            ol.date_request_void, 
+            ol.date_approved, 
+            ol.date_paid, 
+            ol.date_sent, 
+            ol.customer_fullname, 
+            ol.payment_method, 
+            co.courier_name, 
+            lp.logistic_name, 
+            ol.order_num, 
+            ol.order_line_id,
+            w.warehouse_name,
+            u.user_fname,
+            u.user_lname
+        FROM outbound_content oc
+        LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+        LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+        LEFT JOIN product p ON p.hashed_id = s.product_id
+        LEFT JOIN brand b ON b.hashed_id = p.brand
+        LEFT JOIN category c ON c.hashed_id = p.category
+        LEFT JOIN warehouse w ON w.hashed_id = ol.warehouse
+        LEFT JOIN courier co ON co.hashed_id = ol.courier
+        LEFT JOIN logistic_partner lp ON lp.hashed_id = ol.platform
+        LEFT JOIN users u ON u.hashed_id = ol.user_id
+    ";
 
-$count = 1;
-$total = 0;
-$total_profit = 0;
-if ($res->num_rows > 0) {
-    while ($row = $res->fetch_assoc()) {
-        $productDescription = $row['description'];
-        $brandName = $row['brand_name'];
-        $categoryName = $row['category_name'];
-        $parentBarcode = $row['parent_barcode'];
-        $quantityBefore = $row['quantity_before'];
-        $quantityAfter = $row['quantity_after'];
-        $quantity = $row['quantity'];
-        $productCapital = $row['capital'];
-        $soldPrice = $row['sold_price'];
-        $sub_Total = $quantity * $soldPrice;
-        $profit = $soldPrice - $productCapital;
-        $sub_profit = $profit * $quantity;
-        ?>
-            
-        <tr>
-            <td class="fs-10" style="width: 550px;"><?php echo $count;?></td>
-            <td class="fs-10"><?php echo $productDescription;?></td>
-            <td class="fs-10"><?php echo $brandName;?></td>
-            <td class="fs-10"><?php echo $categoryName;?></td>
-            <td class="fs-11">
-                <?php 
-                echo $parentBarcode . "<br>";
-                $last_query = "SELECT unique_barcode FROM outbound_content WHERE hashed_id = '$outbound_id'";
-                $last_res = $conn->query($last_query);
-                if($last_res->num_rows>0){
-                    while($row=$last_res->fetch_assoc()){
-                        $unique_bc = $row['unique_barcode'];
-                        echo $unique_bc . ", ";
-                    }
-                }
-                ?>
-            </td>
-            <td class="text-end fs-10" style="width: 250px;"><?php echo $quantityBefore;?></td>
-            <td class="text-end fs-10" style="width: 250px;"><?php echo $quantity;?></td>
-            <td class="text-end fs-10" style="width: 250px;"><?php echo $quantityAfter;?></td>
-            <?php 
-            if(strpos($access, "view_capital")!==false || $user_position_name === "Administrator" || $user_position_name === "administrator"){
-            ?>
-            <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($productCapital, 2);?></td>
-            <?php 
-            } 
-            ?>
-            <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($soldPrice, 2);?></td>
-            <?php 
-            if(strpos($access, "view_profit")!==false || $user_position_name === "Administrator" || $user_position_name === "administrator"){
-            ?>
-            <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($sub_profit, 2);?></td>
-            <?php 
-            }
-            ?>
-            <td class="text-end fs-10" style="width: 250px;">₱ <?php echo number_format($sub_Total, 2);?></td>
-        </tr>
-        
-                <?php
-        $count++;
-        $total += $sub_Total;
-        $total_profit += $sub_profit;
+$result = $conn->query($query);
+
+if ($result->num_rows > 0) {
+    // Print header
+    echo "ORDER NO,ORDER LINE ID,CUSTOMER,PRODUCT DESCRIPTION,BRAND,CATEGORY,PARENT BARCODE,UNIQUE BARCODE,QUANTITY BEFORE,QUANTITY AFTER,STATUS,DATE REQUEST VOID,DATE APPROVED,DATE PAID,DATE SENT,PAYMENT METHOD,COURIER,PLATFORM,WAREHOUSE,TRANSACTED BY\n";
+
+    while ($row = $result->fetch_assoc()) {
+        // Convert status code to text
+        switch ($row['outbound_status']) {
+            case 6:
+                $outbound_status = "OUTBOUNDED";
+                break;
+            case 0:
+                $outbound_status = "PAID";
+                break;
+            case 2:
+                $outbound_status = "RETURNED";
+                break;
+            case 3:
+                $outbound_status = "VOID REQUESTED";
+                break;
+            case 4:
+                $outbound_status = "VOIDED";
+                break;
+            case 5:
+                $outbound_status = "VOID REJECTED";
+                break;
+            default:
+                $outbound_status = "UNKNOWN";
+        }
+
+        $transacted_by = trim($row['user_fname'] . " " . $row['user_lname']);
+
+        echo "<br>" . 
+            $row['order_num'] . "," .
+            $row['order_line_id'] . "," .
+            $row['customer_fullname'] . "," .
+            $row['description'] . "," .
+            $row['brand_name'] . "," .
+            $row['category_name'] . "," .
+            $row['parent_barcode'] . "," .
+            $row['unique_barcode'] . "," .
+            $row['quantity_before'] . "," .
+            $row['quantity_after'] . "," .
+            $outbound_status . "," .
+            $row['date_request_void'] . "," .
+            $row['date_approved'] . "," .
+            $row['date_paid'] . "," .
+            $row['date_sent'] . "," .
+            $row['payment_method'] . "," .
+            $row['courier_name'] . "," .
+            $row['logistic_name'] . "," .
+            $row['warehouse_name'] . "," .
+            $transacted_by;
     }
+} else {
+    echo "No data found.";
 }
 ?>
