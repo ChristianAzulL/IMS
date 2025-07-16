@@ -1,7 +1,21 @@
-<?php 
+<?php
 include "../config/database.php";
 
-// Second query: Using prepared statements and handling result
+// Set headers to force download as CSV
+header('Content-Type: text/csv');
+header('Content-Disposition: attachment; filename="outbound_export.csv"');
+
+// Open output stream
+$output = fopen('php://output', 'w');
+
+// Output header row
+fputcsv($output, [
+    "ORDER NO", "ORDER LINE ID", "CUSTOMER", "PRODUCT DESCRIPTION", "BRAND", "CATEGORY",
+    "PARENT BARCODE", "UNIQUE BARCODE", "QUANTITY BEFORE", "QUANTITY AFTER", "STATUS",
+    "DATE REQUEST VOID", "DATE APPROVED", "DATE PAID", "DATE SENT", "PAYMENT METHOD",
+    "COURIER", "PLATFORM", "WAREHOUSE", "TRANSACTED BY"
+]);
+
 $query = "SELECT 
             p.description, 
             b.brand_name, 
@@ -34,64 +48,52 @@ $query = "SELECT
         LEFT JOIN courier co ON co.hashed_id = ol.courier
         LEFT JOIN logistic_partner lp ON lp.hashed_id = ol.platform
         LEFT JOIN users u ON u.hashed_id = ol.user_id
-    ";
+        ORDER BY w.warehouse_name, ol.date_sent";
 
 $result = $conn->query($query);
 
-if ($result->num_rows > 0) {
-    // Print header
-    echo "ORDER NO,ORDER LINE ID,CUSTOMER,PRODUCT DESCRIPTION,BRAND,CATEGORY,PARENT BARCODE,UNIQUE BARCODE,QUANTITY BEFORE,QUANTITY AFTER,STATUS,DATE REQUEST VOID,DATE APPROVED,DATE PAID,DATE SENT,PAYMENT METHOD,COURIER,PLATFORM,WAREHOUSE,TRANSACTED BY\n";
-
+if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        // Convert status code to text
         switch ($row['outbound_status']) {
-            case 6:
-                $outbound_status = "OUTBOUNDED";
-                break;
-            case 0:
-                $outbound_status = "PAID";
-                break;
-            case 2:
-                $outbound_status = "RETURNED";
-                break;
-            case 3:
-                $outbound_status = "VOID REQUESTED";
-                break;
-            case 4:
-                $outbound_status = "VOIDED";
-                break;
-            case 5:
-                $outbound_status = "VOID REJECTED";
-                break;
-            default:
-                $outbound_status = "UNKNOWN";
+            case 6:  $status = "OUTBOUNDED"; break;
+            case 0:  $status = "PAID"; break;
+            case 2:  $status = "RETURNED"; break;
+            case 3:  $status = "VOID REQUESTED"; break;
+            case 4:  $status = "VOIDED"; break;
+            case 5:  $status = "VOID REJECTED"; break;
+            default: $status = "UNKNOWN";
         }
 
-        $transacted_by = trim($row['user_fname'] . " " . $row['user_lname']);
+        $transacted_by = trim($row['user_fname'] . ' ' . $row['user_lname']);
 
-        echo "<br>" . 
-            $row['order_num'] . "," .
-            $row['order_line_id'] . "," .
-            $row['customer_fullname'] . "," .
-            $row['description'] . "," .
-            $row['brand_name'] . "," .
-            $row['category_name'] . "," .
-            $row['parent_barcode'] . "," .
-            $row['unique_barcode'] . "," .
-            $row['quantity_before'] . "," .
-            $row['quantity_after'] . "," .
-            $outbound_status . "," .
-            $row['date_request_void'] . "," .
-            $row['date_approved'] . "," .
-            $row['date_paid'] . "," .
-            $row['date_sent'] . "," .
-            $row['payment_method'] . "," .
-            $row['courier_name'] . "," .
-            $row['logistic_name'] . "," .
-            $row['warehouse_name'] . "," .
-            $transacted_by;
+        fputcsv($output, [
+            $row['order_num'],
+            $row['order_line_id'],
+            $row['customer_fullname'],
+            $row['description'],
+            $row['brand_name'],
+            $row['category_name'],
+            $row['parent_barcode'],
+            $row['unique_barcode'],
+            $row['quantity_before'],
+            $row['quantity_after'],
+            $status,
+            $row['date_request_void'],
+            $row['date_approved'],
+            $row['date_paid'],
+            $row['date_sent'],
+            $row['payment_method'],
+            $row['courier_name'],
+            $row['logistic_name'],
+            $row['warehouse_name'],
+            $transacted_by
+        ]);
     }
 } else {
-    echo "No data found.";
+    // Write a message to CSV if no data
+    fputcsv($output, ["No data found."]);
 }
+
+fclose($output);
+exit;
 ?>
