@@ -23,6 +23,30 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                 while (($data = fgetcsv($handle, 1000, ",")) !== false) {
                     if (count($data) >= 9) {
                         [$item, $keyword, $qty, $price, $supplier, $barcode, $batch, $brand, $category, $safety] = $data;
+                        // Generate barcode if missing (your existing code remains)
+                        if (empty($barcode)) {
+                            do {
+                                $barcode = str_pad(mt_rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
+                                $query = "SELECT COUNT(*) AS count FROM product WHERE parent_barcode = ?";
+                                $stmt = $conn->prepare($query);
+                                $stmt->bind_param("s", $barcode);
+                                $stmt->execute();
+                                $stmt->bind_result($count);
+                                $stmt->fetch();
+                                $stmt->close();
+                            } while ($count > 0);
+                        }
+
+                        // Track duplicates within the CSV itself
+                        static $csv_barcodes_seen = [];
+                        static $csv_duplicate_barcodes = [];
+
+                        if (isset($csv_barcodes_seen[$barcode])) {
+                            $csv_duplicate_barcodes[] = $barcode;
+                        } else {
+                            $csv_barcodes_seen[$barcode] = true;
+                        }
+
                         $rowIndex++;
 
                         // Check existing batch
@@ -87,7 +111,7 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                 });
 
                 // Inject SweetAlert2 scripts if there are any duplicates
-                if (!empty($existing_batches) || !empty($existing_barcodes)) {
+                if (!empty($existing_batches) || !empty($existing_barcodes) || !empty($csv_duplicate_barcodes)) {
                     echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>";
                     echo "<script>";
                     echo "Swal.fire({";
@@ -96,7 +120,7 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                     echo "  html: `";
 
                     if (!empty($existing_batches)) {
-                        echo "<strong>Existing Batch Codes:</strong><br>";
+                        echo "<strong>Existing Batch Codes (DB):</strong><br>";
                         foreach ($existing_batches as $batch) {
                             echo htmlspecialchars($batch) . "<br>";
                         }
@@ -104,20 +128,28 @@ if (isset($_POST['submit']) && isset($_FILES['csv_file'])) {
                     }
 
                     if (!empty($existing_barcodes)) {
-                        echo "<strong>Existing Barcodes:</strong><br>";
+                        echo "<strong>Existing Barcodes (DB):</strong><br>";
                         foreach ($existing_barcodes as $barcode) {
                             echo htmlspecialchars($barcode) . "<br>";
                         }
+                        echo "<br>";
                     }
 
-                    echo "`,";
+                    if (!empty($csv_duplicate_barcodes)) {
+                        echo "<strong>Duplicate Barcodes in CSV:</strong><br>";
+                        foreach (array_unique($csv_duplicate_barcodes) as $dup) {
+                            echo htmlspecialchars($dup) . "<br>";
+                        }
+                    }
+
+                    echo "`,"; // closing backtick for HTML
                     echo "  confirmButtonText: 'Go back'";
                     echo "}).then(() => {";
                     echo "  window.location.href = '../Inbound-logs/';";
                     echo "});";
                     echo "</script>";
-
                 }
+
 
                 // Display sorted rows
                 foreach ($rows as $row) {
