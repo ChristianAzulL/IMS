@@ -20,6 +20,7 @@ if (isset($_SESSION['Stock_id'])) {
           <thead class="bg-200">
             <tr>
               <th></th>
+              <th>Transfer ID</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="batch">Details</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="status">Fulfillment Status</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap" data-sort="from_wh">From</th>
@@ -108,6 +109,7 @@ if (isset($_SESSION['Stock_id'])) {
                   <span class="fas fa-eye"></span>
                 </button>
               </td>
+              <td><?php echo 10000 + $transfer_id;?></td>
               <td class="align-middle <?php echo $td;?> white-space-nowrap batch">
                   <?php echo $truncatedText; ?>
               </td>
