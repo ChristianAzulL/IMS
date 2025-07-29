@@ -91,7 +91,7 @@ if ($result->num_rows > 0) {
             ($prev_category !== $category_name || $prev_supplier !== $supplier_name)) {
             // Output subtotal row
             fputcsv($output, [
-                "Total for $prev_category which supplier is $prev_supplier",
+                "TOTAL FOR $prev_category WHICH SUPPLIER IS $prev_supplier",
                 '', '', '', '',
                 number_format($subtotal, 2),
                 $sub_qty, '', ''
@@ -124,7 +124,7 @@ if ($result->num_rows > 0) {
         if (!$next_row) {
             // Output final subtotal
             fputcsv($output, [
-                "Total for $category_name which supplier is $supplier_name",
+                "TOTAL FOR $category_name WHICH SUPPLIER IS $supplier_name",
                 '', '', '', '',
                 number_format($subtotal, 2),
                 $sub_qty, '', ''
