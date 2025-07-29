@@ -131,6 +131,7 @@ if ($category_res && $category_res->num_rows > 0) {
 
             $product_details_query = "
                 SELECT 
+                    p.hashed_id AS product_id,
                     p.description,
                     p.parent_barcode,
                     b.brand_name,
@@ -174,6 +175,38 @@ if ($category_res && $category_res->num_rows > 0) {
                     number_format($product['product_qty']),
                     !empty($product['location_name']) ? $product['location_name'] . " - " . $product['warehouse_name'] : 'For SKU - ' . $product['warehouse_name'] 
                 ];
+
+                // Final detail: per-sequence line (individual item line)
+                $sequences_query = "
+                    SELECT 
+                        s.capital, 
+                        s.unique_barcode, 
+                        il.location_name, 
+                        w.warehouse_name 
+                    FROM stocks s 
+                    LEFT JOIN item_location il ON il.id = s.item_location 
+                    LEFT JOIN warehouse w ON w.hashed_id = s.warehouse 
+                    WHERE s.supplier = ? 
+                        AND s.product_id = ? 
+                        AND s.item_status = 0";
+
+                $sequences_stmt = $conn->prepare($sequences_query);
+                $sequences_stmt->bind_param("ss", $supplier['supplier_id'], $product['product_id']);
+                $sequences_stmt->execute();
+                $sequences_result = $sequences_stmt->get_result();
+
+                while ($sequence = $sequences_result->fetch_assoc()) {
+                    $rows[] = [
+                        '', '', '',
+                        $sequence['unique_barcode'], 
+                        number_format($sequence['capital'], 2), 
+                        1,
+                        !empty($sequence['location_name']) 
+                            ? $sequence['location_name'] . " - " . $sequence['warehouse_name'] 
+                            : 'For SKU - ' . $sequence['warehouse_name']
+                    ];
+                }
+
             }
         }
     }
