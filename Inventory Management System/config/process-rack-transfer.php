@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     unset($_SESSION['warehouse_rack_transfer']);
     unset($_SESSION['scanned_transfer']);
+    unset($_SESSION['rack']);
     
     echo json_encode($response);
 } else {
