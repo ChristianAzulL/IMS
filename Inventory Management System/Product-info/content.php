@@ -36,7 +36,7 @@ $result = $conn->query($product_query);
         $row = $result->fetch_assoc();
         
         if (empty($row['product_img']) || !isset($row['product_img'])) {
-            $product_img = '../../assets/img/def_img.png';
+            $product_img_html = '<div class="swiper-slide h-100 text-center bg-300"><img class="rounded-1 object-fit-cover" src="../../assets/img/def_img.png" alt="Default Image"></div>';
         } else {
             $imageArray = @unserialize($row['product_img']); // or json_decode($row['product_img'], true)
 
@@ -323,6 +323,7 @@ $result = $conn->query($product_query);
                                                 <div class="timeline-item-card">
                                                     <h5 class="mb-2"><?php echo $title;?></h5>
                                                     <p class="fs-10 mb-0"><?php echo $action;?></p>
+                                                    <small class="fs-11 text-400"><?php echo $did_by;?></small>
                                                 </div>
                                             </div>
                                         </div>
@@ -348,6 +349,7 @@ $result = $conn->query($product_query);
                                                 <div class="timeline-item-card">
                                                     <h5 class="mb-2"><?php echo $title;?></h5>
                                                     <p class="fs-10 mb-0"><?php echo $action;?></p>
+                                                    <small class="fs-11 text-400"><?php echo $did_by;?></small>
                                                 </div>
                                             </div>
                                         </div>

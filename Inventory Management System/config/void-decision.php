@@ -51,6 +51,17 @@ if (isset($_POST['outbound_id']) && isset($_POST['response']) && isset($_POST['t
                     echo 'Failed update outbound content.';
                     exit;   
                 }
+
+                // Insert into stock_timeline
+                $action_description = "$outbound_unique_barcode has been successfully voided";
+                $title = 'VOIDED OUTBOUND';
+
+                $stmt_history = $conn->prepare("INSERT INTO stock_timeline (unique_barcode, title, action, date, user_id) VALUES (?, ?, ?, ?, ?)");
+                $stmt_history->bind_param("sssss", $outbound_unique_barcode, $title, $action_description, $currentDateTime, $user_id);
+                if (!$stmt_history->execute()) {
+                    echo 'Failed to insert into stock_timeline.';
+                    exit;
+                }
             }
         }
 
