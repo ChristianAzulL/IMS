@@ -193,6 +193,54 @@ $outbound_res = $conn->query($outbound_sql);
   </div>
 </div>
 
+
+
+<?php 
+if(isset($_GET['notnot'])){
+    $notnot = $_GET['notnot'];
+
+    // Sanitize input
+    $notnot = $conn->real_escape_string($notnot);
+
+    // Correct the query: MySQL doesn't have a built-in SHA256 comparison like this
+    // Instead, compute SHA256 in PHP or use MySQL's SHA2 function properly
+    $notification_query = "SELECT `message` FROM `notification` WHERE SHA2(`id`, 256) = '$notnot'";
+    
+    $not_result = $conn->query($notification_query);
+
+    if ($not_result && $not_result->num_rows > 0) {
+        $row = $not_result->fetch_assoc();
+        $notification_message = $row['message'];
+
+        // Extract only the number using regex
+        if (preg_match('/\d+/', $notification_message, $matches)) {
+            $number = $matches[0]; // This will be something like 0000004454
+            // echo "Extracted number: " . $number;
+        } else {
+            // echo "No number found in the message.";
+        }
+    } else {
+        // echo "Notification not found.";
+    }
+?>
+<!-- Auto trigger script -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const targetId = "<?php echo $number; ?>";
+    if (targetId) {
+      const anchor = document.querySelector(`a[target-id="${targetId}"]`);
+      if (anchor) {
+        anchor.click();
+      }
+    }
+  });
+</script>
+<?php
+}
+?>
+
+
+
 <script>
 // Load content into modal on click
 $(document).on("click", "a[data-bs-toggle='modal']", function() {

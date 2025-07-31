@@ -1,7 +1,9 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
-
+if(isset($_SESSION['warehouse_for_return'])){
+    unset($_SESSION['warehouse_for_return']);
+}
 if(strpos($access, "returns")!==false || $user_position_name === "Administrator"){
 } else {
   header("Location: ../500/");

@@ -179,7 +179,13 @@
           </div>
           <div class="col-lg-3 mb-3">
             <label for="">Parent Barcode</label>
-            <input type="text" class="form-control" name="parent_barcode" placeholder="enter barcode">
+            <input 
+              type="text" 
+              class="form-control" 
+              name="parent_barcode" 
+              placeholder="enter barcode" 
+              oninput="this.value = this.value.replace(/\s/g, '')"
+            >
           </div>
           <div class="col-lg-3 mb-3">
             <label for="">Safety</label>
