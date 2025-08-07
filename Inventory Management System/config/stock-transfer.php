@@ -94,8 +94,8 @@ if($status === "pending"){
                             $stock_action = "Is now enroute to " . $toWarehouse_name . ". transfer #" . $id;
                             $stock_timeline_query = "INSERT INTO stock_timeline SET unique_barcode = '$unique_barcode', title = 'STOCK TRANSFER', `action` = '$stock_action', `date` = '$currentDateTime', user_id = '$user_id'";
                             if($conn->query($stock_timeline_query) === TRUE){
-                                echo "<br>successfully inserted to stock_timeline<br>";
-                                header("Location: ../Stock-transfer-logs/?enroute=success");
+                                // echo "<br>successfully inserted to stock_timeline<br>";
+                                // header("Location: ../Stock-transfer-logs/?enroute=success");
                             }
                         }
                         
@@ -131,8 +131,7 @@ if($status === "pending"){
                             $stock_action = "has been received by " . $toWarehouse_name . ". transfer #" . $id;
                             $stock_timeline_query = "INSERT INTO stock_timeline SET unique_barcode = '$unique_barcode', title = 'STOCK TRANSFER', `action` = '$stock_action', `date` = '$currentDateTime', user_id = '$user_id'";
                             if($conn->query($stock_timeline_query) === TRUE){
-                                echo "<br>successfully inserted to stock_timeline<br>";
-                                header("Location: ../Stock-transfer-logs/?received=success");
+                                
                             }
                         }
                         
@@ -141,6 +140,9 @@ if($status === "pending"){
 
             }
         }
+
+        // echo "<br>successfully inserted to stock_timeline<br>";
+        header("Location: ../Stock-transfer-logs/?transfer=success");
     } else {
         echo "<p class='text-danger'>Invalid request method.</p>";
     }

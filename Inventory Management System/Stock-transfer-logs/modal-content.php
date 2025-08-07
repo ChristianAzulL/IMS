@@ -32,7 +32,7 @@ if (isset($_GET['id'])) {
 
         if(empty($remarksReceiver) && strpos($warehouses, $toWarehouse)!==false && isset($toWarehouse)){
             if(strpos($warehouses, $toWarehouse)!==false){
-                $remarksReceiver = '<textarea class="form-control" name="remarks_receiver" id=""></textarea>';
+                $remarksReceiver = '<textarea class="form-control" name="remarks_receiver" id="" required></textarea>';
             } else {
                 $remarksReceiver = '<b class="text-danger">You cant proccess this because you are not the sender.</b>';
             }
@@ -232,7 +232,7 @@ if (isset($_GET['id'])) {
                                             <h6 class="mb-1 fw-semi-bold">
                                                 <a class="text-1100 stretched-link" href="#!"><?php echo $product_description;?></a>
                                             </h6>
-                                            <p class="fw-semi-bold mb-0 text-500">Brand: <?php echo $brand_name;?> | Category: <?php echo $category_name;?> | qty: <?php echo $qty;?></p>
+                                            <p class="fw-semi-bold mb-0 text-500">Brand: <?php echo $brand_name;?> | Category: <?php echo $category_name;?> | total qty for this item: <?php echo $qty;?></p>
                                             </div>
                                         </div>
                                         </td>
