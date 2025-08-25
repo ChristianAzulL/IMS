@@ -921,6 +921,47 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Transaction Overview</span></div>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory Per Supplier</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory Per Location</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Movement of Stocks</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inbound & Outbound Summary</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inbound Summary</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Outbound Summary</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product Quality</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Monthly Report to Export</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
+
           </ul>
         </li>
         <?php

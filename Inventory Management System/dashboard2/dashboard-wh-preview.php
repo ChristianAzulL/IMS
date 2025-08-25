@@ -99,7 +99,6 @@ if(isset($_GET['warehouse'])){
             <th class="text-900">Fast Moving Products This Month</th>
             <th class="text-900 text-center">Outbounded</th>
             <th class="text-900 text-center">Stocks</th>
-            <th class="text-900 pe-x1 text-end" style="width: 8rem">Outbound (%)</th>
             </tr>
         </thead>
         <tbody>
@@ -133,12 +132,7 @@ if(isset($_GET['warehouse'])){
                         $dis_category = htmlspecialchars($product_data['category']);
                         $dis_outbounded = number_format($product_data['outbounded']);
                         $dis_available_stocks = number_format($product_data['stocks']);
-                        if ($dis_available_stocks > 0) {
-                            $dis_percentage_initial = ($dis_outbounded / $dis_available_stocks) * 100;
-                            $dis_percentage = number_format($dis_percentage_initial, 2);
-                        } else {
-                            $dis_percentage = 100; // or 0, depending on how you want to show it
-                        }
+                        
                         
                         ?>
                         <tr class="border-bottom border-200">
@@ -155,18 +149,7 @@ if(isset($_GET['warehouse'])){
                             </td>
                             <td class="align-middle text-center fw-semi-bold"><?php echo $dis_outbounded;?></td>
                             <td class="align-middle text-center fw-semi-bold"><?php echo $dis_available_stocks;?></td>
-                            <td class="align-middle pe-x1">
-                                <div class="d-flex align-items-center">
-                                <div class="progress me-3 rounded-3 bg-200" style="height: 5px; width:80px" role="progressbar" 
-                                        aria-valuenow="41" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar bg-primary rounded-pill" 
-                                        style="width: <?php echo is_numeric($dis_percentage) ? $dis_percentage : 0;?>%;"></div>
-                                </div>
-                                <div class="fw-semi-bold ms-2">
-                                    <?php echo is_numeric($dis_percentage) ? $dis_percentage . '%' : $dis_percentage; ?>
-                                </div>
-                                </div>
-                            </td>
+                            
                         </tr>
                         <?php
                     }
