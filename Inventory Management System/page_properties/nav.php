@@ -953,7 +953,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="../Product-Quality/">
                 <!-- <a class="nav-link" href="../Product-Quality/"> -->
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product Quality</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
               </a>
