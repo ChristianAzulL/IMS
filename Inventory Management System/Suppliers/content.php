@@ -119,6 +119,7 @@
                             <select class="form-select" name="localInternational" id="localInternational">
                                 <option value="Local">Local</option>
                                 <option value="International">International</option>
+                                <option value="Hakot">Hakot</option>
                             </select>
                         </div>
                     </div>
