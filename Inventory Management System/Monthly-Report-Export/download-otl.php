@@ -12,8 +12,8 @@ $output = fopen('php://output', 'w');
 // Write CSV column headers
 fputcsv($output, ['WAREHOUSE', 'ORDER NUMBER', 'ORDER LINE ID', 'CUSTOMER', 'DESCRIPTION', 'BRAND', 'CATEGORY', 'OUTBOUND REF #', 'PLATFORM', 'SOLD AMOUNT']);
 $grand_total = 0;
-$start_date = date('Y-m-01 00:00:00'); // First day of current month
-$end_date   = date('Y-m-t 23:59:59');  // Last day of current month
+$start_date = $_GET['start'];
+$end_date = $_GET['end'];
 
 $query = "SELECT 
             oc.unique_barcode,
