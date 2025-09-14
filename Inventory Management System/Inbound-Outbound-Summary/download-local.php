@@ -11,6 +11,13 @@ require_once "../config/on_session.php";
  */
 $warehouse_id = null;
 $warehouse_name = null;
+// $start_time = null;
+// $end_time = null;
+
+// if(isset($_GET['start']) && isset($_GET['end'])){
+//     $start_time = $_GET['start'];
+//     $end_time = $_GET['end'];
+// } 
 
 if(isset($_GET['warehouse_id'])){
     $warehouse_id= $_GET['warehouse_id'];

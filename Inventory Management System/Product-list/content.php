@@ -182,10 +182,14 @@
             <input 
               type="text" 
               class="form-control" 
+              id="parent_barcode"
               name="parent_barcode" 
               placeholder="enter barcode" 
               oninput="this.value = this.value.replace(/\s/g, '')"
             >
+            <small id="barcode-message" style="color:red;display:none;">
+              This barcode already exists!
+            </small>
           </div>
           <div class="col-lg-3 mb-3">
             <label for="">Safety</label>
@@ -361,3 +365,32 @@ if (isset($_GET['update']) && $_GET['update'] === "success") {
     </script>";
 }
 ?>
+
+<script>
+document.getElementById('parent_barcode').addEventListener('input', function () {
+    const barcode = this.value.trim();
+    const msg = document.getElementById('barcode-message');
+
+    if (barcode.length === 0) {
+        msg.style.display = 'none';
+        return;
+    }
+
+    fetch('check_barcode.php?barcode=' + encodeURIComponent(barcode))
+        .then(res => res.json())
+        .then(data => {
+            if (data.exists) {
+                msg.textContent = "This barcode already exists!";
+                msg.style.color = "red";
+                msg.style.display = "inline";
+            } else {
+                msg.textContent = "Barcode is available.";
+                msg.style.color = "green";
+                msg.style.display = "inline";
+            }
+        })
+        .catch(err => {
+            console.error(err);
+        });
+});
+</script>

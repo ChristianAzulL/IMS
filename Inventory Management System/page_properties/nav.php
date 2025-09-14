@@ -933,7 +933,6 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../MoS/">
-              <a class="nav-link" href="#">
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Movement of Stocks</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
               </a>
             </li>

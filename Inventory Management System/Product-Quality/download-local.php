@@ -6,11 +6,13 @@ require_once "../config/on_session.php";
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename=returns_report.csv');
 
+$start = $_GET['start'];
+$end = $_GET['end'];
 // Open output stream
 $output = fopen('php://output', 'w');
 
 // ---- LOCAL DEFECTIVE RETURNS ----
-fputcsv($output, ["RETURNED AS DEFECTIVE"]);
+fputcsv($output, ["RETURNED AS DEFECTIVE BETWEEN $start AND $end"]);
 fputcsv($output, ["DESCRIPTION", "BRAND", "CATEGORY", "SUPPLIER", "LOCAL / IMPORT", "QTY", "TOTAL_AMOUNT"]);
 
 $returned_def_query = "
@@ -33,6 +35,7 @@ $returned_def_query = "
     LEFT JOIN brand b ON b.hashed_id = p.brand
     LEFT JOIN category c ON c.hashed_id = p.category
     WHERE r.supplier_type = 'Local' AND r.fault_type = 'DEFECTIVE'
+    AND r.date BETWEEN '$start' AND '$end'
     GROUP BY p.id, s.product_id, p.description
     ORDER BY sup.local_international, w.warehouse_name ASC
 ";
@@ -54,7 +57,7 @@ if ($returned_def_res && $returned_def_res->num_rows > 0) {
 
 // ---- INTERNATIONAL DELIVERY FAILED RETURNS ----
 fputcsv($output, []); // empty row for separation
-fputcsv($output, ["DELIVERY FAILED"]);
+fputcsv($output, ["DELIVERY FAILED BETWEEN $start AND $end"]);
 fputcsv($output, ["DESCRIPTION", "BRAND", "CATEGORY", "PLATFORM", "QTY", "TOTAL_AMOUNT"]);
 
 $returned_dF_query = "
@@ -81,6 +84,7 @@ $returned_dF_query = "
     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
     LEFT JOIN logistic_partner lp ON lp.hashed_id = ol.platform
     WHERE r.supplier_type = 'International' AND r.fault_type = 'DELIVERY FAILED'
+    AND r.date BETWEEN '$start' AND '$end'
     GROUP BY p.id, s.product_id, p.description, lp.logistic_name
     ORDER BY sup.local_international, w.warehouse_name ASC
 ";
