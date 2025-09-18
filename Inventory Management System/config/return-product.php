@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $supplier_info_res = $conn->query($supplier_info);
         if($supplier_info_res->num_rows>0){
             $row=$supplier_info_res->fetch_assoc();
-            $supplier_type = $row['local_international'];
+            $supplier_type = $row['local_international'] ?? 'unset';
         }
 
         if($fault_type === "DELIVERY FAILED" && $fault === "CLIENT FAULT" || $fault_type === "DELIVERY FAILED" && $fault === "SELLER FAULT"){
