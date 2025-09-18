@@ -45,7 +45,7 @@ $query = "SELECT
           LEFT JOIN warehouse w ON w.hashed_id = s.warehouse
           LEFT JOIN logistic_partner lp ON lp.hashed_id = ol.platform
           LEFT JOIN users u ON u.hashed_id = ol.user_id
-          WHERE oc.status IN (0.1)
+          WHERE oc.status IN (0,1)
           AND ol.date_sent BETWEEN '$start_date' AND '$end_date'
           AND ol.warehouse = '$wh_id'
           ORDER BY ol.warehouse, w.warehouse_name";
