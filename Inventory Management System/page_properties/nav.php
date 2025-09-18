@@ -963,6 +963,12 @@
                 <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Monthly Report to Export</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="../Transaction-Per-Day/">
+                <!-- <a class="nav-link" href="../Monthly-Export/"> -->
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Daily Transaction</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+              </a>
+            </li>
 
           </ul>
         </li>
