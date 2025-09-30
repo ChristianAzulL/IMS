@@ -1,12 +1,9 @@
-<div class="accordion" id="incoming stocks">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#incoming" aria-expanded="true" aria-controls="collapse4">incoming Stocks</button></h2>
-    <div class="accordion-collapse collapse" id="incoming" aria-labelledby="heading4" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
+<div class="card">
+    <div class="card-body">
         <div class="row flex-between-center g-0">
             <div class="col-auto mb-3">
                 <h6 class="mb-0">
-                    <a href="../incoming-stocks/?wh=<?php echo $dashboard_wh; ?>">View Incoming Stocks</a>
+                    <a href="../incoming-stocks/?wh=<?php echo $dashboard_wh; ?>">Incoming Stocks</a>
                 </h6>
             </div>
             <div class="col-12">
@@ -102,8 +99,6 @@
                     </table>
                 </div>
             </div>
-        </div>  
-      </div>
+        </div>   
     </div>
-  </div>
 </div>

@@ -1,83 +1,93 @@
-<div class="card py-3 mb-3">
-  <div class="card-body py-3">
-    <div class="row">
-        <div class="col-8 col-md-6 mb-3">
-            <label class="form-label" for="timepicker2">Select Date Range</label>
-            <input class="form-control datetimepicker" name="date_between" id="timepicker2" type="text" placeholder="dd/mm/yy to dd/mm/yy" data-options='{"mode":"range","dateFormat":"d/m/y","disableMobile":false}' />
+<div class="accordion" id="inboundoutboundsummaryContainer">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="heading4">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#inboundoutboundsummary" aria-expanded="true" aria-controls="inboundoutboundsummary">
+        Inbound Outbound Summary
+      </button>
+    </h2>
+    <div class="accordion-collapse collapse" id="inboundoutboundsummary" aria-labelledby="heading4" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class="row">
+            <div class="col-8 col-md-6 mb-3">
+                <label class="form-label" for="timepicker2">Select Date Range</label>
+                <input class="form-control datetimepicker" name="date_between" id="timepicker2" type="text" placeholder="dd/mm/yy to dd/mm/yy" data-options='{"mode":"range","dateFormat":"d/m/y","disableMobile":false}' />
+            </div>
+            <div class="col-6 mb-3">
+              <h6 id="dateLabel"><span class="spinner-border spinner-border-sm text-primary" role="status"></span></h6>
+            </div>
         </div>
-        <div class="col-6 mb-3">
-          <h6 id="dateLabel"><span class="spinner-border spinner-border-sm text-primary" role="status"></span></h6>
-        </div>
-    </div>
 
-    <div class="row g-0">
+        <div class="row g-0">
 
-      <!-- Orders -->
-      <div class="col-6 col-md-6 border-200 border-bottom border-end pb-4">
-        <h6 class="pb-1 text-700">Outbound</h6>
-        <p id="outboundQty" class="font-sans-serif lh-1 mb-1 fs-7">
-          <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-        </p>
-        <div class="d-flex align-items-center">
-          <h6 class="fs-10 text-500 mb-0">qty</h6>
+          <!-- Orders -->
+          <div class="col-6 col-md-6 border-200 border-bottom border-end pb-4">
+            <h6 class="pb-1 text-700">Outbound</h6>
+            <p id="outboundQty" class="font-sans-serif lh-1 mb-1 fs-7">
+              <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+            </p>
+            <div class="d-flex align-items-center">
+              <h6 class="fs-10 text-500 mb-0">qty</h6>
+            </div>
+          </div>
+
+          <!-- Items Sold -->
+          <div class="col-6 col-md-6 border-200 border-bottom border-end-md pb-4 ps-3">
+            <h6 class="pb-1 text-700">Inbound</h6>
+            <p id="inboundQty" class="font-sans-serif lh-1 mb-1 fs-7">
+              <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+            </p>
+            <div class="d-flex align-items-center">
+              <h6 class="fs-10 text-500 mb-3">qty</h6>
+            </div>
+            <div class="d-flex align-items-center">
+              <h6 class="fs-11 text-600 mb-0">Local:</h6>
+              <h6 id="local_qty" class="fs-11 text-600 mb-0">
+                <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+              </h6>
+            </div>
+            <div class="d-flex align-items-center">
+              <h6 class="fs-11 text-600 mb-0">Import:</h6>
+              <h6 id="import_qty" class="fs-11 text-600 mb-0">
+                <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+              </h6>
+            </div>
+            
+          </div>
+
+          <!-- Gross Sale -->
+          <div class="col-6 col-md-6 border-200 border-bottom border-bottom-md-0 border-end-md pt-4 pb-md-0 ps-3 ps-md-0">
+            <h6 class="pb-1 text-700">Outbound ₱</h6>
+            <p id="outboundSales" class="font-sans-serif lh-1 mb-1 fs-7">
+              <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+            </p>
+          </div>
+
+          <!-- Shipping -->
+          <div class="col-6 col-md-6 border-200 border-bottom-md-0 border-end pt-4 pb-md-0 ps-md-3">
+            <h6 class="pb-1 text-700">Inbound ₱</h6>
+            <p id="inboundCost" class="font-sans-serif lh-1 mb-1 fs-7">
+              <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+            </p>
+            <div class="d-flex align-items-center">
+              <h6 class="fs-11 text-600 mb-0">Local:</h6>
+              <h6 id="local_cost" class="fs-11 text-600 mb-0">
+                <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+              </h6>
+            </div>
+            <div class="d-flex align-items-center">
+              <h6 class="fs-11 text-600 mb-0">Import:</h6>
+              <h6 id="import_cost" class="fs-11 text-600 mb-0">
+                <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+              </h6>
+            </div>
+          </div>
+
         </div>
       </div>
-
-      <!-- Items Sold -->
-      <div class="col-6 col-md-6 border-200 border-bottom border-end-md pb-4 ps-3">
-        <h6 class="pb-1 text-700">Inbound</h6>
-        <p id="inboundQty" class="font-sans-serif lh-1 mb-1 fs-7">
-          <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-        </p>
-        <div class="d-flex align-items-center">
-          <h6 class="fs-10 text-500 mb-3">qty</h6>
-        </div>
-        <div class="d-flex align-items-center">
-          <h6 class="fs-11 text-600 mb-0">Local:</h6>
-          <h6 id="local_qty" class="fs-11 text-600 mb-0">
-            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-          </h6>
-        </div>
-        <div class="d-flex align-items-center">
-          <h6 class="fs-11 text-600 mb-0">Import:</h6>
-          <h6 id="import_qty" class="fs-11 text-600 mb-0">
-            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-          </h6>
-        </div>
-        
-      </div>
-
-      <!-- Gross Sale -->
-      <div class="col-6 col-md-6 border-200 border-bottom border-bottom-md-0 border-end-md pt-4 pb-md-0 ps-3 ps-md-0">
-        <h6 class="pb-1 text-700">Outbound ₱</h6>
-        <p id="outboundSales" class="font-sans-serif lh-1 mb-1 fs-7">
-          <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-        </p>
-      </div>
-
-      <!-- Shipping -->
-      <div class="col-6 col-md-6 border-200 border-bottom-md-0 border-end pt-4 pb-md-0 ps-md-3">
-        <h6 class="pb-1 text-700">Inbound ₱</h6>
-        <p id="inboundCost" class="font-sans-serif lh-1 mb-1 fs-7">
-          <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-        </p>
-        <div class="d-flex align-items-center">
-          <h6 class="fs-11 text-600 mb-0">Local:</h6>
-          <h6 id="local_cost" class="fs-11 text-600 mb-0">
-            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-          </h6>
-        </div>
-        <div class="d-flex align-items-center">
-          <h6 class="fs-11 text-600 mb-0">Import:</h6>
-          <h6 id="import_cost" class="fs-11 text-600 mb-0">
-            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
-          </h6>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
+
 
 
 

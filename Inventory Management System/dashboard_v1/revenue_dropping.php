@@ -101,14 +101,11 @@ if ($revdrop_product_res->num_rows > 0) {
 
 ?>
 
-<div class="accordion" id="rev_dropping_container">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading4"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rev_drop" aria-expanded="true" aria-controls="collapse4">Revenue Dropping</button></h2>
-    <div class="accordion-collapse collapse" id="rev_drop" aria-labelledby="heading4" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
-        <div class="accordion-header">
-            <h6><a href="../Revenue Dropping/?wh=<?php echo $dashboard_wh;?>">View all Revenue Dropping</a> <?php echo $date_today; ?></h6>
-        </div>
+<div class="card">
+    <div class="card-header">
+        <h6><a href="../Revenue Dropping/?wh=<?php echo $dashboard_wh;?>">Revenue Dropping</a> <?php echo $date_today; ?></h6>
+    </div>
+    <div class="card-body">
         <div class="table-responsive">
             <table class="table mb-0 data-table fs-10" data-datatables='{"paging":false,"scrollY":"300px","scrollCollapse":true}'>
                 <thead class="bg-warning">
@@ -137,7 +134,5 @@ if ($revdrop_product_res->num_rows > 0) {
                 </tbody>
             </table>
         </div>
-      </div>
     </div>
-  </div>
 </div>

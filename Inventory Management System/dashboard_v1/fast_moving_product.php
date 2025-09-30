@@ -1,12 +1,3 @@
-<div class="accordion" id="fast-moving-product-container">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading4">
-      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fastmovingproducts" aria-expanded="true" aria-controls="fastmovingproducts">
-        Fast Moving Products
-      </button>
-    </h2>
-    <div class="accordion-collapse collapse" id="fastmovingproducts" aria-labelledby="heading4" data-bs-parent="#accordionExample">
-      <div class="accordion-body">
 <div class="card h-lg-100 overflow-hidden">
   <div class="card-body p-0">
     <div id="dashboard-wh-preview">
@@ -30,9 +21,3 @@
     </div>
   </div>
 </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-

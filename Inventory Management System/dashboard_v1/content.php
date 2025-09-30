@@ -78,6 +78,13 @@ if ($hour >= 5 && $hour < 12) {
             </div>
             <?php 
             }
+            if($user_position_name === "Superadmin" || strpos($access, "inbound_outbound")!==false){
+            ?>
+            <div class="col-lg-12">
+                <?php include "inbound_outbound.php"; ?>
+            </div>
+            <?php 
+            }
             if($user_position_name === "Superadmin" || strpos($access, "fast_slow_category")!==false){
             ?>
             <div class="col-lg-12">
@@ -106,23 +113,23 @@ if ($hour >= 5 && $hour < 12) {
             </div>
             <?php 
             }
-            //if($user_position_name === "Superadmin" || strpos($access, "weekly_sales")!==false){
+            if($user_position_name === "Superadmin" || strpos($access, "weekly_sales")!==false){
             ?>
-            <!-- <div class="col-lg-12">
-                <div class="row g-3 mb-3"> -->
-                    <?php // include "weekly_sales.php"; ?>
-                    <?php //include "total_order.php"; ?>
-                <!-- </div>
-            </div> -->
+            <div class="col-lg-12">
+                <div class="row g-3 mb-3">
+                    <?php include "weekly_sales.php"; ?>
+                    <?php include "total_order.php"; ?>
+                </div>
+            </div>
             <?php 
-            //}
-            // if($user_position_name === "Superadmin" || strpos($access, "monthly_display_sales")!==false){
+            }
+            if($user_position_name === "Superadmin" || strpos($access, "monthly_display_sales")!==false){
             ?>
-            <!-- <div class="col-lg-12 mb-3">
-                <?php //include "monthly_sales_display.php"; ?>
-            </div> -->
+            <div class="col-lg-12 mb-3">
+                <?php include "monthly_sales_display.php"; ?>
+            </div>
             <?php 
-            // }
+            }
             if($user_position_name === "Superadmin" || strpos($access, "incoming_stocks")!==false){
             ?>
             <div class="col-lg-12 mb-3">
@@ -132,7 +139,7 @@ if ($hour >= 5 && $hour < 12) {
             }
             if($user_position_name === "Superadmin" || strpos($access, "fast_slow_category")!==false){
             ?>
-            <div class="col-lg-12">
+            <div class="col-lg-12 mb-3">
                 <?php include "slow_moving_category.php"; ?>
             </div>
             <?php 
@@ -149,15 +156,8 @@ if ($hour >= 5 && $hour < 12) {
             }
             if($user_position_name === "Superadmin" || strpos($access, "revenue_drop")!==false){
             ?>
-            <div class="col-lg-12 mb-3">
-                <?php include "revenue_dropping.php"; ?>
-            </div>
-            <?php 
-            }
-            if($user_position_name === "Superadmin" || strpos($access, "inbound_outbound")!==false){
-            ?>
             <div class="col-lg-12">
-                <?php include "inbound_outbound.php"; ?>
+                <?php include "revenue_dropping.php"; ?>
             </div>
             <?php 
             }
@@ -169,10 +169,7 @@ if ($hour >= 5 && $hour < 12) {
     if (strpos($access, "dashboard_inventory") !== false || $user_position_name === "Superadmin") {
         ?>
         <div class="col-xxl-12 col-xl-12">
-            <?php 
-                include "inventory-new.php";
-                // include "inventory.php"; 
-            ?>
+            <?php include "inventory.php"; ?>
         </div>
         <?php
     }
