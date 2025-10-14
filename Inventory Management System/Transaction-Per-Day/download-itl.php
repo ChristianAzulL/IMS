@@ -14,6 +14,7 @@ fputcsv($output, ['WAREHOUSE', 'BARCODE', 'DESCRIPTION', 'BRAND', 'CATEGORY', 'S
 $grand_total = 0;
 $start_date = $_GET['start'];
 $end_date = $_GET['end'];
+$selected_id = $_GET['user'];
 
 $query = "SELECT 
             il.date_received,
@@ -35,7 +36,8 @@ $query = "SELECT
           LEFT JOIN warehouse w ON w.hashed_id = s.warehouse
           LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
           LEFT JOIN users u ON u.hashed_id = s.user_id
-          WHERE il.date_received BETWEEN '$start_date' AND '$end_date'
+          WHERE s.user_id = '$selected_id' 
+          AND il.date_received BETWEEN '$start_date' AND '$end_date'
           ORDER BY s.warehouse, w.warehouse_name ASC";
 
 $res = $conn->query($query);

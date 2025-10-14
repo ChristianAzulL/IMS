@@ -27,7 +27,7 @@ $counter = 1;
 
 if($result->num_rows > 0){
     while($row = $result->fetch_assoc()){
-        if ($counter > 2) break; // ✅ stop after 3 rows
+        // if ($counter > 2) break; // ✅ stop after 3 rows
 
         $warehouse_name = $row['warehouse_name'];
         $available_qty = $row['available_qty'];
