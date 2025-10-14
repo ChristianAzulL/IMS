@@ -14,11 +14,11 @@
                     <select name="warehouse_id" class="form-select" required>
                         <option value="" selected="">Select Warehouse</option>
                         <?php 
-                        $wh_selection = "SELECT hashed_id, warehouse_name FROM warehouse ORDER BY warehouse_name ASC";
+                        $wh_selection = "SELECT hashed_id, user_fname, user_lname FROM users ORDER BY user_lname ASC";
                         $wh_selection_res = $conn->query($wh_selection);
                         if($wh_selection_res->num_rows>0){
                             while($row=$wh_selection_res->fetch_assoc()){
-                                echo '<option value="' . $row['hashed_id'] . '">' . $row['warehouse_name'] . '</option>';
+                                echo '<option value="' . $row['hashed_id'] . '">' . $row['user_lname'] . ", " . $row['user_fname'] . '</option>';
                             }
                         }
                         ?>
@@ -64,8 +64,8 @@
                 CSV downloads are currently limited.  
                 The complete functionality will be accessible upon client approval of the quotation.
             </p><br>
-            <a class="d-inline-flex align-items-center border rounded-pill px-3 py-1 me-2 mt-2 inbox-link" href="download-otl.php?start=<?php echo $startDateFormatted;?>&&end=<?php echo $endDateFormatted;?>&&wh=<?php echo $selected_wh;?>"><span class="fas fa-file-alt text-primary" data-fa-transform="grow-4"></span><span class="ms-2">Download Outbound Transactions CSV</span></a>
-            <a class="d-inline-flex align-items-center border rounded-pill px-3 py-1 me-2 mt-2 inbox-link" href="download-itl.php?start=<?php echo $startDateFormatted;?>&&end=<?php echo $endDateFormatted;?>&&wh=<?php echo $selected_wh;?>"><span class="fas fa-file-alt text-primary" data-fa-transform="grow-4"></span><span class="ms-2">Download Inbound Transactions CSV</span></a>
+            <a class="d-inline-flex align-items-center border rounded-pill px-3 py-1 me-2 mt-2 inbox-link" href="download-otl.php?start=<?php echo $startDateFormatted;?>&&end=<?php echo $endDateFormatted;?>&&user=<?php echo $selected_wh;?>"><span class="fas fa-file-alt text-primary" data-fa-transform="grow-4"></span><span class="ms-2">Download Outbound Transactions CSV</span></a>
+            <a class="d-inline-flex align-items-center border rounded-pill px-3 py-1 me-2 mt-2 inbox-link" href="download-itl.php?start=<?php echo $startDateFormatted;?>&&end=<?php echo $endDateFormatted;?>&&user=<?php echo $selected_wh;?>"><span class="fas fa-file-alt text-primary" data-fa-transform="grow-4"></span><span class="ms-2">Download Inbound Transactions CSV</span></a>
             
         </div>
         <?php 

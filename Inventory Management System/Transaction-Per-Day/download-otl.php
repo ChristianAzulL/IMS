@@ -19,7 +19,7 @@ fputcsv($output, [
 
 $start_date = $_GET['start'];
 $end_date   = $_GET['end'];
-$wh_id      = $_GET['wh'];
+$wh_id      = $_GET['user'];
 
 $query = "SELECT 
             oc.unique_barcode,
@@ -47,7 +47,7 @@ $query = "SELECT
           LEFT JOIN users u ON u.hashed_id = ol.user_id
           WHERE oc.status IN (0,1)
           AND ol.date_sent BETWEEN '$start_date' AND '$end_date'
-          AND ol.warehouse = '$wh_id'
+          AND ol.user_id = '$wh_id'
           ORDER BY ol.warehouse, w.warehouse_name";
 
 $res = $conn->query($query);
