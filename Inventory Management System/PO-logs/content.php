@@ -84,7 +84,7 @@ if(isset($_SESSION['po_list'])){
         <tr class="btn-reveal-trigger">
           <th class="align-middle white-space-nowrap name">
             <?php 
-            if($supplier_type !== "Local"){
+            if($supplier_type !== "Local" || $supplier_type !=="Hakot"){
             if($row['status'] == 0){
             ?>
             <a href="update-session.php?blue=<?php echo $po_id;?>" class="btn fs-11 mx-0"><span class="far fa-edit mx-0"></span></a>
@@ -102,7 +102,7 @@ if(isset($_SESSION['po_list'])){
           <td class="align-middle white-space-nowrap supplier"><?php echo $po_supplier;?></td>
           <td class="align-middle white-space-nowrap country"><?php echo $date_created;?></td>
           <td class="align-middle white-space-nowrap email"><?php echo $by;?></td>
-          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php if($supplier_type !== "Local"){echo $status;} elseif(is_null($row['date_received'])){ echo '<span class="badge badge rounded-pill badge-subtle-warning">To Receive<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';} else  { echo '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';}?></td>
+          <td class="align-middle text-end fs-9 white-space-nowrap payment"><?php if($supplier_type !== "Local" || $supplier_type !=="Hakot"){echo $status;} elseif(is_null($row['date_received'])){ echo '<span class="badge badge rounded-pill badge-subtle-warning">To Receive<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';} else  { echo '<span class="badge badge rounded-pill badge-subtle-success">Received<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>';}?></td>
         </tr>
         <?php 
           }

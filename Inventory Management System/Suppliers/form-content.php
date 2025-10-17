@@ -14,12 +14,19 @@ $supplier_name = $row['supplier_name'];
         <option value=""></option>
         <?php 
         if($row['type'] === "Local"){
+            echo '<option value="Hakot">Hakot</option>';
             echo '<option value="International">International</option>';
             echo '<option value="Local" selected>Local</option>';
         } elseif($row['type'] === "International"){
+            echo '<option value="Hakot">Hakot</option>';
             echo '<option value="International" selected>International</option>';
             echo '<option value="Local">Local</option>';
+        } elseif($row['type'] === "Hakot"){
+            echo '<option value="Hakot" selected>Hakot</option>';
+            echo '<option value="International">International</option>';
+            echo '<option value="Local">Local</option>';
         } else {
+            echo '<option value="Hakot">Hakot</option>';
             echo '<option value="International">International</option>';
             echo '<option value="Local">Local</option>';
         }

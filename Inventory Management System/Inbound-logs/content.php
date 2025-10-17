@@ -351,8 +351,25 @@ $inbound_res = $conn->query($inbound_sql);
                   // Ensure that $imploded_warehouse_ids is safely included in the query to avoid SQL injection
                   if (isset($imploded_warehouse_ids) && !empty($imploded_warehouse_ids)) {
                     // Assuming $imploded_warehouse_ids is a comma-separated string of integers
-                    $po_query = "SELECT po.id, sup.local_international AS supplier_type FROM purchased_order po LEFT JOIN supplier sup ON sup.hashed_id = po.supplier WHERE po.warehouse IN ($imploded_warehouse_ids) AND (po.status = 4 AND sup.local_international = 'International' OR po.status = 0 AND sup.local_international = 'Local') AND po.date_received IS NULL ORDER BY po.id DESC";
-                    
+                    $po_query = "
+SELECT 
+    po.id, 
+    sup.local_international AS supplier_type 
+FROM 
+    purchased_order po
+LEFT JOIN 
+    supplier sup ON sup.hashed_id = po.supplier
+WHERE 
+    po.warehouse IN ($imploded_warehouse_ids)
+    AND (
+        (po.status = 4 AND sup.local_international = 'International')
+        OR (po.status = 0 AND sup.local_international = 'Local')
+        OR (sup.local_international = 'Hakot')
+    )
+    AND po.date_received IS NULL
+ORDER BY 
+    po.id DESC";
+
                     // Execute the query
                     $res = $conn->query($po_query);
 
