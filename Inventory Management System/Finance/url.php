@@ -65,8 +65,8 @@ if ($from && $to) {
     if ($supplier_res->num_rows > 0) {
         while ($row = $supplier_res->fetch_assoc()) {
             // Supplier row
-            $csv_rows[] = [$num++, $row['supplier'], '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
-
+            // $csv_rows[] = [$num++, $row['supplier'], '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+            $supplier_name = $row['supplier'];
             $cat_q = "
                 SELECT c.hashed_id AS category_id, c.category_name,
                        COUNT(oc.unique_barcode) AS outbounded_qty,
@@ -95,8 +95,8 @@ if ($from && $to) {
                     $cat_net = $cat['gross_sale'] - $cat['unit_cost'];
 
                     // Category row
-                    $csv_rows[] = ['', '', $cat['category_name'], '', '', '', '', '', '', '', '', '', '', '', '', ''];
-
+                    // $csv_rows[] = ['', '', $cat['category_name'], '', '', '', '', '', '', '', '', '', '', '', '', ''];
+                    $category_name = $cat['category_name'];
                     // Item rows
                     $item_q = "
                         SELECT oc.unique_barcode, oc.sold_price, ol.order_num, oc.hashed_id AS outbound_num,
@@ -120,7 +120,7 @@ if ($from && $to) {
                     while ($item = $item_res->fetch_assoc()) {
                         $net = $item['sold_price'] - $item['capital'];
                         $csv_rows[] = [
-                            '', '', '', $item['order_num'], $item['outbound_num'], $item['customer_fullname'],
+                            $supplier_name, $category_name, $item['order_num'], $item['outbound_num'], $item['customer_fullname'],
                             $item['date_sent'], $item['supplier_name'], $item['local_international'],
                             $item['description'], $item['brand_name'], $item['unique_barcode'],
                             $item['batch_code'], 1,
@@ -131,20 +131,20 @@ if ($from && $to) {
                     }
 
                     // Category total row
-                    $csv_rows[] = [
-                        '', '', 'TOTAL for ' . $cat['category_name'], '', '', '', '', '', '', '', '', '', '',
-                        $cat['outbounded_qty'],
-                        number_format($cat['unit_cost'], 2),
-                        number_format($cat['gross_sale'], 2),
-                        number_format($cat_net, 2)
-                    ];
+                    // $csv_rows[] = [
+                    //     '', '', 'TOTAL for ' . $cat['category_name'], '', '', '', '', '', '', '', '', '', '',
+                    //     $cat['outbounded_qty'],
+                    //     number_format($cat['unit_cost'], 2),
+                    //     number_format($cat['gross_sale'], 2),
+                    //     number_format($cat_net, 2)
+                    // ];
                 }
             }
         }
 
         $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
         $csv_rows[] = [
-            '', 'GRAND TOTAL', '', '', '', '', '', '', '', '', '', '',
+            'GRAND TOTAL', '', '', '', '', '', '', '', '', '', '', '',
             $grand_total_qty,
             number_format($grand_total_unit_cost, 2),
             number_format($grand_total_gross, 2),
@@ -195,7 +195,7 @@ fputcsv($output, array_fill(0, 16, '')); // Blank line
 
 // Table headers
 fputcsv($output, [
-    '#', 'SUPPLIER', 'CATEGORY', 'ORDER #', 'OUTBOUND #', 'CUSTOMER',
+    'SUPPLIER', 'CATEGORY', 'ORDER #', 'OUTBOUND #', 'CUSTOMER',
     'OUTBOUND DATE', 'SUPPLIER NAME', 'LOCAL/IMPORT', 'DESCRIPTION', 'BRAND',
     'BARCODE', 'BATCH', 'QUANTITY', 'UNIT COST', 'GROSS SALE', 'NET INCOME'
 ]);
