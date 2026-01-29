@@ -635,6 +635,18 @@
             </div>
           </a>
         </li>
+
+        <!-- SEARCH ITEM Link -->
+        <li class="nav-item">
+          <a class="nav-link" href="../search-item/" aria-controls="search item">
+            <div class="d-flex align-items-center">
+              <span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span>
+              <span class="nav-link-text ps-1">Barcode Search</span>
+            </div>
+          </a>
+        </li>
+
+
         <?php 
         if(strpos($access, "po_logs")!==false || strpos($access, "new_po")!==false || strpos($access, "inbound_logs")!==false || $user_position_name === "Administrator"){
         ?>
