@@ -19,7 +19,7 @@ if (isset($_GET['warehouse']) && isset($_GET['movement'])) {
 
     // Set CSV headers
     header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="warehouse_'.$movement_type.'_report.csv"');
+    header('Content-Disposition: attachment; filename="movement of stocks.csv"');
 
     // Start CSV output
     $output = fopen('php://output', 'w');

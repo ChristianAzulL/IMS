@@ -13,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="card-body">
         <div class="text-center">
-            <p>
+            <!-- <p>
                 Please note: This is a <strong>demo version</strong> of the system.  
                 CSV downloads are currently <strong>Limited</strong>.  
                 The complete functionality will be accessible upon client approval of the quotation.
-            </p>
+            </p> -->
         </div>
         <form action="../MoS/index.php" method="POST">
             <div class="row">

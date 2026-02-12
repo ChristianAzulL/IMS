@@ -935,50 +935,50 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../IPS/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory Per Supplier</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory Per Supplier</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../IPL/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory Per Location</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inventory Per Location</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../MoS/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Movement of Stocks</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Movement of Stocks</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../Inbound-Outbound-Summary/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inbound & Outbound Summary</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inbound & Outbound Summary</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../Inbound-Summary/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inbound Summary</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Inbound Summary</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../Outbound-Summary/">
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Outbound Summary</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Outbound Summary</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../Product-Quality/">
                 <!-- <a class="nav-link" href="../Product-Quality/"> -->
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product Quality</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Product Quality</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../Monthly-Report-Export/">
                 <!-- <a class="nav-link" href="../Monthly-Export/"> -->
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Monthly Report to Export</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Monthly Report to Export</span> </div>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../Transaction-Per-Day/">
                 <!-- <a class="nav-link" href="../Monthly-Export/"> -->
-                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Daily Transaction</span> <span class="badge rounded-pill badge-subtle-danger fs-11">Demo</span></div>
+                <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Daily Transaction</span> </div>
               </a>
             </li>
 
