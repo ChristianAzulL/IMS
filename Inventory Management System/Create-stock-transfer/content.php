@@ -38,7 +38,7 @@ if(!isset($_SESSION['warehouse_for_transfer'])){
 
 <?php
 } else {
-    $warehouse_for_transfer = $_SESSION['warehouse_for_transfer'];
+    $warehouse_for_transfer = $conn->real_escape_string($_SESSION['warehouse_for_transfer']);
     
     $warehouse_sql = "SELECT hashed_id FROM warehouse WHERE warehouse_name = '$warehouse_for_transfer' LIMIT 1";
     $res = $conn->query($warehouse_sql);
