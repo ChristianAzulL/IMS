@@ -95,7 +95,7 @@ if ($from && $to) {
                     $cat_net = $cat['gross_sale'] - $cat['unit_cost'];
 
                     // Category row
-                    $csv_rows[] = ['', '', $cat['category_name'], '', '', '', '', '', '', '', '', '', '', '', '', ''];
+                    // $csv_rows[] = ['', '', $cat['category_name'], '', '', '', '', '', '', '', '', '', '', '', '', ''];
 
                     // Item rows
                     $item_q = "
@@ -120,7 +120,7 @@ if ($from && $to) {
                     while ($item = $item_res->fetch_assoc()) {
                         $net = $item['sold_price'] - $item['capital'];
                         $csv_rows[] = [
-                            '', '', '', $item['order_num'], $item['outbound_num'], $item['customer_fullname'],
+                            '', $row['supplier'], $cat['category_name'], $item['order_num'], $item['outbound_num'], $item['customer_fullname'],
                             $item['date_sent'], $item['supplier_name'], $item['local_international'],
                             $item['description'], $item['brand_name'], $item['unique_barcode'],
                             $item['batch_code'], 1,
@@ -132,7 +132,7 @@ if ($from && $to) {
 
                     // Category total row
                     $csv_rows[] = [
-                        '', '', 'TOTAL for ' . $cat['category_name'], '', '', '', '', '', '', '', '', '', '',
+                        '', $row['supplier'], 'TOTAL for ' . $cat['category_name'], '', '', '', '', '', '', '', '', '', '',
                         $cat['outbounded_qty'],
                         number_format($cat['unit_cost'], 2),
                         number_format($cat['gross_sale'], 2),
