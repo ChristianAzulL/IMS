@@ -104,6 +104,7 @@
                         <div class="col-lg-4 mb-3">
                             <label for="warehouse">Warehouse</label>
                             <select class="form-select fs-11" name="warehouse" id="warehouse">
+                                <!-- <option value="">All</option> -->
                             <?php echo implode("\n", $warehouse_options2); ?>
                             </select>
                         </div>
@@ -163,10 +164,10 @@
                     </div>
                 </div>
                 <!-- ------- -->
-                <!-- <div class="row">
-                    <div class="col-lg-12 table-responsive"> -->
-                            <!-- <table class="table mb-0 data-table fs-10" data-datatables="data-datatables"> -->
-                            <!-- <table class="table mb-0 fs-10">
+                <div class="row">
+                    <div class="col-lg-12 table-responsive">
+                            <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
+                            <table class="table mb-0 fs-10">
                                 <thead class="bg-primary">
                                     <tr>
                                         <th class="fs-10 text-white ">#</th>
@@ -178,551 +179,563 @@
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL NET INCOME</th>
                                     </tr>
                                 </thead>
-                                <tbody> -->
+                                <tbody>
                                     <?php
-                                    // $bg_colors = ['bg-100', 'bg-200', 'bg-300', 'bg-400', 'bg-500', 'bg-600', 'table-primary', 'table-info', 'table-dark', 'table-warning', 'table-success'];
+                                    $bg_colors = ['bg-100', 'bg-200', 'bg-300', 'bg-400', 'bg-500', 'bg-600', 'table-primary', 'table-info', 'table-dark', 'table-warning', 'table-success'];
                                     
-                                    // if($supplier_post_local_internation === "All"){
-                                    //     $supplier_query = "
-                                    //     SELECT 
-                                    //         sup.hashed_id AS supplier_head_id,
-                                    //         sup.supplier_name AS supplier,
-                                    //         sup.local_international AS sup_type,
-                                    //         COUNT(oc.unique_barcode) AS sup_outbounded_qty,
-                                    //         SUM(s.capital) AS sup_unit_cost,
-                                    //         SUM(oc.sold_price) AS sup_gross_sale
-                                    //     FROM supplier sup
-                                    //     LEFT JOIN stocks s ON s.supplier = sup.hashed_id
-                                    //     LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    //     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //     WHERE
-                                    //     oc.status IN (0, 6)
-                                    //     AND s.item_status NOT IN (4, 8)
-                                    //     AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
-                                    //     AND ol.warehouse IN ($user_warehouse_id)
-                                    //     AND ol.status IN (0, 6)
-                                    //     $additional_query
-                                    //     GROUP BY sup.supplier_name
-                                    //     ";
-                                    // } elseif($supplier_post_local_internation === "Local"){
-                                    //     $supplier_query = "
-                                    //     SELECT 
-                                    //         sup.hashed_id AS supplier_head_id,
-                                    //         sup.supplier_name AS supplier,
-                                    //         sup.local_international AS sup_type,
-                                    //         COUNT(oc.unique_barcode) AS sup_outbounded_qty,
-                                    //         SUM(s.capital) AS sup_unit_cost,
-                                    //         SUM(oc.sold_price) AS sup_gross_sale
-                                    //     FROM supplier sup
-                                    //     LEFT JOIN stocks s ON s.supplier = sup.hashed_id
-                                    //     LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    //     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //     WHERE
-                                    //     oc.status IN (0, 6)
-                                    //     AND s.item_status NOT IN (4, 8)
-                                    //     AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
-                                    //     AND ol.warehouse IN ($user_warehouse_id)
-                                    //     AND ol.status IN (0, 6)
-                                    //     AND sup.local_international = 'Local'
-                                    //     $additional_query
-                                    //     GROUP BY sup.supplier_name
-                                    //     ";
-                                    // } elseif($supplier_post_local_internation === "International"){
-                                    //     $supplier_query = "
-                                    //     SELECT 
-                                    //         sup.hashed_id AS supplier_head_id,
-                                    //         sup.supplier_name AS supplier,
-                                    //         sup.local_international AS sup_type,
-                                    //         COUNT(oc.unique_barcode) AS sup_outbounded_qty,
-                                    //         SUM(s.capital) AS sup_unit_cost,
-                                    //         SUM(oc.sold_price) AS sup_gross_sale
-                                    //     FROM supplier sup
-                                    //     LEFT JOIN stocks s ON s.supplier = sup.hashed_id
-                                    //     LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    //     LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //     WHERE
-                                    //     oc.status IN (0, 6)
-                                    //     AND s.item_status NOT IN (4, 8)
-                                    //     AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
-                                    //     AND ol.warehouse IN ($user_warehouse_id)
-                                    //     AND ol.status IN (0, 6)
-                                    //     AND sup.local_international = 'International'
-                                    //     $additional_query
-                                    //     GROUP BY sup.supplier_name
-                                    //     ";
-                                    // }
+                                    if($supplier_post_local_internation === "All"){
+                                        $supplier_query = "
+                                        SELECT 
+                                            sup.hashed_id AS supplier_head_id,
+                                            sup.supplier_name AS supplier,
+                                            sup.local_international AS sup_type,
+                                            COUNT(oc.unique_barcode) AS sup_outbounded_qty,
+                                            SUM(s.capital) AS sup_unit_cost,
+                                            SUM(oc.sold_price) AS sup_gross_sale
+                                        FROM supplier sup
+                                        LEFT JOIN stocks s ON s.supplier = sup.hashed_id
+                                        LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                        LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                        WHERE
+                                        oc.status IN (0, 6)
+                                        AND s.item_status NOT IN (4, 8)
+                                        AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
+                                        AND ol.warehouse IN ($user_warehouse_id)
+                                        AND ol.status IN (0, 6)
+                                        $additional_query
+                                        GROUP BY sup.supplier_name
+                                        LIMIT 3
+                                        ";
+                                    } elseif($supplier_post_local_internation === "Local"){
+                                        $supplier_query = "
+                                        SELECT 
+                                            sup.hashed_id AS supplier_head_id,
+                                            sup.supplier_name AS supplier,
+                                            sup.local_international AS sup_type,
+                                            COUNT(oc.unique_barcode) AS sup_outbounded_qty,
+                                            SUM(s.capital) AS sup_unit_cost,
+                                            SUM(oc.sold_price) AS sup_gross_sale
+                                        FROM supplier sup
+                                        LEFT JOIN stocks s ON s.supplier = sup.hashed_id
+                                        LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                        LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                        WHERE
+                                        oc.status IN (0, 6)
+                                        AND s.item_status NOT IN (4, 8)
+                                        AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
+                                        AND ol.warehouse IN ($user_warehouse_id)
+                                        AND ol.status IN (0, 6)
+                                        AND sup.local_international = 'Local'
+                                        $additional_query
+                                        GROUP BY sup.supplier_name
+                                        LIMIT 3
+                                        ";
+                                    } elseif($supplier_post_local_internation === "International"){
+                                        $supplier_query = "
+                                        SELECT 
+                                            sup.hashed_id AS supplier_head_id,
+                                            sup.supplier_name AS supplier,
+                                            sup.local_international AS sup_type,
+                                            COUNT(oc.unique_barcode) AS sup_outbounded_qty,
+                                            SUM(s.capital) AS sup_unit_cost,
+                                            SUM(oc.sold_price) AS sup_gross_sale
+                                        FROM supplier sup
+                                        LEFT JOIN stocks s ON s.supplier = sup.hashed_id
+                                        LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                        LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                        WHERE
+                                        oc.status IN (0, 6)
+                                        AND s.item_status NOT IN (4, 8)
+                                        AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
+                                        AND ol.warehouse IN ($user_warehouse_id)
+                                        AND ol.status IN (0, 6)
+                                        AND sup.local_international = 'International'
+                                        $additional_query
+                                        GROUP BY sup.supplier_name
+                                        LIMIT 3
+                                        ";
+                                    }
                                     
-                                    // $supplier_res = $conn->query($supplier_query);
-                                    // if($supplier_res->num_rows>0){
-                                    //     while($row=$supplier_res->fetch_assoc()){
-                                    //         $random_bg = $bg_colors[array_rand($bg_colors)];
-                                    //         $sup_supplier = $row['supplier'];
-                                    //         $sup_supplierType = $row['sup_type'];
-                                    //         $sup_outboundedQty = $row['sup_outbounded_qty'];
-                                    //         $sup_unitCost = $row['sup_unit_cost'];
-                                    //         $sup_grossSale = $row['sup_gross_sale'];
-                                    //         $sup_supplierHeadId = $row['supplier_head_id'];
-                                    //         $sup_netincome = $sup_grossSale - $sup_unitCost;
+                                    $supplier_res = $conn->query($supplier_query);
+                                    if($supplier_res->num_rows>0){
+                                        while($row=$supplier_res->fetch_assoc()){
+                                            $random_bg = $bg_colors[array_rand($bg_colors)];
+                                            $sup_supplier = $row['supplier'];
+                                            $sup_supplierType = $row['sup_type'];
+                                            $sup_outboundedQty = $row['sup_outbounded_qty'];
+                                            $sup_unitCost = $row['sup_unit_cost'];
+                                            $sup_grossSale = $row['sup_gross_sale'];
+                                            $sup_supplierHeadId = $row['supplier_head_id'];
+                                            $sup_netincome = $sup_grossSale - $sup_unitCost;
 
-                                    //         echo '
-                                    //         <tr class="' . $random_bg . '">
-                                    //             <td class="fs-10">' . $num . '</td>
-                                    //             <td class="fs-10">' . $sup_supplier . '</td>
-                                    //             <td class="fs-10" colspan="9"></td>
-                                    //             <td class="fs-10 text-end">'. $sup_outboundedQty .'</td>
-                                    //             <td class="fs-10 text-end" style="width: 500px;">' . $sup_unitCost .'</td>
-                                    //             <td class="fs-10 text-end" style="width: 500px;">' . $sup_grossSale . '</td>
-                                    //             <td class="fs-10 text-end" style="width: 500px;">' . $sup_netincome . '</td>
-                                    //         </tr>
-                                    //         ';
+                                            echo '
+                                            <tr class="' . $random_bg . '">
+                                                <td class="fs-10">' . $num . '</td>
+                                                <td class="fs-10">' . $sup_supplier . '</td>
+                                                <td class="fs-10" colspan="9"></td>
+                                                <td class="fs-10 text-end">'. $sup_outboundedQty .'</td>
+                                                <td class="fs-10 text-end" style="width: 500px;">' . $sup_unitCost .'</td>
+                                                <td class="fs-10 text-end" style="width: 500px;">' . $sup_grossSale . '</td>
+                                                <td class="fs-10 text-end" style="width: 500px;">' . $sup_netincome . '</td>
+                                            </tr>
+                                            ';
 
-                                    //         if($supplier_post_local_internation === "All"){
-                                    //             $category_query = "
-                                    //             SELECT 
-                                    //                 c.hashed_id AS category_id,
-                                    //                 c.category_name,
-                                    //                 COUNT(oc.unique_barcode) AS outbounded_qty,
-                                    //                 SUM(s.capital) AS unit_cost,
-                                    //                 SUM(oc.sold_price) AS gross_sale
-                                    //             FROM category c
-                                    //             LEFT JOIN product p ON p.category = c.hashed_id
-                                    //             LEFT JOIN stocks s ON s.product_id = p.hashed_id
-                                    //             LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    //             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //             WHERE
-                                    //             oc.status IN (0, 6)
-                                    //             AND s.item_status NOT IN (4, 8)
-                                    //             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //             AND ol.warehouse = '$warehouse_transaction'
-                                    //             AND ol.status IN (0, 6)
-                                    //             AND s.supplier = '$sup_supplierHeadId'
-                                    //             GROUP BY c.category_name
-                                    //             ";
-                                    //         } elseif($supplier_post_local_internation === "Local"){
-                                    //             $category_query = "
-                                    //             SELECT 
-                                    //                 c.hashed_id AS category_id,
-                                    //                 c.category_name,
-                                    //                 COUNT(oc.unique_barcode) AS outbounded_qty,
-                                    //                 SUM(s.capital) AS unit_cost,
-                                    //                 SUM(oc.sold_price) AS gross_sale
-                                    //             FROM category c
-                                    //             LEFT JOIN product p ON p.category = c.hashed_id
-                                    //             LEFT JOIN stocks s ON s.product_id = p.hashed_id
-                                    //             LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //             LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    //             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //             WHERE
-                                    //             oc.status IN (0, 6)
-                                    //             AND s.item_status NOT IN (4, 8)
-                                    //             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //             AND ol.warehouse = '$warehouse_transaction'
-                                    //             AND ol.status IN (0, 6)
-                                    //             AND sup.local_international = 'Local'
-                                    //             AND s.supplier = '$sup_supplierHeadId'
-                                    //             GROUP BY c.category_name
-                                    //             ";
-                                    //         } elseif($supplier_post_local_internation === "International"){
-                                    //             $category_query = "
-                                    //             SELECT 
-                                    //                 c.hashed_id AS category_id,
-                                    //                 c.category_name,
-                                    //                 COUNT(oc.unique_barcode) AS outbounded_qty,
-                                    //                 SUM(s.capital) AS unit_cost,
-                                    //                 SUM(oc.sold_price) AS gross_sale
-                                    //             FROM category c
-                                    //             LEFT JOIN product p ON p.category = c.hashed_id
-                                    //             LEFT JOIN stocks s ON s.product_id = p.hashed_id
-                                    //             LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //             LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    //             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //             WHERE
-                                    //             oc.status IN (0, 6)
-                                    //             AND s.item_status NOT IN (4, 8)
-                                    //             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //             AND ol.warehouse = '$warehouse_transaction'
-                                    //             AND ol.status IN (0, 6)
-                                    //             AND sup.local_international = 'International'
-                                    //             AND s.supplier = '$sup_supplierHeadId'
-                                    //             GROUP BY c.category_name
-                                    //             ";
-                                    //         }
+                                            if($supplier_post_local_internation === "All"){
+                                                $category_query = "
+                                                SELECT 
+                                                    c.hashed_id AS category_id,
+                                                    c.category_name,
+                                                    COUNT(oc.unique_barcode) AS outbounded_qty,
+                                                    SUM(s.capital) AS unit_cost,
+                                                    SUM(oc.sold_price) AS gross_sale
+                                                FROM category c
+                                                LEFT JOIN product p ON p.category = c.hashed_id
+                                                LEFT JOIN stocks s ON s.product_id = p.hashed_id
+                                                LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                                LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                WHERE
+                                                oc.status IN (0, 6)
+                                                AND s.item_status NOT IN (4, 8)
+                                                AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                AND ol.warehouse = '$warehouse_transaction'
+                                                AND ol.status IN (0, 6)
+                                                AND s.supplier = '$sup_supplierHeadId'
+                                                GROUP BY c.category_name
+                                                LIMIT 3
+                                                ";
+                                            } elseif($supplier_post_local_internation === "Local"){
+                                                $category_query = "
+                                                SELECT 
+                                                    c.hashed_id AS category_id,
+                                                    c.category_name,
+                                                    COUNT(oc.unique_barcode) AS outbounded_qty,
+                                                    SUM(s.capital) AS unit_cost,
+                                                    SUM(oc.sold_price) AS gross_sale
+                                                FROM category c
+                                                LEFT JOIN product p ON p.category = c.hashed_id
+                                                LEFT JOIN stocks s ON s.product_id = p.hashed_id
+                                                LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                                LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                WHERE
+                                                oc.status IN (0, 6)
+                                                AND s.item_status NOT IN (4, 8)
+                                                AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                AND ol.warehouse = '$warehouse_transaction'
+                                                AND ol.status IN (0, 6)
+                                                AND sup.local_international = 'Local'
+                                                AND s.supplier = '$sup_supplierHeadId'
+                                                GROUP BY c.category_name
+                                                LIMIT 3
+                                                ";
+                                            } elseif($supplier_post_local_internation === "International"){
+                                                $category_query = "
+                                                SELECT 
+                                                    c.hashed_id AS category_id,
+                                                    c.category_name,
+                                                    COUNT(oc.unique_barcode) AS outbounded_qty,
+                                                    SUM(s.capital) AS unit_cost,
+                                                    SUM(oc.sold_price) AS gross_sale
+                                                FROM category c
+                                                LEFT JOIN product p ON p.category = c.hashed_id
+                                                LEFT JOIN stocks s ON s.product_id = p.hashed_id
+                                                LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                                LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                WHERE
+                                                oc.status IN (0, 6)
+                                                AND s.item_status NOT IN (4, 8)
+                                                AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                AND ol.warehouse = '$warehouse_transaction'
+                                                AND ol.status IN (0, 6)
+                                                AND sup.local_international = 'International'
+                                                AND s.supplier = '$sup_supplierHeadId'
+                                                GROUP BY c.category_name
+                                                LIMIT 3
+                                                ";
+                                            }
                                             
 
                                             
                                             
-                                    //         $category_result = $conn->query($category_query);
-                                    //         if($category_result->num_rows>0){
-                                    //             while($row=$category_result->fetch_assoc()){
-                                    //                 // $random_bg = $bg_colors[array_rand($bg_colors)];
-                                    //                 $category_id = $row['category_id'];
-                                    //                 $category_name = $row['category_name'];
-                                    //                 $outbound_qty = $row['outbounded_qty'];
-                                    //                 $sub_unit_cost = $row['unit_cost'];
-                                    //                 $sub_gross = $row['gross_sale'];
-                                    //                 $sub_netincome = $sub_gross - $sub_unit_cost;
+                                            $category_result = $conn->query($category_query);
+                                            if($category_result->num_rows>0){
+                                                while($row=$category_result->fetch_assoc()){
+                                                    // $random_bg = $bg_colors[array_rand($bg_colors)];
+                                                    $category_id = $row['category_id'];
+                                                    $category_name = $row['category_name'];
+                                                    $outbound_qty = $row['outbounded_qty'];
+                                                    $sub_unit_cost = $row['unit_cost'];
+                                                    $sub_gross = $row['gross_sale'];
+                                                    $sub_netincome = $sub_gross - $sub_unit_cost;
                                                     
-                                    //                 if(!empty($imploded_category) && $imploded_category !== "''"){
-                                    //                     if(strpos($imploded_category, $category_id)!==false){
-                                    //                         $grand_total_qty += $outbound_qty;
-                                    //                         $grand_total_unit_cost += $sub_unit_cost;
-                                    //                         $grand_total_gross += $sub_gross;
-                                    //                         echo '
-                                    //                         <tr class="' . $random_bg . '">
-                                    //                             <td class="fs-10"></td>
-                                    //                             <td class="fs-10"></td>
-                                    //                             <td class="fs-10" colspan="9">'. $category_name .'</td>
-                                    //                             <td class="fs-10 text-end">'. $outbound_qty .'</td>
-                                    //                             <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
-                                    //                             <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
-                                    //                             <td class="fs-10 text-end" style="width: 500px;">' . $sub_netincome . '</td>
-                                    //                         </tr>
-                                    //                         <tr class="' . $random_bg . '">
-                                    //                             <td class="fs-11"><b></b></td>
-                                    //                             <td class="fs-11"><b></b></td>
-                                    //                             <td class="fs-11"><b>ORDER #</b></td>
-                                    //                             <td class="fs-11"><b>ORDER LINE ID</b></td>
-                                    //                             <td class="fs-11"><b>CUSTOMER</b></td>
-                                    //                             <td class="fs-11"><b>OUTBOUND DATE</b></td>
-                                    //                             <td class="fs-11"><b>SUPPLIER</b></td>
-                                    //                             <td class="fs-11"><b>LOCAL/ IMPORT</b></td>
-                                    //                             <td class="fs-11"><b>DESCRIPTION</b></td>
-                                    //                             <td class="fs-11"><b>BRAND</b></td>
-                                    //                             <td class="fs-11"><b>BARCODE</b></td>
-                                    //                             <td class="fs-11"><b>BATCH</b></td>
-                                    //                             <td class="fs-11 text-end"><b>UNIT COST</b></td>
-                                    //                             <td class="fs-11 text-end"><b>GROSS SALE</b></td>
-                                    //                             <td class="fs-11 text-end"><b>NET INCOME</b></td>
-                                    //                         </tr>
-                                    //                         ';
+                                                    if(!empty($imploded_category) && $imploded_category !== "''"){
+                                                        if(strpos($imploded_category, $category_id)!==false){
+                                                            $grand_total_qty += $outbound_qty;
+                                                            $grand_total_unit_cost += $sub_unit_cost;
+                                                            $grand_total_gross += $sub_gross;
+                                                            echo '
+                                                            <tr class="' . $random_bg . '">
+                                                                <td class="fs-10"></td>
+                                                                <td class="fs-10"></td>
+                                                                <td class="fs-10" colspan="9">'. $category_name .'</td>
+                                                                <td class="fs-10 text-end">'. $outbound_qty .'</td>
+                                                                <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
+                                                                <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
+                                                                <td class="fs-10 text-end" style="width: 500px;">' . $sub_netincome . '</td>
+                                                            </tr>
+                                                            <tr class="' . $random_bg . '">
+                                                                <td class="fs-11"><b></b></td>
+                                                                <td class="fs-11"><b></b></td>
+                                                                <td class="fs-11"><b>ORDER #</b></td>
+                                                                <td class="fs-11"><b>ORDER LINE ID</b></td>
+                                                                <td class="fs-11"><b>CUSTOMER</b></td>
+                                                                <td class="fs-11"><b>OUTBOUND DATE</b></td>
+                                                                <td class="fs-11"><b>SUPPLIER</b></td>
+                                                                <td class="fs-11"><b>LOCAL/ IMPORT</b></td>
+                                                                <td class="fs-11"><b>DESCRIPTION</b></td>
+                                                                <td class="fs-11"><b>BRAND</b></td>
+                                                                <td class="fs-11"><b>BARCODE</b></td>
+                                                                <td class="fs-11"><b>BATCH</b></td>
+                                                                <td class="fs-11 text-end"><b>UNIT COST</b></td>
+                                                                <td class="fs-11 text-end"><b>GROSS SALE</b></td>
+                                                                <td class="fs-11 text-end"><b>NET INCOME</b></td>
+                                                            </tr>
+                                                            ';
 
-                                    //                         if($supplier_post_local_internation === "All"){
-                                    //                             $item_query = "
-                                    //                             SELECT
-                                    //                                 oc.unique_barcode,
-                                    //                                 oc.sold_price,
-                                    //                                 ol.order_line_id,
-                                    //                                 ol.order_num,
-                                    //                                 oc.hashed_id AS outbound_num,
-                                    //                                 ol.customer_fullname,
-                                    //                                 ol.date_sent,
-                                    //                                 sup.supplier_name,
-                                    //                                 sup.local_international,
-                                    //                                 p.description,
-                                    //                                 b.brand_name,
-                                    //                                 s.batch_code,
-                                    //                                 s.capital
-                                    //                             FROM outbound_content oc
-                                    //                             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //                             LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-                                    //                             LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //                             LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    //                             LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    //                             WHERE p.category = '$category_id'
-                                    //                             AND oc.status IN (0, 6)
-                                    //                             AND s.item_status NOT IN (4, 8)
-                                    //                             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //                             AND ol.warehouse = '$warehouse_transaction'
-                                    //                             AND ol.status IN (0, 6)
-                                    //                             AND s.supplier = '$sup_supplierHeadId'
-                                    //                             ";
-                                    //                         } elseif($supplier_post_local_internation === "Local"){
-                                    //                             $item_query = "
-                                    //                             SELECT
-                                    //                                 oc.unique_barcode,
-                                    //                                 oc.sold_price,
-                                    //                                 ol.order_line_id,
-                                    //                                 ol.order_num,
-                                    //                                 oc.hashed_id AS outbound_num,
-                                    //                                 ol.customer_fullname,
-                                    //                                 ol.date_sent,
-                                    //                                 sup.supplier_name,
-                                    //                                 sup.local_international,
-                                    //                                 p.description,
-                                    //                                 b.brand_name,
-                                    //                                 s.batch_code,
-                                    //                                 s.capital
-                                    //                             FROM outbound_content oc
-                                    //                             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //                             LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-                                    //                             LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //                             LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    //                             LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    //                             WHERE p.category = '$category_id'
-                                    //                             AND oc.status IN (0, 6)
-                                    //                             AND s.item_status NOT IN (4, 8)
-                                    //                             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //                             AND ol.warehouse = '$warehouse_transaction'
-                                    //                             AND ol.status IN (0, 6)
-                                    //                             AND sup.local_international = 'Local'
-                                    //                             AND s.supplier = '$sup_supplierHeadId'
-                                    //                             ";
-                                    //                         } elseif($supplier_post_local_internation === "International"){
-                                    //                             $item_query = "
-                                    //                             SELECT
-                                    //                                 oc.unique_barcode,
-                                    //                                 oc.sold_price,
-                                    //                                 ol.order_line_id,
-                                    //                                 ol.order_num,
-                                    //                                 oc.hashed_id AS outbound_num,
-                                    //                                 ol.customer_fullname,
-                                    //                                 ol.date_sent,
-                                    //                                 sup.supplier_name,
-                                    //                                 sup.local_international,
-                                    //                                 p.description,
-                                    //                                 b.brand_name,
-                                    //                                 s.batch_code,
-                                    //                                 s.capital
-                                    //                             FROM outbound_content oc
-                                    //                             LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //                             LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-                                    //                             LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //                             LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    //                             LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    //                             WHERE p.category = '$category_id'
-                                    //                             AND oc.status IN (0, 6)
-                                    //                             AND s.item_status NOT IN (4, 8)
-                                    //                             AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //                             AND ol.warehouse = '$warehouse_transaction'
-                                    //                             AND ol.status IN (0, 6)
-                                    //                             AND sup.local_international = 'International'
-                                    //                             AND s.supplier = '$sup_supplierHeadId'
-                                    //                             ";
-                                    //                         }
+                                                            if($supplier_post_local_internation === "All"){
+                                                                $item_query = "
+                                                                SELECT
+                                                                    oc.unique_barcode,
+                                                                    oc.sold_price,
+                                                                    ol.order_line_id,
+                                                                    ol.order_num,
+                                                                    oc.hashed_id AS outbound_num,
+                                                                    ol.customer_fullname,
+                                                                    ol.date_sent,
+                                                                    sup.supplier_name,
+                                                                    sup.local_international,
+                                                                    p.description,
+                                                                    b.brand_name,
+                                                                    s.batch_code,
+                                                                    s.capital
+                                                                FROM outbound_content oc
+                                                                LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                                LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+                                                                LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                                LEFT JOIN product p ON p.hashed_id = s.product_id
+                                                                LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                                WHERE p.category = '$category_id'
+                                                                AND oc.status IN (0, 6)
+                                                                AND s.item_status NOT IN (4, 8)
+                                                                AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                                AND ol.warehouse = '$warehouse_transaction'
+                                                                AND ol.status IN (0, 6)
+                                                                AND s.supplier = '$sup_supplierHeadId'
+                                                                LIMIT 3
+                                                                ";
+                                                            } elseif($supplier_post_local_internation === "Local"){
+                                                                $item_query = "
+                                                                SELECT
+                                                                    oc.unique_barcode,
+                                                                    oc.sold_price,
+                                                                    ol.order_line_id,
+                                                                    ol.order_num,
+                                                                    oc.hashed_id AS outbound_num,
+                                                                    ol.customer_fullname,
+                                                                    ol.date_sent,
+                                                                    sup.supplier_name,
+                                                                    sup.local_international,
+                                                                    p.description,
+                                                                    b.brand_name,
+                                                                    s.batch_code,
+                                                                    s.capital
+                                                                FROM outbound_content oc
+                                                                LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                                LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+                                                                LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                                LEFT JOIN product p ON p.hashed_id = s.product_id
+                                                                LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                                WHERE p.category = '$category_id'
+                                                                AND oc.status IN (0, 6)
+                                                                AND s.item_status NOT IN (4, 8)
+                                                                AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                                AND ol.warehouse = '$warehouse_transaction'
+                                                                AND ol.status IN (0, 6)
+                                                                AND sup.local_international = 'Local'
+                                                                AND s.supplier = '$sup_supplierHeadId'
+                                                                LIMIT 3
+                                                                ";
+                                                            } elseif($supplier_post_local_internation === "International"){
+                                                                $item_query = "
+                                                                SELECT
+                                                                    oc.unique_barcode,
+                                                                    oc.sold_price,
+                                                                    ol.order_line_id,
+                                                                    ol.order_num,
+                                                                    oc.hashed_id AS outbound_num,
+                                                                    ol.customer_fullname,
+                                                                    ol.date_sent,
+                                                                    sup.supplier_name,
+                                                                    sup.local_international,
+                                                                    p.description,
+                                                                    b.brand_name,
+                                                                    s.batch_code,
+                                                                    s.capital
+                                                                FROM outbound_content oc
+                                                                LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                                LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+                                                                LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                                LEFT JOIN product p ON p.hashed_id = s.product_id
+                                                                LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                                WHERE p.category = '$category_id'
+                                                                AND oc.status IN (0, 6)
+                                                                AND s.item_status NOT IN (4, 8)
+                                                                AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                                AND ol.warehouse = '$warehouse_transaction'
+                                                                AND ol.status IN (0, 6)
+                                                                AND sup.local_international = 'International'
+                                                                AND s.supplier = '$sup_supplierHeadId'
+                                                                LIMIT 3
+                                                                ";
+                                                            }
 
                                                             
-                                    //                         $item_res = $conn->query($item_query);
-                                    //                         if($item_res->num_rows>0){
-                                    //                             while($row=$item_res->fetch_assoc()){
-                                    //                                 $unique_barcode = $row['unique_barcode'];
-                                    //                                 $sold_price = $row['sold_price'];
-                                    //                                 $order_line_id = $row['order_line_id'];
-                                    //                                 $order_num = $row['order_num'];
-                                    //                                 $outbound_num = $row['outbound_num'];
-                                    //                                 $customer_fullname = $row['customer_fullname'];
-                                    //                                 $supplier_name = $row['supplier_name'];
-                                    //                                 $local_international = $row['local_international'];
-                                    //                                 $description = $row['description'];
-                                    //                                 $brand_name = $row['brand_name'];
-                                    //                                 $batch_code = $row['batch_code'];
-                                    //                                 $capital = $row['capital'];
-                                    //                                 $date_sent = $row['date_sent'];
-                                    //                                 $net_income = $sold_price - $capital;
+                                                            $item_res = $conn->query($item_query);
+                                                            if($item_res->num_rows>0){
+                                                                while($row=$item_res->fetch_assoc()){
+                                                                    $unique_barcode = $row['unique_barcode'];
+                                                                    $sold_price = $row['sold_price'];
+                                                                    $order_line_id = $row['order_line_id'];
+                                                                    $order_num = $row['order_num'];
+                                                                    $outbound_num = $row['outbound_num'];
+                                                                    $customer_fullname = $row['customer_fullname'];
+                                                                    $supplier_name = $row['supplier_name'];
+                                                                    $local_international = $row['local_international'];
+                                                                    $description = $row['description'];
+                                                                    $brand_name = $row['brand_name'];
+                                                                    $batch_code = $row['batch_code'];
+                                                                    $capital = $row['capital'];
+                                                                    $date_sent = $row['date_sent'];
+                                                                    $net_income = $sold_price - $capital;
                                                                     
-                                    //                                 echo '
-                                    //                                 <tr class="' . $random_bg . '">
-                                    //                                     <td class="fs-11"></td>
-                                    //                                     <td class="fs-11"><b></b></td>
-                                    //                                     <td class="fs-11">' . $order_num . '</td>
-                                    //                                     <td class="fs-11">' . $order_line_id . '</td>
-                                    //                                     <td class="fs-11">' . $customer_fullname . '</td>
-                                    //                                     <td class="fs-11">' . $date_sent . '</td>
-                                    //                                     <td class="fs-11">' . $supplier_name . '</td>
-                                    //                                     <td class="fs-11">' . $local_international . '</td>
-                                    //                                     <td class="fs-11">' . $description . '</td>
-                                    //                                     <td class="fs-11">' . $brand_name . '</td>
-                                    //                                     <td class="fs-11">' . $unique_barcode . '</td>
-                                    //                                     <td class="fs-11">' . $batch_code . '</td>
-                                    //                                     <td class="fs-11 text-end">' . $capital . '</td>
-                                    //                                     <td class="fs-11 text-end">' . $sold_price . '</td>
-                                    //                                     <td class="fs-11 text-end">' . $net_income . '</td>
-                                    //                                 </tr>';
-                                    //                             }
-                                    //                         }
-                                    //                     }
-                                    //                 } else {
-                                    //                     $grand_total_qty += $outbound_qty;
-                                    //                     $grand_total_unit_cost += $sub_unit_cost;
-                                    //                     $grand_total_gross += $sub_gross;
-                                    //                     echo '
-                                    //                     <tr class="' . $random_bg . '">
-                                    //                         <td class="fs-10"></td>
-                                    //                         <td class="fs-11"></td>
-                                    //                         <td class="fs-10" colspan="9">'. $category_name .'</td>
-                                    //                         <td class="fs-10 text-end">'. $outbound_qty .'</td>
-                                    //                         <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
-                                    //                         <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
-                                    //                         <td class="fs-10 text-end" style="width: 500px;">' . $sub_netincome . '</td>
-                                    //                     </tr>
-                                    //                     <tr class="' . $random_bg . '">
-                                    //                         <td class="fs-11"><b></b></td>
-                                    //                         <td class="fs-11"><b></b></td>
-                                    //                         <td class="fs-11"><b>ORDER #</b></td>
-                                    //                         <td class="fs-11"><b>ORDER LINE ID</b></td>
-                                    //                         <td class="fs-11"><b>CUSTOMER</b></td>
-                                    //                         <td class="fs-11"><b>OUTBOUND DATE</b></td>
-                                    //                         <td class="fs-11"><b>SUPPLIER</b></td>
-                                    //                         <td class="fs-11"><b>LOCAL/ IMPORT</b></td>
-                                    //                         <td class="fs-11"><b>DESCRIPTION</b></td>
-                                    //                         <td class="fs-11"><b>BRAND</b></td>
-                                    //                         <td class="fs-11"><b>BARCODE</b></td>
-                                    //                         <td class="fs-11"><b>BATCH</b></td>
-                                    //                         <td class="fs-11 text-end"><b>UNIT COST</b></td>
-                                    //                         <td class="fs-11 text-end"><b>GROSS SALE</b></td>
-                                    //                         <td class="fs-11 text-end"><b>NET INCOME</b></td>
-                                    //                     </tr>
-                                    //                     ';
+                                                                    echo '
+                                                                    <tr class="' . $random_bg . '">
+                                                                        <td class="fs-11"></td>
+                                                                        <td class="fs-11"><b></b></td>
+                                                                        <td class="fs-11">' . $order_num . '</td>
+                                                                        <td class="fs-11">' . $order_line_id . '</td>
+                                                                        <td class="fs-11">' . $customer_fullname . '</td>
+                                                                        <td class="fs-11">' . $date_sent . '</td>
+                                                                        <td class="fs-11">' . $supplier_name . '</td>
+                                                                        <td class="fs-11">' . $local_international . '</td>
+                                                                        <td class="fs-11">' . $description . '</td>
+                                                                        <td class="fs-11">' . $brand_name . '</td>
+                                                                        <td class="fs-11">' . $unique_barcode . '</td>
+                                                                        <td class="fs-11">' . $batch_code . '</td>
+                                                                        <td class="fs-11 text-end">' . $capital . '</td>
+                                                                        <td class="fs-11 text-end">' . $sold_price . '</td>
+                                                                        <td class="fs-11 text-end">' . $net_income . '</td>
+                                                                    </tr>';
+                                                                }
+                                                            }
+                                                        }
+                                                    } else {
+                                                        $grand_total_qty += $outbound_qty;
+                                                        $grand_total_unit_cost += $sub_unit_cost;
+                                                        $grand_total_gross += $sub_gross;
+                                                        echo '
+                                                        <tr class="' . $random_bg . '">
+                                                            <td class="fs-10"></td>
+                                                            <td class="fs-11"></td>
+                                                            <td class="fs-10" colspan="9">'. $category_name .'</td>
+                                                            <td class="fs-10 text-end">'. $outbound_qty .'</td>
+                                                            <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
+                                                            <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
+                                                            <td class="fs-10 text-end" style="width: 500px;">' . $sub_netincome . '</td>
+                                                        </tr>
+                                                        <tr class="' . $random_bg . '">
+                                                            <td class="fs-11"><b></b></td>
+                                                            <td class="fs-11"><b></b></td>
+                                                            <td class="fs-11"><b>ORDER #</b></td>
+                                                            <td class="fs-11"><b>ORDER LINE ID</b></td>
+                                                            <td class="fs-11"><b>CUSTOMER</b></td>
+                                                            <td class="fs-11"><b>OUTBOUND DATE</b></td>
+                                                            <td class="fs-11"><b>SUPPLIER</b></td>
+                                                            <td class="fs-11"><b>LOCAL/ IMPORT</b></td>
+                                                            <td class="fs-11"><b>DESCRIPTION</b></td>
+                                                            <td class="fs-11"><b>BRAND</b></td>
+                                                            <td class="fs-11"><b>BARCODE</b></td>
+                                                            <td class="fs-11"><b>BATCH</b></td>
+                                                            <td class="fs-11 text-end"><b>UNIT COST</b></td>
+                                                            <td class="fs-11 text-end"><b>GROSS SALE</b></td>
+                                                            <td class="fs-11 text-end"><b>NET INCOME</b></td>
+                                                        </tr>
+                                                        ';
 
-                                    //                     if($supplier_post_local_internation === "All"){
-                                    //                         $item_query = "
-                                    //                         SELECT
-                                    //                             oc.unique_barcode,
-                                    //                             oc.sold_price,
-                                    //                             ol.order_line_id,
-                                    //                             ol.order_num,
-                                    //                             oc.hashed_id AS outbound_num,
-                                    //                             ol.customer_fullname,
-                                    //                             ol.date_sent,
-                                    //                             sup.supplier_name,
-                                    //                             sup.local_international,
-                                    //                             p.description,
-                                    //                             b.brand_name,
-                                    //                             s.batch_code,
-                                    //                             s.capital
-                                    //                         FROM outbound_content oc
-                                    //                         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //                         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-                                    //                         LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //                         LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    //                         LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    //                         WHERE p.category = '$category_id'
-                                    //                         AND oc.status IN (0, 6)
-                                    //                         AND s.item_status NOT IN (4, 8)
-                                    //                         AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //                         AND ol.warehouse = '$warehouse_transaction'
-                                    //                         AND ol.status IN (0, 6)
-                                    //                         AND s.supplier = '$sup_supplierHeadId'
-                                    //                         ";
-                                    //                     } elseif($supplier_post_local_internation === "Local"){
-                                    //                         $item_query = "
-                                    //                         SELECT
-                                    //                             oc.unique_barcode,
-                                    //                             oc.sold_price,
-                                    //                             ol.order_line_id,
-                                    //                             ol.order_num,
-                                    //                             oc.hashed_id AS outbound_num,
-                                    //                             ol.customer_fullname,
-                                    //                             ol.date_sent,
-                                    //                             sup.supplier_name,
-                                    //                             sup.local_international,
-                                    //                             p.description,
-                                    //                             b.brand_name,
-                                    //                             s.batch_code,
-                                    //                             s.capital
-                                    //                         FROM outbound_content oc
-                                    //                         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //                         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-                                    //                         LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //                         LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    //                         LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    //                         WHERE p.category = '$category_id'
-                                    //                         AND oc.status IN (0, 6)
-                                    //                         AND s.item_status NOT IN (4, 8)
-                                    //                         AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //                         AND ol.warehouse = '$warehouse_transaction'
-                                    //                         AND ol.status IN (0, 6)
-                                    //                         AND sup.local_international = 'Local'
-                                    //                         AND s.supplier = '$sup_supplierHeadId'
-                                    //                         ";
-                                    //                     } elseif($supplier_post_local_internation === "International"){
-                                    //                         $item_query = "
-                                    //                         SELECT
-                                    //                             oc.unique_barcode,
-                                    //                             oc.sold_price,
-                                    //                             ol.order_line_id,
-                                    //                             ol.order_num,
-                                    //                             oc.hashed_id AS outbound_num,
-                                    //                             ol.customer_fullname,
-                                    //                             ol.date_sent,
-                                    //                             sup.supplier_name,
-                                    //                             sup.local_international,
-                                    //                             p.description,
-                                    //                             b.brand_name,
-                                    //                             s.batch_code,
-                                    //                             s.capital
-                                    //                         FROM outbound_content oc
-                                    //                         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //                         LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-                                    //                         LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //                         LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    //                         LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    //                         WHERE p.category = '$category_id'
-                                    //                         AND oc.status IN (0, 6)
-                                    //                         AND s.item_status NOT IN (4, 8)
-                                    //                         AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
-                                    //                         AND ol.warehouse = '$warehouse_transaction'
-                                    //                         AND ol.status IN (0, 6)
-                                    //                         AND sup.local_international = 'International'
-                                    //                         AND s.supplier = '$sup_supplierHeadId'
-                                    //                         ";
-                                    //                     }
+                                                        if($supplier_post_local_internation === "All"){
+                                                            $item_query = "
+                                                            SELECT
+                                                                oc.unique_barcode,
+                                                                oc.sold_price,
+                                                                ol.order_line_id,
+                                                                ol.order_num,
+                                                                oc.hashed_id AS outbound_num,
+                                                                ol.customer_fullname,
+                                                                ol.date_sent,
+                                                                sup.supplier_name,
+                                                                sup.local_international,
+                                                                p.description,
+                                                                b.brand_name,
+                                                                s.batch_code,
+                                                                s.capital
+                                                            FROM outbound_content oc
+                                                            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                            LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+                                                            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                            LEFT JOIN product p ON p.hashed_id = s.product_id
+                                                            LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                            WHERE p.category = '$category_id'
+                                                            AND oc.status IN (0, 6)
+                                                            AND s.item_status NOT IN (4, 8)
+                                                            AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                            AND ol.warehouse = '$warehouse_transaction'
+                                                            AND ol.status IN (0, 6)
+                                                            AND s.supplier = '$sup_supplierHeadId'
+                                                            LIMIT 3
+                                                            ";
+                                                        } elseif($supplier_post_local_internation === "Local"){
+                                                            $item_query = "
+                                                            SELECT
+                                                                oc.unique_barcode,
+                                                                oc.sold_price,
+                                                                ol.order_line_id,
+                                                                ol.order_num,
+                                                                oc.hashed_id AS outbound_num,
+                                                                ol.customer_fullname,
+                                                                ol.date_sent,
+                                                                sup.supplier_name,
+                                                                sup.local_international,
+                                                                p.description,
+                                                                b.brand_name,
+                                                                s.batch_code,
+                                                                s.capital
+                                                            FROM outbound_content oc
+                                                            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                            LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+                                                            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                            LEFT JOIN product p ON p.hashed_id = s.product_id
+                                                            LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                            WHERE p.category = '$category_id'
+                                                            AND oc.status IN (0, 6)
+                                                            AND s.item_status NOT IN (4, 8)
+                                                            AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                            AND ol.warehouse = '$warehouse_transaction'
+                                                            AND ol.status IN (0, 6)
+                                                            AND sup.local_international = 'Local'
+                                                            AND s.supplier = '$sup_supplierHeadId'
+                                                            LIMIT 3
+                                                            ";
+                                                        } elseif($supplier_post_local_internation === "International"){
+                                                            $item_query = "
+                                                            SELECT
+                                                                oc.unique_barcode,
+                                                                oc.sold_price,
+                                                                ol.order_line_id,
+                                                                ol.order_num,
+                                                                oc.hashed_id AS outbound_num,
+                                                                ol.customer_fullname,
+                                                                ol.date_sent,
+                                                                sup.supplier_name,
+                                                                sup.local_international,
+                                                                p.description,
+                                                                b.brand_name,
+                                                                s.batch_code,
+                                                                s.capital
+                                                            FROM outbound_content oc
+                                                            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                            LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+                                                            LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                            LEFT JOIN product p ON p.hashed_id = s.product_id
+                                                            LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                            WHERE p.category = '$category_id'
+                                                            AND oc.status IN (0, 6)
+                                                            AND s.item_status NOT IN (4, 8)
+                                                            AND DATE(ol.date_sent) BETWEEN '$startDate' AND '$endDate'
+                                                            AND ol.warehouse = '$warehouse_transaction'
+                                                            AND ol.status IN (0, 6)
+                                                            AND sup.local_international = 'International'
+                                                            AND s.supplier = '$sup_supplierHeadId'
+                                                            LIMIT 3
+                                                            ";
+                                                        }
                                                     
-                                    //                         $item_res = $conn->query($item_query);
-                                    //                         if($item_res->num_rows>0){
-                                    //                             while($row=$item_res->fetch_assoc()){
-                                    //                                 $unique_barcode = $row['unique_barcode'];
-                                    //                                 $sold_price = $row['sold_price'];
-                                    //                                 $order_line_id = $row['order_line_id'];
-                                    //                                 $order_num = $row['order_num'];
-                                    //                                 $outbound_num = $row['outbound_num'];
-                                    //                                 $customer_fullname = $row['customer_fullname'];
-                                    //                                 $supplier_name = $row['supplier_name'];
-                                    //                                 $local_international = $row['local_international'];
-                                    //                                 $description = $row['description'];
-                                    //                                 $brand_name = $row['brand_name'];
-                                    //                                 $batch_code = $row['batch_code'];
-                                    //                                 $capital = $row['capital'];
-                                    //                                 $date_sent = $row['date_sent'];
-                                    //                                 $net_income = $sold_price - $capital;
+                                                            $item_res = $conn->query($item_query);
+                                                            if($item_res->num_rows>0){
+                                                                while($row=$item_res->fetch_assoc()){
+                                                                    $unique_barcode = $row['unique_barcode'];
+                                                                    $sold_price = $row['sold_price'];
+                                                                    $order_line_id = $row['order_line_id'];
+                                                                    $order_num = $row['order_num'];
+                                                                    $outbound_num = $row['outbound_num'];
+                                                                    $customer_fullname = $row['customer_fullname'];
+                                                                    $supplier_name = $row['supplier_name'];
+                                                                    $local_international = $row['local_international'];
+                                                                    $description = $row['description'];
+                                                                    $brand_name = $row['brand_name'];
+                                                                    $batch_code = $row['batch_code'];
+                                                                    $capital = $row['capital'];
+                                                                    $date_sent = $row['date_sent'];
+                                                                    $net_income = $sold_price - $capital;
                                                                     
-                                    //                                 echo '
-                                    //                                 <tr class="' . $random_bg . '">
-                                    //                                     <td class="fs-11"></td>
-                                    //                                     <td class="fs-11"></td>
-                                    //                                     <td class="fs-11">' . $order_num . '</td>
-                                    //                                     <td class="fs-11">' . $order_line_id . '</td>
-                                    //                                     <td class="fs-11">' . $customer_fullname . '</td>
-                                    //                                     <td class="fs-11">' . $date_sent . '</td>
-                                    //                                     <td class="fs-11">' . $supplier_name . '</td>
-                                    //                                     <td class="fs-11">' . $local_international . '</td>
-                                    //                                     <td class="fs-11">' . $description . '</td>
-                                    //                                     <td class="fs-11">' . $brand_name . '</td>
-                                    //                                     <td class="fs-11">' . $unique_barcode . '</td>
-                                    //                                     <td class="fs-11">' . $batch_code . '</td>
-                                    //                                     <td class="fs-11 text-end">' . $capital . '</td>
-                                    //                                     <td class="fs-11 text-end">' . $sold_price . '</td>
-                                    //                                     <td class="fs-11 text-end">' . $net_income . '</td>
-                                    //                                 </tr>';
-                                    //                             }
-                                    //                         }
-                                    //                 }
-                                    //                 $num++;
+                                                                    echo '
+                                                                    <tr class="' . $random_bg . '">
+                                                                        <td class="fs-11"></td>
+                                                                        <td class="fs-11"></td>
+                                                                        <td class="fs-11">' . $order_num . '</td>
+                                                                        <td class="fs-11">' . $order_line_id . '</td>
+                                                                        <td class="fs-11">' . $customer_fullname . '</td>
+                                                                        <td class="fs-11">' . $date_sent . '</td>
+                                                                        <td class="fs-11">' . $supplier_name . '</td>
+                                                                        <td class="fs-11">' . $local_international . '</td>
+                                                                        <td class="fs-11">' . $description . '</td>
+                                                                        <td class="fs-11">' . $brand_name . '</td>
+                                                                        <td class="fs-11">' . $unique_barcode . '</td>
+                                                                        <td class="fs-11">' . $batch_code . '</td>
+                                                                        <td class="fs-11 text-end">' . $capital . '</td>
+                                                                        <td class="fs-11 text-end">' . $sold_price . '</td>
+                                                                        <td class="fs-11 text-end">' . $net_income . '</td>
+                                                                    </tr>';
+                                                                }
+                                                            }
+                                                    }
+                                                    $num++;
                                                     
-                                    //             }
-                                    //         } else {
-                                    //             echo '<tr><td colspan="6">No Data Available</td></tr>';
-                                    //         }
-                                    //     }    
-                                    //     $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
-                                    //     echo '<tr>
-                                    //         <td class="fs-10 text-start pe-3" colspan="11"><b><i>Total</i></b></td>
-                                    //         <td class="fs-10 text-end"><b><i>' . $grand_total_qty . '</i></b></td>
-                                    //         <td class="fs-10 text-end"><b><i>' . $grand_total_unit_cost . '</i></b></td>
-                                    //         <td class="fs-10 text-end"><b><i>' . $grand_total_gross . '</i></b></td>
-                                    //         <td class="fs-10 text-end"><b><i>' . $grand_total_net . '</i></b></td>
-                                    //     </tr>';
-                                    // } else {
-                                    //     echo '<tr>
-                                    //                     <td></td>
-                                    //                     <td class="fs-10 text-end pe-3" colspan="14"><b><i>Nothing Matched</i></b></td>
-                                    //                 </tr>';
-                                    // }
+                                                }
+                                            } else {
+                                                echo '<tr><td colspan="6">No Data Available</td></tr>';
+                                            }
+                                        }    
+                                        // $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
+                                        // echo '<tr>
+                                        //     <td class="fs-10 text-start pe-3" colspan="11"><b><i>Total</i></b></td>
+                                        //     <td class="fs-10 text-end"><b><i>' . $grand_total_qty . '</i></b></td>
+                                        //     <td class="fs-10 text-end"><b><i>' . $grand_total_unit_cost . '</i></b></td>
+                                        //     <td class="fs-10 text-end"><b><i>' . $grand_total_gross . '</i></b></td>
+                                        //     <td class="fs-10 text-end"><b><i>' . $grand_total_net . '</i></b></td>
+                                        // </tr>';
+                                    } else {
+                                        echo '<tr>
+                                                        <td></td>
+                                                        <td class="fs-10 text-end pe-3" colspan="14"><b><i>Nothing Matched</i></b></td>
+                                                    </tr>';
+                                    }
 
                                     ?>
-                                <!-- </tbody>
+                                </tbody>
                             </table>
                     </div>
-                </div> -->
+                </div>
                 <!-- ----------------- -->
             </div>
         </div>
@@ -771,6 +784,7 @@
                         <div class="col-lg-4 mb-3">
                             <label for="warehouse">Warehouse</label>
                             <select class="form-select fs-11" name="warehouse" id="warehouse">
+                                <!-- <option value="">All</option> -->
                             <?php echo implode("\n", $warehouse_options2); ?>
                             </select>
                         </div>
@@ -824,10 +838,10 @@
                     </div>
                 </div>
                 <!-- --------------- -->
-                <!-- <div class="row">
-                    <div class="col-lg-12 table-responsive"> -->
-                            <!-- <table class="table mb-0 data-table fs-10" data-datatables="data-datatables"> -->
-                            <!-- <table class="table mb-0 fs-10">
+                <div class="row">
+                    <div class="col-lg-12 table-responsive">
+                            <table class="table mb-0 data-table fs-10" data-datatables="data-datatables">
+                            <table class="table mb-0 fs-10">
                                 <thead class="bg-primary">
                                     <tr>
                                         <th class="fs-10 text-white ">#</th>
@@ -839,195 +853,198 @@
                                         <th class="fs-10 text-white text-end " style="width: 500px;">SUBTOTAL NET INCOME</th>
                                     </tr>
                                 </thead>
-                                <tbody> -->
+                                <tbody>
                                     <?php
-                                    // $bg_colors = ['bg-100', 'bg-200', 'bg-300', 'bg-400', 'bg-500', 'bg-600', 'table-primary', 'table-info', 'table-dark', 'table-warning', 'table-success'];
+                                    $bg_colors = ['bg-100', 'bg-200', 'bg-300', 'bg-400', 'bg-500', 'bg-600', 'table-primary', 'table-info', 'table-dark', 'table-warning', 'table-success'];
                                     
-                                    // $supplier_query = "
-                                    // SELECT 
-                                    //     sup.hashed_id AS supplier_head_id,
-                                    //     sup.supplier_name AS supplier,
-                                    //     sup.local_international AS sup_type,
-                                    //     COUNT(oc.unique_barcode) AS sup_outbounded_qty,
-                                    //     SUM(s.capital) AS sup_unit_cost,
-                                    //     SUM(oc.sold_price) AS sup_gross_sale
-                                    // FROM supplier sup
-                                    // LEFT JOIN stocks s ON s.supplier = sup.hashed_id
-                                    // LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    // LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    // WHERE
-                                    // oc.status IN (0, 6)
-                                    // AND s.item_status NOT IN (4, 8)
-                                    // AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
-                                    // AND ol.warehouse IN ($user_warehouse_id)
-                                    // AND ol.status IN (0, 6)
-                                    // GROUP BY sup.supplier_name
-                                    // ";
-                                    // $supplier_res = $conn->query($supplier_query);
-                                    // if($supplier_res->num_rows>0){
-                                    //     while($row=$supplier_res->fetch_assoc()){
-                                    //         $random_bg = $bg_colors[array_rand($bg_colors)];
-                                    //         $sup_supplier = $row['supplier'];
-                                    //         $sup_supplierType = $row['sup_type'];
-                                    //         $sup_outboundedQty = $row['sup_outbounded_qty'];
-                                    //         $sup_unitCost = $row['sup_unit_cost'];
-                                    //         $sup_grossSale = $row['sup_gross_sale'];
-                                    //         $sup_supplierHeadId = $row['supplier_head_id'];
-                                    //         $sup_netincome = $sup_grossSale - $sup_unitCost;
+                                    $supplier_query = "
+                                    SELECT 
+                                        sup.hashed_id AS supplier_head_id,
+                                        sup.supplier_name AS supplier,
+                                        sup.local_international AS sup_type,
+                                        COUNT(oc.unique_barcode) AS sup_outbounded_qty,
+                                        SUM(s.capital) AS sup_unit_cost,
+                                        SUM(oc.sold_price) AS sup_gross_sale
+                                    FROM supplier sup
+                                    LEFT JOIN stocks s ON s.supplier = sup.hashed_id
+                                    LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                    LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                    WHERE
+                                    oc.status IN (0, 6)
+                                    AND s.item_status NOT IN (4, 8)
+                                    AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
+                                    AND ol.warehouse IN ($user_warehouse_id)
+                                    AND ol.status IN (0, 6)
+                                    GROUP BY sup.supplier_name
+                                    LIMIT 3
+                                    ";
+                                    $supplier_res = $conn->query($supplier_query);
+                                    if($supplier_res->num_rows>0){
+                                        while($row=$supplier_res->fetch_assoc()){
+                                            $random_bg = $bg_colors[array_rand($bg_colors)];
+                                            $sup_supplier = $row['supplier'];
+                                            $sup_supplierType = $row['sup_type'];
+                                            $sup_outboundedQty = $row['sup_outbounded_qty'];
+                                            $sup_unitCost = $row['sup_unit_cost'];
+                                            $sup_grossSale = $row['sup_gross_sale'];
+                                            $sup_supplierHeadId = $row['supplier_head_id'];
+                                            $sup_netincome = $sup_grossSale - $sup_unitCost;
 
-                                    //         echo '
-                                    //         <tr class="' . $random_bg . '">
-                                    //             <td class="fs-10">' . $num . '</td>
-                                    //             <td class="fs-10">' . $sup_supplier . '</td>
-                                    //             <td class="fs-10" colspan="9"></td>
-                                    //             <td class="fs-10 text-end">'. $sup_outboundedQty .'</td>
-                                    //             <td class="fs-10 text-end" style="width: 500px;">' . $sup_unitCost .'</td>
-                                    //             <td class="fs-10 text-end" style="width: 500px;">' . $sup_grossSale . '</td>
-                                    //             <td class="fs-10 text-end" style="width: 500px;">' . $sup_netincome . '</td>
-                                    //         </tr>
-                                    //         ';
+                                            echo '
+                                            <tr class="' . $random_bg . '">
+                                                <td class="fs-10">' . $num . '</td>
+                                                <td class="fs-10">' . $sup_supplier . '</td>
+                                                <td class="fs-10" colspan="9"></td>
+                                                <td class="fs-10 text-end">'. $sup_outboundedQty .'</td>
+                                                <td class="fs-10 text-end" style="width: 500px;">' . $sup_unitCost .'</td>
+                                                <td class="fs-10 text-end" style="width: 500px;">' . $sup_grossSale . '</td>
+                                                <td class="fs-10 text-end" style="width: 500px;">' . $sup_netincome . '</td>
+                                            </tr>
+                                            ';
 
-                                    //         $category_query = "
-                                    //         SELECT 
-                                    //             c.hashed_id AS category_id,
-                                    //             c.category_name,
-                                    //             COUNT(oc.unique_barcode) AS outbounded_qty,
-                                    //             SUM(s.capital) AS unit_cost,
-                                    //             SUM(oc.sold_price) AS gross_sale
-                                    //         FROM category c
-                                    //         LEFT JOIN product p ON p.category = c.hashed_id
-                                    //         LEFT JOIN stocks s ON s.product_id = p.hashed_id
-                                    //         LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
-                                    //         LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //         WHERE
-                                    //         oc.status IN (0, 6)
-                                    //         AND s.item_status NOT IN (4, 8)
-                                    //         AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
-                                    //         AND ol.warehouse IN ($user_warehouse_id)
-                                    //         AND ol.status IN (0, 6)
-                                    //         AND s.supplier = '$sup_supplierHeadId'
-                                    //         GROUP BY c.category_name
-                                    //         ";
+                                            $category_query = "
+                                            SELECT 
+                                                c.hashed_id AS category_id,
+                                                c.category_name,
+                                                COUNT(oc.unique_barcode) AS outbounded_qty,
+                                                SUM(s.capital) AS unit_cost,
+                                                SUM(oc.sold_price) AS gross_sale
+                                            FROM category c
+                                            LEFT JOIN product p ON p.category = c.hashed_id
+                                            LEFT JOIN stocks s ON s.product_id = p.hashed_id
+                                            LEFT JOIN outbound_content oc ON oc.unique_barcode = s.unique_barcode
+                                            LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                            WHERE
+                                            oc.status IN (0, 6)
+                                            AND s.item_status NOT IN (4, 8)
+                                            AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
+                                            AND ol.warehouse IN ($user_warehouse_id)
+                                            AND ol.status IN (0, 6)
+                                            AND s.supplier = '$sup_supplierHeadId'
+                                            GROUP BY c.category_name
+                                            LIMIT 3
+                                            ";
 
                                             
                                             
-                                    //         $category_result = $conn->query($category_query);
-                                    //         if($category_result->num_rows>0){
-                                    //             while($row=$category_result->fetch_assoc()){
+                                            $category_result = $conn->query($category_query);
+                                            if($category_result->num_rows>0){
+                                                while($row=$category_result->fetch_assoc()){
                                                     
-                                    //                 $category_id = $row['category_id'];
-                                    //                 $category_name = $row['category_name'];
-                                    //                 $outbound_qty = $row['outbounded_qty'];
-                                    //                 $sub_unit_cost = $row['unit_cost'];
-                                    //                 $sub_gross = $row['gross_sale'];
-                                    //                 $sub_netincome = $sub_gross - $sub_unit_cost;
-                                    //                 $grand_total_qty += $outbound_qty;
-                                    //                 $grand_total_unit_cost += $sub_unit_cost;
-                                    //                 $grand_total_gross += $sub_gross;
+                                                    $category_id = $row['category_id'];
+                                                    $category_name = $row['category_name'];
+                                                    $outbound_qty = $row['outbounded_qty'];
+                                                    $sub_unit_cost = $row['unit_cost'];
+                                                    $sub_gross = $row['gross_sale'];
+                                                    $sub_netincome = $sub_gross - $sub_unit_cost;
+                                                    $grand_total_qty += $outbound_qty;
+                                                    $grand_total_unit_cost += $sub_unit_cost;
+                                                    $grand_total_gross += $sub_gross;
                                                     
-                                    //                 echo '
-                                    //                 <tr class="' . $random_bg . '">
-                                    //                     <td class="fs-10"></td>
-                                    //                     <td class="fs-10"></td>
-                                    //                     <td class="fs-10" colspan="9">'. $category_name .'</td>
-                                    //                     <td class="fs-10 text-end">'. $outbound_qty .'</td>
-                                    //                     <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
-                                    //                     <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
-                                    //                     <td class="fs-10 text-end" style="width: 500px;">' . $sub_netincome . '</td>
-                                    //                 </tr>
-                                    //                 <tr class="' . $random_bg . '">
-                                    //                     <td class="fs-11"><b></b></td>
-                                    //                     <td class="fs-11"><b></b></td>
-                                    //                     <td class="fs-11"><b>ORDER #</b></td>
-                                    //                     <td class="fs-11"><b>ORDER LINE ID</b></td>
-                                    //                     <td class="fs-11"><b>CUSTOMER</b></td>
-                                    //                     <td class="fs-11"><b>OUTBOUND DATE</b></td>
-                                    //                     <td class="fs-11"><b>SUPPLIER</b></td>
-                                    //                     <td class="fs-11"><b>LOCAL/ IMPORT</b></td>
-                                    //                     <td class="fs-11"><b>DESCRIPTION</b></td>
-                                    //                     <td class="fs-11"><b>BRAND</b></td>
-                                    //                     <td class="fs-11"><b>BARCODE</b></td>
-                                    //                     <td class="fs-11"><b>BATCH</b></td>
-                                    //                     <td class="fs-11 text-end"><b>UNIT COST</b></td>
-                                    //                     <td class="fs-11 text-end"><b>GROSS SALE</b></td>
-                                    //                     <td class="fs-11 text-end"><b>NET INCOME</b></td>
-                                    //                 </tr>
-                                    //                 ';
-                                    //                 $item_query = "
-                                    //                 SELECT
-                                    //                     oc.unique_barcode,
-                                    //                     oc.sold_price,
-                                    //                     ol.order_line_id,
-                                    //                     ol.order_num,
-                                    //                     oc.hashed_id AS outbound_num,
-                                    //                     ol.customer_fullname,
-                                    //                     ol.date_sent,
-                                    //                     sup.supplier_name,
-                                    //                     sup.local_international,
-                                    //                     p.description,
-                                    //                     b.brand_name,
-                                    //                     s.batch_code,
-                                    //                     s.capital
-                                    //                 FROM outbound_content oc
-                                    //                 LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
-                                    //                 LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
-                                    //                 LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
-                                    //                 LEFT JOIN product p ON p.hashed_id = s.product_id
-                                    //                 LEFT JOIN brand b ON b.hashed_id = p.brand
-                                    //                 WHERE p.category = '$category_id'
-                                    //                 AND oc.status IN (0, 6)
-                                    //                 AND s.item_status NOT IN (4, 8)
-                                    //                 AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
-                                    //                 AND ol.warehouse IN ($user_warehouse_id)
-                                    //                 AND s.supplier = '$sup_supplierHeadId'
-                                    //                 AND ol.status IN (0, 6)
-                                    //                 ";
-                                    //                 $item_res = $conn->query($item_query);
-                                    //                 if($item_res->num_rows>0){
-                                    //                     while($row=$item_res->fetch_assoc()){
-                                    //                         $unique_barcode = $row['unique_barcode'];
-                                    //                         $sold_price = $row['sold_price'];
-                                    //                         $order_line_id = $row['order_line_id'];
-                                    //                         $order_num = $row['order_num'];
-                                    //                         $outbound_num = $row['outbound_num'];
-                                    //                         $customer_fullname = $row['customer_fullname'];
-                                    //                         $supplier_name = $row['supplier_name'];
-                                    //                         $local_international = $row['local_international'];
-                                    //                         $description = $row['description'];
-                                    //                         $brand_name = $row['brand_name'];
-                                    //                         $batch_code = $row['batch_code'];
-                                    //                         $capital = $row['capital'];
-                                    //                         $date_sent = $row['date_sent'];
-                                    //                         $net_income = $sold_price - $capital;
+                                                    echo '
+                                                    <tr class="' . $random_bg . '">
+                                                        <td class="fs-10"></td>
+                                                        <td class="fs-10"></td>
+                                                        <td class="fs-10" colspan="9">'. $category_name .'</td>
+                                                        <td class="fs-10 text-end">'. $outbound_qty .'</td>
+                                                        <td class="fs-10 text-end" style="width: 500px;">' . $sub_unit_cost .'</td>
+                                                        <td class="fs-10 text-end" style="width: 500px;">' . $sub_gross . '</td>
+                                                        <td class="fs-10 text-end" style="width: 500px;">' . $sub_netincome . '</td>
+                                                    </tr>
+                                                    <tr class="' . $random_bg . '">
+                                                        <td class="fs-11"><b></b></td>
+                                                        <td class="fs-11"><b></b></td>
+                                                        <td class="fs-11"><b>ORDER #</b></td>
+                                                        <td class="fs-11"><b>ORDER LINE ID</b></td>
+                                                        <td class="fs-11"><b>CUSTOMER</b></td>
+                                                        <td class="fs-11"><b>OUTBOUND DATE</b></td>
+                                                        <td class="fs-11"><b>SUPPLIER</b></td>
+                                                        <td class="fs-11"><b>LOCAL/ IMPORT</b></td>
+                                                        <td class="fs-11"><b>DESCRIPTION</b></td>
+                                                        <td class="fs-11"><b>BRAND</b></td>
+                                                        <td class="fs-11"><b>BARCODE</b></td>
+                                                        <td class="fs-11"><b>BATCH</b></td>
+                                                        <td class="fs-11 text-end"><b>UNIT COST</b></td>
+                                                        <td class="fs-11 text-end"><b>GROSS SALE</b></td>
+                                                        <td class="fs-11 text-end"><b>NET INCOME</b></td>
+                                                    </tr>
+                                                    ';
+                                                    $item_query = "
+                                                    SELECT
+                                                        oc.unique_barcode,
+                                                        oc.sold_price,
+                                                        ol.order_line_id,
+                                                        ol.order_num,
+                                                        oc.hashed_id AS outbound_num,
+                                                        ol.customer_fullname,
+                                                        ol.date_sent,
+                                                        sup.supplier_name,
+                                                        sup.local_international,
+                                                        p.description,
+                                                        b.brand_name,
+                                                        s.batch_code,
+                                                        s.capital
+                                                    FROM outbound_content oc
+                                                    LEFT JOIN outbound_logs ol ON ol.hashed_id = oc.hashed_id
+                                                    LEFT JOIN stocks s ON s.unique_barcode = oc.unique_barcode
+                                                    LEFT JOIN supplier sup ON sup.hashed_id = s.supplier
+                                                    LEFT JOIN product p ON p.hashed_id = s.product_id
+                                                    LEFT JOIN brand b ON b.hashed_id = p.brand
+                                                    WHERE p.category = '$category_id'
+                                                    AND oc.status IN (0, 6)
+                                                    AND s.item_status NOT IN (4, 8)
+                                                    AND MONTH(ol.date_sent) = MONTH(NOW()) AND YEAR(ol.date_sent) = YEAR(NOW())
+                                                    AND ol.warehouse IN ($user_warehouse_id)
+                                                    AND s.supplier = '$sup_supplierHeadId'
+                                                    AND ol.status IN (0, 6)
+                                                    LIMIT 3
+                                                    ";
+                                                    $item_res = $conn->query($item_query);
+                                                    if($item_res->num_rows>0){
+                                                        while($row=$item_res->fetch_assoc()){
+                                                            $unique_barcode = $row['unique_barcode'];
+                                                            $sold_price = $row['sold_price'];
+                                                            $order_line_id = $row['order_line_id'];
+                                                            $order_num = $row['order_num'];
+                                                            $outbound_num = $row['outbound_num'];
+                                                            $customer_fullname = $row['customer_fullname'];
+                                                            $supplier_name = $row['supplier_name'];
+                                                            $local_international = $row['local_international'];
+                                                            $description = $row['description'];
+                                                            $brand_name = $row['brand_name'];
+                                                            $batch_code = $row['batch_code'];
+                                                            $capital = $row['capital'];
+                                                            $date_sent = $row['date_sent'];
+                                                            $net_income = $sold_price - $capital;
                                                             
-                                    //                         echo '
-                                    //                         <tr class="' . $random_bg . '">
-                                    //                             <td class="fs-11"></td>
-                                    //                             <td class="fs-11"></td>
-                                    //                             <td class="fs-11">' . $order_num . '</td>
-                                    //                             <td class="fs-11">' . $order_line_id . '</td>
-                                    //                             <td class="fs-11">' . $customer_fullname . '</td>
-                                    //                             <td class="fs-11">' . $date_sent . '</td>
-                                    //                             <td class="fs-11">' . $supplier_name . '</td>
-                                    //                             <td class="fs-11">' . $local_international . '</td>
-                                    //                             <td class="fs-11">' . $description . '</td>
-                                    //                             <td class="fs-11">' . $brand_name . '</td>
-                                    //                             <td class="fs-11">' . $unique_barcode . '</td>
-                                    //                             <td class="fs-11">' . $batch_code . '</td>
-                                    //                             <td class="fs-11 text-end">' . $capital . '</td>
-                                    //                             <td class="fs-11 text-end">' . $sold_price . '</td>
-                                    //                             <td class="fs-11 text-end">' . $net_income . '</td>
-                                    //                         </tr>';
-                                    //                     }
-                                    //                 }
-                                    //                 $num++;
+                                                            echo '
+                                                            <tr class="' . $random_bg . '">
+                                                                <td class="fs-11"></td>
+                                                                <td class="fs-11"></td>
+                                                                <td class="fs-11">' . $order_num . '</td>
+                                                                <td class="fs-11">' . $order_line_id . '</td>
+                                                                <td class="fs-11">' . $customer_fullname . '</td>
+                                                                <td class="fs-11">' . $date_sent . '</td>
+                                                                <td class="fs-11">' . $supplier_name . '</td>
+                                                                <td class="fs-11">' . $local_international . '</td>
+                                                                <td class="fs-11">' . $description . '</td>
+                                                                <td class="fs-11">' . $brand_name . '</td>
+                                                                <td class="fs-11">' . $unique_barcode . '</td>
+                                                                <td class="fs-11">' . $batch_code . '</td>
+                                                                <td class="fs-11 text-end">' . $capital . '</td>
+                                                                <td class="fs-11 text-end">' . $sold_price . '</td>
+                                                                <td class="fs-11 text-end">' . $net_income . '</td>
+                                                            </tr>';
+                                                        }
+                                                    }
+                                                    $num++;
                                                     
-                                    //             }
-                                    //         } else {
-                                    //             echo '<tr><td colspan="6">No Data Available</td></tr>';
-                                    //         }
-                                    //     }
-                                    // }
+                                                }
+                                            } else {
+                                                echo '<tr><td colspan="6">No Data Available</td></tr>';
+                                            }
+                                        }
+                                    }
 
                                     // $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
                                     // echo '<tr>
@@ -1039,10 +1056,10 @@
                                     // </tr>';
 
                                     ?>
-                                <!-- </tbody>
+                                </tbody>
                             </table>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </div>

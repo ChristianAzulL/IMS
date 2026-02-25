@@ -13,6 +13,9 @@ $warehouse_transaction = htmlspecialchars($_GET['wh'] ?? '');
 $sup_type = htmlspecialchars($_GET['sup_type'] ?? '');
 $display_sup = ($sup_type === "All") ? "Local/ Import" : $sup_type;
 
+$fromFormatted = date("M j Y", strtotime($from));
+$toFormatted   = date("M j Y", strtotime($to));
+
 $raw_category = !empty($_GET['category']) ? implode(', ', array_map(fn($c) => "'" . trim($c) . "'", explode(',', $_GET['category']))) : "";
 $get_supplier = !empty($_GET['supplier']) ? implode(', ', array_map(fn($s) => "'" . trim($s) . "'", explode(',', htmlspecialchars($_GET['supplier'])))) : "";
 
@@ -65,7 +68,7 @@ if ($from && $to) {
     if ($supplier_res->num_rows > 0) {
         while ($row = $supplier_res->fetch_assoc()) {
             // Supplier row
-            $csv_rows[] = [$num++, $row['supplier'], '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+            // $csv_rows[] = [$num++, $row['supplier'], '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
 
             $cat_q = "
                 SELECT c.hashed_id AS category_id, c.category_name,
@@ -120,7 +123,7 @@ if ($from && $to) {
                     while ($item = $item_res->fetch_assoc()) {
                         $net = $item['sold_price'] - $item['capital'];
                         $csv_rows[] = [
-                            '', $row['supplier'], $cat['category_name'], $item['order_num'], $item['outbound_num'], $item['customer_fullname'],
+                            $row['supplier'], $cat['category_name'], $item['order_num'], $item['outbound_num'], $item['customer_fullname'],
                             $item['date_sent'], $item['supplier_name'], $item['local_international'],
                             $item['description'], $item['brand_name'], $item['unique_barcode'],
                             $item['batch_code'], 1,
@@ -131,20 +134,20 @@ if ($from && $to) {
                     }
 
                     // Category total row
-                    $csv_rows[] = [
-                        '', $row['supplier'], 'TOTAL for ' . $cat['category_name'], '', '', '', '', '', '', '', '', '', '',
-                        $cat['outbounded_qty'],
-                        number_format($cat['unit_cost'], 2),
-                        number_format($cat['gross_sale'], 2),
-                        number_format($cat_net, 2)
-                    ];
+                    // $csv_rows[] = [
+                    //     $row['supplier'], 'TOTAL for ' . $cat['category_name'], '', '', '', '', '', '', '', '', '', '',
+                    //     $cat['outbounded_qty'],
+                    //     number_format($cat['unit_cost'], 2),
+                    //     number_format($cat['gross_sale'], 2),
+                    //     number_format($cat_net, 2)
+                    // ];
                 }
             }
         }
 
         $grand_total_net = $grand_total_gross - $grand_total_unit_cost;
         $csv_rows[] = [
-            '', 'GRAND TOTAL', '', '', '', '', '', '', '', '', '', '',
+            'GRAND TOTAL', '', '', '', '', '', '', '', '', '', '',
             $grand_total_qty,
             number_format($grand_total_unit_cost, 2),
             number_format($grand_total_gross, 2),
@@ -153,9 +156,14 @@ if ($from && $to) {
     }
 }
 
+if($warehouse_transaction === ''){
+    $warehousez = "All Warehouse";
+} else {
+    $warehousez = $ware_treans;
+}
 // === Output CSV ===
 header('Content-Type: text/csv');
-header('Content-Disposition: attachment; filename="finance_' . $from . '_to_' . $to . '.csv"');
+header('Content-Disposition: attachment; filename="' . $warehousez . ' ' . $fromFormatted . '_to_' . $toFormatted . '.csv"');
 
 $output = fopen('php://output', 'w');
 
@@ -195,7 +203,7 @@ fputcsv($output, array_fill(0, 16, '')); // Blank line
 
 // Table headers
 fputcsv($output, [
-    '#', 'SUPPLIER', 'CATEGORY', 'ORDER #', 'OUTBOUND #', 'CUSTOMER',
+    'SUPPLIER', 'CATEGORY', 'ORDER #', 'OUTBOUND #', 'CUSTOMER',
     'OUTBOUND DATE', 'SUPPLIER NAME', 'LOCAL/IMPORT', 'DESCRIPTION', 'BRAND',
     'BARCODE', 'BATCH', 'QUANTITY', 'UNIT COST', 'GROSS SALE', 'NET INCOME'
 ]);
