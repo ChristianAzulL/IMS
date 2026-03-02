@@ -122,15 +122,24 @@ if ($from && $to) {
                     $item_res = $conn->query($item_q);
                     while ($item = $item_res->fetch_assoc()) {
                         $net = $item['sold_price'] - $item['capital'];
-                        $csv_rows[] = [
-                            $row['supplier'], $cat['category_name'], $item['order_num'], $item['outbound_num'], $item['customer_fullname'],
-                            $item['date_sent'], $item['supplier_name'], $item['local_international'],
-                            $item['description'], $item['brand_name'], $item['unique_barcode'],
-                            $item['batch_code'], 1,
-                            number_format($item['capital'], 2),
-                            number_format($item['sold_price'], 2),
-                            number_format($net, 2)
-                        ];
+                       $csv_rows[] = [
+                                        $row['supplier'],
+                                        $cat['category_name'],
+                                        '="' . $item['order_num'] . '"',
+                                        $item['outbound_num'],
+                                        $item['customer_fullname'],
+                                        $item['date_sent'],
+                                        $item['supplier_name'],
+                                        $item['local_international'],
+                                        $item['description'],
+                                        $item['brand_name'],
+                                        $item['unique_barcode'],
+                                        $item['batch_code'],
+                                        1,
+                                        number_format($item['capital'], 2),
+                                        number_format($item['sold_price'], 2),
+                                        number_format($net, 2)
+                                    ];
                     }
 
                     // Category total row
