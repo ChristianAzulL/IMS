@@ -125,7 +125,7 @@ if ($from && $to) {
                        $csv_rows[] = [
                                         $row['supplier'],
                                         $cat['category_name'],
-                                        '="' . $item['order_num'] . '"',
+                                        '"-' . $item['order_num'] . '-"',
                                         $item['outbound_num'],
                                         $item['customer_fullname'],
                                         $item['date_sent'],
