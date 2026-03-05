@@ -156,7 +156,7 @@ if ($from && $to) {
                         $num,
                         $category_name,
                         $row['order_num'],
-                        $row['outbound_num'],
+                        '"-' . $row['outbound_num'] . '-"',
                         $row['customer_fullname'],
                         $row['date_sent'],
                         $row['supplier_name'],
