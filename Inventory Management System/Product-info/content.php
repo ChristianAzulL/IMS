@@ -233,7 +233,7 @@ $result = $conn->query($product_query);
                                 </tr>
                                 <tr>
                                 <th>Location:</th>
-                                <td><?php echo $item_location; ?></td>
+                                <td><?php echo $warehouse_name . " - " .$item_location; ?></td>
                                 </tr>
                                 <tr>
                                 <th>Batch:</th>

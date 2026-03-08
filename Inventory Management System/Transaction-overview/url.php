@@ -155,7 +155,7 @@ if ($from && $to) {
                     fputcsv($output, [
                         $num,
                         $category_name,
-                        $row['order_num'],
+                        '"-' . $row['order_num'] . '-"',
                         '"-' . $row['outbound_num'] . '-"',
                         $row['customer_fullname'],
                         $row['date_sent'],
