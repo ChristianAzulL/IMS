@@ -81,6 +81,13 @@
                             </div>
                         </div>
                         <div class="col-lg-12 mb-3">
+                            <label for="">Exclusive</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="amountupdate" />
+                                <label class="form-check-label" for="flexSwitchCheckDefault">Update Amount</label>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 mb-3">
                             <label for="">Inbounds</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input"  name="access[]" id="flexSwitchCheckDefault" type="checkbox" value="po_logs" />

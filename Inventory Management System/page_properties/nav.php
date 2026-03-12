@@ -645,6 +645,21 @@
             </div>
           </a>
         </li>
+        <?php
+        if(strpos($access, "amountupdate")!==false){
+        ?>
+        <!-- Amount Update Link -->
+        <li class="nav-item">
+          <a class="nav-link" href="../update-amount/" aria-controls="search item">
+            <div class="d-flex align-items-center">
+              <span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span>
+              <span class="nav-link-text ps-1">Amount Update</span>
+            </div>
+          </a>
+        </li>
+        <?php
+        }
+        ?>
 
 
         <?php 

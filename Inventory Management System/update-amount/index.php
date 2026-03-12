@@ -1,6 +1,13 @@
 <?php
 include "../config/database.php";
 include "../config/on_session.php";
+
+
+if(strpos($access, "amountupdate")!==false){
+} else {
+  header("Location: ../500/");
+}
+
 ?>
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
