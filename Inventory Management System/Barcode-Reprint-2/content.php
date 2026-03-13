@@ -42,7 +42,17 @@
                                         echo '<tr>';
                                         echo '<td class="align-middle">Selected Products</td>';
                                         echo '<td class="align-middle">Barcode ' . $start . '-' . $end . '</td>';
-                                        echo '<td class="align-middle"><a href="../config/reprint.php?' . $query_string . '" target="_blank">Reprint Batch</a></td>';
+                                        // echo '<td class="align-middle"><a href="../config/reprint.php?' . $query_string . '" target="_blank">Reprint Batch</a></td>';
+                                        echo '<td class="align-middle">
+                                        <form action="../config/reprint.php" method="POST" target="_blank">';
+
+                                        foreach ($group as $id) {
+                                            echo '<input type="hidden" name="product_id[]" value="'.$id.'">';
+                                        }
+
+                                        echo '<button class="btn btn-sm btn-primary">Reprint Batch</button>
+                                        </form>
+                                        </td>';
                                         echo '</tr>';
 
                                         $start = $end + 1;
