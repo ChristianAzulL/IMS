@@ -1,6 +1,5 @@
 <div class="card">
     <div class="card-body overflow-hidden py-6 px-2">
-        <form action="../config/create_po.php" method="POST">
             <h5 class="ms-3">Finish download before downloading the next</h5>
             <div class="card shadow-none">
                 <div class="card-body p-0 pb-3">
@@ -80,6 +79,5 @@
                     </div>
                 </div>
             </div>
-        </form>
     </div>
 </div>
