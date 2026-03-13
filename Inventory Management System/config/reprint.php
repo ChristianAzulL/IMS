@@ -124,12 +124,7 @@ if (!empty($unique_barcodes)) {
 
     $mpdf->WriteHTML($html);
 
-    $pdf_content = $mpdf->Output('', 'D');
-
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: attachment; filename=\"Product_Barcodes.pdf\"');
-
-    echo $pdf_content;
+    $mpdf->Output('Product_Barcodes.pdf', 'D'); // PDF download with correct filename
     exit;
 }
 
